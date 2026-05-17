@@ -821,23 +821,21 @@ const DATA_STATUS_SCORE_MULTIPLIER = {
   Manual: 0.4,
 };
 
-const SCORE_CURVE_SCALE = 55;
-
 function roundDelta(value) {
   return Number(value.toFixed(1));
 }
 
-function scoreFromNetDelta(netDelta) {
-  if (!Number.isFinite(netDelta) || netDelta === 0) return 50;
-  const direction = netDelta > 0 ? 1 : -1;
-  const curved = 50 * (1 - Math.exp(-Math.abs(netDelta) / SCORE_CURVE_SCALE));
-  return Math.max(0, Math.min(100, Math.round(50 + direction * curved)));
+function scoreFromEvidenceBalance(netDelta, evidenceCapacity) {
+  if (!Number.isFinite(netDelta) || !Number.isFinite(evidenceCapacity) || evidenceCapacity <= 0) return 50;
+  const balance = Math.max(-1, Math.min(1, netDelta / evidenceCapacity));
+  return Math.max(0, Math.min(100, Math.round(50 + 50 * balance)));
 }
 
 function aggregate(metrics) {
   // 对 Live / Cached / Manual 且有明确 status 的指标做加权评分；Pending / data_unavailable 不参与评分。
   // 不是所有“低压力”都应该抵消强派发证据。FTD 低、VIX 平静这类只算弱缓和因子；Form 4、Margin、宽度破坏权重更高。
-  // Cached / Manual 慢变量会降权；总分使用非线性曲线，避免滞后证据堆叠把页面长期顶成 100/100。
+  // Cached / Manual 慢变量会降权；总分按“净方向证据 / 已参与评分的有效证据总量”归一化。
+  // 这让 100/100 只在所有可用证据都指向派发时出现，中性和反向证据会客观稀释风险温度。
   const considered = metrics.filter(m =>
     ['Live', 'Cached', 'Manual'].includes(m.dataStatus) && ['distribution', 'neutral', 'accumulation'].includes(m.status)
   );
@@ -845,14 +843,17 @@ function aggregate(metrics) {
   const accHits = considered.filter(m => m.status === 'accumulation').length;
 
   let netDelta = 0;
+  let evidenceCapacity = 0;
   const contributions = [];
   for (const m of considered) {
     const weight = METRIC_WEIGHTS[m.id] ?? 5;
     const multiplier = DATA_STATUS_SCORE_MULTIPLIER[m.dataStatus] ?? 1;
+    const effectiveWeight = weight * multiplier;
     let delta = 0;
-    if (m.status === 'distribution') delta = weight * multiplier;
-    else if (m.status === 'accumulation') delta = -weight * multiplier;
+    if (m.status === 'distribution') delta = effectiveWeight;
+    else if (m.status === 'accumulation') delta = -effectiveWeight;
     netDelta += delta;
+    evidenceCapacity += effectiveWeight;
     if (delta !== 0) contributions.push({
       id: m.id,
       name: m.name,
@@ -864,7 +865,7 @@ function aggregate(metrics) {
       dataStatus: m.dataStatus,
     });
   }
-  const score = scoreFromNetDelta(netDelta);
+  const score = scoreFromEvidenceBalance(netDelta, evidenceCapacity);
 
   let overall;
   if (score >= 65) overall = 'distribution';
@@ -883,7 +884,7 @@ function aggregate(metrics) {
     distributionHits: distHits,
     accumulationHits: accHits,
     scoreDrivers: contributions.sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta)).slice(0, 8),
-    dataQuality: { total, live, cached, manual, pending },
+    dataQuality: { total, live, cached, manual, pending, evidenceCapacity: roundDelta(evidenceCapacity), netDelta: roundDelta(netDelta) },
   };
 }
 
