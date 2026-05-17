@@ -23,6 +23,28 @@
       "permanent": true
     },
     {
+      "source": "/robots.txt",
+      "has": [
+        {
+          "type": "host",
+          "value": "stock.flowhunt.net"
+        }
+      ],
+      "destination": "/robots-stock.txt",
+      "permanent": false
+    },
+    {
+      "source": "/sitemap.xml",
+      "has": [
+        {
+          "type": "host",
+          "value": "stock.flowhunt.net"
+        }
+      ],
+      "destination": "/sitemap-stock.xml",
+      "permanent": false
+    },
+    {
       "source": "/",
       "has": [
         {
@@ -35,26 +57,6 @@
     }
   ],
   "rewrites": [
-    {
-      "source": "/robots.txt",
-      "has": [
-        {
-          "type": "host",
-          "value": "stock.flowhunt.net"
-        }
-      ],
-      "destination": "/robots-stock.txt"
-    },
-    {
-      "source": "/sitemap.xml",
-      "has": [
-        {
-          "type": "host",
-          "value": "stock.flowhunt.net"
-        }
-      ],
-      "destination": "/sitemap-stock.xml"
-    },
     {
       "source": "/eth",
       "destination": "/eth.html"
@@ -110,7 +112,7 @@
   "crons": [
     {
       "path": "/api/price-alert",
-      "schedule": "*/5 * * * *"
+      "schedule": "0 0 * * *"
     }
   ],
   "env": {
