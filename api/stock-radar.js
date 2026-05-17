@@ -815,34 +815,56 @@ const METRIC_WEIGHTS = {
   bofa_fms_cash: 4,
 };
 
+const DATA_STATUS_SCORE_MULTIPLIER = {
+  Live: 1,
+  Cached: 0.6,
+  Manual: 0.4,
+};
+
+const SCORE_CURVE_SCALE = 55;
+
+function roundDelta(value) {
+  return Number(value.toFixed(1));
+}
+
+function scoreFromNetDelta(netDelta) {
+  if (!Number.isFinite(netDelta) || netDelta === 0) return 50;
+  const direction = netDelta > 0 ? 1 : -1;
+  const curved = 50 * (1 - Math.exp(-Math.abs(netDelta) / SCORE_CURVE_SCALE));
+  return Math.max(0, Math.min(100, Math.round(50 + direction * curved)));
+}
+
 function aggregate(metrics) {
   // 对 Live / Cached / Manual 且有明确 status 的指标做加权评分；Pending / data_unavailable 不参与评分。
   // 不是所有“低压力”都应该抵消强派发证据。FTD 低、VIX 平静这类只算弱缓和因子；Form 4、Margin、宽度破坏权重更高。
+  // Cached / Manual 慢变量会降权；总分使用非线性曲线，避免滞后证据堆叠把页面长期顶成 100/100。
   const considered = metrics.filter(m =>
     ['Live', 'Cached', 'Manual'].includes(m.dataStatus) && ['distribution', 'neutral', 'accumulation'].includes(m.status)
   );
   const distHits = considered.filter(m => m.status === 'distribution').length;
   const accHits = considered.filter(m => m.status === 'accumulation').length;
 
-  let score = 50;
+  let netDelta = 0;
   const contributions = [];
   for (const m of considered) {
     const weight = METRIC_WEIGHTS[m.id] ?? 5;
+    const multiplier = DATA_STATUS_SCORE_MULTIPLIER[m.dataStatus] ?? 1;
     let delta = 0;
-    if (m.status === 'distribution') delta = weight;
-    else if (m.status === 'accumulation') delta = -weight;
-    score += delta;
+    if (m.status === 'distribution') delta = weight * multiplier;
+    else if (m.status === 'accumulation') delta = -weight * multiplier;
+    netDelta += delta;
     if (delta !== 0) contributions.push({
       id: m.id,
       name: m.name,
       status: m.status,
       weight,
-      delta,
+      scoreWeight: roundDelta(Math.abs(delta)),
+      delta: roundDelta(delta),
       value: m.value,
       dataStatus: m.dataStatus,
     });
   }
-  score = Math.max(0, Math.min(100, Math.round(score)));
+  const score = scoreFromNetDelta(netDelta);
 
   let overall;
   if (score >= 65) overall = 'distribution';
