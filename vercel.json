@@ -70,6 +70,10 @@
       "destination": "/stock.html"
     },
     {
+      "source": "/stock-en",
+      "destination": "/stock-en.html"
+    },
+    {
       "source": "/stock/nvda-risk",
       "destination": "/stock-nvda-risk.html"
     },
