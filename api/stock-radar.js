@@ -13,8 +13,6 @@
  * - 仅作研究参考，不构成投资建议。
  */
 
-import { verifyMemberRequest } from './_membership.js';
-
 export const config = { runtime: 'edge' };
 
 const JSON_HEADERS = {
@@ -52,16 +50,6 @@ function num(v, fallback = null) {
 function nowISO() {
   return new Date().toISOString();
 }
-
-function memberGateResponse(result) {
-  return new Response(JSON.stringify({
-    error: result.error || 'member_required',
-    message: result.message || '个股风险解读为会员功能。市场体温与公开证据链继续免费开放。',
-    upgradeUrl: result.upgradeUrl || '/pricing',
-    retryAfter: result.retryAfter,
-  }), { status: result.status || 402, headers: MEMBER_JSON_HEADERS });
-}
-
 
 async function safeFetchJson(key, url, timeout = 5500) {
   try {
@@ -901,10 +889,6 @@ export default async function handler(req) {
   if (symbolParam) {
     if (!/^[A-Z0-9.-]{1,12}$/.test(symbolParam)) {
       return new Response(JSON.stringify({ error: 'Invalid symbol' }), { status: 400, headers: MEMBER_JSON_HEADERS });
-    }
-    const memberCheck = await verifyMemberRequest(req);
-    if (!memberCheck.ok) {
-      return memberGateResponse(memberCheck);
     }
     const breadthSnapshotUrl = new URL('/data/snapshots/market-breadth-latest.json', url.origin).toString();
     const [r, breadthSnapshotResult] = await Promise.all([
