@@ -1495,6 +1495,24 @@ export default async function handler(req) {
 
   // 综合评分
   const agg = aggregate(finalMetrics);
+  const marketTemperatureHistory = buildMarketTemperatureHistory({ spyBars, qqqBars, iwmBars, rspBars, hygBars, sectorBars });
+  const currentHistoryDate = String(spyMeta.regularMarketTime || nowISO()).slice(0, 10);
+  const currentHistoryPoint = {
+    date: currentHistoryDate,
+    score: agg.score,
+    status: agg.overall,
+    distributionHits: agg.distributionHits,
+    accumulationHits: agg.accumulationHits,
+    evidenceCount: agg.dataQuality.live + agg.dataQuality.cached + agg.dataQuality.manual,
+    drivers: agg.scoreDrivers.slice(0, 3).map(d => ({ id: d.id, name: d.name, delta: d.delta })),
+  };
+  const historyPoints = marketTemperatureHistory.points || [];
+  if (historyPoints.length && historyPoints[historyPoints.length - 1].date === currentHistoryDate) {
+    historyPoints[historyPoints.length - 1] = currentHistoryPoint;
+  } else {
+    historyPoints.push(currentHistoryPoint);
+  }
+  marketTemperatureHistory.points = historyPoints;
 
   // 股池元数据（前端直接读 /data/ai-stock-pool.json；这里也一并返回 summary）
   const stockPool = {
@@ -1533,7 +1551,7 @@ export default async function handler(req) {
     generatedAt: nowISO(),
     status: agg.overall,
     score: agg.score,
-    marketTemperatureHistory: buildMarketTemperatureHistory({ spyBars, qqqBars, iwmBars, rspBars, hygBars, sectorBars }),
+    marketTemperatureHistory,
     distributionHits: agg.distributionHits,
     accumulationHits: agg.accumulationHits,
     scoreDrivers: agg.scoreDrivers,
