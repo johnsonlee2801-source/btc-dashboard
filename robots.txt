@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://btc.flowhunt.net/sitemap.xml
+Sitemap: https://stock.flowhunt.net/sitemap.xml
