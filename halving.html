@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="BTC 减半周期观察器：用历史减半节奏、周期位置、价格相对减半价倍数和链上指标框架观察比特币当前所处阶段。仅作研究参考，不构成投资建议。">
+<meta name="keywords" content="BTC减半周期,比特币减半,BTC halving cycle,比特币周期位置,减半历史数据,BTC周期观察">
+<link rel="canonical" href="https://btc.flowhunt.net/halving">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://btc.flowhunt.net/halving">
+<meta property="og:title" content="BTC 减半周期观察器 | FlowHunt｜流程猎人">
+<meta property="og:description" content="用历史减半节奏观察 BTC 当前周期位置，不输出买卖建议。">
+<meta property="og:image" content="https://btc.flowhunt.net/og-image.png">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>BTC 减半周期观察器 | 比特币周期位置与历史减半数据 | FlowHunt｜流程猎人</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #080c18;
+  --card: #0d1525;
+  --border: #1e2d4a;
+  --orange: #f7931a;
+  --blue: #3b82f6;
+  --green: #10b981;
+  --red: #ef4444;
+  --purple: #8b5cf6;
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --dim: #475569;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, 'Helvetica Neue', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 2rem; border-bottom: 1px solid var(--border);
+  background: rgba(8,12,24,0.95); backdrop-filter: blur(10px);
+  position: sticky; top: 0; z-index: 100;
+}
+.logo { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem; }
+.logo span { color: var(--orange); font-size: 1.4rem; }
+.nav-links { display: flex; gap: 1.5rem; list-style: none; }
+.nav-links a { color: var(--muted); text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+.nav-links a:hover { color: var(--orange); }
+
+main { max-width: 1200px; margin: 0 auto; padding: 2rem; }
+section { margin-bottom: 3rem; }
+
+.sec-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+.sec-header h2 { font-size: 1.2rem; font-weight: 600; }
+.tag {
+  font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--orange); background: rgba(247,147,26,0.1);
+  padding: 0.2rem 0.6rem; border-radius: 4px; border: 1px solid rgba(247,147,26,0.2);
+}
+.live-badge {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  font-size: 0.7rem; font-weight: 600; color: var(--green);
+  background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.25);
+  padding: 0.2rem 0.6rem; border-radius: 20px;
+}
+.live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+
+/* Status */
+.status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1rem; }
+.status-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 1.25rem 1.5rem; position: relative; overflow: hidden;
+}
+.status-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+.status-card.c-orange::before { background: var(--orange); }
+.status-card.c-blue::before { background: var(--blue); }
+.status-card.c-green::before { background: var(--green); }
+.status-card.c-purple::before { background: var(--purple); }
+.s-label { font-size: 0.72rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+.s-value { font-size: 1.8rem; font-weight: 700; line-height: 1.1; }
+.s-value.c-orange { color: var(--orange); }
+.s-value.c-blue { color: var(--blue); }
+.s-value.c-green { color: var(--green); }
+.s-value.c-purple { color: var(--purple); }
+.s-sub { font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
+
+.progress-wrap { margin-top: 1rem; }
+.progress-labels { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--muted); margin-bottom: 0.4rem; }
+.progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, var(--orange), var(--blue)); transition: width 0.5s; }
+.progress-hints { display: flex; justify-content: space-between; margin-top: 0.4rem; font-size: 0.72rem; color: var(--dim); }
+
+/* Halving cards */
+.halving-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+.halving-card {
+  background: var(--card); border: 1px solid var(--border); border-radius: 12px;
+  padding: 1.25rem; transition: border-color 0.2s;
+}
+.halving-card:hover { border-color: var(--orange); }
+.halving-card.active { border-color: var(--orange); background: linear-gradient(135deg,rgba(247,147,26,0.05),var(--card)); }
+.h-num { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.1em; color: var(--orange); margin-bottom: 0.5rem; }
+.h-date { font-size: 1.05rem; font-weight: 600; margin-bottom: 1rem; }
+.stat-row { display: flex; justify-content: space-between; align-items: center; padding: 0.35rem 0; border-bottom: 1px solid rgba(30,45,74,0.5); font-size: 0.83rem; }
+.stat-row:last-child { border-bottom: none; }
+.sk { color: var(--muted); }
+.sv { font-weight: 500; }
+.sv.up { color: var(--green); }
+.sv.dn { color: var(--red); }
+.sv.cur { color: var(--orange); }
+
+/* Chart */
+.chart-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; height: 420px; position: relative; }
+.chart-note { margin-top: 0.75rem; font-size: 0.78rem; color: var(--dim); }
+
+/* Calculator */
+.calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+@media(max-width:680px){ .calc-grid { grid-template-columns: 1fr; } }
+.inp-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1rem; }
+.inp-label { font-size: 0.83rem; color: var(--muted); }
+.inp {
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 0.75rem 1rem; color: var(--text); font-size: 1rem; width: 100%;
+  transition: border-color 0.2s;
+}
+.inp:focus { outline: none; border-color: var(--orange); }
+.btn {
+  background: var(--orange); color: #000; border: none; border-radius: 8px;
+  padding: 0.75rem 1.5rem; font-size: 0.9rem; font-weight: 700;
+  cursor: pointer; width: 100%; transition: opacity 0.2s;
+}
+.btn:hover { opacity: 0.88; }
+.result-panel { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+.r-title { font-size: 0.7rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem; }
+.r-row { display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0; border-bottom: 1px solid var(--border); font-size: 0.85rem; }
+.r-row:last-child { border-bottom: none; }
+.rk { color: var(--muted); }
+.rv { font-weight: 600; }
+
+.support-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
+.sup-card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; }
+.sup-label { font-size: 0.7rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 0.4rem; }
+.sup-val { font-size: 1.2rem; font-weight: 700; }
+.sup-note { font-size: 0.73rem; color: var(--muted); margin-top: 0.25rem; }
+
+/* Timeline */
+.pred-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+@media(max-width:680px){ .pred-grid { grid-template-columns: 1fr; } }
+.timeline { position: relative; padding-left: 1.75rem; }
+.timeline::before { content:''; position:absolute; left:0; top:4px; bottom:0; width:2px; background: linear-gradient(to bottom, var(--orange), var(--blue), transparent); }
+.tl-item { position: relative; margin-bottom: 1.4rem; }
+.tl-item::before { content:''; position:absolute; left:-2.15rem; top:5px; width:9px; height:9px; border-radius:50%; border:2px solid var(--orange); background:var(--bg); }
+.tl-item.fut::before { border-color: var(--blue); }
+.tl-date { font-size: 0.72rem; font-weight: 700; color: var(--orange); margin-bottom: 0.15rem; }
+.tl-item.fut .tl-date { color: var(--blue); }
+.tl-title { font-size: 0.88rem; font-weight: 600; margin-bottom: 0.15rem; }
+.tl-desc { font-size: 0.78rem; color: var(--muted); }
+
+.pred-stats { display: flex; flex-direction: column; gap: 0.75rem; }
+
+/* Table */
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+th { text-align: right; padding: 0.5rem 0.75rem; color: var(--dim); font-weight: 500; border-bottom: 1px solid var(--border); }
+th:first-child { text-align: left; }
+td { padding: 0.5rem 0.75rem; border-bottom: 1px solid rgba(30,45,74,0.5); text-align: right; }
+td:first-child { text-align: left; }
+tr:last-child td { border-bottom: none; }
+tr.highlight { background: rgba(247,147,26,0.05); }
+tr.highlight2 { background: rgba(59,130,246,0.05); }
+
+/* Indicators */
+.ind-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+.ind-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 1.25rem; }
+.ind-name { font-size: 1rem; font-weight: 600; }
+.ind-full { font-size: 0.73rem; color: var(--dim); margin-bottom: 0.75rem; }
+.zones { display: flex; flex-direction: column; gap: 0.4rem; margin-top: 0.75rem; }
+.zone { font-size: 0.79rem; padding: 0.4rem 0.75rem; border-radius: 6px; }
+.zone.red { background: rgba(239,68,68,0.1); color: var(--red); }
+.zone.orange { background: rgba(247,147,26,0.1); color: var(--orange); }
+.zone.neutral { background: rgba(148,163,184,0.08); color: var(--muted); }
+.zone.green { background: rgba(16,185,129,0.1); color: var(--green); }
+.ind-note { margin-top: 0.75rem; padding: 0.5rem 0.75rem; background: rgba(16,185,129,0.05); border-radius: 6px; font-size: 0.75rem; color: var(--green); }
+
+footer { text-align: center; padding: 2rem; color: var(--dim); font-size: 0.78rem; border-top: 1px solid var(--border); }
+
+@media(max-width:600px){
+  main { padding: 1rem; }
+  .halving-grid { grid-template-columns: 1fr 1fr; }
+  nav { padding: 1rem; }
+  .nav-links { display: none; }
+  .s-value { font-size: 1.4rem; }
+}
+
+
+/* FlowHunt BTC product shell */
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at 12% 0%,rgba(247,147,26,.12),transparent 28%),radial-gradient(circle at 80% 10%,rgba(59,130,246,.10),transparent 32%);z-index:-1}.product-shell{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 2rem;border-bottom:1px solid var(--border);background:rgba(8,12,24,.92);backdrop-filter:blur(14px);position:sticky;top:0;z-index:100}.brand{display:flex;align-items:center;gap:.75rem;min-width:0}.brand-mark{width:42px;height:42px;border-radius:12px;border:1px solid rgba(247,147,26,.25);display:inline-flex;align-items:center;justify-content:center;background:radial-gradient(circle at 30% 30%,rgba(247,147,26,.2),rgba(247,147,26,.04));box-shadow:0 0 18px rgba(247,147,26,.12);font-weight:900;color:var(--orange);font-size:1.2rem}.brand-title{font-weight:800;font-size:.98rem;letter-spacing:.01em}.brand-sub{font-size:.74rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.site-links{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;justify-content:flex-end}.site-links a,.nav-links a{color:var(--muted);text-decoration:none;font-size:.8rem;border:1px solid rgba(148,163,184,.16);background:rgba(255,255,255,.03);padding:.42rem .68rem;border-radius:999px;transition:all .18s}.site-links a:hover,.nav-links a:hover{color:var(--orange);border-color:rgba(247,147,26,.35);background:rgba(247,147,26,.07);text-decoration:none}.site-links a.active{color:#0b0f18;background:linear-gradient(135deg,var(--orange),#ffcc00);border-color:transparent;font-weight:800}.hero{margin:2rem 0 1.5rem;padding:1.5rem;border:1px solid rgba(247,147,26,.18);border-radius:18px;background:linear-gradient(135deg,rgba(247,147,26,.10),rgba(59,130,246,.06) 55%,rgba(13,21,37,.92));box-shadow:0 18px 50px rgba(0,0,0,.22)}.hero-kicker{font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--orange);font-weight:800;margin-bottom:.5rem}.hero h1{font-size:clamp(1.7rem,4vw,3.1rem);line-height:1.05;margin-bottom:.65rem}.hero p{color:var(--muted);max-width:760px;font-size:.96rem}.disclaimer{margin-top:1rem;border:1px solid rgba(255,204,0,.22);background:rgba(255,204,0,.07);color:#f8d36b;border-radius:12px;padding:.75rem .9rem;font-size:.82rem}.section-nav{margin:0 0 2rem;display:flex;gap:.55rem;flex-wrap:wrap}nav{display:none}@media(max-width:700px){.product-shell{padding:1rem;align-items:flex-start;flex-direction:column}.site-links{justify-content:flex-start}.brand-sub{white-space:normal}.hero{margin-top:1rem}.halving-grid{grid-template-columns:1fr}.section-nav{display:none}}
+
+</style>
+
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"BTC 减半周期观察器","url":"https://btc.flowhunt.net/halving","applicationCategory":"FinanceApplication","operatingSystem":"Web","inLanguage":"zh-CN","description":"用历史减半节奏观察 BTC 当前周期位置，仅作研究参考，不构成投资建议。","author":{"@type":"Organization","name":"FlowHunt｜流程猎人"}}
+</script>
+</head>
+<body>
+
+<header class="product-shell">
+  <a class="brand" href="/" style="text-decoration:none;color:inherit;">
+    <span class="brand-mark">₿</span>
+    <span>
+      <span class="brand-title">FlowHunt｜流程猎人 · BTC</span>
+      <span class="brand-sub">算盘 · 周期观察 / 链上数据 / 风险温度</span>
+    </span>
+  </a>
+  <div class="site-links" aria-label="站点导航">
+    <a href="/">仪表盘</a>
+    <a href="/distribution-radar">派发雷达</a>
+    <a href="/eth">ETH 观察</a>
+    <a class="active" href="/halving">减半周期</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero" aria-labelledby="page-title">
+    <div class="hero-kicker">BTC Halving Cycle Observer</div>
+    <h1 id="page-title">BTC 减半周期观察器</h1>
+    <p>把历次减半后的价格倍数、周期窗口、相对减半价位置和链上指标放到一张工作台里看。它回答的是“现在大概处在周期哪一段”，不是“该不该买卖”。</p>
+    <div class="disclaimer">仅作研究参考，不构成投资建议；所有区间都是历史样本观察，不代表未来必然发生。</div>
+  </section>
+  <div class="section-nav" aria-label="页面章节">
+    <a href="#status">周期状态</a>
+    <a href="#history">历史减半</a>
+    <a href="#chart">周期对比</a>
+    <a href="#calculator">周期位置测算</a>
+    <a href="#prediction">观察框架</a>
+    <a href="#indicators">链上指标</a>
+  </div>
+
+<!-- ① 周期状态 -->
+<section id="status">
+  <div class="sec-header">
+    <h2>第四次减半周期状态</h2>
+    <span class="tag">2024.04.20</span>
+    <span class="live-badge"><span class="live-dot"></span>进行中</span>
+  </div>
+  <div class="status-grid">
+    <div class="status-card c-orange">
+      <div class="s-label">距减半已过天数</div>
+      <div class="s-value c-orange" id="daysSince">—</div>
+      <div class="s-sub">第四次减半：2024年4月20日</div>
+    </div>
+    <div class="status-card c-blue">
+      <div class="s-label">历史高点窗口</div>
+      <div class="s-value c-blue">Day 526–548</div>
+      <div class="s-sub" id="athStatus">—</div>
+    </div>
+    <div class="status-card c-green">
+      <div class="s-label">历史回撤窗口</div>
+      <div class="s-value c-green">Day 777–914</div>
+      <div class="s-sub">约 2026年6月—10月</div>
+    </div>
+    <div class="status-card c-purple">
+      <div class="s-label">距下次减半</div>
+      <div class="s-value c-purple" id="nextCountdown">—</div>
+      <div class="s-sub">约 2028年4月17日</div>
+    </div>
+  </div>
+  <div class="card progress-wrap" style="margin-top:1rem;">
+    <div class="progress-labels">
+      <span>第4次减半 2024-04-20</span>
+      <span id="progressPct">—</span>
+      <span>第5次减半 ~2028-04-17</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-hints">
+      <span>▲ ATH窗口 Day 526–548</span>
+      <span>▲ 回撤窗口 Day 777–914</span>
+      <span>▲ 下次减半 Day ~1458</span>
+    </div>
+  </div>
+</section>
+
+<!-- ② 历史减半 -->
+<section id="history">
+  <div class="sec-header"><h2>历次减半完整数据</h2><span class="tag">4次减半</span></div>
+  <div class="halving-grid">
+    <div class="halving-card">
+      <div class="h-num">第 1 次减半</div>
+      <div class="h-date">2012年11月28日</div>
+      <div class="stat-row"><span class="sk">减半时价格</span><span class="sv">$12</span></div>
+      <div class="stat-row"><span class="sk">周期 ATH</span><span class="sv up">$1,150</span></div>
+      <div class="stat-row"><span class="sk">ATH 时间</span><span class="sv">2013-12-04 (Day 371)</span></div>
+      <div class="stat-row"><span class="sk">从减半涨幅</span><span class="sv up">+9,483% (95x)</span></div>
+      <div class="stat-row"><span class="sk">熊市低点</span><span class="sv dn">$178 (Day 777)</span></div>
+      <div class="stat-row"><span class="sk">从 ATH 跌幅</span><span class="sv dn">−84.5%</span></div>
+    </div>
+    <div class="halving-card">
+      <div class="h-num">第 2 次减半</div>
+      <div class="h-date">2016年7月9日</div>
+      <div class="stat-row"><span class="sk">减半时价格</span><span class="sv">$650</span></div>
+      <div class="stat-row"><span class="sk">周期 ATH</span><span class="sv up">$19,800</span></div>
+      <div class="stat-row"><span class="sk">ATH 时间</span><span class="sv">2017-12-17 (Day 526)</span></div>
+      <div class="stat-row"><span class="sk">从减半涨幅</span><span class="sv up">+2,946% (30.5x)</span></div>
+      <div class="stat-row"><span class="sk">熊市低点</span><span class="sv dn">$3,200 (Day 860)</span></div>
+      <div class="stat-row"><span class="sk">从 ATH 跌幅</span><span class="sv dn">−83.8%</span></div>
+    </div>
+    <div class="halving-card">
+      <div class="h-num">第 3 次减半</div>
+      <div class="h-date">2020年5月11日</div>
+      <div class="stat-row"><span class="sk">减半时价格</span><span class="sv">$8,600</span></div>
+      <div class="stat-row"><span class="sk">周期 ATH</span><span class="sv up">$69,000</span></div>
+      <div class="stat-row"><span class="sk">ATH 时间</span><span class="sv">2021-11-10 (Day 548)</span></div>
+      <div class="stat-row"><span class="sk">从减半涨幅</span><span class="sv up">+702% (8x)</span></div>
+      <div class="stat-row"><span class="sk">熊市低点</span><span class="sv dn">$16,000 (Day 914)</span></div>
+      <div class="stat-row"><span class="sk">从 ATH 跌幅</span><span class="sv dn">−76.8%</span></div>
+    </div>
+    <div class="halving-card active">
+      <div class="h-num">第 4 次减半 · 当前周期</div>
+      <div class="h-date">2024年4月20日</div>
+      <div class="stat-row"><span class="sk">减半时价格</span><span class="sv">$64,000</span></div>
+      <div class="stat-row"><span class="sk">周期 ATH</span><span class="sv cur">输入当前价格 → 测算 ↓</span></div>
+      <div class="stat-row"><span class="sk">历史 ATH 窗口参考</span><span class="sv">Day 526–560 (已过)</span></div>
+      <div class="stat-row"><span class="sk">历史样本涨幅参考</span><span class="sv up">+150%–+400%</span></div>
+      <div class="stat-row"><span class="sk">历史回撤窗口参考</span><span class="sv">2026年6月–10月</span></div>
+      <div class="stat-row"><span class="sk">历史样本跌幅参考</span><span class="sv dn">−60% ~ −80%</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ③ 周期对比图 -->
+<section id="chart">
+  <div class="sec-header"><h2>四轮减半周期对比</h2><span class="tag">对数坐标 · 倍数</span></div>
+  <div class="chart-wrap"><canvas id="cycleChart"></canvas></div>
+  <div class="chart-note">Y 轴: 相对减半时价格的涨幅倍数（对数） · X 轴: 距减半天数 · 橙色虚线 = 今日位置 (Day <span id="todayLabel">—</span>)</div>
+</section>
+
+<!-- ④ 周期位置测算 -->
+<section id="calculator">
+  <div class="sec-header"><h2>周期位置测算器</h2><span class="tag">基于历史规律</span></div>
+  <div class="calc-grid">
+    <div class="card">
+      <div class="inp-group">
+        <label class="inp-label">当前 BTC 价格（USD）</label>
+        <input type="number" class="inp" id="curPrice" placeholder="例如：85000" min="0">
+      </div>
+      <div class="inp-group">
+        <label class="inp-label">本周期历史最高价（USD）</label>
+        <input type="number" class="inp" id="cycleATH" placeholder="例如：108000" min="0">
+      </div>
+      <button class="btn" onclick="calculate()">计算周期位置</button>
+    </div>
+    <div class="card" id="resultCard" style="display:none;">
+      <div class="result-panel">
+        <div class="r-title">测算结果</div>
+        <div id="resultContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1rem;">
+    <div style="font-size:0.9rem;font-weight:600;margin-bottom:1rem;">关键支撑位参考</div>
+    <div class="support-grid">
+      <div class="sup-card">
+        <div class="sup-label">200 周均线（2026年估算）</div>
+        <div class="sup-val" style="color:var(--green)">$48,000–$55,000</div>
+        <div class="sup-note">历史样本中常被视为长期成本线参考</div>
+      </div>
+      <div class="sup-card">
+        <div class="sup-label">前周期 ATH 支撑</div>
+        <div class="sup-val" style="color:var(--blue)">$64,000–$69,000</div>
+        <div class="sup-note">前周期高点常被市场关注</div>
+      </div>
+      <div class="sup-card">
+        <div class="sup-label">减半时价格锚</div>
+        <div class="sup-val" style="color:var(--orange)">$64,000</div>
+        <div class="sup-note">心理锚与矿工成本观察点</div>
+      </div>
+      <div class="sup-card">
+        <div class="sup-label">历史回撤样本估算</div>
+        <div class="sup-val" style="color:var(--red)" id="drawdownEst">输入 ATH 后显示</div>
+        <div class="sup-note">按历史 −60%~−80% 回撤样本</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑤ 下一轮观察框架 -->
+<section id="prediction">
+  <div class="sec-header"><h2>下一轮减半观察框架</h2><span class="tag">2028·历史规律推演</span></div>
+  <div class="pred-grid">
+    <div class="card">
+      <div style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">当前周期时间轴</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-date">2024年4月20日</div>
+          <div class="tl-title">第4次减半 ✓</div>
+          <div class="tl-desc">区块奖励 6.25→3.125 BTC，价格约 $64,000</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">2024年11–12月（Day ~200–240）</div>
+          <div class="tl-title">周期高点窗口 ✓</div>
+          <div class="tl-desc">ETF 持续流入 + 减半效应，价格突破 $100,000</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">2026年6–10月（Day 777–914）</div>
+          <div class="tl-title" style="color:var(--orange)">历史回撤窗口 ← 当前阶段</div>
+          <div class="tl-desc">历史样本显示，深度回撤常集中在这类时间窗口</div>
+        </div>
+        <div class="tl-item fut">
+          <div class="tl-date">2027年（Day 1000–1200）</div>
+          <div class="tl-title">下轮预热期</div>
+          <div class="tl-desc">市场开始为第五次减半定价，成交量回升</div>
+        </div>
+        <div class="tl-item fut">
+          <div class="tl-date">2028年4月17日（Day ~1458）</div>
+          <div class="tl-title">第5次减半</div>
+          <div class="tl-desc">区块奖励 3.125→1.5625 BTC，供给再度压缩</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:0.85rem;color:var(--muted);margin-bottom:1rem;">第5周期关键参数观察</div>
+      <div class="pred-stats">
+        <div class="result-panel">
+          <div class="r-title">减半时价格观察区间</div>
+          <div style="font-size:1.1rem;font-weight:700;color:var(--orange)">$80,000–$150,000</div>
+          <div style="font-size:0.75rem;color:var(--muted)">取决于本轮回撤位置</div>
+        </div>
+        <div class="result-panel">
+          <div class="r-title">第5周期 ATH 历史样本观察（保守）</div>
+          <div style="font-size:1.1rem;font-weight:700;color:var(--green)">$200,000–$400,000</div>
+          <div style="font-size:0.75rem;color:var(--muted)">历史涨幅递减，按 2–4x 减半价估算</div>
+        </div>
+        <div class="result-panel">
+          <div class="r-title">ATH 历史样本窗口</div>
+          <div style="font-size:1.1rem;font-weight:700;color:var(--blue)">2029年8月–2030年2月</div>
+          <div style="font-size:0.75rem;color:var(--muted)">距第5次减半 Day 480–640</div>
+        </div>
+        <div class="result-panel">
+          <div class="r-title">关键变量（影响模型精度）</div>
+          <div style="font-size:0.8rem;color:var(--muted);line-height:1.7;margin-top:0.25rem">
+            • BTC ETF 持续资金净流入规模<br>
+            • 全球宏观利率环境<br>
+            • 监管政策变化<br>
+            • 链上采用率增长速度
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1rem;">
+    <div style="font-size:0.9rem;font-weight:600;margin-bottom:1rem;">涨幅递减规律总表</div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th style="text-align:left">周期</th>
+            <th>减半价</th><th>周期 ATH</th><th>涨幅倍数</th><th>从 ATH 跌幅</th><th>熊市低点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>第1次 (2012)</td><td>$12</td>
+            <td style="color:var(--green)">$1,150</td>
+            <td style="color:var(--green)">95x</td>
+            <td style="color:var(--red)">−84.5%</td>
+            <td>$178</td>
+          </tr>
+          <tr>
+            <td>第2次 (2016)</td><td>$650</td>
+            <td style="color:var(--green)">$19,800</td>
+            <td style="color:var(--green)">30.5x</td>
+            <td style="color:var(--red)">−83.8%</td>
+            <td>$3,200</td>
+          </tr>
+          <tr>
+            <td>第3次 (2020)</td><td>$8,600</td>
+            <td style="color:var(--green)">$69,000</td>
+            <td style="color:var(--green)">8x</td>
+            <td style="color:var(--red)">−76.8%</td>
+            <td>$16,000</td>
+          </tr>
+          <tr class="highlight">
+            <td style="color:var(--orange);font-weight:600">第4次 (2024) 进行中</td>
+            <td>$64,000</td>
+            <td style="color:var(--orange)">$100k–$108k?</td>
+            <td style="color:var(--orange)">1.5x–1.7x?</td>
+            <td style="color:var(--red)">−60%–−75%?</td>
+            <td style="color:var(--orange)">$30k–$55k?</td>
+          </tr>
+          <tr class="highlight2">
+            <td style="color:var(--blue)">第5次 (2028) 观察假设</td>
+            <td style="color:var(--blue)">$80k–$150k?</td>
+            <td style="color:var(--blue)">$200k–$400k?</td>
+            <td style="color:var(--blue)">2x–4x?</td>
+            <td style="color:var(--blue)">−50%–−70%?</td>
+            <td style="color:var(--blue)">$80k–$200k?</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ⑥ 链上指标 -->
+<section id="indicators">
+  <div class="sec-header"><h2>关键链上指标解读</h2><span class="tag">周期低位参考</span></div>
+  <div class="ind-grid">
+    <div class="ind-card">
+      <div class="ind-name">MVRV-Z Score</div>
+      <div class="ind-full">Market Value to Realized Value Z-Score</div>
+      <div style="font-size:0.8rem;color:var(--muted)">比较市值与实现市值差异，判断整体持仓盈亏状态</div>
+      <div class="zones">
+        <div class="zone red">&gt;7 → 极度高估，历史顶部区域</div>
+        <div class="zone orange">3.5–7 → 高估，牛市中段，警惕</div>
+        <div class="zone neutral">0–3.5 → 中性均值区间</div>
+        <div class="zone green">&lt;0 → 低估，历史低估区参考</div>
+      </div>
+    </div>
+    <div class="ind-card">
+      <div class="ind-name">Puell Multiple</div>
+      <div class="ind-full">矿工日收入 ÷ 365日均值</div>
+      <div style="font-size:0.8rem;color:var(--muted)">反映矿工经济压力与挖矿收益周期</div>
+      <div class="zones">
+        <div class="zone red">&gt;4 → 矿工暴利区，卖压释放风险</div>
+        <div class="zone orange">2–4 → 牛市中段，关注减速信号</div>
+        <div class="zone neutral">0.5–2 → 正常区间</div>
+        <div class="zone green">&lt;0.5 → 矿工亏损区，历史低位参考</div>
+      </div>
+    </div>
+    <div class="ind-card">
+      <div class="ind-name">200 周均线</div>
+      <div class="ind-full">200-Week Moving Average — 比特币长期成本线参考</div>
+      <div style="font-size:0.8rem;color:var(--muted)">历史上 BTC 周线从未有效跌破此线</div>
+      <div class="zones">
+        <div class="zone red">跌破 200W MA → 极端超跌，历史低位样本区</div>
+        <div class="zone green">回测 200W MA → 历史低位观察区</div>
+        <div class="zone neutral">MA 1–2x → 中性</div>
+        <div class="zone orange">MA 3x 以上 → 高估警戒区</div>
+      </div>
+      <div class="ind-note">2026年4月估算：约 $48,000–$55,000</div>
+    </div>
+    <div class="ind-card">
+      <div class="ind-name">Pi Cycle Top</div>
+      <div class="ind-full">111日均线 vs 350日均线 × 2</div>
+      <div style="font-size:0.8rem;color:var(--muted)">当 111MA 上穿 350MA×2，历史精准预示顶部</div>
+      <div class="zones">
+        <div class="zone red">111MA 上穿 350MA×2 → 顶部信号触发</div>
+        <div class="zone orange">两线接近交叉 → 进入警戒状态</div>
+        <div class="zone neutral">两线距离扩大 → 中性行情</div>
+        <div class="zone green">111MA 远低于 350MA×2 → 低位或早期阶段</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>本工具仅供参考，不构成任何投资建议 · 加密资产具有高风险，请谨慎决策</p>
+  <p style="margin-top:0.4rem">数据基于历史规律，过去表现不代表未来结果</p>
+<br>仅作研究参考，不构成投资建议。</footer>
+
+<script>
+// ─── 日期计算 ───
+const HALVING4 = new Date('2024-04-20');
+const HALVING5 = new Date('2028-04-17');
+const TODAY    = new Date();
+
+function daysBetween(a, b) {
+  return Math.round((b - a) / 86400000);
+}
+
+const daysSince   = daysBetween(HALVING4, TODAY);   
+const daysToNext  = daysBetween(TODAY, HALVING5);    
+const totalDays   = daysBetween(HALVING4, HALVING5); // ~1458
+const pct         = (daysSince / totalDays * 100).toFixed(1);
+
+document.getElementById('daysSince').textContent      = 'Day ' + daysSince;
+document.getElementById('nextCountdown').textContent  = daysToNext + ' 天';
+document.getElementById('progressPct').textContent    = pct + '%';
+document.getElementById('progressFill').style.width   = Math.min(pct, 100) + '%';
+document.getElementById('todayLabel').textContent     = daysSince;
+document.getElementById('athStatus').textContent      = daysSince > 548 ? '当前已超过历史高点窗口' : '尚未到达高点窗口';
+
+// ─── 周期数据（相对减半价倍数，对数坐标） ───
+const c1 = [
+  {x:0,y:1},{x:30,y:1.4},{x:60,y:2.2},{x:90,y:2.7},
+  {x:120,y:18},{x:150,y:20.8},{x:180,y:9},{x:210,y:8},
+  {x:240,y:14},{x:270,y:20},{x:300,y:28},{x:330,y:55},
+  {x:360,y:80},{x:371,y:95.8},{x:400,y:40},{x:450,y:22},
+  {x:500,y:16},{x:550,y:15},{x:600,y:14.5},{x:700,y:14.2},
+  {x:777,y:14.4},{x:850,y:15.5},{x:950,y:20},{x:1000,y:22}
+];
+const c2 = [
+  {x:0,y:1},{x:60,y:1.1},{x:120,y:1.05},{x:180,y:1.2},
+  {x:240,y:1.5},{x:300,y:2.3},{x:360,y:4.5},{x:420,y:7.5},
+  {x:480,y:14},{x:526,y:30.5},{x:560,y:18},{x:600,y:10},
+  {x:650,y:8},{x:700,y:7},{x:800,y:5.5},{x:860,y:4.9},
+  {x:950,y:5.8},{x:1000,y:6.5}
+];
+const c3 = [
+  {x:0,y:1},{x:60,y:1.1},{x:90,y:1.2},{x:120,y:1.4},
+  {x:180,y:2.0},{x:210,y:3.5},{x:240,y:4.5},{x:270,y:4.0},
+  {x:330,y:7.5},{x:370,y:3.8},{x:400,y:4.5},{x:430,y:5.5},
+  {x:480,y:6.8},{x:548,y:8.0},{x:580,y:5.5},{x:620,y:4.0},
+  {x:660,y:3.5},{x:700,y:3.0},{x:730,y:2.4},{x:770,y:1.9},
+  {x:800,y:2.0},{x:860,y:1.9},{x:914,y:1.86},{x:1000,y:2.5}
+];
+// 第4周期：已知数据至 Day ~240
+const c4 = [
+  {x:0,y:1},{x:30,y:0.95},{x:60,y:0.95},{x:90,y:0.92},
+  {x:120,y:0.97},{x:150,y:1.0},{x:180,y:1.05},{x:200,y:1.1},
+  {x:210,y:1.5},{x:225,y:1.56},{x:240,y:1.69}
+];
+
+// ─── 图表 ───
+const ctx = document.getElementById('cycleChart').getContext('2d');
+
+const todayLine = {
+  id: 'todayLine',
+  afterDraw(chart) {
+    const {ctx: c, scales: {x, y}} = chart;
+    const px = x.getPixelForValue(daysSince);
+    c.save();
+    c.beginPath();
+    c.moveTo(px, y.top);
+    c.lineTo(px, y.bottom);
+    c.strokeStyle = 'rgba(247,147,26,0.7)';
+    c.lineWidth = 1.5;
+    c.setLineDash([5, 4]);
+    c.stroke();
+    c.setLineDash([]);
+    c.fillStyle = 'rgba(247,147,26,0.85)';
+    c.font = '11px sans-serif';
+    c.fillText('今日 Day ' + daysSince, px + 4, y.top + 14);
+    c.restore();
+  }
+};
+
+new Chart(ctx, {
+  type: 'scatter',
+  data: {
+    datasets: [
+      {label:'第1周期 (2012)', data:c1, borderColor:'#8b5cf6', showLine:true, fill:false, pointRadius:0, borderWidth:1.5, tension:0.3, borderDash:[4,2]},
+      {label:'第2周期 (2016)', data:c2, borderColor:'#3b82f6', showLine:true, fill:false, pointRadius:0, borderWidth:1.5, tension:0.3, borderDash:[4,2]},
+      {label:'第3周期 (2020)', data:c3, borderColor:'#10b981', showLine:true, fill:false, pointRadius:0, borderWidth:2,   tension:0.3},
+      {label:'第4周期 (2024) 已知', data:c4, borderColor:'#f7931a', showLine:true, fill:false, pointRadius:0, borderWidth:2.5, tension:0.3},
+      {label:'第4周期 当前位置', data:[], borderColor:'#f7931a', backgroundColor:'#f7931a', showLine:false, pointRadius:7, pointStyle:'circle'}
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: {
+        type:'linear', min:0, max:1000,
+        grid:{color:'rgba(255,255,255,0.04)'},
+        ticks:{color:'#475569'},
+        title:{display:true, text:'距减半天数', color:'#475569'}
+      },
+      y: {
+        type:'logarithmic', min:0.5, max:200,
+        grid:{color:'rgba(255,255,255,0.04)'},
+        ticks:{color:'#475569', callback(v){ return [0.5,1,2,5,10,20,50,100,200].includes(v)?v+'x':null; }},
+        title:{display:true, text:'价格倍数（相对减半价）', color:'#475569'}
+      }
+    },
+    plugins: {
+      legend:{labels:{color:'#94a3b8', usePointStyle:true}},
+      tooltip:{callbacks:{label(ctx){ return `Day ${ctx.raw.x}: ${ctx.raw.y.toFixed(2)}x`; }}}
+    }
+  },
+  plugins: [todayLine]
+});
+
+// ─── 测算器 ───
+function calculate() {
+  const cur = parseFloat(document.getElementById('curPrice').value);
+  const ath = parseFloat(document.getElementById('cycleATH').value);
+  if (!cur || cur <= 0) { alert('请输入当前价格'); return; }
+
+  const halvingPrice = 64000;
+  const mult = (cur / halvingPrice).toFixed(2);
+  const ma200w = 52000;
+  const distMa = ((cur - ma200w) / ma200w * 100).toFixed(1);
+
+  let html = `
+    <div class="r-row"><span class="rk">当前价格</span><span class="rv">$${cur.toLocaleString()}</span></div>
+    <div class="r-row"><span class="rk">相对减半价</span><span class="rv" style="color:${mult>=1?'var(--green)':'var(--red)'}">${mult}x</span></div>
+    <div class="r-row"><span class="rk">估算200周均线</span><span class="rv">~$52,000</span></div>
+    <div class="r-row"><span class="rk">距200周均线</span><span class="rv" style="color:${distMa>0?'var(--green)':'var(--red)'}">${distMa>0?'+':''}${distMa}%</span></div>`;
+
+  if (ath && ath > 0) {
+    const dd = ((cur - ath) / ath * 100).toFixed(1);
+    const bot80 = Math.round(ath * 0.20).toLocaleString();
+    const bot70 = Math.round(ath * 0.30).toLocaleString();
+    const bot60 = Math.round(ath * 0.40).toLocaleString();
+    html += `
+      <div class="r-row"><span class="rk">距本轮 ATH 跌幅</span><span class="rv" style="color:var(--red)">${dd}%</span></div>
+      <div class="r-row"><span class="rk">回撤区间估算 −80%（激进）</span><span class="rv" style="color:var(--orange)">$${bot80}</span></div>
+      <div class="r-row"><span class="rk">回撤区间估算 −70%（中性）</span><span class="rv" style="color:var(--orange)">$${bot70}</span></div>
+      <div class="r-row"><span class="rk">回撤区间估算 −60%（保守）</span><span class="rv" style="color:var(--green)">$${bot60}</span></div>`;
+    document.getElementById('drawdownEst').textContent = `$${bot80} – $${bot60}`;
+    document.getElementById('drawdownEst').style.color = 'var(--red)';
+  }
+
+  const judgment = getJudgment(cur, ath, ma200w);
+  html += `<div class="r-row" style="background:rgba(247,147,26,0.05);padding:0.6rem 0"><span class="rk">当前位置判断</span><span class="rv" style="color:var(--orange)">${judgment}</span></div>`;
+
+  document.getElementById('resultContent').innerHTML = html;
+  document.getElementById('resultCard').style.display = 'block';
+
+  // 更新图表当前位置
+  const chart = Chart.getChart('cycleChart');
+  if (chart) {
+    chart.data.datasets[4].data = [{x: daysSince, y: cur / halvingPrice}];
+    chart.update();
+  }
+}
+
+function getJudgment(cur, ath, ma200w) {
+  if (ath && ath > 0) {
+    const dd = (cur - ath) / ath;
+    if (dd < -0.75) return '深度调整，进入历史深度回撤样本区';
+    if (dd < -0.60) return '显著回调，接近历史深度回撤参考区间';
+    if (dd < -0.40) return '中度回调，仍需等待更低确认';
+    if (dd < -0.20) return '轻度回调，尚未进入深度回撤区间';
+    return '接近高点区域，注意风险';
+  }
+  if (cur < ma200w) return '低于200周均线，长期成本线参考下方';
+  if (cur < ma200w * 1.3) return '接近200周均线，历史强支撑位';
+  return '中性区域，结合 ATH 输入以精确判断';
+}
+</script>
+</body>
+</html>

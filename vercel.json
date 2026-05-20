@@ -66,6 +66,10 @@
       "destination": "/distribution-radar.html"
     },
     {
+      "source": "/halving",
+      "destination": "/halving.html"
+    },
+    {
       "source": "/stock",
       "destination": "/stock.html"
     },
