@@ -31,6 +31,56 @@ def run_aggregate(metrics):
     return json.loads(result.stdout)
 
 
+def run_history_fixture():
+    source = MODULE_PATH.read_text(encoding="utf-8")
+    start = source.index("function computeDistributionDays")
+    end = source.index("export default async function handler")
+    history_source = source[start:end]
+    script = textwrap.dedent(
+        f"""
+        {history_source}
+        function bars(base, drift) {{
+          const out = [];
+          for (let i = 0; i < 95; i++) {{
+            const close = base + i * drift;
+            out.push({{
+              t: 1700000000 + i * 86400,
+              open: close - 0.2,
+              high: close + 1,
+              low: close - 1,
+              close,
+              volume: i % 6 === 0 ? 1300000 : 1000000,
+            }});
+          }}
+          return out;
+        }}
+        const spyBars = bars(100, 0.2);
+        const qqqBars = bars(100, 0.15);
+        const sectorBars = Object.fromEntries(['xlk','xlf','xle','xlv','xly','xlp','xli','xlb','xlu','xlre','xlc'].map((key, idx) => [
+          key,
+          bars(60 + idx, ['xlu','xlp','xlv'].includes(key) ? 0.42 : 0.03),
+        ]));
+        const result = buildMarketTemperatureHistory({{
+          spyBars,
+          qqqBars,
+          iwmBars: bars(80, -0.08),
+          rspBars: bars(90, -0.04),
+          hygBars: bars(70, -0.03),
+          sectorBars,
+        }});
+        console.log(JSON.stringify(result));
+        """
+    )
+    result = subprocess.run(
+        ["node", "--input-type=module", "-e", script],
+        cwd=ROOT,
+        check=True,
+        text=True,
+        capture_output=True,
+    )
+    return json.loads(result.stdout)
+
+
 class StockRadarScoringTests(unittest.TestCase):
     def test_score_is_weighted_evidence_balance_not_raw_signal_count(self):
         metrics = [
@@ -68,6 +118,16 @@ class StockRadarScoringTests(unittest.TestCase):
         result = run_aggregate(metrics)
 
         self.assertEqual(result["score"], 100)
+
+    def test_market_temperature_history_is_chronological_and_bounded(self):
+        result = run_history_fixture()
+        points = result["points"]
+
+        self.assertGreater(len(points), 20)
+        self.assertEqual(points, sorted(points, key=lambda x: x["date"]))
+        self.assertTrue(all(0 <= p["score"] <= 100 for p in points))
+        self.assertTrue(all(len(p["drivers"]) <= 3 for p in points))
+        self.assertIn("Form 4", result["note"])
 
 
 if __name__ == "__main__":

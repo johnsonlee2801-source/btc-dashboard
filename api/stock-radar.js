@@ -876,6 +876,80 @@ function aggregate(metrics) {
   };
 }
 
+function barsUntil(bars, ts) {
+  if (!Array.isArray(bars)) return [];
+  return bars.filter(b => Number.isFinite(b?.t) && b.t <= ts);
+}
+
+function historyMetric(id, name, status, dataStatus = 'Live', value = 'history') {
+  return { id, name, status, dataStatus, value };
+}
+
+function buildMarketTemperatureHistory({ spyBars, qqqBars, iwmBars, rspBars, hygBars, sectorBars }) {
+  const source = Array.isArray(spyBars) ? spyBars.filter(b => Number.isFinite(b?.t)) : [];
+  const last = source[source.length - 1];
+  if (!last) return { points: [], source: 'insufficient_data', note: 'SPY 日线不足，无法生成历史温度。' };
+
+  const startTs = last.t - 190 * 24 * 60 * 60;
+  const points = [];
+
+  for (const row of source) {
+    if (row.t < startTs) continue;
+    const spy = barsUntil(spyBars, row.t);
+    const qqq = barsUntil(qqqBars, row.t);
+    if (spy.length < 65) continue;
+
+    const metrics = [];
+    const ddSpy = computeDistributionDays(spy, 25);
+    const ddQqq = computeDistributionDays(qqq, 25);
+    if (ddSpy) {
+      const maxCount = Math.max(ddSpy.count, ddQqq?.count || 0);
+      const status = maxCount >= 5 ? 'distribution' : maxCount <= 2 ? 'accumulation' : 'neutral';
+      metrics.push(historyMetric('distribution_days', 'Distribution Days (SPY/QQQ)', status));
+    }
+
+    const addRelativeStrength = (id, name, numeratorBars, threshold = 3) => {
+      const rs = computeRelativeStrength(barsUntil(numeratorBars, row.t), spy, 60);
+      if (!rs) return;
+      const status = rs.changePct <= -threshold ? 'distribution' : rs.changePct >= threshold ? 'accumulation' : 'neutral';
+      metrics.push(historyMetric(id, name, status));
+    };
+
+    addRelativeStrength('smallcap_rs_iwm_spy', '小盘相对强弱 IWM/SPY', iwmBars, 3);
+    addRelativeStrength('equal_weight_rs_rsp_spy', '等权相对强弱 RSP/SPY', rspBars, 2);
+    addRelativeStrength('credit_risk_hyg_spy', '信用风险偏好 HYG/SPY', hygBars, 3);
+
+    const sectorSlices = Object.fromEntries(
+      Object.entries(sectorBars || {}).map(([key, bars]) => [key, barsUntil(bars, row.t)])
+    );
+    const sector = computeSectorRotation(sectorSlices, spy);
+    if (sector) {
+      const status = sector.spread != null && sector.spread >= 3 ? 'distribution'
+        : sector.spread != null && sector.spread <= -3 ? 'accumulation'
+          : 'neutral';
+      metrics.push(historyMetric('sector_rotation_rs', '板块相对强弱：防御 vs 进攻', status));
+    }
+
+    if (metrics.length < 3) continue;
+    const agg = aggregate(metrics);
+    points.push({
+      date: new Date(row.t * 1000).toISOString().slice(0, 10),
+      score: agg.score,
+      status: agg.overall,
+      distributionHits: agg.distributionHits,
+      accumulationHits: agg.accumulationHits,
+      evidenceCount: agg.dataQuality.live,
+      drivers: agg.scoreDrivers.slice(0, 3).map(d => ({ id: d.id, name: d.name, delta: d.delta })),
+    });
+  }
+
+  return {
+    points,
+    source: 'Yahoo Finance daily bars; trailing 25/60-day market-risk signals',
+    note: '历史曲线只回放有日线历史的量价/相对强弱指标；Form 4、13F、FINRA、SEC FTD 等滞后披露指标只参与当前评分，不倒填历史。',
+  };
+}
+
 export default async function handler(req) {
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: JSON_HEADERS });
   if (req.method !== 'GET') {
@@ -921,26 +995,26 @@ export default async function handler(req) {
 
   // 大盘指标需要的 Yahoo 数据。V2 第一阶段坚持免费 + 自动化：指数、ETF、板块 ETF 全走 Yahoo chart。
   const endpoints = {
-    spy: YF_CHART('SPY', '6mo', '1d'),
-    qqq: YF_CHART('QQQ', '6mo', '1d'),
-    iwm: YF_CHART('IWM', '6mo', '1d'),
-    rsp: YF_CHART('RSP', '6mo', '1d'),
-    hyg: YF_CHART('HYG', '6mo', '1d'),
+    spy: YF_CHART('SPY', '1y', '1d'),
+    qqq: YF_CHART('QQQ', '1y', '1d'),
+    iwm: YF_CHART('IWM', '1y', '1d'),
+    rsp: YF_CHART('RSP', '1y', '1d'),
+    hyg: YF_CHART('HYG', '1y', '1d'),
     vix: YF_CHART('^VIX', '1mo', '1d'),     // Yahoo chart 会在 YF_CHART 内统一 encode
     vix3m: YF_CHART('^VIX3M', '1mo', '1d'),
     skew: YF_CHART('^SKEW', '1mo', '1d'),
     gspc: YF_CHART('^GSPC', '1mo', '1d'),
-    xlk: YF_CHART('XLK', '6mo', '1d'),
-    xlf: YF_CHART('XLF', '6mo', '1d'),
-    xle: YF_CHART('XLE', '6mo', '1d'),
-    xlv: YF_CHART('XLV', '6mo', '1d'),
-    xly: YF_CHART('XLY', '6mo', '1d'),
-    xlp: YF_CHART('XLP', '6mo', '1d'),
-    xli: YF_CHART('XLI', '6mo', '1d'),
-    xlb: YF_CHART('XLB', '6mo', '1d'),
-    xlu: YF_CHART('XLU', '6mo', '1d'),
-    xlre: YF_CHART('XLRE', '6mo', '1d'),
-    xlc: YF_CHART('XLC', '6mo', '1d'),
+    xlk: YF_CHART('XLK', '1y', '1d'),
+    xlf: YF_CHART('XLF', '1y', '1d'),
+    xle: YF_CHART('XLE', '1y', '1d'),
+    xlv: YF_CHART('XLV', '1y', '1d'),
+    xly: YF_CHART('XLY', '1y', '1d'),
+    xlp: YF_CHART('XLP', '1y', '1d'),
+    xli: YF_CHART('XLI', '1y', '1d'),
+    xlb: YF_CHART('XLB', '1y', '1d'),
+    xlu: YF_CHART('XLU', '1y', '1d'),
+    xlre: YF_CHART('XLRE', '1y', '1d'),
+    xlc: YF_CHART('XLC', '1y', '1d'),
   };
   for (const symbol of AI_BREADTH_TICKERS) {
     endpoints[`ai_${symbol}`] = YF_CHART(symbol, '1y', '1d');
@@ -1459,6 +1533,7 @@ export default async function handler(req) {
     generatedAt: nowISO(),
     status: agg.overall,
     score: agg.score,
+    marketTemperatureHistory: buildMarketTemperatureHistory({ spyBars, qqqBars, iwmBars, rspBars, hygBars, sectorBars }),
     distributionHits: agg.distributionHits,
     accumulationHits: agg.accumulationHits,
     scoreDrivers: agg.scoreDrivers,
