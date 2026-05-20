@@ -381,20 +381,20 @@ export default async function handler(req) {
     addMetric(metrics, { id: 'upper_wick_pullback', name: '上影线 / 冲高回落', maxScore: 14, score: 6, status: 'neutral', value: '待接入', detail: 'K线获取失败，按中性处理。' });
   }
 
-  // 6) 美盘/法币现货溢价（权重 12）
+  // 6) 美元现货溢价（权重 12）
   let cbScore = 5;
   if (Number.isFinite(fiatSpotPremiumPct)) {
     cbScore = fiatSpotPremiumPct < -0.08 ? 12 : fiatSpotPremiumPct < 0 ? 9 : fiatSpotPremiumPct < 0.04 ? 6 : 2;
     if ((price24hPct ?? price48hPct ?? 0) > 1 && fiatSpotPremiumPct < 0.02) cbScore = Math.min(12, cbScore + 2);
     addMetric(metrics, {
-      id: 'coinbase_premium', name: '美盘/法币现货溢价', maxScore: 12, score: cbScore,
+      id: 'coinbase_premium', name: '美元现货溢价', maxScore: 12, score: cbScore,
       status: cbScore >= 9 ? 'risk' : cbScore <= 3 ? 'healthy' : 'neutral',
       value: `${fiatSpotPremiumPct >= 0 ? '+' : ''}${fiatSpotPremiumPct.toFixed(3)}% (${fiatSpotSource})`,
-      detail: `${fiatSpotSource} BTC/USD ${usd(fiatSpotPrice, 2)} vs Binance BTCUSDT ${usd(spotPrice, 2)}。使用 Coinbase/Kraken/Bitstamp/Gemini fallback；溢价弱代表美盘/法币现货买盘不积极。`,
+      detail: `${fiatSpotSource} BTC/USD ${usd(fiatSpotPrice, 2)} vs Binance BTCUSDT ${usd(spotPrice, 2)}。使用 Coinbase/Kraken/Bitstamp/Gemini fallback；溢价弱代表美元现货买盘不积极。`,
     });
   } else {
     notes.push('fiat spot premium unavailable; all Coinbase/Kraken/Bitstamp/Gemini fallback sources failed; metric set neutral');
-    addMetric(metrics, { id: 'coinbase_premium', name: '美盘/法币现货溢价', maxScore: 12, score: 5, status: 'neutral', value: '待接入', detail: 'Coinbase/Kraken/Bitstamp/Gemini ticker 均不可用，按中性处理。' });
+    addMetric(metrics, { id: 'coinbase_premium', name: '美元现货溢价', maxScore: 12, score: 5, status: 'neutral', value: '待接入', detail: 'Coinbase/Kraken/Bitstamp/Gemini ticker 均不可用，按中性处理。' });
   }
 
   // 7) 主动买盘质量（权重 10）
