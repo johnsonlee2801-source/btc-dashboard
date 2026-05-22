@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>https://stock.flowhunt.net/stock</loc><lastmod>2026-05-20</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://stock.flowhunt.net/stock-en</loc><lastmod>2026-05-22</lastmod><changefreq>daily</changefreq><priority>0.95</priority></url>
   <url><loc>https://stock.flowhunt.net/pricing</loc><lastmod>2026-05-20</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>
   <url><loc>https://stock.flowhunt.net/stock/nvda-risk</loc><lastmod>2026-05-20</lastmod><changefreq>daily</changefreq><priority>0.85</priority></url>
   <url><loc>https://stock.flowhunt.net/stock/tsla-risk</loc><lastmod>2026-05-20</lastmod><changefreq>daily</changefreq><priority>0.85</priority></url>
