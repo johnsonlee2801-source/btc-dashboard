@@ -49,6 +49,19 @@ class FetchResilienceTests(unittest.TestCase):
         self.assertEqual(result["fed_direction"], "cut2")
         self.assertIn("沿用上一版有效值", result["reasoning"])
 
+    def test_parse_oddpool_cut_count_html_converts_zero_cuts_to_at_least_one_cut(self):
+        html = """
+        <span>Number of Fed Rate Cuts in 2026</span>
+        <tr><td class="px-4">Exactly 0 cuts</td>
+        <td><span>64.0%</span></td>
+        <td><span>68.2%</span></td>
+        <td><span>66.1%</span></td></tr>
+        """
+        parsed = fetch_data.parse_oddpool_cut_count_html(html)
+        self.assertEqual(parsed["year"], "2026")
+        self.assertEqual(parsed["zero_cut_probability"], 66.1)
+        self.assertEqual(parsed["cut_probability"], 33.9)
+
 
 if __name__ == "__main__":
     unittest.main()

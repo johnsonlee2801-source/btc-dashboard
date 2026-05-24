@@ -279,12 +279,81 @@ def fetch_fed_direction_rateprob():
         log(f"  RateProbability API parse error: {e}")
         return None
 
+
+def parse_oddpool_cut_count_html(html):
+    """Parse Oddpool's Fed cut-count page and return probability of >=1 cut this year.
+
+    Oddpool renders the table server-side, so this works without browser/CDP and
+    survives CME/Investing 403 blocks. We use the Average column for "Exactly 0
+    cuts" and convert it to P(at least one cut) = 100 - P(0 cuts).
+    """
+    if not html:
+        return None
+    match = re.search(
+        r'Exactly\s+0\s+cuts</td>.*?<td[^>]*>.*?</td>.*?<td[^>]*>.*?</td>.*?<td[^>]*>\s*<span[^>]*>([0-9]+(?:\.[0-9]+)?)%</span>',
+        html,
+        re.IGNORECASE | re.DOTALL,
+    )
+    if not match:
+        return None
+    zero_cut_probability = float(match.group(1))
+    cut_probability = round(max(0.0, min(100.0, 100.0 - zero_cut_probability)), 1)
+    title_match = re.search(r'Number\s+of\s+Fed\s+Rate\s+Cuts\s+in\s+(20\d{2})', html, re.IGNORECASE)
+    year = title_match.group(1) if title_match else datetime.now(timezone.utc).strftime("%Y")
+    return {
+        "year": year,
+        "zero_cut_probability": zero_cut_probability,
+        "cut_probability": cut_probability,
+    }
+
+
+def fetch_fed_direction_oddpool_cut_count():
+    """Fallback source for year-end Fed cut probability.
+
+    Source: https://www.oddpool.com/fed-rate-cut-count
+    This is not CME Fed Funds futures; it is a cross-venue prediction-market
+    average (Kalshi/Polymarket where available). Mark source clearly and keep
+    confidence medium unless the page is parsed cleanly.
+    """
+    url = "https://www.oddpool.com/fed-rate-cut-count"
+    html = http_get(url, headers={
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Accept-Encoding": "identity",
+        "Referer": "https://www.oddpool.com/",
+    }, timeout=35)
+    parsed = parse_oddpool_cut_count_html(html)
+    if not parsed:
+        return None
+
+    prob = parsed["cut_probability"]
+    zero_prob = parsed["zero_cut_probability"]
+    year = parsed["year"]
+    direction = "cut2" if prob >= 60 else "cut1"
+    confidence = "medium"
+    reasoning = f"Oddpool {year} 年降息次数市场：至少一次降息概率 {prob:.1f}%（Exactly 0 cuts 平均 {zero_prob:.1f}%）；非 CME 期货源，作为 403 fallback"
+    log(f"  ✅ 美联储方向(Oddpool cut-count fallback): {direction} ({reasoning})")
+    return {
+        "fed_direction": direction,
+        "reasoning": reasoning,
+        "confidence": confidence,
+        "source": "oddpool_fed_rate_cut_count",
+        "cut_probability": prob,
+        "zero_cut_probability": zero_prob,
+        "year": year,
+    }
+
+
 def fetch_fed_direction():
     log("抓取美联储预期 (多源)...")
 
     api_result = fetch_fed_direction_rateprob()
     if api_result and api_result.get("fed_direction"):
         return api_result
+
+    oddpool_result = fetch_fed_direction_oddpool_cut_count()
+    if oddpool_result and oddpool_result.get("fed_direction"):
+        return oddpool_result
 
     sources = [
         "https://www.cmegroup.com/markets/interest-rates/cme-fedwatch-tool.html",
