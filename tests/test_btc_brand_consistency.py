@@ -3,7 +3,7 @@ import unittest
 
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
-BRAND = "FlowHunt｜流程猎人 · 算盘"
+BRAND = "FlowHunt｜流程猎人"
 PAGES = (
     "index.html",
     "eth.html",
