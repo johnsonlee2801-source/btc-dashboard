@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-05-22T23:37:38Z",
+  "generatedAt": "2026-05-25T23:36:54Z",
   "description": "Daily static market breadth snapshot for stock.flowhunt.net. Free public sources; not investment advice.",
   "sources": {
     "sp500Constituents": "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv",
@@ -79,7 +79,7 @@
     "nasdaq100": {
       "name": "Nasdaq-100 / QQQ 持仓宽度快照",
       "source": "https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/QQQ/holdings/fund?idType=ticker&interval=monthly&productType=ETF",
-      "sourceUpdatedAt": "2026-05-21",
+      "sourceUpdatedAt": "2026-05-25",
       "requested": 98,
       "sampleSize": 98,
       "coveragePct": 100.0,
@@ -108,15 +108,15 @@
         "AAPL",
         "AMZN",
         "GOOGL",
-        "GOOG",
         "AMD",
+        "GOOG",
         "CSCO",
         "LRCX",
         "AMAT",
         "TXN",
+        "QCOM",
         "KLAC",
-        "LIN",
-        "QCOM"
+        "LIN"
       ],
       "laggards": [
         "META",
@@ -128,8 +128,8 @@
         "AMGN",
         "GILD",
         "ISRG",
-        "SHOP",
         "BKNG",
+        "SHOP",
         "VRTX"
       ],
       "status": "neutral",
@@ -239,12 +239,12 @@
       "source": "https://www.aaii.com/sentimentsurvey",
       "sourceType": "official_html_js",
       "updatedAt": "2026-05-20",
-      "value": "Bull 37.0% · Bear 38.3% · Spread -1.2",
+      "value": "Bull 36.1% · Bear 39.0% · Spread -2.9",
       "status": "neutral",
-      "bullishPct": 37.0,
-      "neutralPct": 24.7,
-      "bearishPct": 38.3,
-      "spreadPct": -1.2,
+      "bullishPct": 36.1,
+      "neutralPct": 24.9,
+      "bearishPct": 39.0,
+      "spreadPct": -2.9,
       "threshold": "Bull-Bear Spread > +10 或 Bullish ≥50%：散户乐观偏热/派发风险；Spread < -10 或 Bearish ≥50%：悲观拥挤/恐慌释放；其他中性。",
       "limitations": "AAII 页面受 Cloudflare 保护，需浏览器 UA/Referer；页面内变量为最新读数，dataChart5 仅约 52 周历史。"
     },
@@ -252,7 +252,7 @@
       "name": "NYSE A/D 日宽度",
       "source": "https://www.barchart.com/stocks/quotes/%24ADVN",
       "sourceType": "barchart_scraped_quote",
-      "updatedAt": "2026-05-22T23:37:51Z",
+      "updatedAt": "2026-05-25T23:37:07Z",
       "value": "上涨 1051 · 下跌 791 · A/D 1.32",
       "status": "neutral",
       "advancers": 1051,
@@ -265,7 +265,7 @@
           "lastPrice": 1051.0,
           "priceChange": 6.0,
           "percentChange": 0.57,
-          "tradeTime": "18:14 ET",
+          "tradeTime": "05/22/26",
           "sessionDateDisplayLong": "Fri, May 22nd, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24ADVN"
         },
@@ -275,7 +275,7 @@
           "lastPrice": 791.0,
           "priceChange": -2.0,
           "percentChange": -0.25,
-          "tradeTime": "18:14 ET",
+          "tradeTime": "05/22/26",
           "sessionDateDisplayLong": "Fri, May 22nd, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24DECN"
         },
@@ -285,7 +285,7 @@
           "lastPrice": 1.32,
           "priceChange": 0.01,
           "percentChange": 0.76,
-          "tradeTime": "18:14 ET",
+          "tradeTime": "05/22/26",
           "sessionDateDisplayLong": "Fri, May 22nd, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24ADRN"
         }
@@ -297,20 +297,20 @@
       "name": "NYSE 52周新高 / 新低",
       "source": "https://www.barchart.com/stocks/quotes/%24MAHN",
       "sourceType": "barchart_scraped_quote",
-      "updatedAt": "2026-05-22T23:37:51Z",
-      "value": "新高 59 · 新低 20 · H/L 2.95",
+      "updatedAt": "2026-05-25T23:37:07Z",
+      "value": "新高 58 · 新低 20 · H/L 2.90",
       "status": "neutral",
-      "newHighs52w": 59,
+      "newHighs52w": 58,
       "newLows52w": 20,
-      "highLowRatio": 2.95,
+      "highLowRatio": 2.9,
       "quotes": {
         "newHighs52w": {
           "symbol": "$MAHN",
           "name": "52-Week Highs NYSE Exch",
-          "lastPrice": 59.0,
-          "priceChange": 4.0,
-          "percentChange": 7.27,
-          "tradeTime": "17:11 ET",
+          "lastPrice": 58.0,
+          "priceChange": 3.0,
+          "percentChange": 5.45,
+          "tradeTime": "05/22/26",
           "sessionDateDisplayLong": "Fri, May 22nd, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24MAHN"
         },
@@ -320,7 +320,7 @@
           "lastPrice": 20.0,
           "priceChange": -7.0,
           "percentChange": -25.93,
-          "tradeTime": "17:11 ET",
+          "tradeTime": "05/22/26",
           "sessionDateDisplayLong": "Fri, May 22nd, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24MALN"
         }
@@ -330,37 +330,41 @@
     },
     "finra_short_sale_volume": {
       "name": "FINRA 场外短量占比自动快照",
-      "source": "https://cdn.finra.org/equity/regsho/daily/CNMSshvol20260521.txt",
+      "source": "https://cdn.finra.org/equity/regsho/daily/CNMSshvol20260522.txt",
       "sourceType": "official_txt",
-      "updatedAt": "2026-05-21",
-      "value": "市场 48.8% · 20日均 48.1% · S&P500 48.2% · QQQ 45.0%",
+      "updatedAt": "2026-05-22",
+      "value": "市场 47.3% · 20日均 48.1% · S&P500 45.3% · QQQ 42.7%",
       "status": "neutral",
-      "marketRatioPct": 48.8,
+      "marketRatioPct": 47.3,
       "marketAverage20dPct": 48.1,
-      "sp500RatioPct": 48.2,
-      "qqqRatioPct": 45.0,
+      "sp500RatioPct": 45.3,
+      "qqqRatioPct": 42.7,
       "latest": {
-        "date": "2026-05-21",
+        "date": "2026-05-22",
         "market": {
-          "tickerCount": 11409,
-          "shortVolume": 3747514363.63,
-          "totalVolume": 7681779145.66,
-          "ratioPct": 48.8
+          "tickerCount": 11477,
+          "shortVolume": 3680786495.1,
+          "totalVolume": 7774076281.54,
+          "ratioPct": 47.3
         },
         "sp500": {
           "tickerCount": 501,
-          "shortVolume": 551292780.93,
-          "totalVolume": 1143807897.85,
-          "ratioPct": 48.2
+          "shortVolume": 482507625.93,
+          "totalVolume": 1064091616.88,
+          "ratioPct": 45.3
         },
         "qqq": {
           "tickerCount": 98,
-          "shortVolume": 215705880.71,
-          "totalVolume": 478943439.89,
-          "ratioPct": 45.0
+          "shortVolume": 189423144.54,
+          "totalVolume": 443645744.87,
+          "ratioPct": 42.7
         }
       },
       "history": [
+        {
+          "date": "2026-05-22",
+          "marketRatioPct": 47.3
+        },
         {
           "date": "2026-05-21",
           "marketRatioPct": 48.8
@@ -436,72 +440,68 @@
         {
           "date": "2026-04-27",
           "marketRatioPct": 47.8
-        },
-        {
-          "date": "2026-04-24",
-          "marketRatioPct": 49.1
         }
       ],
       "abnormalTickers": [
         {
-          "symbol": "EMEM",
+          "symbol": "FHDG",
+          "ratioPct": 100.0,
+          "totalVolume": 1626197.0
+        },
+        {
+          "symbol": "DLMY",
           "ratioPct": 99.9,
-          "totalVolume": 1022164.0
+          "totalVolume": 1070006.0
         },
         {
-          "symbol": "AVIV",
-          "ratioPct": 99.3,
-          "totalVolume": 2214598.0
-        },
-        {
-          "symbol": "BSCX",
-          "ratioPct": 96.8,
-          "totalVolume": 1323262.0
+          "symbol": "IJS",
+          "ratioPct": 94.8,
+          "totalVolume": 2543616.0
         },
         {
           "symbol": "AVLV",
-          "ratioPct": 95.6,
-          "totalVolume": 2974940.0
+          "ratioPct": 91.5,
+          "totalVolume": 1304683.0
         },
         {
-          "symbol": "AMBP",
-          "ratioPct": 93.4,
-          "totalVolume": 2896308.0
+          "symbol": "SAGU/WS",
+          "ratioPct": 88.0,
+          "totalVolume": 1038300.0
         },
         {
-          "symbol": "CARY",
-          "ratioPct": 93.2,
-          "totalVolume": 1319361.0
+          "symbol": "BSCV",
+          "ratioPct": 86.6,
+          "totalVolume": 1287319.0
         },
         {
-          "symbol": "TAP",
-          "ratioPct": 86.9,
-          "totalVolume": 1569924.0
+          "symbol": "OMAH",
+          "ratioPct": 86.2,
+          "totalVolume": 1005082.0
         },
         {
-          "symbol": "UGI",
-          "ratioPct": 86.7,
-          "totalVolume": 3697498.0
+          "symbol": "EXC",
+          "ratioPct": 86.1,
+          "totalVolume": 4501072.0
         },
         {
-          "symbol": "SCHO",
-          "ratioPct": 86.4,
-          "totalVolume": 5399361.0
+          "symbol": "ELAN",
+          "ratioPct": 85.6,
+          "totalVolume": 2053580.0
         },
         {
-          "symbol": "USHY",
-          "ratioPct": 86.3,
-          "totalVolume": 14041118.0
+          "symbol": "SAN",
+          "ratioPct": 85.2,
+          "totalVolume": 5452321.0
         },
         {
           "symbol": "XRT",
-          "ratioPct": 86.3,
-          "totalVolume": 3127744.0
+          "ratioPct": 85.1,
+          "totalVolume": 1357787.0
         },
         {
-          "symbol": "GBTG",
-          "ratioPct": 86.0,
-          "totalVolume": 1382834.0
+          "symbol": "SPRY",
+          "ratioPct": 85.1,
+          "totalVolume": 1187430.0
         }
       ],
       "missingRecentFiles": [],
@@ -513,7 +513,7 @@
       "source": "https://www.sec.gov/edgar/search/",
       "sourceType": "official_sec_form4",
       "updatedAt": "2026-05-22",
-      "value": "90日卖出 $703.2M · 买入 $0.0M · 卖出股票 17只 · 买入股票 0只",
+      "value": "90日卖出 $531.1M · 买入 $0.0M · 卖出股票 17只 · 买入股票 0只",
       "status": "distribution",
       "lookbackDays": 90,
       "tickerUniverse": [
@@ -569,14 +569,14 @@
         "OKLO"
       ],
       "missingTickers": [],
-      "sellValueUsd": 703169610.52,
+      "sellValueUsd": 531118734.68,
       "buyValueUsd": 0,
       "saleTickerCount": 17,
       "buyTickerCount": 0,
       "topSaleTickers": [
         {
           "ticker": "PLTR",
-          "valueUsd": 299714739.44
+          "valueUsd": 127647918.48
         },
         {
           "ticker": "NVDA",
@@ -618,54 +618,6 @@
       "topBuyTickers": [],
       "topSales": [
         {
-          "ticker": "PLTR",
-          "transactionDate": "2026-03-02",
-          "filingDate": "2026-03-04",
-          "accessionNumber": "0001211060-26-000007",
-          "ownerName": "THIEL PETER",
-          "ownerTitle": null,
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 721136.0,
-          "price": 145.1654,
-          "valueUsd": 104683995.89,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1321655/000121106026000007/0001211060-26-000007.txt"
-        },
-        {
-          "ticker": "PLTR",
-          "transactionDate": "2026-03-02",
-          "filingDate": "2026-03-04",
-          "accessionNumber": "0001211060-26-000007",
-          "ownerName": "THIEL PETER",
-          "ownerTitle": null,
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 488783.0,
-          "price": 146.1385,
-          "valueUsd": 71430014.45,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1321655/000121106026000007/0001211060-26-000007.txt"
-        },
-        {
-          "ticker": "PLTR",
-          "transactionDate": "2026-03-02",
-          "filingDate": "2026-03-04",
-          "accessionNumber": "0001211060-26-000007",
-          "ownerName": "THIEL PETER",
-          "ownerTitle": null,
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 419113.0,
-          "price": 144.1774,
-          "valueUsd": 60426622.65,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1321655/000121106026000007/0001211060-26-000007.txt"
-        },
-        {
           "ticker": "NVDA",
           "transactionDate": "2026-03-18",
           "filingDate": "2026-03-20",
@@ -699,19 +651,19 @@
         },
         {
           "ticker": "PLTR",
-          "transactionDate": "2026-03-02",
-          "filingDate": "2026-03-04",
-          "accessionNumber": "0001211060-26-000007",
-          "ownerName": "THIEL PETER",
-          "ownerTitle": null,
-          "isDirector": false,
-          "isOfficer": false,
+          "transactionDate": "2026-05-20",
+          "filingDate": "2026-05-22",
+          "accessionNumber": "0001823951-26-000007",
+          "ownerName": "Karp Alexander C.",
+          "ownerTitle": "See Remarks",
+          "isDirector": true,
+          "isOfficer": true,
           "code": "S",
           "direction": "sale",
-          "shares": 222837.0,
-          "price": 143.2751,
-          "valueUsd": 31926993.46,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1321655/000121106026000007/0001211060-26-000007.txt"
+          "shares": 224009.0,
+          "price": 136.0811,
+          "valueUsd": 30483391.13,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1321655/000182395126000007/0001823951-26-000007.txt"
         },
         {
           "ticker": "AAPL",
@@ -728,6 +680,22 @@
           "price": 285.04,
           "valueUsd": 28638823.92,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/320193/000114036126020298/0001140361-26-020298.txt"
+        },
+        {
+          "ticker": "PLTR",
+          "transactionDate": "2026-05-20",
+          "filingDate": "2026-05-22",
+          "accessionNumber": "0001823920-26-000007",
+          "ownerName": "Cohen Stephen Andrew",
+          "ownerTitle": "See Remarks",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 180187.0,
+          "price": 136.0811,
+          "valueUsd": 24520045.17,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1321655/000182392026000007/0001823920-26-000007.txt"
         },
         {
           "ticker": "NVDA",
@@ -762,6 +730,54 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000003/0001199039-26-000003.txt"
         },
         {
+          "ticker": "PLTR",
+          "transactionDate": "2026-05-20",
+          "filingDate": "2026-05-22",
+          "accessionNumber": "0001823951-26-000007",
+          "ownerName": "Karp Alexander C.",
+          "ownerTitle": "See Remarks",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 122195.0,
+          "price": 136.6143,
+          "valueUsd": 16693584.39,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1321655/000182395126000007/0001823951-26-000007.txt"
+        },
+        {
+          "ticker": "PLTR",
+          "transactionDate": "2026-05-20",
+          "filingDate": "2026-05-22",
+          "accessionNumber": "0001823920-26-000007",
+          "ownerName": "Cohen Stephen Andrew",
+          "ownerTitle": "See Remarks",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 98291.0,
+          "price": 136.6143,
+          "valueUsd": 13427956.16,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1321655/000182392026000007/0001823920-26-000007.txt"
+        },
+        {
+          "ticker": "PLTR",
+          "transactionDate": "2026-05-20",
+          "filingDate": "2026-05-22",
+          "accessionNumber": "0001824159-26-000007",
+          "ownerName": "Sankar Shyam",
+          "ownerTitle": "See Remarks",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 93218.0,
+          "price": 136.0811,
+          "valueUsd": 12685207.98,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1321655/000182415926000007/0001824159-26-000007.txt"
+        },
+        {
           "ticker": "ADBE",
           "transactionDate": "2026-04-28",
           "filingDate": "2026-04-30",
@@ -792,26 +808,10 @@
           "price": 448.29,
           "valueUsd": 9313673.04,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000096/0000002488-26-000096.txt"
-        },
-        {
-          "ticker": "AMZN",
-          "transactionDate": "2026-05-04",
-          "filingDate": "2026-05-06",
-          "accessionNumber": "0001374545-26-000006",
-          "ownerName": "Jassy Andrew R",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 31352.0,
-          "price": 275.0,
-          "valueUsd": 8621800.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1018724/000137454526000006/0001374545-26-000006.txt"
         }
       ],
       "topPurchases": [],
-      "transactionCount": 262,
+      "transactionCount": 266,
       "threshold": "90日内部人公开市场卖出≥$50M、净卖出≥$25M、且涉及≥3只样本股：内部人卖出证据偏强；公开市场买入≥$5M、买入额≥卖出额1.5倍、且涉及≥2只样本股：内部人买入/承接证据偏强；其他中性。",
       "limitations": "SEC Form 4 只覆盖公司内部人交易，不等于机构13F持仓或暗池/期权流；大型科技公司高管10b5-1计划性卖出很常见，必须结合价格、宽度、成交量和公告背景判断。"
     },
