@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-05-25T23:36:54Z",
+  "generatedAt": "2026-05-26T23:37:52Z",
   "description": "Daily static market breadth snapshot for stock.flowhunt.net. Free public sources; not investment advice.",
   "sources": {
     "sp500Constituents": "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv",
@@ -24,40 +24,40 @@
       "requested": 503,
       "sampleSize": 503,
       "coveragePct": 100.0,
-      "above20Pct": 57.7,
-      "above50Pct": 56.9,
-      "above200Pct": 56.3,
-      "nearHighPct": 23.9,
-      "newHighPct": 6.0,
-      "nearLowPct": 23.1,
-      "newLowPct": 0.0,
-      "advancePct": 70.0,
-      "declinePct": 29.8,
+      "above20Pct": 59.2,
+      "above50Pct": 55.5,
+      "above200Pct": 57.3,
+      "nearHighPct": 25.2,
+      "newHighPct": 8.2,
+      "nearLowPct": 25.0,
+      "newLowPct": 0.8,
+      "advancePct": 49.3,
+      "declinePct": 50.5,
       "counts": {
-        "above20": 290,
-        "above50": 286,
-        "above200": 283,
-        "nearHigh": 120,
-        "newHigh": 30,
-        "nearLow": 116,
-        "newLow": 0,
-        "advanced": 352,
-        "declined": 150
+        "above20": 298,
+        "above50": 279,
+        "above200": 288,
+        "nearHigh": 127,
+        "newHigh": 41,
+        "nearLow": 126,
+        "newLow": 4,
+        "advanced": 248,
+        "declined": 254
       },
-      "updatedAt": "2026-05-22T13:30:00Z",
+      "updatedAt": "2026-05-26T13:30:00Z",
       "leaders": [
         "AMD",
         "AFL",
         "LNT",
-        "ALL",
         "GOOGL",
         "GOOG",
         "MO",
         "AMZN",
         "AEE",
+        "AME",
+        "ADI",
         "AAPL",
-        "AMAT",
-        "AIZ"
+        "AMAT"
       ],
       "laggards": [
         "MMM",
@@ -71,10 +71,10 @@
         "ALB",
         "ALGN",
         "ALLE",
-        "AMCR"
+        "ALL"
       ],
       "status": "neutral",
-      "value": "MA50上方 56.9% · MA200上方 56.3% · 新高/新低 30/0 · 上涨/下跌 352/150"
+      "value": "MA50上方 55.5% · MA200上方 57.3% · 新高/新低 41/4 · 上涨/下跌 248/254"
     },
     "nasdaq100": {
       "name": "Nasdaq-100 / QQQ 持仓宽度快照",
@@ -83,44 +83,45 @@
       "requested": 98,
       "sampleSize": 98,
       "coveragePct": 100.0,
-      "above20Pct": 58.2,
-      "above50Pct": 59.2,
-      "above200Pct": 57.1,
-      "nearHighPct": 29.6,
-      "newHighPct": 15.3,
-      "nearLowPct": 19.4,
-      "newLowPct": 0.0,
-      "advancePct": 60.2,
-      "declinePct": 39.8,
+      "above20Pct": 59.2,
+      "above50Pct": 55.1,
+      "above200Pct": 59.2,
+      "nearHighPct": 37.8,
+      "newHighPct": 19.4,
+      "nearLowPct": 22.4,
+      "newLowPct": 1.0,
+      "advancePct": 49.0,
+      "declinePct": 51.0,
       "counts": {
-        "above20": 57,
-        "above50": 58,
-        "above200": 56,
-        "nearHigh": 29,
-        "newHigh": 15,
-        "nearLow": 19,
-        "newLow": 0,
-        "advanced": 59,
-        "declined": 39
+        "above20": 58,
+        "above50": 54,
+        "above200": 58,
+        "nearHigh": 37,
+        "newHigh": 19,
+        "nearLow": 22,
+        "newLow": 1,
+        "advanced": 48,
+        "declined": 50
       },
-      "updatedAt": "2026-05-22T13:30:00Z",
+      "updatedAt": "2026-05-26T13:30:00Z",
       "leaders": [
         "AAPL",
         "AMZN",
+        "MU",
         "GOOGL",
         "AMD",
         "GOOG",
+        "AVGO",
+        "INTC",
         "CSCO",
         "LRCX",
         "AMAT",
-        "TXN",
-        "QCOM",
-        "KLAC",
-        "LIN"
+        "TXN"
       ],
       "laggards": [
         "META",
         "WMT",
+        "COST",
         "NFLX",
         "PLTR",
         "TMUS",
@@ -129,11 +130,10 @@
         "GILD",
         "ISRG",
         "BKNG",
-        "SHOP",
-        "VRTX"
+        "SHOP"
       ],
       "status": "neutral",
-      "value": "MA50上方 59.2% · MA200上方 57.1% · 新高/新低 15/0 · 上涨/下跌 59/39"
+      "value": "MA50上方 55.1% · MA200上方 59.2% · 新高/新低 19/1 · 上涨/下跌 48/50"
     }
   },
   "macroIndicators": {
@@ -239,12 +239,12 @@
       "source": "https://www.aaii.com/sentimentsurvey",
       "sourceType": "official_html_js",
       "updatedAt": "2026-05-20",
-      "value": "Bull 36.1% · Bear 39.0% · Spread -2.9",
+      "value": "Bull 36.3% · Bear 38.8% · Spread -2.5",
       "status": "neutral",
-      "bullishPct": 36.1,
-      "neutralPct": 24.9,
-      "bearishPct": 39.0,
-      "spreadPct": -2.9,
+      "bullishPct": 36.3,
+      "neutralPct": 24.8,
+      "bearishPct": 38.8,
+      "spreadPct": -2.5,
       "threshold": "Bull-Bear Spread > +10 或 Bullish ≥50%：散户乐观偏热/派发风险；Spread < -10 或 Bearish ≥50%：悲观拥挤/恐慌释放；其他中性。",
       "limitations": "AAII 页面受 Cloudflare 保护，需浏览器 UA/Referer；页面内变量为最新读数，dataChart5 仅约 52 周历史。"
     },
@@ -252,41 +252,41 @@
       "name": "NYSE A/D 日宽度",
       "source": "https://www.barchart.com/stocks/quotes/%24ADVN",
       "sourceType": "barchart_scraped_quote",
-      "updatedAt": "2026-05-25T23:37:07Z",
-      "value": "上涨 1051 · 下跌 791 · A/D 1.32",
-      "status": "neutral",
-      "advancers": 1051,
-      "decliners": 791,
-      "advanceDeclineRatio": 1.32,
+      "updatedAt": "2026-05-26T23:38:13Z",
+      "value": "上涨 1200 · 下跌 664 · A/D 1.80",
+      "status": "accumulation",
+      "advancers": 1200,
+      "decliners": 664,
+      "advanceDeclineRatio": 1.8,
       "quotes": {
         "advancers": {
           "symbol": "$ADVN",
           "name": "NYSE Advancing Stocks",
-          "lastPrice": 1051.0,
-          "priceChange": 6.0,
-          "percentChange": 0.57,
-          "tradeTime": "05/22/26",
-          "sessionDateDisplayLong": "Fri, May 22nd, 2026",
+          "lastPrice": 1200.0,
+          "priceChange": 149.0,
+          "percentChange": 14.18,
+          "tradeTime": "18:14 ET",
+          "sessionDateDisplayLong": "Tue, May 26th, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24ADVN"
         },
         "decliners": {
           "symbol": "$DECN",
           "name": "NYSE Declining Stocks",
-          "lastPrice": 791.0,
-          "priceChange": -2.0,
-          "percentChange": -0.25,
-          "tradeTime": "05/22/26",
-          "sessionDateDisplayLong": "Fri, May 22nd, 2026",
+          "lastPrice": 664.0,
+          "priceChange": -127.0,
+          "percentChange": -16.06,
+          "tradeTime": "18:14 ET",
+          "sessionDateDisplayLong": "Tue, May 26th, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24DECN"
         },
         "adRatio": {
           "symbol": "$ADRN",
           "name": "NYSE Advance Decline Ratio",
-          "lastPrice": 1.32,
-          "priceChange": 0.01,
-          "percentChange": 0.76,
-          "tradeTime": "05/22/26",
-          "sessionDateDisplayLong": "Fri, May 22nd, 2026",
+          "lastPrice": 1.8,
+          "priceChange": 0.48,
+          "percentChange": 36.36,
+          "tradeTime": "18:14 ET",
+          "sessionDateDisplayLong": "Tue, May 26th, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24ADRN"
         }
       },
@@ -297,31 +297,31 @@
       "name": "NYSE 52周新高 / 新低",
       "source": "https://www.barchart.com/stocks/quotes/%24MAHN",
       "sourceType": "barchart_scraped_quote",
-      "updatedAt": "2026-05-25T23:37:07Z",
-      "value": "新高 58 · 新低 20 · H/L 2.90",
-      "status": "neutral",
-      "newHighs52w": 58,
-      "newLows52w": 20,
-      "highLowRatio": 2.9,
+      "updatedAt": "2026-05-26T23:38:13Z",
+      "value": "新高 110 · 新低 17 · H/L 6.47",
+      "status": "accumulation",
+      "newHighs52w": 110,
+      "newLows52w": 17,
+      "highLowRatio": 6.471,
       "quotes": {
         "newHighs52w": {
           "symbol": "$MAHN",
           "name": "52-Week Highs NYSE Exch",
-          "lastPrice": 58.0,
-          "priceChange": 3.0,
-          "percentChange": 5.45,
-          "tradeTime": "05/22/26",
-          "sessionDateDisplayLong": "Fri, May 22nd, 2026",
+          "lastPrice": 110.0,
+          "priceChange": 52.0,
+          "percentChange": 89.66,
+          "tradeTime": "05/26/26",
+          "sessionDateDisplayLong": "Tue, May 26th, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24MAHN"
         },
         "newLows52w": {
           "symbol": "$MALN",
           "name": "52-Week Lows NYSE Exch",
-          "lastPrice": 20.0,
-          "priceChange": -7.0,
-          "percentChange": -25.93,
-          "tradeTime": "05/22/26",
-          "sessionDateDisplayLong": "Fri, May 22nd, 2026",
+          "lastPrice": 17.0,
+          "priceChange": -3.0,
+          "percentChange": -15.0,
+          "tradeTime": "05/26/26",
+          "sessionDateDisplayLong": "Tue, May 26th, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24MALN"
         }
       },
@@ -504,7 +504,9 @@
           "totalVolume": 1187430.0
         }
       ],
-      "missingRecentFiles": [],
+      "missingRecentFiles": [
+        "20260525"
+      ],
       "threshold": "FINRA 场外 short/total ≥58% 或高于20日均值6个百分点：场外短量涌入/派发风险；≤42% 或低于20日均值6个百分点：空头压力缓和/承接改善；其他中性。",
       "limitations": "FINRA Daily Short Sale Volume 仅覆盖 TRF/ADF/ORF 等场外报告口径，不等同于全市场 short interest 或机构空头仓位；做市商对冲会造成噪声。"
     },
@@ -512,8 +514,8 @@
       "name": "SEC Form 4 内部人交易快照",
       "source": "https://www.sec.gov/edgar/search/",
       "sourceType": "official_sec_form4",
-      "updatedAt": "2026-05-22",
-      "value": "90日卖出 $531.1M · 买入 $0.0M · 卖出股票 17只 · 买入股票 0只",
+      "updatedAt": "2026-05-26",
+      "value": "90日卖出 $527.8M · 买入 $0.0M · 卖出股票 16只 · 买入股票 0只",
       "status": "distribution",
       "lookbackDays": 90,
       "tickerUniverse": [
@@ -569,9 +571,9 @@
         "OKLO"
       ],
       "missingTickers": [],
-      "sellValueUsd": 531118734.68,
+      "sellValueUsd": 527822324.99,
       "buyValueUsd": 0,
-      "saleTickerCount": 17,
+      "saleTickerCount": 16,
       "buyTickerCount": 0,
       "topSaleTickers": [
         {
@@ -600,7 +602,7 @@
         },
         {
           "ticker": "AMZN",
-          "valueUsd": 21458336.87
+          "valueUsd": 19747567.3
         },
         {
           "ticker": "ADBE",
@@ -811,7 +813,7 @@
         }
       ],
       "topPurchases": [],
-      "transactionCount": 266,
+      "transactionCount": 282,
       "threshold": "90日内部人公开市场卖出≥$50M、净卖出≥$25M、且涉及≥3只样本股：内部人卖出证据偏强；公开市场买入≥$5M、买入额≥卖出额1.5倍、且涉及≥2只样本股：内部人买入/承接证据偏强；其他中性。",
       "limitations": "SEC Form 4 只覆盖公司内部人交易，不等于机构13F持仓或暗池/期权流；大型科技公司高管10b5-1计划性卖出很常见，必须结合价格、宽度、成交量和公告背景判断。"
     },
