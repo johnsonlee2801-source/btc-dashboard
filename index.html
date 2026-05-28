@@ -1284,11 +1284,11 @@
       <div class="guide-step-body">
         <div class="guide-step-title">读懂评级结论</div>
         <div class="guide-step-desc">
-          <div class="guide-grade-row"><span class="guide-grade grade-A">A+ ≥90分</span><span>历史级机会 — 重仓3-5批建仓，总仓位80-100%</span></div>
-          <div class="guide-grade-row"><span class="guide-grade grade-A">A ≥78分</span><span>积极建仓 — 分批建仓60-80%，不追单日大阳线</span></div>
-          <div class="guide-grade-row"><span class="guide-grade grade-B">B 65-77分</span><span>轻仓定投 — 仓位30-50%，不重仓追高</span></div>
-          <div class="guide-grade-row"><span class="guide-grade grade-C">C 50-64分</span><span>观望等待 — 维持底仓10-20%，暂停新增</span></div>
-          <div class="guide-grade-row"><span class="guide-grade grade-D">D &lt;50分</span><span>清仓观望 — 减至底仓或空仓，等多维度改善</span></div>
+          <div class="guide-grade-row"><span class="guide-grade grade-A">A+ ≥90分</span><span>低温区 — 多项公开指标显示风险相对舒缓，适合继续做来源核验</span></div>
+          <div class="guide-grade-row"><span class="guide-grade grade-A">A ≥78分</span><span>偏低温 — 宏观、资金和链上信号较友好，但仍需结合个人风险承受能力</span></div>
+          <div class="guide-grade-row"><span class="guide-grade grade-B">B 65-77分</span><span>中性区 — 信号偏正面但不充分，适合观察关键指标是否延续</span></div>
+          <div class="guide-grade-row"><span class="guide-grade grade-C">C 50-64分</span><span>偏热区 — 赔率不足或宏观不明朗，优先等待风险线索改善</span></div>
+          <div class="guide-grade-row"><span class="guide-grade grade-D">D &lt;50分</span><span>高温区 — 多项风险线索叠加，先看防守与复核，不做交易指令</span></div>
         </div>
         <div class="guide-note">⚠️ 一票否决：MVRV&gt;6、NUPL&gt;0.75、美联储加息 → 任一触发直接降D，无论总分多高。</div>
       </div>
@@ -1706,28 +1706,28 @@ function calcScores() {
 
   if (vetoTriggered) {
     grade = 'D'; total = Math.min(total, 50);
-    title = '⛔ 一票否决 — 立即停止买入';
-    desc = '⚠️ 检测到极端风险信号（链上严重过热 / 主动加息周期 / NUPL狂热）。操作建议：停止新增仓位，已有仓位减至底仓20-30%，等待信号解除。';
+    title = '⛔ 一票否决 — 高温风险预警';
+    desc = '⚠️ 检测到极端风险信号（链上严重过热 / 主动加息周期 / NUPL 狂热）。这不是交易指令，只提示当前应优先做风险复核，等待信号解除。';
     verdictClass = 'verdict-D';
   } else if (total >= 90) {
-    grade = 'A+'; title = '🚀 重仓机会 — 历史级低估';
-    desc = '五维指标高度共振（含借贷结构健康+低杠杆），出现历史级买入机会。操作建议：可重仓3-5批建仓，总仓位可达计划上限的80-100%，每跌5%加一批。';
+    grade = 'A+'; title = '🟢 低温区 — 多维风险相对舒缓';
+    desc = '五维公开指标高度共振（含借贷结构健康 + 低杠杆），显示 BTC 风险温度较低。仅作研究参考，下一步应继续核验数据来源和自身风险边界。';
     verdictClass = 'verdict-A';
   } else if (total >= 78) {
-    grade = 'A'; title = '✅ 积极建仓 — 赔率良好';
-    desc = '宏观、资金、借贷结构、链上、赔率多维均较友好，整体偏向低估。操作建议：分3-5批建仓，总仓位60-80%，不追单日大阳线，逢回调加仓。';
+    grade = 'A'; title = '✅ 偏低温 — 指标整体友好';
+    desc = '宏观、资金、借贷结构、链上与赔率多维度较友好，整体风险温度偏低。该结论只用于辅助观察，不代表买卖建议。';
     verdictClass = 'verdict-A';
   } else if (total >= 65) {
-    grade = 'B'; title = '🟡 轻仓参与 — 定投为主';
-    desc = '信号偏正面但存在不确定性，市场处于中性偏多区间。操作建议：定投为主，仓位控制在30-50%，不追高，等待更好的入场点。';
+    grade = 'B'; title = '🟡 中性区 — 继续观察';
+    desc = '信号偏正面但仍有不确定性，市场处于中性偏暖区间。适合继续观察 ETF、资金费率、TIPS 与链上指标是否延续改善。';
     verdictClass = 'verdict-B';
   } else if (total >= 50) {
-    grade = 'C'; title = '⏸ 观望等待 — 赔率不足';
-    desc = '当前信号混杂，估值偏贵或宏观不明朗。操作建议：维持底仓（10-20%），暂停新增，等待MVRV/NUPL回落或宏观改善再行动。';
+    grade = 'C'; title = '⏸ 偏热区 — 赔率不足';
+    desc = '当前信号混杂，估值偏贵或宏观不明朗。建议把注意力放在 MVRV/NUPL 回落、宏观改善和资金流修复等公开线索上。';
     verdictClass = 'verdict-C';
   } else {
-    grade = 'D'; title = '❌ 清仓观望 — 风险大于机会';
-    desc = '宏观逆风 + 估值偏贵 + 资金面弱 + 借贷结构异常，多重不利信号叠加。操作建议：减仓至底仓或空仓，等待至少2-3个维度出现明显改善后再重新评估。';
+    grade = 'D'; title = '❌ 高温区 — 风险线索集中';
+    desc = '宏观逆风 + 估值偏贵 + 资金面弱 + 借贷结构异常，多重不利信号叠加。该状态只提示风险温度较高，不构成任何交易建议。';
     verdictClass = 'verdict-D';
   }
 

@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-05-28T06:21:10.552671+00:00",
-  "timestamp_cn": "2026-05-28 14:21",
+  "timestamp": "2026-05-28T06:23:07.415945+00:00",
+  "timestamp_cn": "2026-05-28 14:23",
   "price": {
-    "price": 72893,
-    "change24h": -3.59
+    "price": 72885,
+    "change24h": -3.6
   },
   "etf": {
     "sum5d": -1343.6,
@@ -40,7 +40,7 @@
     "btc_daily_rate": 1.082e-05,
     "btc_annual_rate": 0.3949,
     "btc_borrow_limit": 100.0,
-    "open_interest": 103836.0,
+    "open_interest": 103840.0,
     "open_interest_usd": null,
     "source": "binance_public"
   },
@@ -48,5 +48,5 @@
     "total_b": 319.9,
     "trend": "expand"
   },
-  "tips": 1.92
+  "tips": 2.09
 }

@@ -5,6 +5,7 @@ BTC Dashboard - 自动数据抓取脚本
 """
 
 import json, urllib.request, urllib.error, time, subprocess, os, re
+import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 
 DEEPSEEK_KEY = os.environ.get("DEEPSEEK_KEY", "")
@@ -50,6 +51,9 @@ def http_get(url, headers=None, timeout=25):
         return None
 
 def ask_deepseek(prompt, content, max_tokens=300):
+    if not DEEPSEEK_KEY:
+        log("  DeepSeek key 未配置，跳过 AI 解析")
+        return None
     payload = json.dumps({
         "model": "deepseek-chat",
         "messages": [
@@ -397,32 +401,61 @@ def fetch_fed_direction():
 # 4. 资金费率 - Coinglass / Binance API
 # ============================================================
 def fetch_funding_rate():
-    log("抓取资金费率 (Coinglass)...")
+    """Fetch BTC perpetual funding rates from public exchange APIs.
 
-    html = http_get("https://www.coinglass.com/FundingRate")
-    if html:
-        result = ask_deepseek(
-            """这是 Coinglass 资金费率页面。请找出 BTC 在主流交易所（Binance/Bybit/OKX）的当前资金费率（%/8h）。
-            正常范围 -0.1% 到 +0.1%，正数代表多头付空头。
-            返回JSON：{"funding_rate": Binance的数值, "avg": 平均值} 或 {"error": "找不到"}""",
-            html
-        )
-        if result and isinstance(result.get('funding_rate'), (int, float)):
-            fr = result['funding_rate']
-            log(f"  ✅ 资金费率: {fr}%/8h")
-            return fr
+    Return an object instead of a single number so the frontend can show Binance
+    and OKX separately. Older data.json files may still contain a scalar; the
+    page keeps backward compatibility.
+    """
+    log("抓取资金费率 (Binance + OKX 公开 API)...")
+    result = {"bn": None, "okx": None, "avg": None, "source": "exchange_public"}
 
-    # 备用: Binance 公开API
-    binance_url = "https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT"
-    data = http_get(binance_url)
+    # Binance USD-M perpetual: lastFundingRate is decimal per 8h.
+    data = http_get("https://fapi.binance.com/fapi/v1/premiumIndex?symbol=BTCUSDT")
     if data:
         try:
             d = json.loads(data)
-            fr = float(d.get('lastFundingRate', 0)) * 100
-            log(f"  ✅ 资金费率(Binance API): {fr:.4f}%/8h")
-            return round(fr, 4)
+            result["bn"] = round(float(d.get('lastFundingRate', 0)) * 100, 4)
+            log(f"  ✅ Binance 资金费率: {result['bn']:.4f}%/8h")
         except Exception as e:
             log(f"  Binance API parse error: {e}")
+
+    # OKX BTC-USDT swap: fundingRate is decimal per funding interval.
+    okx_data = http_get("https://www.okx.com/api/v5/public/funding-rate?instId=BTC-USDT-SWAP")
+    if okx_data:
+        try:
+            d = json.loads(okx_data)
+            rows = d.get('data') or []
+            if rows:
+                result["okx"] = round(float(rows[0].get('fundingRate', 0)) * 100, 4)
+                log(f"  ✅ OKX 资金费率: {result['okx']:.4f}%/8h")
+        except Exception as e:
+            log(f"  OKX API parse error: {e}")
+
+    vals = [v for v in (result["bn"], result["okx"]) if isinstance(v, (int, float))]
+    if vals:
+        result["avg"] = round(sum(vals) / len(vals), 4)
+        return result
+
+    # Last resort: Coinglass page + AI parser only if a key is configured.
+    if DEEPSEEK_KEY:
+        html = http_get("https://www.coinglass.com/FundingRate")
+        if html:
+            parsed = ask_deepseek(
+                """这是 Coinglass 资金费率页面。请找出 BTC 在 Binance 和 OKX 的当前资金费率（%/8h）。
+                正常范围 -0.1% 到 +0.1%，正数代表多头付空头。
+                返回JSON：{"bn": Binance数值, "okx": OKX数值} 或 {"error": "找不到"}""",
+                html
+            )
+            if parsed:
+                for k in ("bn", "okx"):
+                    if isinstance(parsed.get(k), (int, float)):
+                        result[k] = round(float(parsed[k]), 4)
+                vals = [v for v in (result["bn"], result["okx"]) if isinstance(v, (int, float))]
+                if vals:
+                    result["avg"] = round(sum(vals) / len(vals), 4)
+                    result["source"] = "coinglass_ai_fallback"
+                    return result
 
     return None
 
@@ -486,19 +519,62 @@ def fetch_margin_lending():
 # TIPS 实际利率 - FRED API
 # ============================================================
 def fetch_tips():
-    log("抓取 TIPS 实际利率 (FRED)...")
-    url = f"https://api.stlouisfed.org/fred/series/observations?series_id=DFII10&api_key={FRED_KEY}&sort_order=desc&limit=1&file_type=json"
-    data = http_get(url)
-    if data:
-        try:
-            d = json.loads(data)
-            obs = d.get('observations', [])
-            if obs and obs[0].get('value') not in ('.', ''):
-                val = float(obs[0]['value'])
-                log(f"  ✅ TIPS: {val}% (日期: {obs[0]['date']})")
-                return val
-        except Exception as e:
-            log(f"  解析失败: {e}")
+    """Fetch 10-year real yield.
+
+    Preferred source is FRED when FRED_KEY is configured. Without a key, fall
+    back to the official U.S. Treasury real-yield XML feed so the dashboard does
+    not keep carrying stale TIPS values forever.
+    """
+    log("抓取 10Y TIPS 实际利率 (FRED / Treasury fallback)...")
+
+    if FRED_KEY:
+        url = f"https://api.stlouisfed.org/fred/series/observations?series_id=DFII10&api_key={FRED_KEY}&sort_order=desc&limit=1&file_type=json"
+        data = http_get(url)
+        if data:
+            try:
+                d = json.loads(data)
+                obs = d.get('observations', [])
+                if obs and obs[0].get('value') not in ('.', ''):
+                    val = float(obs[0]['value'])
+                    log(f"  ✅ TIPS(FRED): {val}% (日期: {obs[0]['date']})")
+                    return val
+            except Exception as e:
+                log(f"  FRED 解析失败: {e}")
+    else:
+        log("  FRED_KEY 未配置，改用 U.S. Treasury official XML fallback")
+
+    try:
+        year = datetime.now(timezone.utc).strftime("%Y")
+        url = f"https://home.treasury.gov/resource-center/data-chart-center/interest-rates/pages/xml?data=daily_treasury_real_yield_curve&field_tdr_date_value={year}"
+        xml_text = http_get(url, headers={"Accept": "application/xml,text/xml,*/*"}, timeout=45)
+        if xml_text:
+            root = ET.fromstring(xml_text)
+            ns = {
+                'atom': 'http://www.w3.org/2005/Atom',
+                'm': 'http://schemas.microsoft.com/ado/2007/08/dataservices/metadata',
+                'd': 'http://schemas.microsoft.com/ado/2007/08/dataservices',
+            }
+            latest = None
+            for entry in root.findall('atom:entry', ns):
+                props = entry.find('atom:content/m:properties', ns)
+                if props is None:
+                    continue
+                date_el = props.find('d:NEW_DATE', ns)
+                val_el = props.find('d:TC_10YEAR', ns)
+                if val_el is None:
+                    val_el = props.find('d:BC_10YEAR', ns)
+                if date_el is None or val_el is None:
+                    continue
+                val_text = (val_el.text or '').strip()
+                if not val_text:
+                    continue
+                latest = ((date_el.text or '')[:10], float(val_text))
+            if latest:
+                log(f"  ✅ TIPS(Treasury 10Y real yield): {latest[1]}% (日期: {latest[0]})")
+                return latest[1]
+    except Exception as e:
+        log(f"  Treasury fallback 解析失败: {e}")
+
     log("  ⚠️ TIPS 获取失败")
     return None
 
