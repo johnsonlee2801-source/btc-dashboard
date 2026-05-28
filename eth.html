@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ETH 链上观察 | 以太坊筹码集中度分析 | FlowHunt｜流程猎人</title>
-<meta name="description" content="以太坊链上筹码分布观察：鲸鱼持仓占比、地址分布热力图、交易所净流量、质押集中度，实时追踪庄家筹码动向。">
-<meta name="keywords" content="以太坊链上数据,ETH鲸鱼持仓,筹码集中度,ETH链上分析,以太坊庄家,ETH持仓分布">
+<title>ETH 链上观察 | 以太坊供给集中度与交易所流量 | FlowHunt｜流程猎人</title>
+<meta name="description" content="以太坊链上供给观察：前100地址集中度、地址分布、交易所净流量、质押结构与稳定币流动性。公开数据研究参考，不构成投资建议。">
+<meta name="keywords" content="以太坊链上数据,ETH供给集中度,ETH交易所净流量,ETH质押结构,ETH持仓分布">
 <link rel="canonical" href="https://btc.flowhunt.net/eth">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://btc.flowhunt.net/eth">
-<meta property="og:title" content="ETH 链上观察 | 筹码集中度分析">
-<meta property="og:description" content="追踪以太坊鲸鱼筹码分布、交易所净流量，判断大户建仓/派发状态。">
+<meta property="og:title" content="ETH 链上观察 | 供给集中度分析">
+<meta property="og:description" content="追踪以太坊前100地址集中度、交易所净流量与质押结构，用公开数据观察供给状态。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="FlowHunt｜流程猎人">
 <script type="application/ld+json">
@@ -278,7 +278,7 @@
     <div class="logo">⟠</div>
     <div class="title-block">
       <h1>FlowHunt｜流程猎人</h1>
-      <p>ETH 链上观察 · 筹码集中度 / 交易所净流量 / 质押结构</p>
+      <p>ETH 链上观察 · 供给集中度 / 交易所净流量 / 质押结构</p>
     </div>
   </div>
   <div class="header-right">
@@ -318,9 +318,9 @@
         <div class="metric-sub" id="ethPriceChange">24h涨跌: --</div>
       </div>
       <div class="metric-card">
-        <div class="metric-label">总持币地址数</div>
+        <div class="metric-label">累计地址数</div>
         <div class="metric-value" id="holderCount">--</div>
-        <div class="metric-sub">持有 > 0 ETH</div>
+        <div class="metric-sub">Etherscan unique addresses，非持币地址数</div>
       </div>
       <div class="metric-card">
         <div class="metric-label">活跃地址 (7日均)</div>
@@ -337,13 +337,13 @@
 
   <!-- 筹码集中度评分 -->
   <div class="section">
-    <div class="section-title"><span class="icon">🎯</span> 筹码集中度评分</div>
+    <div class="section-title"><span class="icon">🎯</span> 供给集中度评分</div>
 
     <div class="score-row">
       <div class="score-row-icon">🐳</div>
       <div class="score-row-label">
-        鲸鱼持仓占比（前100地址）
-        <small>占比越高 = 筹码越集中 = 庄家控盘越强</small>
+        前100地址集中度（含交易所/合约）
+        <small>占比越高 = 供给越集中；需结合地址类型解读，不等于单一主体行为</small>
       </div>
       <div class="score-bar-wrap"><div class="score-bar" id="whale100_bar" style="width:0%;background:var(--accent)"></div></div>
       <div class="score-row-val" id="whale100_val">--</div>
@@ -352,8 +352,8 @@
     <div class="score-row">
       <div class="score-row-icon">🏦</div>
       <div class="score-row-label">
-        交易所净流出（7日）
-        <small>净流出 = 鲸鱼囤币 = 供给减少（看多信号）</small>
+        交易所净流量（7日）
+        <small>净流出通常代表交易所可交易供给下降；净流入则代表潜在卖压上升</small>
       </div>
       <div class="score-bar-wrap"><div class="score-bar" id="exflow_bar" style="width:0%"></div></div>
       <div class="score-row-val" id="exflow_val">--</div>
@@ -362,8 +362,8 @@
     <div class="score-row">
       <div class="score-row-icon">💎</div>
       <div class="score-row-label">
-        长期持有者占比（>1年不动）
-        <small>占比越高 = 钻石手越多 = 抛压越小</small>
+        长期未移动供应占比（>1年）
+        <small>占比越高 = 流动供应相对减少；估算口径需谨慎</small>
       </div>
       <div class="score-bar-wrap"><div class="score-bar" id="lth_bar" style="width:0%;background:var(--green)"></div></div>
       <div class="score-row-val" id="lth_val">--</div>
@@ -392,8 +392,8 @@
     <div class="score-row">
       <div class="score-row-icon">🌊</div>
       <div class="score-row-label">
-        稳定币在ETH上市值
-        <small>稳定币增加 = 场外资金蓄势 = 潜在买入力量</small>
+        以太坊链上稳定币市值
+        <small>稳定币规模代表链上流动性基础，不等于必然流入 ETH</small>
       </div>
       <div class="score-bar-wrap"><div class="score-bar" id="stbl_bar" style="width:0%;background:var(--blue)"></div></div>
       <div class="score-row-val" id="stbl_val">--</div>
@@ -432,7 +432,7 @@
 
   <!-- 信号解读 -->
   <div class="section">
-    <div class="section-title"><span class="icon">🔍</span> 庄家行为信号</div>
+    <div class="section-title"><span class="icon">🔍</span> 链上状态提示</div>
     <div id="signalAlerts">
       <div class="loading-placeholder">加载中...</div>
     </div>
@@ -440,26 +440,26 @@
 
   <!-- 如何看懂这个页面 -->
   <div class="section">
-    <div class="section-title"><span class="icon">📖</span> 如何解读筹码集中度</div>
+    <div class="section-title"><span class="icon">📖</span> 如何解读供给集中度</div>
     <div class="interp-box">
       <p>
-        <strong>筹码集中度（Supply Concentration）</strong> 是判断庄家控盘程度的核心链上指标。
-        核心逻辑：如果大量 ETH 集中在少数地址（鲸鱼）中，市场价格更容易被这些大户影响。
+        <strong>供给集中度（Supply Concentration）</strong> 用来观察 ETH 是否集中在少数公开地址中。
+        但前100地址通常包含交易所、合约、ETF/托管和质押相关地址，不能直接等同为单一大户行为。
       </p>
       <br>
       <p>
-        📈 <strong>建仓信号</strong>：鲸鱼地址持仓占比上升 + 交易所 ETH 持续净流出 + 长期持有者增多
-        → 大概率庄家在默默囤货，短期拉盘概率增加。
+        📈 <strong>供给收紧线索</strong>：前100地址集中度稳定 + 交易所 ETH 持续净流出 + 长期未移动供应增多。
+        → 代表可交易供给可能下降，但不等于价格方向判断。
       </p>
       <br>
       <p>
-        📉 <strong>派发信号</strong>：交易所 ETH 净流入增加 + 鲸鱼持仓减少 + 链上大额转账增多
-        → 大概率庄家开始出货，警惕顶部风险。
+        📉 <strong>供给释放线索</strong>：交易所 ETH 净流入增加 + 大额地址余额下降 + 链上大额转账增多。
+        → 代表潜在卖压可能上升，仍需结合价格、成交量和宏观环境复核。
       </p>
       <br>
       <p>
         ⚖️ <strong>重要前提</strong>：链上数据是辅助工具，不是水晶球。
-        部分"鲸鱼地址"实际上是交易所冷钱包或 ETF 托管地址，需结合背景判断。
+        部分大额地址实际上是交易所冷钱包、合约、质押池或托管地址，需结合地址标签判断。
         本页数据每日自动更新，数据源：Etherscan · CoinGecko · DefiLlama。
       </p>
     </div>
@@ -477,7 +477,7 @@
 
 <div class="footer">
   <p>⟠ ETH 链上观察 · <a href="/">BTC 评分仪表盘</a> · <a href="https://flowhunt.net" target="_blank">FlowHunt｜流程猎人</a></p>
-  <p style="margin-top:6px">数据仅供参考，不构成投资建议。投资有风险，入市需谨慎。</p>
+  <p style="margin-top:6px">公开数据研究参考，不构成投资建议、买卖建议或收益承诺。加密资产波动极大，请自行核验来源与风险。</p>
 </div>
 
 <script>
@@ -507,17 +507,17 @@ function calcScores() {
   const s = ethState;
   const sc = {};
 
-  // 1. 鲸鱼集中度 (0-5): >40%=5, 35-40%=4, 30-35%=3, <30%=2
+  // 1. 前100地址集中度 (0-5): 高集中度只是供给结构线索，含交易所/合约/托管地址。
   if (s.whale100Pct !== null) {
     sc.whale = s.whale100Pct >= 40 ? 5 : s.whale100Pct >= 35 ? 4 : s.whale100Pct >= 30 ? 3 : 2;
   } else { sc.whale = null; }
 
-  // 2. 交易所净流出 (0-5): >100k ETH=5, 50-100k=4, 0-50k=3, 净流入=1
+  // 2. 交易所净流量 (0-5): 正数=净流出，负数=净流入。
   if (s.exflow7d !== null) {
     sc.exflow = s.exflow7d > 100000 ? 5 : s.exflow7d > 50000 ? 4 : s.exflow7d > 0 ? 3 : s.exflow7d > -50000 ? 2 : 1;
   } else { sc.exflow = null; }
 
-  // 3. 长期持有者占比 (0-5): >65%=5, 60-65%=4, 55-60%=3, <55%=2
+  // 3. 长期未移动供应占比 (0-5): >65%=5, 60-65%=4, 55-60%=3, <55%=2
   if (s.lthPct !== null) {
     sc.lth = s.lthPct >= 65 ? 5 : s.lthPct >= 60 ? 4 : s.lthPct >= 55 ? 3 : 2;
   } else { sc.lth = null; }
@@ -533,7 +533,7 @@ function calcScores() {
     sc.burn = s.burnRate >= 5000 ? 5 : s.burnRate >= 3000 ? 4 : s.burnRate >= 1000 ? 3 : 2;
   } else { sc.burn = null; }
 
-  // 6. 稳定币市值 (0-5): >100B=5, 70-100B=4, 50-70B=3, <50B=2
+  // 6. 以太坊链上稳定币市值 (0-5): >100B=5, 70-100B=4, 50-70B=3, <50B=2
   if (s.stblMcap !== null) {
     sc.stbl = s.stblMcap >= 100 ? 5 : s.stblMcap >= 70 ? 4 : s.stblMcap >= 50 ? 3 : 2;
   } else { sc.stbl = null; }
@@ -548,9 +548,9 @@ function calcScores() {
 function getSignal(sc) {
   if (sc.total === null) return { grade:'?', title:'数据加载中', desc:'正在获取链上数据...', cls:'grade-neutral' };
   const pct = sc.total / sc.maxPossible;
-  if (pct >= 0.72) return { grade:'🟢', title:'筹码集中 · 积极信号', desc:'大户持续囤货，交易所库存减少，链上供给收紧。此阶段通常是庄家建仓期，但不代表短期即刻拉升。', cls:'grade-accumulate' };
-  if (pct >= 0.50) return { grade:'🟡', title:'筹码横盘 · 观望信号', desc:'大户行为中性，既无明显建仓也无大规模出货。等待方向选择。', cls:'grade-neutral' };
-  return { grade:'🔴', title:'筹码分散 · 警戒信号', desc:'交易所 ETH 流入增加，鲸鱼可能在出货。需结合价格行情谨慎判断。', cls:'grade-distribute' };
+  if (pct >= 0.72) return { grade:'🟢', title:'供给偏集中 · 流动性线索较强', desc:'前100地址集中度、长期未移动供应、交易所净流量与稳定币规模共同指向供给结构偏紧。此结论仅为公开数据观察，不代表价格方向。', cls:'grade-accumulate' };
+  if (pct >= 0.50) return { grade:'🟡', title:'供给结构中性 · 信号混合', desc:'链上集中度、交易所流量和长期未移动供应未形成一致方向。更适合作为风险复核，而不是方向判断。', cls:'grade-neutral' };
+  return { grade:'🔴', title:'供给释放压力上升', desc:'交易所 ETH 流入或集中度下降等线索偏弱。需结合价格、成交量和宏观环境复核，不构成交易建议。', cls:'grade-distribute' };
 }
 
 // ============================================================
@@ -637,18 +637,18 @@ function renderAlerts(sc) {
 
   if (ethState.exflow7d !== null) {
     if (ethState.exflow7d > 50000) {
-      alerts.push({ cls:'bull', icon:'📤', title:'交易所 ETH 大量流出', desc:`过去7天净流出 ${Math.abs(ethState.exflow7d).toLocaleString()} ETH，机构/大户正在将筹码转移到冷钱包囤积。` });
+      alerts.push({ cls:'bull', icon:'📤', title:'交易所 ETH 明显净流出', desc:`过去7天净流出 ${Math.abs(ethState.exflow7d).toLocaleString()} ETH，代表交易所可交易供给阶段性下降，但不能单独判断价格方向。` });
     } else if (ethState.exflow7d < -50000) {
-      alerts.push({ cls:'bear', icon:'📥', title:'交易所 ETH 大量流入', desc:`过去7天净流入 ${Math.abs(ethState.exflow7d).toLocaleString()} ETH，警惕大户将筹码搬上交易所准备出售。` });
+      alerts.push({ cls:'bear', icon:'📥', title:'交易所 ETH 明显净流入', desc:`过去7天净流入 ${Math.abs(ethState.exflow7d).toLocaleString()} ETH，代表潜在可交易供给上升，需要结合成交量与价格行为复核。` });
     }
   }
 
   if (ethState.lthPct !== null && ethState.lthPct >= 60) {
-    alerts.push({ cls:'bull', icon:'💎', title:'长期持有者占主导', desc:`${ethState.lthPct.toFixed(1)}% 的 ETH 超过1年未移动，钻石手比例极高，短期抛压有限。` });
+    alerts.push({ cls:'bull', icon:'💎', title:'长期未移动供应占比较高', desc:`${ethState.lthPct.toFixed(1)}% 的 ETH 超过1年未移动，说明流动供应相对收缩；该项为估算口径。` });
   }
 
   if (ethState.whale100Pct !== null && ethState.whale100Pct >= 38) {
-    alerts.push({ cls:'neutral', icon:'🐳', title:'鲸鱼集中度偏高', desc:`前100地址持有 ${ethState.whale100Pct.toFixed(2)}% 的 ETH，庄家控盘能力强，波动可能放大。` });
+    alerts.push({ cls:'neutral', icon:'🐳', title:'前100地址集中度偏高', desc:`前100地址持有 ${ethState.whale100Pct.toFixed(2)}% 的 ETH，其中可能包含交易所、合约、质押池或托管地址，不能直接视为单一主体行为。` });
   }
 
   if (ethState.burnRate !== null && ethState.burnRate < 500) {

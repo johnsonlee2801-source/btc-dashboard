@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-05-28T04:44:19.700865+00:00",
-  "timestamp_cn": "2026-05-28 12:44 GMT+8",
-  "price_usd": 1979.26,
-  "price_change_24h": -3.92681,
-  "market_cap": 238921938323,
+  "timestamp": "2026-05-28T11:02:14.732494+00:00",
+  "timestamp_cn": "2026-05-28 19:02 GMT+8",
+  "price_usd": 1987.27,
+  "price_change_24h": -4.44026,
+  "market_cap": 239843432346,
   "circulating_supply": 120685415.2818607,
-  "holder_count": 1779840000,
-  "whale_top100_pct": 88.95302442999997,
+  "holder_count": 1780000000,
+  "whale_top100_pct": 38.5,
   "staked_pct": 27.8,
   "total_staked": null,
   "stake_conc_top5": 58.0,
@@ -15,31 +15,31 @@
     {
       "name": "Binance",
       "reserve": "3,200K",
-      "flow": -12000
+      "flow": 12000
     },
     {
       "name": "Coinbase",
       "reserve": "2,800K",
-      "flow": -8000
+      "flow": 8000
     },
     {
       "name": "Kraken",
       "reserve": "1,200K",
-      "flow": 3000
+      "flow": -3000
     },
     {
       "name": "OKX",
       "reserve": "980K",
-      "flow": -5000
+      "flow": 5000
     },
     {
       "name": "Bybit",
       "reserve": "750K",
-      "flow": -2000
+      "flow": 2000
     }
   ],
-  "exchange_netflow_7d": -24000,
-  "stablecoin_mcap_b": 162.7072186785821,
+  "exchange_netflow_7d": 24000,
+  "stablecoin_mcap_b": 162.54022022309456,
   "lth_pct": 62.0,
   "distribution": [
     {
@@ -63,16 +63,16 @@
       "count": "~85,000",
       "eth": "~18M ETH",
       "pct": 15.0,
-      "signal": "bull",
-      "meaning": "聪明钱+小型基金"
+      "signal": "neutral",
+      "meaning": "中型大额地址/小型基金样本"
     },
     {
       "tier": "大户 (10-100 ETH)",
       "count": "~550,000",
       "eth": "~15M ETH",
       "pct": 12.5,
-      "signal": "bull",
-      "meaning": "活跃投资者主力"
+      "signal": "neutral",
+      "meaning": "活跃大额地址样本"
     },
     {
       "tier": "中等 (1-10 ETH)",

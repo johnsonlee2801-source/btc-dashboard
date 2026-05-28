@@ -68,11 +68,12 @@ def fetch_coingecko():
     return result
 
 # ============================================================
-# 2. ETH 持币地址数 - Etherscan
+# 2. ETH 累计地址数 - Etherscan
 # ============================================================
 def fetch_holder_count():
-    log("抓取持币地址数 (Etherscan)...")
-    # Public stats page
+    log("抓取累计地址数 (Etherscan unique addresses)...")
+    # Etherscan address chart is total unique addresses, not holder addresses.
+    # The frontend labels it explicitly to avoid implying every address holds ETH.
     url = "https://etherscan.io/chart/address?output=csv"
     text = http_get(url)
     if text:
@@ -82,14 +83,14 @@ def fetch_holder_count():
             if len(parts) >= 2:
                 try:
                     count = int(parts[1].strip().strip('"'))
-                    log(f"  ✅ 持币地址数: {count:,}")
+                    log(f"  ✅ 累计地址数: {count:,}")
                     return count
                 except:
                     pass
 
-    # Fallback: estimate from known public data (~110M+ addresses)
+    # Fallback: estimate from known public data (~1.7B+ unique addresses)
     log("  ⚠️ 使用估计值")
-    return 110_000_000
+    return 1_780_000_000
 
 # ============================================================
 # 3. Top 100 地址持仓占比 - Etherscan 公开页面
@@ -225,11 +226,11 @@ def fetch_exchange_flow():
         # Fallback: known approximate data
         log("  ⚠️ 使用近似交易所数据")
         exchanges = [
-            {'name': 'Binance', 'reserve': '3,200K', 'flow': -12000},
-            {'name': 'Coinbase', 'reserve': '2,800K', 'flow': -8000},
-            {'name': 'Kraken', 'reserve': '1,200K', 'flow': 3000},
-            {'name': 'OKX', 'reserve': '980K', 'flow': -5000},
-            {'name': 'Bybit', 'reserve': '750K', 'flow': -2000},
+            {'name': 'Binance', 'reserve': '3,200K', 'flow': 12000},
+            {'name': 'Coinbase', 'reserve': '2,800K', 'flow': 8000},
+            {'name': 'Kraken', 'reserve': '1,200K', 'flow': -3000},
+            {'name': 'OKX', 'reserve': '980K', 'flow': 5000},
+            {'name': 'Bybit', 'reserve': '750K', 'flow': 2000},
         ]
         total_flow = sum(e['flow'] for e in exchanges)
 
@@ -297,16 +298,16 @@ def fetch_distribution():
             'count': '~85,000',
             'eth': '~18M ETH',
             'pct': 15.0,
-            'signal': 'bull',
-            'meaning': '聪明钱+小型基金'
+            'signal': 'neutral',
+            'meaning': '中型大额地址/小型基金样本'
         },
         {
             'tier': '大户 (10-100 ETH)',
             'count': '~550,000',
             'eth': '~15M ETH',
             'pct': 12.5,
-            'signal': 'bull',
-            'meaning': '活跃投资者主力'
+            'signal': 'neutral',
+            'meaning': '活跃大额地址样本'
         },
         {
             'tier': '中等 (1-10 ETH)',
