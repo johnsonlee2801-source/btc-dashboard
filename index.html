@@ -2164,6 +2164,7 @@ async function loadAll(forceFresh = false) {
 
   // 先拿后端兜底数据，再让前端实时价覆盖，避免 Promise 竞态把价格压回旧值
   await fetchDataJson();
+  await fetchRealtimePrice();
   await Promise.all([fetchCoingecko(forceFresh), fetchFG(), fetchNetworkHashrate()]);
 
   render();
