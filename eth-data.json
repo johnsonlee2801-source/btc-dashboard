@@ -1,12 +1,12 @@
 {
-  "timestamp": "2026-05-31T04:55:05.929969+00:00",
-  "timestamp_cn": "2026-05-31 12:55 GMT+8",
-  "price_usd": 2030.81,
-  "price_change_24h": 1.16162,
-  "market_cap": 245056410302,
-  "circulating_supply": 120685242.9823532,
-  "holder_count": 1780099200,
-  "whale_top100_pct": 89.13921979000001,
+  "timestamp": "2026-06-01T05:20:02.417616+00:00",
+  "timestamp_cn": "2026-06-01 13:20 GMT+8",
+  "price_usd": 1995.2,
+  "price_change_24h": -1.68067,
+  "market_cap": 240786844109,
+  "circulating_supply": 120685209.6594955,
+  "holder_count": 1780185600,
+  "whale_top100_pct": 89.1573957000001,
   "staked_pct": 27.8,
   "total_staked": null,
   "stake_conc_top5": 58.0,
@@ -39,7 +39,7 @@
     }
   ],
   "exchange_netflow_7d": 24000,
-  "stablecoin_mcap_b": 161.77940404071603,
+  "stablecoin_mcap_b": 161.66971630963383,
   "lth_pct": 62.0,
   "distribution": [
     {
