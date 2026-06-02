@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-06-02T05:00:35.867436+00:00",
-  "timestamp_cn": "2026-06-02 05:00",
+  "timestamp": "2026-06-02T10:55:01.247231+00:00",
+  "timestamp_cn": "2026-06-02 10:55",
   "price": {
-    "price": 70689,
-    "change24h": -3.69
+    "price": 69552,
+    "change24h": -4.31
   },
   "etf": {
     "sum5d": -1899.4,
@@ -23,7 +23,7 @@
   },
   "fed": {
     "fed_direction": "cut1",
-    "reasoning": "Jun 17, 2026 定价：加息/不降息概率 4.00%，变动 1.0bps",
+    "reasoning": "Jun 16, 2026 定价：降息概率 4.23%，变动 -1.1bps",
     "confidence": "high",
     "source": "rateprobability_api"
   },
@@ -42,7 +42,7 @@
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 318.8,
+    "total_b": 318.5,
     "trend": "expand"
   },
   "tips": 2.07
