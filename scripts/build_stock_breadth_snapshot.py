@@ -31,6 +31,7 @@ from statistics import mean
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "snapshots" / "market-breadth-latest.json"
+AI_STOCK_POOL_PATH = ROOT / "data" / "ai-stock-pool.json"
 
 SP500_URL = "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv"
 QQQ_HOLDINGS_URL = "https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/QQQ/holdings/fund?idType=ticker&interval=monthly&productType=ETF"
@@ -51,11 +52,6 @@ BARCHART_NYSE_BREADTH_SYMBOLS = {
     "newHighs52w": "$MAHN",
     "newLows52w": "$MALN",
 }
-SEC_FORM4_TICKERS = [
-    "AAPL", "MSFT", "NVDA", "AMZN", "GOOGL", "META", "TSLA",
-    "AVGO", "ORCL", "PLTR", "CRM", "AMD", "GE", "IBM", "QCOM",
-    "NOW", "ADBE", "APP", "ISRG", "PDD", "NEE", "CEG", "VST", "OKLO",
-]
 SEC_13F_MANAGERS = [
     {"name": "Citadel Advisors", "cik": "0001423053"},
     {"name": "Renaissance Technologies", "cik": "0001037389"},
@@ -66,7 +62,7 @@ SEC_13F_MANAGERS = [
     {"name": "Tiger Global Management", "cik": "0001167483"},
     {"name": "Berkshire Hathaway", "cik": "0001067983"},
 ]
-SEC_13F_TARGETS = {
+SEC_13F_TARGET_OVERRIDES = {
     "AAPL": {"cusips": ["037833100"], "patterns": ["APPLE INC"]},
     "MSFT": {"cusips": ["594918104"], "patterns": ["MICROSOFT CORP"]},
     "NVDA": {"cusips": ["67066G104"], "patterns": ["NVIDIA CORP"]},
@@ -120,6 +116,66 @@ def fetch_bytes(url: str, timeout: int = 45, headers: dict | None = None) -> byt
 def yahoo_symbol(symbol: str) -> str:
     # Yahoo uses BRK-B / BF-B instead of BRK.B / BF.B.
     return symbol.strip().upper().replace(".", "-")
+
+
+def load_ai_stock_pool_tickers() -> list[dict]:
+    payload = json.loads(AI_STOCK_POOL_PATH.read_text(encoding="utf-8"))
+    return payload.get("tickers", [])
+
+
+def issuer_pattern_variants(name: str) -> list[str]:
+    raw = re.sub(r"\s+", " ", str(name or "").upper()).strip()
+    if not raw:
+        return []
+    variants = [raw]
+    cleaned = re.sub(r"[^A-Z0-9&.\- ]+", " ", raw)
+    cleaned = re.sub(r"\s+", " ", cleaned).strip()
+    if cleaned and cleaned not in variants:
+        variants.append(cleaned)
+    amp = cleaned.replace("&", "AND").strip()
+    if amp and amp not in variants:
+        variants.append(amp)
+    base = re.sub(r"\b(HOLDINGS?|TECHNOLOGY|TECHNOLOGIES|GROUP|SYSTEMS|NETWORKS|PLATFORMS|CORP|CORPORATION|INC|LTD|LIMITED|CO|COMPANY|PLC|N\.V\.)\b", " ", cleaned)
+    base = re.sub(r"\s+", " ", base).strip()
+    if base and len(base) >= 4 and base not in variants:
+        variants.append(base)
+    return variants
+
+
+def build_sec_form4_tickers() -> list[str]:
+    seen = set()
+    out = []
+    for row in load_ai_stock_pool_tickers():
+        ticker = str(row.get("ticker") or "").upper().strip()
+        if ticker and ticker not in seen:
+            seen.add(ticker)
+            out.append(ticker)
+    return out
+
+
+def build_sec_13f_targets() -> dict[str, dict]:
+    targets = {}
+    for row in load_ai_stock_pool_tickers():
+        ticker = str(row.get("ticker") or "").upper().strip()
+        if not ticker:
+            continue
+        targets[ticker] = {
+            "cusips": [],
+            "patterns": issuer_pattern_variants(row.get("name_en") or ""),
+        }
+    for ticker, override in SEC_13F_TARGET_OVERRIDES.items():
+        base = targets.setdefault(ticker, {"cusips": [], "patterns": []})
+        for cusip in override.get("cusips", []):
+            if cusip not in base["cusips"]:
+                base["cusips"].append(cusip)
+        for pattern in override.get("patterns", []):
+            if pattern not in base["patterns"]:
+                base["patterns"].append(pattern)
+    return targets
+
+
+SEC_FORM4_TICKERS = build_sec_form4_tickers()
+SEC_13F_TARGETS = build_sec_13f_targets()
 
 
 def load_sp500() -> list[dict]:
@@ -665,29 +721,44 @@ def sec_form4_status(sell_value: float, buy_value: float, sale_tickers: int, buy
     return "neutral"
 
 
+def collect_form4_ticker_transactions(ticker: str, info: dict, since_date: str) -> dict:
+    filings = sec_recent_form4_filings(info["cik10"], limit=8)
+    transactions = []
+    errors = []
+    for filing in filings:
+        if filing.get("filingDate") and filing["filingDate"] < since_date:
+            continue
+        try:
+            transactions.extend(parse_sec_form4_transactions(ticker, info["cik"], filing))
+        except Exception as e:
+            errors.append({"source": "sec_form4_insider_activity", "ticker": ticker, "accession": filing.get("accessionNumber"), "error": str(e)[:180]})
+        time.sleep(0.05)
+    return {"ticker": ticker, "transactions": transactions, "errors": errors}
+
+
 def collect_sec_form4_insider_activity(fetch_errors: list[dict]) -> dict | None:
     cik_map = load_sec_ticker_cik_map()
     since_date = (datetime.now(timezone.utc).date() - timedelta(days=90)).isoformat()
     transactions = []
     missing = []
+    jobs = []
     for ticker in SEC_FORM4_TICKERS:
         info = cik_map.get(ticker)
         if not info:
             missing.append(ticker)
             continue
-        try:
-            filings = sec_recent_form4_filings(info["cik10"], limit=8)
-            time.sleep(0.12)
-            for filing in filings:
-                if filing.get("filingDate") and filing["filingDate"] < since_date:
-                    continue
-                try:
-                    transactions.extend(parse_sec_form4_transactions(ticker, info["cik"], filing))
-                except Exception as e:
-                    fetch_errors.append({"source": "sec_form4_insider_activity", "ticker": ticker, "accession": filing.get("accessionNumber"), "error": str(e)[:180]})
-                time.sleep(0.12)
-        except Exception as e:
-            fetch_errors.append({"source": "sec_form4_insider_activity", "ticker": ticker, "error": str(e)[:180]})
+        jobs.append((ticker, info))
+    with ThreadPoolExecutor(max_workers=4) as ex:
+        futs = {ex.submit(collect_form4_ticker_transactions, ticker, info, since_date): ticker for ticker, info in jobs}
+        for fut in as_completed(futs):
+            ticker = futs[fut]
+            try:
+                result = fut.result()
+                transactions.extend(result["transactions"])
+                fetch_errors.extend(result["errors"])
+            except Exception as e:
+                fetch_errors.append({"source": "sec_form4_insider_activity", "ticker": ticker, "error": str(e)[:180]})
+            time.sleep(0.05)
     sales = [t for t in transactions if t["direction"] == "sale"]
     purchases = [t for t in transactions if t["direction"] == "purchase"]
     sell_value = sum(t["valueUsd"] for t in sales)
@@ -698,6 +769,15 @@ def collect_sec_form4_insider_activity(fetch_errors: list[dict]) -> dict | None:
         sale_by_ticker[t["ticker"]] = sale_by_ticker.get(t["ticker"], 0) + t["valueUsd"]
     for t in purchases:
         buy_by_ticker[t["ticker"]] = buy_by_ticker.get(t["ticker"], 0) + t["valueUsd"]
+    ticker_totals = {}
+    for ticker in sorted(set(sale_by_ticker) | set(buy_by_ticker)):
+        txs = [t for t in transactions if t["ticker"] == ticker]
+        ticker_totals[ticker] = {
+            "sellValueUsd": round(sale_by_ticker.get(ticker, 0), 2),
+            "buyValueUsd": round(buy_by_ticker.get(ticker, 0), 2),
+            "saleCount": sum(1 for t in txs if t["direction"] == "sale"),
+            "purchaseCount": sum(1 for t in txs if t["direction"] == "purchase"),
+        }
     status = sec_form4_status(sell_value, buy_value, len(sale_by_ticker), len(buy_by_ticker))
     top_sales = sorted(sales, key=lambda x: x["valueUsd"], reverse=True)[:12]
     top_purchases = sorted(purchases, key=lambda x: x["valueUsd"], reverse=True)[:8]
@@ -716,10 +796,12 @@ def collect_sec_form4_insider_activity(fetch_errors: list[dict]) -> dict | None:
         "missingTickers": missing,
         "sellValueUsd": round(sell_value, 2),
         "buyValueUsd": round(buy_value, 2),
+        "tickerTotals": ticker_totals,
         "saleTickerCount": len(sale_by_ticker),
         "buyTickerCount": len(buy_by_ticker),
         "topSaleTickers": sorted([{"ticker": k, "valueUsd": round(v, 2)} for k, v in sale_by_ticker.items()], key=lambda x: x["valueUsd"], reverse=True)[:10],
         "topBuyTickers": sorted([{"ticker": k, "valueUsd": round(v, 2)} for k, v in buy_by_ticker.items()], key=lambda x: x["valueUsd"], reverse=True)[:10],
+        "transactions": transactions,
         "topSales": top_sales,
         "topPurchases": top_purchases,
         "transactionCount": len(transactions),
@@ -806,72 +888,96 @@ def parse_13f_target_holdings(cik: str, filing: dict) -> dict[str, dict]:
     return holdings
 
 
+def collect_13f_manager_snapshot(manager: dict) -> dict:
+    cik = manager["cik"]
+    filings = recent_13f_filings(cik, limit=2)
+    if len(filings) < 2:
+        raise ValueError("less than two 13F filings")
+    current_filing, previous_filing = filings[0], filings[1]
+    current = parse_13f_target_holdings(cik, current_filing)
+    previous = parse_13f_target_holdings(cik, previous_filing)
+    manager_current_value = sum(x["valueUsd"] for x in current.values())
+    manager_previous_value = sum(x["valueUsd"] for x in previous.values())
+    tickers = sorted(set(current) | set(previous))
+    manager_changes = []
+    increased = decreased = unchanged = 0
+    for ticker in tickers:
+        cur = current.get(ticker, {"shares": 0, "valueUsd": 0, "issuer": None})
+        prev = previous.get(ticker, {"shares": 0, "valueUsd": 0})
+        share_change = cur["shares"] - prev["shares"]
+        if abs(share_change) < 1:
+            unchanged += 1
+            direction = "flat"
+        elif share_change > 0:
+            increased += 1
+            direction = "increase"
+        else:
+            decreased += 1
+            direction = "decrease"
+        pct_change = round(share_change / prev["shares"] * 100, 1) if prev.get("shares") else (100.0 if share_change > 0 else None)
+        row = {
+            "manager": manager["name"],
+            "ticker": ticker,
+            "direction": direction,
+            "shares": round(cur["shares"], 2),
+            "previousShares": round(prev["shares"], 2),
+            "shareChange": round(share_change, 2),
+            "shareChangePct": pct_change,
+            "valueUsd": round(cur["valueUsd"], 2),
+            "previousValueUsd": round(prev["valueUsd"], 2),
+        }
+        manager_changes.append(row)
+    return {
+        "name": manager["name"],
+        "cik": cik,
+        "currentFilingDate": current_filing.get("filingDate"),
+        "currentReportDate": current_filing.get("reportDate"),
+        "previousFilingDate": previous_filing.get("filingDate"),
+        "previousReportDate": previous_filing.get("reportDate"),
+        "targetValueUsd": round(manager_current_value, 2),
+        "previousTargetValueUsd": round(manager_previous_value, 2),
+        "targetTickerCount": len(current),
+        "changes": sorted(manager_changes, key=lambda x: abs(x.get("valueUsd", 0)), reverse=True),
+        "increased": increased,
+        "decreased": decreased,
+        "unchanged": unchanged,
+        "currentValue": manager_current_value,
+        "previousValue": manager_previous_value,
+    }
+
+
 def collect_sec_13f_institutional_sample(fetch_errors: list[dict]) -> dict | None:
     managers = []
     changed_rows = []
     increased = decreased = unchanged = 0
     current_value = previous_value = 0.0
-    for manager in SEC_13F_MANAGERS:
-        cik = manager["cik"]
-        try:
-            filings = recent_13f_filings(cik, limit=2)
-            time.sleep(0.15)
-            if len(filings) < 2:
-                fetch_errors.append({"source": "sec_13f_institutional_sample", "manager": manager["name"], "error": "less than two 13F filings"})
-                continue
-            current_filing, previous_filing = filings[0], filings[1]
-            current = parse_13f_target_holdings(cik, current_filing)
-            time.sleep(0.15)
-            previous = parse_13f_target_holdings(cik, previous_filing)
-            time.sleep(0.15)
-            manager_current_value = sum(x["valueUsd"] for x in current.values())
-            manager_previous_value = sum(x["valueUsd"] for x in previous.values())
-            current_value += manager_current_value
-            previous_value += manager_previous_value
-            tickers = sorted(set(current) | set(previous))
-            manager_changes = []
-            for ticker in tickers:
-                cur = current.get(ticker, {"shares": 0, "valueUsd": 0, "issuer": None})
-                prev = previous.get(ticker, {"shares": 0, "valueUsd": 0})
-                share_change = cur["shares"] - prev["shares"]
-                if abs(share_change) < 1:
-                    unchanged += 1
-                    direction = "flat"
-                elif share_change > 0:
-                    increased += 1
-                    direction = "increase"
-                else:
-                    decreased += 1
-                    direction = "decrease"
-                pct_change = round(share_change / prev["shares"] * 100, 1) if prev.get("shares") else (100.0 if share_change > 0 else None)
-                row = {
-                    "manager": manager["name"],
-                    "ticker": ticker,
-                    "direction": direction,
-                    "shares": round(cur["shares"], 2),
-                    "previousShares": round(prev["shares"], 2),
-                    "shareChange": round(share_change, 2),
-                    "shareChangePct": pct_change,
-                    "valueUsd": round(cur["valueUsd"], 2),
-                    "previousValueUsd": round(prev["valueUsd"], 2),
-                }
-                manager_changes.append(row)
-                if direction != "flat":
-                    changed_rows.append(row)
-            managers.append({
-                "name": manager["name"],
-                "cik": cik,
-                "currentFilingDate": current_filing.get("filingDate"),
-                "currentReportDate": current_filing.get("reportDate"),
-                "previousFilingDate": previous_filing.get("filingDate"),
-                "previousReportDate": previous_filing.get("reportDate"),
-                "targetValueUsd": round(manager_current_value, 2),
-                "previousTargetValueUsd": round(manager_previous_value, 2),
-                "targetTickerCount": len(current),
-                "changes": sorted(manager_changes, key=lambda x: abs(x.get("valueUsd", 0)), reverse=True)[:12],
-            })
-        except Exception as e:
-            fetch_errors.append({"source": "sec_13f_institutional_sample", "manager": manager["name"], "error": str(e)[:180]})
+    with ThreadPoolExecutor(max_workers=3) as ex:
+        futs = {ex.submit(collect_13f_manager_snapshot, manager): manager for manager in SEC_13F_MANAGERS}
+        for fut in as_completed(futs):
+            manager = futs[fut]
+            try:
+                result = fut.result()
+                managers.append({
+                    "name": result["name"],
+                    "cik": result["cik"],
+                    "currentFilingDate": result["currentFilingDate"],
+                    "currentReportDate": result["currentReportDate"],
+                    "previousFilingDate": result["previousFilingDate"],
+                    "previousReportDate": result["previousReportDate"],
+                    "targetValueUsd": result["targetValueUsd"],
+                    "previousTargetValueUsd": result["previousTargetValueUsd"],
+                    "targetTickerCount": result["targetTickerCount"],
+                    "changes": result["changes"],
+                })
+                increased += result["increased"]
+                decreased += result["decreased"]
+                unchanged += result["unchanged"]
+                current_value += result["currentValue"]
+                previous_value += result["previousValue"]
+                changed_rows.extend([row for row in result["changes"] if row["direction"] != "flat"])
+            except Exception as e:
+                fetch_errors.append({"source": "sec_13f_institutional_sample", "manager": manager["name"], "error": str(e)[:180]})
+            time.sleep(0.05)
     total_changes = increased + decreased + unchanged
     if not managers:
         return None
@@ -894,6 +1000,7 @@ def collect_sec_13f_institutional_sample(fetch_errors: list[dict]) -> dict | Non
         "updatedAt": latest_date,
         "value": f"样本机构AI/Mag7持仓 ${current_value/1_000_000_000:.1f}B · 较上季 {value_change_pct:+.1f}% · 增/减 {increased}/{decreased}",
         "status": status,
+        "tickerUniverse": sorted(SEC_13F_TARGETS.keys()),
         "managerCount": len(managers),
         "currentValueUsd": round(current_value, 2),
         "previousValueUsd": round(previous_value, 2),

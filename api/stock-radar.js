@@ -494,12 +494,13 @@ function buildStockEvidenceMetrics(symbol, snapshot) {
 
   const form4 = macro.sec_form4_insider_activity;
   if (form4) {
+    const totals = form4.tickerTotals?.[ticker] || null;
     const sale = (form4.topSaleTickers || []).find(x => String(x.ticker || '').toUpperCase() === ticker);
     const buy = (form4.topBuyTickers || []).find(x => String(x.ticker || '').toUpperCase() === ticker);
-    const sellValue = Number(sale?.valueUsd || 0);
-    const buyValue = Number(buy?.valueUsd || 0);
+    const sellValue = Number(totals?.sellValueUsd ?? sale?.valueUsd ?? 0);
+    const buyValue = Number(totals?.buyValueUsd ?? buy?.valueUsd ?? 0);
     const covered = (form4.coveredTickers || form4.tickerUniverse || []).map(x => String(x).toUpperCase()).includes(ticker);
-    const txs = [...(form4.topSales || []), ...(form4.topPurchases || [])]
+    const txs = [...(form4.transactions || []), ...(form4.topSales || []), ...(form4.topPurchases || [])]
       .filter(x => String(x.ticker || '').toUpperCase() === ticker)
       .slice(0, 6);
     let status = 'neutral';
@@ -534,6 +535,7 @@ function buildStockEvidenceMetrics(symbol, snapshot) {
         if (String(change.ticker || '').toUpperCase() === ticker) changes.push({ ...change, manager: change.manager || manager.name });
       }
     }
+    const covered = (thirteenF.tickerUniverse || []).map(x => String(x).toUpperCase()).includes(ticker);
     const currentValue = changes.reduce((s, x) => s + Number(x.valueUsd || 0), 0);
     const previousValue = changes.reduce((s, x) => s + Number(x.previousValueUsd || 0), 0);
     const inc = changes.filter(x => x.direction === 'increase').length;
@@ -546,16 +548,16 @@ function buildStockEvidenceMetrics(symbol, snapshot) {
       id: 'stock_sec_13f_institutional_sample',
       name: '13F 样本机构慢变量',
       purpose: '观察样本机构上一季度末多头持仓变化，作为慢变量证据层',
-      value: changes.length ? `样本持仓 ${moneyShort(currentValue)} · 较上季 ${pct == null ? '新增' : (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%'} · 增/减 ${inc}/${dec}` : null,
-      status: changes.length ? status : 'pending',
+      value: covered ? `样本持仓 ${moneyShort(currentValue)} · 较上季 ${pct == null ? '无可比变动' : (pct >= 0 ? '+' : '') + pct.toFixed(1) + '%'} · 增/减 ${inc}/${dec}` : null,
+      status: covered ? status : 'pending',
       threshold: '样本机构多头持仓较上季 ±15% 且方向一致时，标记为慢变量增/减持线索',
       sourceName: 'SEC 13F 样本机构快照',
       sourceUrl: thirteenF.source || 'https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets',
       frequency: '季更；最多 45 天披露延迟',
       updatedAt: thirteenF.updatedAt || generatedAt,
-      dataStatus: changes.length ? 'Cached' : 'Pending',
+      dataStatus: covered ? 'Cached' : 'Pending',
       logic: '13F 只代表样本机构季度末多头持仓，不含空头、完整衍生品和季内交易。它适合看慢变量，不适合判断今天是否有人派发。',
-      caseStudy: changes.slice(0, 6).map(x => `${x.manager} ${x.direction === 'increase' ? '增持' : '减持'} ${x.shareChangePct != null ? x.shareChangePct.toFixed(1) + '%' : ''}`).join('；') || '当前样本机构未返回该股票持仓变化。',
+      caseStudy: changes.slice(0, 6).map(x => `${x.manager} ${x.direction === 'increase' ? '增持' : '减持'} ${x.shareChangePct != null ? x.shareChangePct.toFixed(1) + '%' : ''}`).join('；') || '当前样本机构最近两期 13F 未记录该股票持仓变化。',
       limitations: thirteenF.limitations || '样本机构有限；季度滞后；只看多头持仓。',
       extras: { currentValueUsd: currentValue, previousValueUsd: previousValue, valueChangePct: pct, increases: inc, decreases: dec, changes: changes.slice(0, 12) },
     }));
