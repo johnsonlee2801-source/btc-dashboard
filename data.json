@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-08-07T19:14:07.046462+00:00",
-  "timestamp_cn": "2026-08-07 19:14",
+  "timestamp": "2026-08-07T23:21:20.650522+00:00",
+  "timestamp_cn": "2026-08-07 23:21",
   "price": {
-    "price": 64800,
-    "change24h": 0.64
+    "price": 64849,
+    "change24h": 0.96
   },
   "etf": {
-    "sum5d": 763.6,
+    "sum5d": 767.6,
     "days": [
       170.1,
       211.5,
       244.4,
       137.6,
-      0.0
+      4.0
     ],
     "latest_date": "07 Aug 2026",
     "source": "farside_parsed"
@@ -22,15 +22,15 @@
     "nupl": 0.64
   },
   "fed": {
-    "fed_direction": "hike",
-    "reasoning": "Sep 16, 2026 定价：加息/不降息概率 61.60%，变动 15.4bps",
-    "confidence": "high",
+    "fed_direction": "cut1",
+    "reasoning": "Sep 16, 2026 定价：加息/不降息概率 49.20%，变动 12.3bps",
+    "confidence": "medium",
     "source": "rateprobability_api"
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0037,
-    "avg": 0.0037,
+    "okx": 0.0041,
+    "avg": 0.0041,
     "source": "exchange_public"
   },
   "margin_lending": {
@@ -42,8 +42,8 @@
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 307.9,
+    "total_b": 307.2,
     "trend": "expand"
   },
-  "tips": 2.41
+  "tips": 2.43
 }
