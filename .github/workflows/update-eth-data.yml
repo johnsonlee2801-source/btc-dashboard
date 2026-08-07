@@ -26,7 +26,16 @@ jobs:
           git add eth-data.json
           if git diff --cached --quiet; then
             echo "No ETH data changes"
-          else
-            git commit -m "chore: update ETH on-chain data"
-            git push
+            exit 0
           fi
+          git commit -m "chore: update ETH on-chain data"
+          # Another data workflow may land first; rebase and retry instead of failing.
+          for attempt in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push rejected on attempt $attempt, rebasing onto latest master"
+            git pull --rebase origin master
+          done
+          echo "Push still failing after 3 attempts"
+          exit 1
