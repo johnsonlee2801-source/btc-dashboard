@@ -7,6 +7,15 @@ on:
   push:
     branches:
       - master
+  # Data workflows commit with the default GITHUB_TOKEN, and those pushes do
+  # not trigger workflows. Watch the runs themselves instead.
+  workflow_run:
+    workflows:
+      - Update BTC dashboard data
+      - Update ETH on-chain data
+      - Update stock breadth snapshot
+    types:
+      - completed
   workflow_dispatch:
 
 # Data workflows push on their own schedules; never run two production
@@ -18,6 +27,10 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    # A failed data run has nothing worth publishing.
+    if: >-
+      github.event_name != 'workflow_run' ||
+      github.event.workflow_run.conclusion == 'success'
     env:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
