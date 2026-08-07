@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-08-07T23:21:20.650522+00:00",
-  "timestamp_cn": "2026-08-07 23:21",
+  "timestamp": "2026-08-07T23:58:03.522458+00:00",
+  "timestamp_cn": "2026-08-07 23:58",
   "price": {
-    "price": 64849,
+    "price": 64882,
     "change24h": 0.96
   },
   "etf": {
-    "sum5d": 767.6,
+    "sum5d": 748.2,
     "days": [
       170.1,
       211.5,
       244.4,
       137.6,
-      4.0
+      -15.4
     ],
     "latest_date": "07 Aug 2026",
     "source": "farside_parsed"
@@ -29,8 +29,8 @@
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0041,
-    "avg": 0.0041,
+    "okx": 0.0038,
+    "avg": 0.0038,
     "source": "exchange_public"
   },
   "margin_lending": {
