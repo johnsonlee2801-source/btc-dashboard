@@ -65,4 +65,7 @@ jobs:
 
       - name: Deploy to production
         if: steps.check.outputs.skip != 'true'
-        run: vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
+        # Fail loudly rather than hang: a stuck deploy blocks every later one
+        # through the concurrency group.
+        timeout-minutes: 10
+        run: vercel deploy --prebuilt --prod --yes --debug --token="$VERCEL_TOKEN"
