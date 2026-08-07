@@ -35,3 +35,5 @@ jobs:
             git commit -m "chore: update BTC dashboard data"
             git push
           fi
+
+# Registered with GitHub Actions on initial repository push.
