@@ -1,0 +1,55 @@
+name: Deploy to Vercel
+
+# The Vercel project is owned by a GitHub account we no longer control, so its
+# Git integration cannot see this repository. Deploy with a token instead.
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+# Data workflows push on their own schedules; never run two production
+# deploys at once, and never cancel one midway.
+concurrency:
+  group: vercel-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+    steps:
+      - name: Check deploy credentials
+        id: check
+        run: |
+          missing=""
+          [ -z "$VERCEL_TOKEN" ] && missing="$missing VERCEL_TOKEN"
+          [ -z "$VERCEL_ORG_ID" ] && missing="$missing VERCEL_ORG_ID"
+          [ -z "$VERCEL_PROJECT_ID" ] && missing="$missing VERCEL_PROJECT_ID"
+          if [ -n "$missing" ]; then
+            echo "::warning::Skipping deploy, missing secrets:$missing"
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v5
+        if: steps.check.outputs.skip != 'true'
+
+      - name: Install Vercel CLI
+        if: steps.check.outputs.skip != 'true'
+        run: npm install --global vercel@latest
+
+      - name: Pull production project settings
+        if: steps.check.outputs.skip != 'true'
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+
+      - name: Build
+        if: steps.check.outputs.skip != 'true'
+        run: vercel build --prod --token="$VERCEL_TOKEN"
+
+      - name: Deploy to production
+        if: steps.check.outputs.skip != 'true'
+        run: vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"
