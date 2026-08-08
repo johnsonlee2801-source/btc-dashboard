@@ -1366,6 +1366,7 @@ const state = {
   fed: null, dxy: null, tips: null, etf5d: null, stbl: null, fr_bn: null, fr_okx: null, ml_rate: null, oi_btc: null,
   // 链上指标的新鲜度：抓取失败时后端会沿用旧值，这里记录它到底多旧
   mvrvStale: false, mvrvAgeDays: null, nuplStale: false, nuplAgeDays: null,
+  oiSource: null,  // OI 阈值按 Binance 量级标定，换了交易所就不能照搬
 };
 
 // ============================================================
@@ -1601,8 +1602,11 @@ function calcScores() {
   }
 
   // 未平仓合约 OI (3pts) — 杠杆程度判断（注：用绝对量近似，理想应用OI/市值比，后续迭代）
+  // 阈值是按 Binance 永续的量级定的。Binance 封锁 GitHub runner 后会回退到 OKX，
+  // 那个市场本来就小得多，硬套阈值会把"市场小"误判成"杠杆低"，所以只在来源是
+  // Binance 时计分，其余保持中性默认值。
   let oi_score = 1;
-  if (state.oi_btc !== null) {
+  if (state.oi_btc !== null && state.oiSource === 'binance_public') {
     if (state.oi_btc < 60000) oi_score = 3;      // 低OI=低杠杆=健康
     else if (state.oi_btc < 90000) oi_score = 2; // 中等OI=正常
     else if (state.oi_btc < 120000) oi_score = 1; // 偏高OI=杠杆偏多
@@ -1833,7 +1837,10 @@ function render() {
   }
   if(state.oi_btc!==null){
     const oiK = (state.oi_btc/1000).toFixed(1);
-    setText('m2oi', oiK+'K BTC ('+sc.oi_score+'/3)');
+    const oiVenue = {binance_public:'Binance', okx_public:'OKX', bybit_public:'Bybit'}[state.oiSource];
+    setText('m2oi', state.oiSource === 'binance_public'
+      ? oiK+'K BTC ('+sc.oi_score+'/3)'
+      : oiK+'K BTC · '+(oiVenue||'其他来源')+'（口径不同，未计分）');
     setBar('m2oi_bar', barWidth(sc.oi_score,3), barColor(sc.oi_score,3));
     document.getElementById('m2oi').classList.remove('loading');
   }
@@ -2025,8 +2032,10 @@ async function fetchDataJson() {
     if (d.margin_lending) {
       if (d.margin_lending.btc_annual_rate !== null && d.margin_lending.btc_annual_rate !== undefined)
         state.ml_rate = d.margin_lending.btc_annual_rate;
-      if (d.margin_lending.open_interest !== null && d.margin_lending.open_interest !== undefined)
+      if (d.margin_lending.open_interest !== null && d.margin_lending.open_interest !== undefined) {
         state.oi_btc = d.margin_lending.open_interest;
+        state.oiSource = d.margin_lending.open_interest_source || 'binance_public';
+      }
     }
 
     // 稳定币趋势
