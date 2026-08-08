@@ -891,8 +891,8 @@ def main(push=False, dry_run=False):
     log(f"\n✅ 数据已写入: {DATA_FILE}")
 
     if not push:
-        log("  本地运行：未提交也未推送。要发布请加 --push，"
-            "或让 GitHub Actions 处理（默认路径）。")
+        log("  未提交也未推送：git 操作需显式 --push；"
+            "定时任务里由 workflow 负责提交。")
         return data
 
     push_data_file(data)
