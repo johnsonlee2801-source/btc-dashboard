@@ -4,9 +4,10 @@ BTC Dashboard - 自动数据抓取脚本
 每6小时运行一次，抓取链上/宏观数据，写入 data.json，推送到 GitHub
 """
 
-import json, urllib.request, urllib.error, time, subprocess, os, re
+import json, urllib.request, urllib.error, time, subprocess, os, re, math
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 
 DEEPSEEK_KEY = os.environ.get("DEEPSEEK_KEY", "")
 GH_TOKEN = os.environ.get("GH_TOKEN", "")
@@ -34,6 +35,21 @@ def carry_forward(previous, current, path, label):
         log(f"  ♻️ {label} 本轮抓取失败，沿用上一版有效值: {old}")
         return old
     return current
+
+def drop_non_finite(node, path="data"):
+    """Replace NaN/Infinity with None, in place, anywhere in the payload.
+
+    A single non-finite float makes data.json unparseable by the browser, which
+    takes down every metric on the page — not just the bad one.
+    """
+    items = node.items() if isinstance(node, dict) else enumerate(node)
+    for key, value in list(items):
+        if isinstance(value, (dict, list)):
+            drop_non_finite(value, f"{path}.{key}")
+        elif isinstance(value, float) and not math.isfinite(value):
+            log(f"  ⚠️ {path}.{key} 是 {value}，无法写入 JSON，置为 null")
+            node[key] = None
+
 
 ONCHAIN_STALE_AFTER_DAYS = 3
 
@@ -596,10 +612,15 @@ def fetch_margin_lending():
         oi_data = http_get(oi_url)
         if oi_data:
             oi = json.loads(oi_data)
-            oi_btc = float(oi.get('openInterest', 0))
-            result['open_interest'] = round(oi_btc, 0)
-            result['open_interest_source'] = 'binance_public'
-            log(f"  ✅ BTC未平仓合约 (Binance): {oi_btc:,.0f} BTC")
+            oi_btc = float(oi.get('openInterest') or 0)
+            # A malformed 200 response would otherwise publish 0 and, being
+            # non-None, stop the fallback chain below from ever running.
+            if oi_btc > 0:
+                result['open_interest'] = round(oi_btc, 0)
+                result['open_interest_source'] = 'binance_public'
+                log(f"  ✅ BTC未平仓合约 (Binance): {oi_btc:,.0f} BTC")
+            else:
+                log("  ⚠️ Binance 未平仓合约响应缺少有效数值，转兜底源")
     except Exception as e:
         log(f"  ⚠️ 未平仓合约抓取失败: {e}")
 
@@ -728,9 +749,14 @@ def main():
 
     previous_data = load_previous_data()
 
+    # One instant, two renderings. datetime.now() without a timezone follows the
+    # machine clock: on the GitHub runner that is UTC, so the "CN" timestamp the
+    # page shows was running eight hours behind Beijing.
+    now_utc = datetime.now(timezone.utc)
+
     data = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "timestamp_cn": datetime.now().strftime("%Y-%m-%d %H:%M"),
+        "timestamp": now_utc.isoformat(),
+        "timestamp_cn": now_utc.astimezone(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M"),
         "price": None,
         "etf": None,
         "onchain": {"mvrv_zscore": None, "nupl": None},
@@ -804,26 +830,35 @@ def main():
     log("=" * 55)
 
     # 写入文件
+    # NaN/Infinity are valid Python floats but not valid JSON. The browser's
+    # response.json() rejects them, which would blank the whole dashboard, so
+    # drop them to null here and let allow_nan=False catch anything missed.
+    drop_non_finite(data)
     with open(DATA_FILE, 'w', encoding='utf-8') as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+        json.dump(data, f, ensure_ascii=False, indent=2, allow_nan=False)
     log(f"\n✅ 数据已写入: {DATA_FILE}")
 
     # 推送到 GitHub
     log("推送到 GitHub...")
     try:
         os.chdir(REPO_DIR)
-        # Only the data file: this script never edits index.html, and staging it
-        # sweeps unrelated in-progress page edits into an automated commit.
-        subprocess.run(["git", "add", "data.json"], check=True, capture_output=True)
+        # --only scopes the commit to this one path. Staging alone does not:
+        # a plain `git commit` also sweeps in whatever the user had staged.
         result = subprocess.run(
-            ["git", "commit", "-m", f"data: auto-update {data['timestamp_cn']}"],
+            ["git", "commit", "--only", "-m",
+             f"data: auto-update {data['timestamp_cn']}", "--", "data.json"],
             capture_output=True, text=True
         )
-        if "nothing to commit" in result.stdout:
-            log("  无变化，跳过 push")
-        else:
+        if result.returncode == 0:
             subprocess.run(["git", "push"], check=True, capture_output=True)
             log("  ✅ 推送成功")
+        elif "nothing to commit" in result.stdout or "no changes added" in result.stdout:
+            log("  无变化，跳过 push")
+        else:
+            # Never fall through to push on an unexplained failure: that reports
+            # success while the new data sits uncommitted.
+            log(f"  ⚠️ commit 失败({result.returncode})，未推送: "
+                f"{(result.stderr or result.stdout).strip()[:200]}")
     except subprocess.CalledProcessError as e:
         log(f"  Git 操作: {e.stderr if e.stderr else str(e)}")
 

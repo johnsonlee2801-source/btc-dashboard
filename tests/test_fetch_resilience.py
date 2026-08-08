@@ -110,5 +110,44 @@ class OnchainFreshnessTests(unittest.TestCase):
         self.assertTrue(onchain["mvrv_zscore_stale"])
 
 
+class PayloadSafetyTests(unittest.TestCase):
+    """data.json must stay parseable: one bad float blanks the whole page."""
+
+    def test_non_finite_floats_become_null(self):
+        payload = {
+            "price": {"price": float("nan"), "change24h": 1.2},
+            "series": [1.0, float("inf"), 3.0],
+            "tips": float("-inf"),
+            "text": "unchanged",
+        }
+        fetch_data.drop_non_finite(payload)
+        self.assertIsNone(payload["price"]["price"])
+        self.assertEqual(payload["price"]["change24h"], 1.2)
+        self.assertIsNone(payload["series"][1])
+        self.assertIsNone(payload["tips"])
+        self.assertEqual(payload["text"], "unchanged")
+
+    def test_sanitised_payload_survives_strict_json(self):
+        import json as _json
+
+        payload = {"a": float("nan"), "b": [float("inf")]}
+        fetch_data.drop_non_finite(payload)
+        # allow_nan=False raises on any survivor.
+        self.assertEqual(_json.dumps(payload, allow_nan=False), '{"a": null, "b": [null]}')
+
+
+class BeijingTimestampTests(unittest.TestCase):
+    """The page labels this value as China time, so it must not follow the
+    runner's clock — GitHub's runners are UTC."""
+
+    def test_cn_timestamp_is_eight_hours_ahead_of_utc(self):
+        from datetime import datetime, timezone
+        from zoneinfo import ZoneInfo
+
+        moment = datetime(2026, 8, 8, 2, 20, tzinfo=timezone.utc)
+        rendered = moment.astimezone(ZoneInfo("Asia/Shanghai")).strftime("%Y-%m-%d %H:%M")
+        self.assertEqual(rendered, "2026-08-08 10:20")
+
+
 if __name__ == "__main__":
     unittest.main()
