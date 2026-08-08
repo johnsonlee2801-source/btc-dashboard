@@ -4,7 +4,7 @@ BTC Dashboard - 自动数据抓取脚本
 每6小时运行一次，抓取链上/宏观数据，写入 data.json，推送到 GitHub
 """
 
-import json, urllib.request, urllib.error, time, subprocess, os, re, math
+import json, urllib.request, urllib.error, time, subprocess, os, re, math, sys
 import xml.etree.ElementTree as ET
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
@@ -760,7 +760,14 @@ def fetch_stablecoin():
 # ============================================================
 # 主流程
 # ============================================================
-def main():
+def main(push=False, dry_run=False):
+    """Fetch every metric and write data.json.
+
+    Git is opt-in: this script used to commit and push on every run, so simply
+    debugging it locally published to production — twice in one afternoon, once
+    causing a rebase conflict against the scheduled job. Publishing is now the
+    workflow's job unless --push says otherwise.
+    """
     log("=" * 55)
     log("BTC Dashboard 数据抓取 v3（含借贷费率+未平仓合约）")
     log(f"时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -874,11 +881,32 @@ def main():
     # response.json() rejects them, which would blank the whole dashboard, so
     # drop them to null here and let allow_nan=False catch anything missed.
     drop_non_finite(data)
+
+    if dry_run:
+        log("\n🔍 --dry-run：未写入文件，以上为本轮抓取结果")
+        return data
+
     with open(DATA_FILE, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2, allow_nan=False)
     log(f"\n✅ 数据已写入: {DATA_FILE}")
 
-    # 推送到 GitHub
+    if not push:
+        log("  本地运行：未提交也未推送。要发布请加 --push，"
+            "或让 GitHub Actions 处理（默认路径）。")
+        return data
+
+    push_data_file(data)
+    return data
+
+
+def push_data_file(data):
+    """Commit and push data.json. Opt-in only — see main()'s --push.
+
+    The scheduled workflow does its own commit with rebase-and-retry, so this
+    path exists for manual runs. Two owners of the same commit is why it is not
+    the default: if this push loses a race, the workflow then sees a clean tree
+    and exits without republishing the data.
+    """
     log("推送到 GitHub...")
     try:
         os.chdir(REPO_DIR)
@@ -902,7 +930,6 @@ def main():
     except subprocess.CalledProcessError as e:
         log(f"  Git 操作: {e.stderr if e.stderr else str(e)}")
 
-    return data
 
 if __name__ == "__main__":
-    main()
+    main(push="--push" in sys.argv, dry_run="--dry-run" in sys.argv)

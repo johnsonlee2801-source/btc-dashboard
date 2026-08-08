@@ -25,4 +25,6 @@ if command -v op &>/dev/null && [ -f ~/.openclaw/.op-token ]; then
 fi
 
 cd "$SCRIPT_DIR/.."
-python3 scripts/fetch_data.py >> /tmp/btc-fetch.log 2>&1
+# This wrapper exists to publish, so it opts into git explicitly. Running
+# fetch_data.py directly only writes the file — see its --push flag.
+python3 scripts/fetch_data.py --push >> /tmp/btc-fetch.log 2>&1
