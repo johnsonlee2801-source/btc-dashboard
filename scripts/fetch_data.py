@@ -52,6 +52,26 @@ def drop_non_finite(node, path="data"):
 
 
 ONCHAIN_STALE_AFTER_DAYS = 3
+# TIPS is a business-day series: a Monday reading is legitimately Friday's.
+TIPS_STALE_AFTER_DAYS = 7
+FED_STALE_AFTER_DAYS = 3
+
+
+def age_in_days(as_of):
+    """Age of an ISO date in days, or None when it is missing or unparseable."""
+    if not isinstance(as_of, str):
+        return None
+    try:
+        return (datetime.now(timezone.utc).date()
+                - datetime.strptime(as_of, "%Y-%m-%d").date()).days
+    except (ValueError, TypeError):
+        return None
+
+
+def is_stale(age_days, limit):
+    """Unknown ages and future dates both count as stale — neither can be
+    trusted to mean 'current'."""
+    return age_days is None or age_days < 0 or age_days > limit
 
 
 def mark_onchain_freshness(previous, onchain):
@@ -62,7 +82,6 @@ def mark_onchain_freshness(previous, onchain):
     exactly like a fresh reading. Keep the carried value, but say how old it is.
     """
     prev_onchain = (previous or {}).get("onchain") or {}
-    today = datetime.now(timezone.utc).date()
 
     for metric in ("mvrv_zscore", "nupl"):
         as_of_key = f"{metric}_as_of"
@@ -72,17 +91,10 @@ def mark_onchain_freshness(previous, onchain):
             onchain[as_of_key] = prev_onchain.get(as_of_key)
             onchain[source_key] = prev_onchain.get(source_key)
 
-        age_days = None
-        as_of = onchain.get(as_of_key)
-        if as_of:
-            try:
-                age_days = (today - datetime.strptime(as_of, "%Y-%m-%d").date()).days
-            except ValueError:
-                age_days = None
-
+        age_days = age_in_days(onchain.get(as_of_key))
         onchain[f"{metric}_age_days"] = age_days
         # Unknown age means the value predates this bookkeeping: treat as stale.
-        onchain[f"{metric}_stale"] = age_days is None or age_days > ONCHAIN_STALE_AFTER_DAYS
+        onchain[f"{metric}_stale"] = is_stale(age_days, ONCHAIN_STALE_AFTER_DAYS)
 
         if onchain[f"{metric}_stale"] and onchain.get(metric) is not None:
             shown = f"{age_days} 天前" if age_days is not None else "日期未知"
@@ -498,8 +510,11 @@ def fetch_fed_direction():
             log(f"  ✅ 美联储方向(yahoo): {result['fed_direction']}")
             return result
 
-    log("  ⚠️ 美联储方向获取失败，使用默认值 cut1")
-    return {"fed_direction": "cut1", "reasoning": "数据获取失败，使用中性默认值", "confidence": "low"}
+    # Returning "cut1" here invented a market stance out of a network failure,
+    # and the page rendered it exactly like a real reading. Say nothing instead;
+    # main() will carry the previous value forward and label it.
+    log("  ⚠️ 美联储方向所有来源失败，本轮留空（不编造方向）")
+    return {"fed_direction": None, "reasoning": "所有数据源获取失败", "confidence": "none"}
 
 # ============================================================
 # 4. 资金费率 - Coinglass / Binance API
@@ -660,11 +675,15 @@ def fetch_margin_lending():
 # TIPS 实际利率 - FRED API
 # ============================================================
 def fetch_tips():
-    """Fetch 10-year real yield.
+    """Fetch 10-year real yield as ``(value, as_of)``.
 
     Preferred source is FRED when FRED_KEY is configured. Without a key, fall
     back to the official U.S. Treasury real-yield XML feed so the dashboard does
     not keep carrying stale TIPS values forever.
+
+    The observation date travels with the value: this is a business-day series,
+    so "yesterday's number" is normal and "six weeks old" is not, and the page
+    cannot tell them apart from the value alone.
     """
     log("抓取 10Y TIPS 实际利率 (FRED / Treasury fallback)...")
 
@@ -678,7 +697,7 @@ def fetch_tips():
                 if obs and obs[0].get('value') not in ('.', ''):
                     val = float(obs[0]['value'])
                     log(f"  ✅ TIPS(FRED): {val}% (日期: {obs[0]['date']})")
-                    return val
+                    return val, obs[0]['date']
             except Exception as e:
                 log(f"  FRED 解析失败: {e}")
     else:
@@ -712,12 +731,12 @@ def fetch_tips():
                 latest = ((date_el.text or '')[:10], float(val_text))
             if latest:
                 log(f"  ✅ TIPS(Treasury 10Y real yield): {latest[1]}% (日期: {latest[0]})")
-                return latest[1]
+                return latest[1], latest[0]
     except Exception as e:
         log(f"  Treasury fallback 解析失败: {e}")
 
     log("  ⚠️ TIPS 获取失败")
-    return None
+    return None, None
 
 def fetch_stablecoin():
     log("抓取稳定币市值 (DeFiLlama)...")
@@ -785,13 +804,24 @@ def main():
 
     fed = fetch_fed_direction()
     prev_fed = (((previous_data or {}).get("fed") or {}))
-    if fed and fed.get("confidence") == "low" and prev_fed.get("fed_direction"):
+    fed_usable = bool(fed and fed.get("fed_direction") and fed.get("confidence") != "low")
+    if fed_usable:
+        fed["as_of"] = now_utc.strftime("%Y-%m-%d")
+        fed["age_days"] = 0
+        fed["stale"] = False
+        data["fed"] = fed
+    elif prev_fed.get("fed_direction"):
+        age = age_in_days(prev_fed.get("as_of"))
         data["fed"] = {
-            "fed_direction": prev_fed.get("fed_direction"),
+            **prev_fed,
             "reasoning": f"沿用上一版有效值；本轮抓取失败。上一版依据：{prev_fed.get('reasoning', '')}".strip(),
-            "confidence": prev_fed.get("confidence", "carried_forward")
+            # Never inherit the old "high": this reading is no longer current.
+            "confidence": "carried_forward",
+            "age_days": age,
+            "stale": is_stale(age, FED_STALE_AFTER_DAYS),
         }
-        log(f"  ♻️ 美联储方向本轮抓取失败，沿用上一版有效值: {prev_fed.get('fed_direction')}")
+        shown = f"{age} 天前" if age is not None else "日期未知"
+        log(f"  ♻️ 美联储方向本轮抓取失败，沿用上一版有效值: {prev_fed.get('fed_direction')}（{shown}）")
     elif fed:
         data["fed"] = fed
     time.sleep(2)
@@ -811,8 +841,18 @@ def main():
         data["stablecoin"] = stbl
 
     time.sleep(1)
-    tips = fetch_tips()
+    tips, tips_as_of = fetch_tips()
     data["tips"] = carry_forward(previous_data, tips, ["tips"], "TIPS 实际利率")
+    if tips is None:
+        # Carried forward, so its observation date came from the previous run.
+        tips_as_of = (previous_data or {}).get("tips_as_of")
+    tips_age = age_in_days(tips_as_of)
+    data["tips_as_of"] = tips_as_of
+    data["tips_age_days"] = tips_age
+    data["tips_stale"] = data["tips"] is not None and is_stale(tips_age, TIPS_STALE_AFTER_DAYS)
+    if data["tips_stale"]:
+        shown = f"{tips_age} 天前" if tips_age is not None else "日期未知"
+        log(f"  ⚠️ TIPS 使用陈旧数据（{shown}），页面会标注")
 
     # 汇总输出
     log("\n" + "=" * 55)

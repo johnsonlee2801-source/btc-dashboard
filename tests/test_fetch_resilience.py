@@ -110,6 +110,40 @@ class OnchainFreshnessTests(unittest.TestCase):
         self.assertTrue(onchain["mvrv_zscore_stale"])
 
 
+class StalenessHelperTests(unittest.TestCase):
+    def test_future_date_counts_as_stale(self):
+        # A clock skew or bad feed must not read as "fresher than today".
+        self.assertTrue(fetch_data.is_stale(-1, 3))
+
+    def test_unknown_age_counts_as_stale(self):
+        self.assertTrue(fetch_data.is_stale(None, 3))
+
+    def test_within_limit_is_fresh(self):
+        self.assertFalse(fetch_data.is_stale(3, 3))
+        self.assertTrue(fetch_data.is_stale(4, 3))
+
+    def test_age_in_days_rejects_garbage_without_raising(self):
+        self.assertIsNone(fetch_data.age_in_days("not-a-date"))
+        self.assertIsNone(fetch_data.age_in_days(None))
+        self.assertIsNone(fetch_data.age_in_days(20260806))
+
+
+class FedDirectionTests(unittest.TestCase):
+    """A failed fetch must not invent a market stance."""
+
+    def test_total_failure_returns_no_direction(self):
+        import unittest.mock as mock
+
+        with mock.patch.object(fetch_data, "http_get", return_value=None), \
+             mock.patch.object(fetch_data, "ask_deepseek", return_value=None), \
+             mock.patch.object(fetch_data, "fetch_fed_direction_rateprob", return_value=None), \
+             mock.patch.object(fetch_data, "fetch_fed_direction_oddpool_cut_count", return_value=None), \
+             mock.patch.object(fetch_data.time, "sleep", return_value=None):
+            result = fetch_data.fetch_fed_direction()
+        self.assertIsNone(result["fed_direction"])
+        self.assertEqual(result["confidence"], "none")
+
+
 class PayloadSafetyTests(unittest.TestCase):
     """data.json must stay parseable: one bad float blanks the whole page."""
 
