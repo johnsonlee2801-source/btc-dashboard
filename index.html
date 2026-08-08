@@ -1513,17 +1513,30 @@ function barColor(s, max) {
 }
 function barWidth(s, max) { return Math.max(4, Math.min(100, (s/max)*100)) + '%'; }
 
+// 陈旧的自动指标退出评分与一票否决。标注它"N天前"只解决了看得见的一半：
+// 一个几周前的 MVRV 触发的否决，在结论里和实时数据触发的否决完全一样。
+// 这四个值只来自 data.json（applyManual 不碰它们），所以不会误伤手动输入。
+function scoringValues() {
+  return {
+    mvrv: state.mvrvStale ? null : state.mvrv,
+    nupl: state.nuplStale ? null : state.nupl,
+    fed:  state.fedStale  ? null : state.fed,
+    tips: state.tipsStale ? null : state.tips,
+  };
+}
+
 function calcScores() {
   let s1=0, s2=0, s3=0, s4=0;
   let vetoTriggered = false;
+  const live = scoringValues();
 
   // ---- MODULE 1: 宏观环境 (25pts) ----
   // 美联储方向 (10pts) — 流动性最核心驱动
   let fed_score = 5; // default: 暂停
-  if (state.fed === 'cut2') fed_score = 10;       // 连续降息
-  else if (state.fed === 'cut1') fed_score = 7;   // 降息1次/暂停偏鸽
-  else if (state.fed === 'hold') fed_score = 5;   // 观望
-  else if (state.fed === 'hike') { fed_score = 0; vetoTriggered = true; } // 加息=一票否决
+  if (live.fed === 'cut2') fed_score = 10;       // 连续降息
+  else if (live.fed === 'cut1') fed_score = 7;   // 降息1次/暂停偏鸽
+  else if (live.fed === 'hold') fed_score = 5;   // 观望
+  else if (live.fed === 'hike') { fed_score = 0; vetoTriggered = true; } // 加息=一票否决
 
   // DXY美元指数 (7pts)
   let dxy_score = 4; // default
@@ -1536,11 +1549,11 @@ function calcScores() {
 
   // TIPS实际利率 (5pts)
   let tips_score = 3; // default
-  if (state.tips !== null) {
-    if (state.tips < 0) tips_score = 5;          // 负实际利率，极度利多
-    else if (state.tips < 0.5) tips_score = 4;
-    else if (state.tips <= 1.5) tips_score = 3;
-    else if (state.tips <= 2.5) tips_score = 1;
+  if (live.tips !== null) {
+    if (live.tips < 0) tips_score = 5;          // 负实际利率，极度利多
+    else if (live.tips < 0.5) tips_score = 4;
+    else if (live.tips <= 1.5) tips_score = 3;
+    else if (live.tips <= 2.5) tips_score = 1;
     else tips_score = 0;                          // 高实际利率压制风险资产
   }
 
@@ -1619,11 +1632,11 @@ function calcScores() {
   // ---- MODULE 3: 链上估值 (30pts) ----
   // MVRV Z-Score (9pts) — 最核心的市场估值指标
   let mvrv_score = 5; // default中性
-  if (state.mvrv !== null) {
-    if (state.mvrv < 0) mvrv_score = 9;          // 极度低估
-    else if (state.mvrv < 1) mvrv_score = 8;     // 低估
-    else if (state.mvrv < 3) mvrv_score = 6;     // 健康
-    else if (state.mvrv < 6) mvrv_score = 3;     // 偏高
+  if (live.mvrv !== null) {
+    if (live.mvrv < 0) mvrv_score = 9;          // 极度低估
+    else if (live.mvrv < 1) mvrv_score = 8;     // 低估
+    else if (live.mvrv < 3) mvrv_score = 6;     // 健康
+    else if (live.mvrv <= 6) mvrv_score = 3;    // 偏高（否决线是 > 6，见 veto1 文案）
     else { mvrv_score = 0; vetoTriggered = true; } // 极度高估=一票否决
   }
 
@@ -1639,11 +1652,11 @@ function calcScores() {
 
   // NUPL (7pts) — 全网未实现盈亏
   let nupl_score = 4; // default中性
-  if (state.nupl !== null) {
-    if (state.nupl < 0) nupl_score = 7;           // 全网亏损=抄底机会
-    else if (state.nupl < 0.25) nupl_score = 6;  // 希望/恐惧区
-    else if (state.nupl <= 0.5) nupl_score = 5;  // 乐观/信念区
-    else if (state.nupl <= 0.75) nupl_score = 2; // 贪婪=减仓警告
+  if (live.nupl !== null) {
+    if (live.nupl < 0) nupl_score = 7;           // 全网亏损=抄底机会
+    else if (live.nupl < 0.25) nupl_score = 6;  // 希望/恐惧区
+    else if (live.nupl <= 0.5) nupl_score = 5;  // 乐观/信念区
+    else if (live.nupl <= 0.75) nupl_score = 2; // 贪婪=减仓警告
     else { nupl_score = 0; vetoTriggered = true; } // 极度狂热=一票否决
   }
 
@@ -1839,9 +1852,11 @@ function render() {
   if(state.oi_btc!==null){
     const oiK = (state.oi_btc/1000).toFixed(1);
     const oiVenue = {binance_public:'Binance', okx_public:'OKX', bybit_public:'Bybit'}[state.oiSource];
+    // 说"未计分"是错的：阈值不适用时 oi_score 保持默认 1 分，并且计入 s2。
+    // 如实写成中性分，别让标签比代码更好看。
     setText('m2oi', state.oiSource === 'binance_public'
       ? oiK+'K BTC ('+sc.oi_score+'/3)'
-      : oiK+'K BTC · '+(oiVenue||'其他来源')+'（口径不同，未计分）');
+      : oiK+'K BTC · '+(oiVenue||'其他来源')+'（阈值按 Binance 标定，按中性 '+sc.oi_score+'/3 计）');
     setBar('m2oi_bar', barWidth(sc.oi_score,3), barColor(sc.oi_score,3));
     document.getElementById('m2oi').classList.remove('loading');
   }
@@ -1873,9 +1888,15 @@ function render() {
     if(d) d.className = 'veto-dot ' + (ok === null ? 'veto-unknown' : ok ? 'veto-ok' : 'veto-warn');
     if(v) { v.textContent = label; v.className = ok === false ? 'veto-value veto-triggered' : 'veto-value'; }
   }
-  setVeto('veto1dot','veto1val', state.mvrv===null?null:state.mvrv<6, state.mvrv===null?'需输入MVRV':'当前 '+state.mvrv+(state.mvrv>=6?' ⛔ 已触发':'✅'));
-  setVeto('veto2dot','veto2val', state.nupl===null?null:state.nupl<=0.75, state.nupl===null?'需输入NUPL':'当前 '+state.nupl+(state.nupl>0.75?' ⛔ 已触发':' ✅'));
-  setVeto('veto3dot','veto3val', state.fed===null?null:state.fed!=='hike', state.fed===null?'需输入美联储方向':state.fed==='hike'?'加息周期 ⛔ 已触发':'✅ 未触发');
+  // 否决用和评分同一套值：陈旧数据不该宣布"已触发"，也不该宣布"未触发"。
+  // 阈值按页面公布的口径 > 6 / > 0.75，代码此前在正好等于 6 时就触发。
+  const veto = scoringValues();
+  setVeto('veto1dot','veto1val', veto.mvrv===null?null:veto.mvrv<=6,
+    veto.mvrv===null?(state.mvrv===null?'需输入MVRV':'数据陈旧，暂不判定'):'当前 '+veto.mvrv+(veto.mvrv>6?' ⛔ 已触发':' ✅'));
+  setVeto('veto2dot','veto2val', veto.nupl===null?null:veto.nupl<=0.75,
+    veto.nupl===null?(state.nupl===null?'需输入NUPL':'数据陈旧，暂不判定'):'当前 '+veto.nupl+(veto.nupl>0.75?' ⛔ 已触发':' ✅'));
+  setVeto('veto3dot','veto3val', veto.fed===null?null:veto.fed!=='hike',
+    veto.fed===null?(state.fed===null?'需输入美联储方向':'数据陈旧，暂不判定'):veto.fed==='hike'?'加息周期 ⛔ 已触发':'✅ 未触发');
   setVeto('veto4dot','veto4val', null, '需手动核查Farside数据');
 
   // Monitor
@@ -1885,12 +1906,13 @@ function render() {
   if(mon3El) mon3El.style.background = mon3ok===null?'var(--muted)':mon3ok?'var(--green)':'var(--red)';
   setText('mon3val', mon3ok===null?'计算中':mon3ok?('价格 $'+Math.round(state.price).toLocaleString()+' > MA200 ✅'):('价格 $'+Math.round(state.price).toLocaleString()+' < MA200 ⚠️'));
 
-  const mon1ok = state.mvrv === null ? null : state.mvrv < 6;
+  // 持仓监控同样只用未过期的值，判定口径与公布的 > 6 / > 0.75 一致。
+  const mon1ok = veto.mvrv === null ? null : veto.mvrv <= 6;
   document.getElementById('mon1dot').style.background = mon1ok===null?'var(--muted)':mon1ok?'var(--green)':'var(--red)';
-  setText('mon1val', state.mvrv===null?'需输入MVRV':mon1ok?'当前 '+state.mvrv+' ✅':'⚠️ MVRV='+state.mvrv+' 超过警戒线');
-  const mon2ok = state.nupl === null ? null : state.nupl <= 0.75;
+  setText('mon1val', veto.mvrv===null?(state.mvrv===null?'需输入MVRV':'数据陈旧，暂不判定'):mon1ok?'当前 '+veto.mvrv+' ✅':'⚠️ MVRV='+veto.mvrv+' 超过警戒线');
+  const mon2ok = veto.nupl === null ? null : veto.nupl <= 0.75;
   document.getElementById('mon2dot').style.background = mon2ok===null?'var(--muted)':mon2ok?'var(--green)':'var(--red)';
-  setText('mon2val', state.nupl===null?'需输入NUPL':mon2ok?'当前 '+state.nupl+' ✅':'⚠️ NUPL='+state.nupl+' 已进入狂热区');
+  setText('mon2val', veto.nupl===null?(state.nupl===null?'需输入NUPL':'数据陈旧，暂不判定'):mon2ok?'当前 '+veto.nupl+' ✅':'⚠️ NUPL='+veto.nupl+' 已进入狂热区');
 
   // Timestamp
   document.getElementById('lastUpdated').textContent = '更新于 '+new Date().toLocaleTimeString('zh-CN');
@@ -2298,21 +2320,62 @@ function alertRenderList() {
     el.innerHTML = '<div style="color:var(--muted);font-size:12px;padding:8px 0;">还没有设置任何提醒</div>';
     return;
   }
-  el.innerHTML = alerts.map(a => {
-    const dir = a.condition === 'below' ? '📉 跌破' : '📈 突破';
-    const curPrice = alertPriceCache[a.symbol.toUpperCase()];
-    const curStr = curPrice ? '$' + curPrice.toLocaleString() : '--';
-    const dotClass = a.triggered ? 'alert-dot-triggered' : 'alert-dot-active';
-    const statusStr = a.triggered ? '<span style="color:var(--accent);font-size:11px;">已触发</span>' : '';
-    return `<div class="alert-item">
-      <div class="alert-dot ${dotClass}"></div>
-      <div class="alert-sym-badge">${a.symbol}</div>
-      <div class="alert-desc">${dir} <strong>$${a.targetPrice.toLocaleString()}</strong>${a.label ? ' · ' + a.label : ''} ${statusStr}</div>
-      <div class="alert-price-cur">当前 ${curStr}</div>
-      ${a.triggered ? `<button class="alert-reset" onclick="alertReset('${a.id}')" title="重置提醒">↺</button>` : ''}
-      <button class="alert-del" onclick="alertDelete('${a.id}')" title="删除">✕</button>
-    </div>`;
-  }).join('');
+  // 用 DOM 构造而不是 innerHTML：symbol / label / id 都是用户自己输入并存在
+  // localStorage 里的，拼进 HTML 会让 `<img src=x onerror=...>` 这样的标签在每次
+  // 渲染时执行，进而能读走同域存着的 Server酱 key。
+  el.textContent = '';
+  for (const a of alerts) {
+    const item = document.createElement('div');
+    item.className = 'alert-item';
+
+    const dot = document.createElement('div');
+    dot.className = 'alert-dot ' + (a.triggered ? 'alert-dot-triggered' : 'alert-dot-active');
+    item.appendChild(dot);
+
+    const badge = document.createElement('div');
+    badge.className = 'alert-sym-badge';
+    badge.textContent = a.symbol;
+    item.appendChild(badge);
+
+    const desc = document.createElement('div');
+    desc.className = 'alert-desc';
+    desc.append(a.condition === 'below' ? '📉 跌破 ' : '📈 突破 ');
+    const target = document.createElement('strong');
+    target.textContent = '$' + Number(a.targetPrice).toLocaleString();
+    desc.appendChild(target);
+    if (a.label) desc.append(' · ' + a.label);
+    if (a.triggered) {
+      const status = document.createElement('span');
+      status.style.cssText = 'color:var(--accent);font-size:11px;';
+      status.textContent = ' 已触发';
+      desc.appendChild(status);
+    }
+    item.appendChild(desc);
+
+    const curPrice = alertPriceCache[String(a.symbol).toUpperCase()];
+    const cur = document.createElement('div');
+    cur.className = 'alert-price-cur';
+    cur.textContent = '当前 ' + (curPrice ? '$' + curPrice.toLocaleString() : '--');
+    item.appendChild(cur);
+
+    if (a.triggered) {
+      const reset = document.createElement('button');
+      reset.className = 'alert-reset';
+      reset.title = '重置提醒';
+      reset.textContent = '↺';
+      reset.addEventListener('click', () => alertReset(a.id));
+      item.appendChild(reset);
+    }
+
+    const del = document.createElement('button');
+    del.className = 'alert-del';
+    del.title = '删除';
+    del.textContent = '✕';
+    del.addEventListener('click', () => alertDelete(a.id));
+    item.appendChild(del);
+
+    el.appendChild(item);
+  }
 }
 
 async function alertCheck() {
