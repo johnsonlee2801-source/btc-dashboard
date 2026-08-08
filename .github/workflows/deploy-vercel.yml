@@ -51,14 +51,6 @@ jobs:
       - uses: actions/checkout@v5
         if: steps.check.outputs.skip != 'true'
 
-      # Vercel blocks deployments whose Git author is not on the team, and this
-      # repo's account is not a member of it (Hobby plans have no seats). The
-      # CLI only reports an author because .git is present, and a prebuilt
-      # static deploy does not need it.
-      - name: Drop Git metadata so Vercel does not attribute an author
-        if: steps.check.outputs.skip != 'true'
-        run: rm -rf .git
-
       - name: Install Vercel CLI
         if: steps.check.outputs.skip != 'true'
         run: npm install --global vercel@latest
