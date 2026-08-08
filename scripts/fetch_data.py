@@ -35,6 +35,44 @@ def carry_forward(previous, current, path, label):
         return old
     return current
 
+ONCHAIN_STALE_AFTER_DAYS = 3
+
+
+def mark_onchain_freshness(previous, onchain):
+    """Record how old each on-chain number is, and flag the old ones.
+
+    MVRV feeds the score directly (it can even trigger the veto), so a value
+    carried forward for weeks is worse than a missing one: the page renders it
+    exactly like a fresh reading. Keep the carried value, but say how old it is.
+    """
+    prev_onchain = (previous or {}).get("onchain") or {}
+    today = datetime.now(timezone.utc).date()
+
+    for metric in ("mvrv_zscore", "nupl"):
+        as_of_key = f"{metric}_as_of"
+        source_key = f"{metric}_source" if metric == "mvrv_zscore" else "nupl_source"
+        if not onchain.get(as_of_key):
+            # Value came from carry_forward, so its date and source did too.
+            onchain[as_of_key] = prev_onchain.get(as_of_key)
+            onchain[source_key] = prev_onchain.get(source_key)
+
+        age_days = None
+        as_of = onchain.get(as_of_key)
+        if as_of:
+            try:
+                age_days = (today - datetime.strptime(as_of, "%Y-%m-%d").date()).days
+            except ValueError:
+                age_days = None
+
+        onchain[f"{metric}_age_days"] = age_days
+        # Unknown age means the value predates this bookkeeping: treat as stale.
+        onchain[f"{metric}_stale"] = age_days is None or age_days > ONCHAIN_STALE_AFTER_DAYS
+
+        if onchain[f"{metric}_stale"] and onchain.get(metric) is not None:
+            shown = f"{age_days} 天前" if age_days is not None else "日期未知"
+            log(f"  ⚠️ {metric} 使用陈旧数据（{shown}），页面会标注")
+
+
 def log(msg):
     print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
 
@@ -177,10 +215,38 @@ def fetch_btc_price():
 # ============================================================
 # 2. 链上指标 - lookintobitcoin.com
 # ============================================================
+def fetch_bitcoin_data_metric(endpoint, key, label):
+    """Read one daily metric from bitcoin-data.com.
+
+    lookintobitcoin only yields these numbers to a scraper, and that scraping
+    has been failing from CI since June while the dashboard quietly reused the
+    last good value. This public JSON feed is the fallback, and it reports the
+    date the value belongs to so staleness stops being invisible.
+    """
+    raw = http_get(f"https://bitcoin-data.com/v1/{endpoint}/last", timeout=20)
+    if not raw:
+        return None, None
+    try:
+        payload = json.loads(raw)
+    except Exception as e:
+        log(f"  ⚠️ {label} (bitcoin-data.com) 解析失败: {e}")
+        return None, None
+    value = payload.get(key)
+    if not isinstance(value, (int, float)):
+        log(f"  ⚠️ {label} (bitcoin-data.com) 响应缺少 {key}")
+        return None, None
+    as_of = payload.get("d")
+    log(f"  ✅ {label} (bitcoin-data.com): {value} (数据日期: {as_of})")
+    return float(value), as_of
+
+
 def fetch_lookintobitcoin():
     log("抓取链上指标 (lookintobitcoin.com)...")
     mvrv_val = None
     nupl_val = None
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    mvrv_source = mvrv_as_of = None
+    nupl_source = nupl_as_of = None
 
     # MVRV Z-Score
     html = http_get("https://www.lookintobitcoin.com/charts/mvrv-zscore/")
@@ -213,6 +279,14 @@ def fetch_lookintobitcoin():
                 mvrv_val = result['mvrv_zscore']
                 log(f"  ✅ MVRV Z-Score (AI): {mvrv_val}")
 
+    if mvrv_val is not None:
+        mvrv_source, mvrv_as_of = "lookintobitcoin", today
+    else:
+        mvrv_val, mvrv_as_of = fetch_bitcoin_data_metric(
+            "mvrv-zscore", "mvrvZscore", "MVRV Z-Score")
+        if mvrv_val is not None:
+            mvrv_source = "bitcoin-data.com"
+
     time.sleep(3)
 
     # NUPL
@@ -231,7 +305,21 @@ def fetch_lookintobitcoin():
                 nupl_val = nupl_val / 100
             log(f"  ✅ NUPL (AI): {nupl_val}")
 
-    return {"mvrv_zscore": mvrv_val, "nupl": nupl_val}
+    if nupl_val is not None:
+        nupl_source, nupl_as_of = "lookintobitcoin", today
+    else:
+        nupl_val, nupl_as_of = fetch_bitcoin_data_metric("nupl", "nupl", "NUPL")
+        if nupl_val is not None:
+            nupl_source = "bitcoin-data.com"
+
+    return {
+        "mvrv_zscore": mvrv_val,
+        "nupl": nupl_val,
+        "mvrv_zscore_as_of": mvrv_as_of,
+        "nupl_as_of": nupl_as_of,
+        "mvrv_zscore_source": mvrv_source,
+        "nupl_source": nupl_source,
+    }
 
 # ============================================================
 # 3. 美联储方向 - 多源备用
@@ -476,6 +564,7 @@ def fetch_margin_lending():
         "btc_borrow_limit": None,    # VIP0最大借款量（BTC）
         "open_interest": None,       # 合约未平仓总量（BTC）
         "open_interest_usd": None,   # 合约未平仓总量（美元估算）
+        "open_interest_source": None,  # 实际取到数的交易所
         "source": "binance_public"
     }
 
@@ -509,9 +598,28 @@ def fetch_margin_lending():
             oi = json.loads(oi_data)
             oi_btc = float(oi.get('openInterest', 0))
             result['open_interest'] = round(oi_btc, 0)
-            log(f"  ✅ BTC未平仓合约: {oi_btc:,.0f} BTC")
+            result['open_interest_source'] = 'binance_public'
+            log(f"  ✅ BTC未平仓合约 (Binance): {oi_btc:,.0f} BTC")
     except Exception as e:
         log(f"  ⚠️ 未平仓合约抓取失败: {e}")
+
+    # Binance answers GitHub runners with HTTP 451, so this value never
+    # survived in CI. Bybit's perpetual is a different venue, hence the source
+    # label: the number is comparable in shape, not identical in size.
+    if result['open_interest'] is None:
+        try:
+            bybit_url = ("https://api.bybit.com/v5/market/open-interest"
+                         "?category=linear&symbol=BTCUSDT&intervalTime=5min&limit=1")
+            raw = http_get(bybit_url)
+            if raw:
+                rows = (json.loads(raw).get('result') or {}).get('list') or []
+                if rows:
+                    oi_btc = float(rows[0]['openInterest'])
+                    result['open_interest'] = round(oi_btc, 0)
+                    result['open_interest_source'] = 'bybit_public'
+                    log(f"  ✅ BTC未平仓合约 (Bybit 兜底): {oi_btc:,.0f} BTC")
+        except Exception as e:
+            log(f"  ⚠️ 未平仓合约 Bybit 兜底失败: {e}")
 
     return result
 
@@ -633,6 +741,7 @@ def main():
     onchain = fetch_lookintobitcoin()
     onchain["mvrv_zscore"] = carry_forward(previous_data, onchain.get("mvrv_zscore"), ["onchain", "mvrv_zscore"], "MVRV Z-Score")
     onchain["nupl"] = carry_forward(previous_data, onchain.get("nupl"), ["onchain", "nupl"], "NUPL")
+    mark_onchain_freshness(previous_data, onchain)
     data["onchain"] = onchain
     time.sleep(2)
 
@@ -691,7 +800,9 @@ def main():
     log("推送到 GitHub...")
     try:
         os.chdir(REPO_DIR)
-        subprocess.run(["git", "add", "data.json", "index.html"], check=True, capture_output=True)
+        # Only the data file: this script never edits index.html, and staging it
+        # sweeps unrelated in-progress page edits into an automated commit.
+        subprocess.run(["git", "add", "data.json"], check=True, capture_output=True)
         result = subprocess.run(
             ["git", "commit", "-m", f"data: auto-update {data['timestamp_cn']}"],
             capture_output=True, text=True

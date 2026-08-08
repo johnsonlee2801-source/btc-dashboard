@@ -1364,6 +1364,8 @@ const state = {
   // manual
   mvrv: null, nupl: null, puell: null, lth: null, lthmvrv: null,
   fed: null, dxy: null, tips: null, etf5d: null, stbl: null, fr_bn: null, fr_okx: null, ml_rate: null, oi_btc: null,
+  // 链上指标的新鲜度：抓取失败时后端会沿用旧值，这里记录它到底多旧
+  mvrvStale: false, mvrvAgeDays: null, nuplStale: false, nuplAgeDays: null,
 };
 
 // ============================================================
@@ -1743,6 +1745,11 @@ function calcScores() {
 // RENDER
 // ============================================================
 function setText(id, val) { const el=document.getElementById(id); if(el){ el.textContent=val; el.classList.remove('loading'); } }
+// 链上指标抓取失败时后端会沿用旧值，标出来，别让它看起来像刚更新的
+function staleNote(isStale, ageDays) {
+  if (!isStale) return '';
+  return ageDays !== null && ageDays !== undefined ? ' ⚠️ ' + ageDays + '天前数据' : ' ⚠️ 数据陈旧';
+}
 function setClass(id, cls) { const el=document.getElementById(id); if(el){ el.className=cls; } }
 function setBar(id, pct, color) {
   const el=document.getElementById(id);
@@ -1832,9 +1839,9 @@ function render() {
   }
 
   // M3
-  setText('m3mvrv', state.mvrv!==null? state.mvrv+' ('+sc.mvrv_score+'/9)' : '--');
+  setText('m3mvrv', state.mvrv!==null? state.mvrv+' ('+sc.mvrv_score+'/9)'+staleNote(state.mvrvStale, state.mvrvAgeDays) : '--');
   setBar('m3mvrv_bar', barWidth(sc.mvrv_score,9), barColor(sc.mvrv_score,9));
-  setText('m3nupl', state.nupl!==null? state.nupl+' ('+sc.nupl_score+'/7)' : '--');
+  setText('m3nupl', state.nupl!==null? state.nupl+' ('+sc.nupl_score+'/7)'+staleNote(state.nuplStale, state.nuplAgeDays) : '--');
   setBar('m3nupl_bar', barWidth(sc.nupl_score,7), barColor(sc.nupl_score,7));
   setText('m3puell', state.puell!==null? state.puell+' ('+sc.puell_score+'/4)' : '--');
   setBar('m3puell_bar', barWidth(sc.puell_score,4), barColor(sc.puell_score,4));
@@ -1965,11 +1972,15 @@ async function fetchDataJson() {
     if (d.onchain) {
       if (d.onchain.mvrv_zscore !== null && d.onchain.mvrv_zscore !== undefined) {
         state.mvrv = d.onchain.mvrv_zscore;
+        state.mvrvStale = d.onchain.mvrv_zscore_stale === true;
+        state.mvrvAgeDays = d.onchain.mvrv_zscore_age_days ?? null;
         const el = document.getElementById('inp_mvrv');
         if (el) el.value = state.mvrv;
       }
       if (d.onchain.nupl !== null && d.onchain.nupl !== undefined) {
         state.nupl = d.onchain.nupl;
+        state.nuplStale = d.onchain.nupl_stale === true;
+        state.nuplAgeDays = d.onchain.nupl_age_days ?? null;
         const el = document.getElementById('inp_nupl');
         if (el) el.value = state.nupl;
       }

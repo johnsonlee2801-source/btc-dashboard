@@ -63,5 +63,52 @@ class FetchResilienceTests(unittest.TestCase):
         self.assertEqual(parsed["cut_probability"], 33.9)
 
 
+class OnchainFreshnessTests(unittest.TestCase):
+    """MVRV drives the score, so a value carried forward for weeks must be
+    labelled rather than rendered like a fresh reading."""
+
+    def _today(self):
+        from datetime import datetime, timezone
+
+        return datetime.now(timezone.utc).date()
+
+    def test_fresh_value_is_not_marked_stale(self):
+        onchain = {
+            "mvrv_zscore": 0.41,
+            "nupl": 0.19,
+            "mvrv_zscore_as_of": self._today().isoformat(),
+            "nupl_as_of": self._today().isoformat(),
+        }
+        fetch_data.mark_onchain_freshness({}, onchain)
+        self.assertFalse(onchain["mvrv_zscore_stale"])
+        self.assertEqual(onchain["mvrv_zscore_age_days"], 0)
+
+    def test_carried_value_keeps_its_original_date_and_is_marked_stale(self):
+        from datetime import timedelta
+
+        old_date = (self._today() - timedelta(days=60)).isoformat()
+        previous = {
+            "onchain": {
+                "mvrv_zscore_as_of": old_date,
+                "mvrv_zscore_source": "lookintobitcoin",
+                "nupl_as_of": old_date,
+                "nupl_source": "lookintobitcoin",
+            }
+        }
+        # carry_forward already restored the values; the dates are missing.
+        onchain = {"mvrv_zscore": 2.5, "nupl": 0.64}
+        fetch_data.mark_onchain_freshness(previous, onchain)
+        self.assertEqual(onchain["mvrv_zscore_as_of"], old_date)
+        self.assertEqual(onchain["mvrv_zscore_age_days"], 60)
+        self.assertTrue(onchain["mvrv_zscore_stale"])
+        self.assertTrue(onchain["nupl_stale"])
+
+    def test_unknown_date_counts_as_stale(self):
+        onchain = {"mvrv_zscore": 2.5, "nupl": 0.64}
+        fetch_data.mark_onchain_freshness({}, onchain)
+        self.assertIsNone(onchain["mvrv_zscore_age_days"])
+        self.assertTrue(onchain["mvrv_zscore_stale"])
+
+
 if __name__ == "__main__":
     unittest.main()
