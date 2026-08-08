@@ -603,23 +603,35 @@ def fetch_margin_lending():
     except Exception as e:
         log(f"  ⚠️ 未平仓合约抓取失败: {e}")
 
-    # Binance answers GitHub runners with HTTP 451, so this value never
-    # survived in CI. Bybit's perpetual is a different venue, hence the source
-    # label: the number is comparable in shape, not identical in size.
-    if result['open_interest'] is None:
+    # Binance (451) and Bybit (403) both refuse GitHub runners, so this value
+    # was always empty in production. OKX answers there — the funding-rate call
+    # above proves it. Each venue is its own market, hence the source label:
+    # the numbers are comparable in shape, not identical in size.
+    for label, url, extract in (
+        ("OKX",
+         "https://www.okx.com/api/v5/public/open-interest?instType=SWAP&instId=BTC-USDT-SWAP",
+         lambda p: float((p.get('data') or [{}])[0].get('oiCcy'))),
+        ("Bybit",
+         "https://api.bybit.com/v5/market/open-interest"
+         "?category=linear&symbol=BTCUSDT&intervalTime=5min&limit=1",
+         lambda p: float(((p.get('result') or {}).get('list') or [{}])[0]['openInterest'])),
+    ):
+        if result['open_interest'] is not None:
+            break
         try:
-            bybit_url = ("https://api.bybit.com/v5/market/open-interest"
-                         "?category=linear&symbol=BTCUSDT&intervalTime=5min&limit=1")
-            raw = http_get(bybit_url)
-            if raw:
-                rows = (json.loads(raw).get('result') or {}).get('list') or []
-                if rows:
-                    oi_btc = float(rows[0]['openInterest'])
-                    result['open_interest'] = round(oi_btc, 0)
-                    result['open_interest_source'] = 'bybit_public'
-                    log(f"  ✅ BTC未平仓合约 (Bybit 兜底): {oi_btc:,.0f} BTC")
+            raw = http_get(url)
+            if not raw:
+                continue
+            oi_btc = extract(json.loads(raw))
+            if oi_btc > 0:
+                result['open_interest'] = round(oi_btc, 0)
+                result['open_interest_source'] = f"{label.lower()}_public"
+                log(f"  ✅ BTC未平仓合约 ({label} 兜底): {oi_btc:,.0f} BTC")
         except Exception as e:
-            log(f"  ⚠️ 未平仓合约 Bybit 兜底失败: {e}")
+            log(f"  ⚠️ 未平仓合约 {label} 兜底失败: {e}")
+
+    if result['open_interest'] is None:
+        log("  ⚠️ 未平仓合约全部来源失败，本轮为空")
 
     return result
 
