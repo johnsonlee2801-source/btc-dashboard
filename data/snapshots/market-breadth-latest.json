@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-08-28T06:11:34Z",
+  "generatedAt": "2026-08-29T03:45:25Z",
   "description": "Daily static market breadth snapshot for stock.flowhunt.net. Free public sources; not investment advice.",
   "sources": {
     "sp500Constituents": "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv",
@@ -24,42 +24,43 @@
       "requested": 503,
       "sampleSize": 502,
       "coveragePct": 99.8,
-      "above20Pct": 44.2,
-      "above50Pct": 54.0,
-      "above200Pct": 69.3,
-      "nearHighPct": 20.1,
-      "newHighPct": 2.8,
-      "nearLowPct": 15.1,
-      "newLowPct": 1.8,
-      "advancePct": 30.3,
-      "declinePct": 69.3,
+      "above20Pct": 42.4,
+      "above50Pct": 53.0,
+      "above200Pct": 68.5,
+      "nearHighPct": 19.3,
+      "newHighPct": 1.2,
+      "nearLowPct": 14.5,
+      "newLowPct": 0.4,
+      "advancePct": 45.4,
+      "declinePct": 54.4,
       "counts": {
-        "above20": 222,
-        "above50": 271,
-        "above200": 348,
-        "nearHigh": 101,
-        "newHigh": 14,
-        "nearLow": 76,
-        "newLow": 9,
-        "advanced": 152,
-        "declined": 348
+        "above20": 213,
+        "above50": 266,
+        "above200": 344,
+        "nearHigh": 97,
+        "newHigh": 6,
+        "nearLow": 73,
+        "newLow": 2,
+        "advanced": 228,
+        "declined": 273
       },
-      "updatedAt": "2026-08-27T13:30:00Z",
+      "updatedAt": "2026-08-28T13:30:00Z",
       "leaders": [
-        "MMM",
         "ABBV",
         "A",
         "APD",
         "ABNB",
+        "AWK",
         "AMP",
         "AMGN",
         "APA",
-        "ANET",
+        "BAC",
         "BDX",
         "BRK.B",
         "TECH"
       ],
       "laggards": [
+        "AOS",
         "AMD",
         "AFL",
         "AKAM",
@@ -70,53 +71,52 @@
         "MO",
         "AEE",
         "AEP",
-        "AXP",
-        "AIG"
+        "AXP"
       ],
-      "status": "distribution",
-      "value": "MA50上方 54.0% · MA200上方 69.3% · 新高/新低 14/9 · 上涨/下跌 152/348"
+      "status": "neutral",
+      "value": "MA50上方 53.0% · MA200上方 68.5% · 新高/新低 6/2 · 上涨/下跌 228/273"
     },
     "nasdaq100": {
       "name": "Nasdaq-100 / QQQ 持仓宽度快照",
       "source": "https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/QQQ/holdings/fund?idType=ticker&interval=monthly&productType=ETF",
-      "sourceUpdatedAt": "2026-08-26",
+      "sourceUpdatedAt": "2026-08-27",
       "requested": 99,
       "sampleSize": 97,
       "coveragePct": 98.0,
-      "above20Pct": 50.5,
+      "above20Pct": 47.4,
       "above50Pct": 49.5,
-      "above200Pct": 70.1,
-      "nearHighPct": 17.5,
-      "newHighPct": 2.1,
-      "nearLowPct": 12.4,
+      "above200Pct": 69.1,
+      "nearHighPct": 13.4,
+      "newHighPct": 0.0,
+      "nearLowPct": 11.3,
       "newLowPct": 0.0,
-      "advancePct": 50.5,
-      "declinePct": 49.5,
+      "advancePct": 42.3,
+      "declinePct": 57.7,
       "counts": {
-        "above20": 49,
+        "above20": 46,
         "above50": 48,
-        "above200": 68,
-        "nearHigh": 17,
-        "newHigh": 2,
-        "nearLow": 12,
+        "above200": 67,
+        "nearHigh": 13,
+        "newHigh": 0,
+        "nearLow": 11,
         "newLow": 0,
-        "advanced": 49,
-        "declined": 48
+        "advanced": 41,
+        "declined": 56
       },
-      "updatedAt": "2026-08-27T13:30:00Z",
+      "updatedAt": "2026-08-28T13:30:00Z",
       "leaders": [
-        "NVDA",
-        "PANW",
         "AMGN",
         "CRWD",
-        "GILD",
         "VRTX",
-        "SBUX",
         "FTNT",
+        "SBUX",
         "CSX",
-        "REGN",
         "MDLZ",
-        "ABNB"
+        "ABNB",
+        "WBD",
+        "FAST",
+        "CCEP",
+        "KDP"
       ],
       "laggards": [
         "MU",
@@ -124,8 +124,8 @@
         "GOOGL",
         "GOOG",
         "TSLA",
-        "META",
         "AVGO",
+        "META",
         "WMT",
         "INTC",
         "CSCO",
@@ -133,7 +133,7 @@
         "LRCX"
       ],
       "status": "neutral",
-      "value": "MA50上方 49.5% · MA200上方 70.1% · 新高/新低 2/0 · 上涨/下跌 49/48"
+      "value": "MA50上方 49.5% · MA200上方 69.1% · 新高/新低 0/0 · 上涨/下跌 41/56"
     }
   },
   "macroIndicators": {
@@ -238,41 +238,41 @@
       "name": "NYSE A/D 日宽度",
       "source": "https://www.barchart.com/stocks/quotes/%24ADVN",
       "sourceType": "barchart_scraped_quote",
-      "updatedAt": "2026-08-28T06:12:32Z",
-      "value": "上涨 719 · 下跌 1119 · A/D 0.64",
+      "updatedAt": "2026-08-29T03:45:38Z",
+      "value": "上涨 789 · 下跌 1045 · A/D 0.75",
       "status": "distribution",
-      "advancers": 719,
-      "decliners": 1119,
-      "advanceDeclineRatio": 0.64,
+      "advancers": 789,
+      "decliners": 1045,
+      "advanceDeclineRatio": 0.75,
       "quotes": {
         "advancers": {
           "symbol": "$ADVN",
           "name": "NYSE Advancing Stocks",
-          "lastPrice": 719.0,
-          "priceChange": -168.0,
-          "percentChange": -18.94,
-          "tradeTime": "08/27/26",
-          "sessionDateDisplayLong": "Thu, Aug 27th, 2026",
+          "lastPrice": 789.0,
+          "priceChange": 71.0,
+          "percentChange": 9.89,
+          "tradeTime": "08/28/26",
+          "sessionDateDisplayLong": "Fri, Aug 28th, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24ADVN"
         },
         "decliners": {
           "symbol": "$DECN",
           "name": "NYSE Declining Stocks",
-          "lastPrice": 1119.0,
-          "priceChange": 167.0,
-          "percentChange": 17.54,
-          "tradeTime": "08/27/26",
-          "sessionDateDisplayLong": "Thu, Aug 27th, 2026",
+          "lastPrice": 1045.0,
+          "priceChange": -74.0,
+          "percentChange": -6.61,
+          "tradeTime": "08/28/26",
+          "sessionDateDisplayLong": "Fri, Aug 28th, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24DECN"
         },
         "adRatio": {
           "symbol": "$ADRN",
           "name": "NYSE Advance Decline Ratio",
-          "lastPrice": 0.64,
-          "priceChange": -0.29,
-          "percentChange": -31.18,
-          "tradeTime": "08/27/26",
-          "sessionDateDisplayLong": "Thu, Aug 27th, 2026",
+          "lastPrice": 0.75,
+          "priceChange": 0.11,
+          "percentChange": 17.19,
+          "tradeTime": "08/28/26",
+          "sessionDateDisplayLong": "Fri, Aug 28th, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24ADRN"
         }
       },
@@ -283,31 +283,31 @@
       "name": "NYSE 52周新高 / 新低",
       "source": "https://www.barchart.com/stocks/quotes/%24MAHN",
       "sourceType": "barchart_scraped_quote",
-      "updatedAt": "2026-08-28T06:12:32Z",
-      "value": "新高 35 · 新低 29 · H/L 1.21",
+      "updatedAt": "2026-08-29T03:45:38Z",
+      "value": "新高 35 · 新低 20 · H/L 1.75",
       "status": "neutral",
       "newHighs52w": 35,
-      "newLows52w": 29,
-      "highLowRatio": 1.207,
+      "newLows52w": 20,
+      "highLowRatio": 1.75,
       "quotes": {
         "newHighs52w": {
           "symbol": "$MAHN",
           "name": "52-Week Highs NYSE Exch",
           "lastPrice": 35.0,
-          "priceChange": 2.0,
-          "percentChange": 6.06,
-          "tradeTime": "08/27/26",
-          "sessionDateDisplayLong": "Thu, Aug 27th, 2026",
+          "priceChange": null,
+          "percentChange": null,
+          "tradeTime": "08/28/26",
+          "sessionDateDisplayLong": "Fri, Aug 28th, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24MAHN"
         },
         "newLows52w": {
           "symbol": "$MALN",
           "name": "52-Week Lows NYSE Exch",
-          "lastPrice": 29.0,
-          "priceChange": 14.0,
-          "percentChange": 93.33,
-          "tradeTime": "08/27/26",
-          "sessionDateDisplayLong": "Thu, Aug 27th, 2026",
+          "lastPrice": 20.0,
+          "priceChange": -9.0,
+          "percentChange": -31.03,
+          "tradeTime": "08/28/26",
+          "sessionDateDisplayLong": "Fri, Aug 28th, 2026",
           "source": "https://www.barchart.com/stocks/quotes/%24MALN"
         }
       },
@@ -316,37 +316,41 @@
     },
     "finra_short_sale_volume": {
       "name": "FINRA 场外短量占比自动快照",
-      "source": "https://cdn.finra.org/equity/regsho/daily/CNMSshvol20260827.txt",
+      "source": "https://cdn.finra.org/equity/regsho/daily/CNMSshvol20260828.txt",
       "sourceType": "official_txt",
-      "updatedAt": "2026-08-27",
-      "value": "市场 50.1% · 20日均 50.5% · S&P500 46.9% · QQQ 45.1%",
+      "updatedAt": "2026-08-28",
+      "value": "市场 51.0% · 20日均 50.5% · S&P500 46.6% · QQQ 45.9%",
       "status": "neutral",
-      "marketRatioPct": 50.1,
+      "marketRatioPct": 51.0,
       "marketAverage20dPct": 50.5,
-      "sp500RatioPct": 46.9,
-      "qqqRatioPct": 45.1,
+      "sp500RatioPct": 46.6,
+      "qqqRatioPct": 45.9,
       "latest": {
-        "date": "2026-08-27",
+        "date": "2026-08-28",
         "market": {
-          "tickerCount": 12241,
-          "shortVolume": 3356016384.62,
-          "totalVolume": 6701528498.56,
-          "ratioPct": 50.1
+          "tickerCount": 12221,
+          "shortVolume": 3755127949.44,
+          "totalVolume": 7367435091.38,
+          "ratioPct": 51.0
         },
         "sp500": {
           "tickerCount": 501,
-          "shortVolume": 513634384.99,
-          "totalVolume": 1095690505.43,
-          "ratioPct": 46.9
+          "shortVolume": 493488572.77,
+          "totalVolume": 1058246803.79,
+          "ratioPct": 46.6
         },
         "qqq": {
           "tickerCount": 99,
-          "shortVolume": 232063846.35,
-          "totalVolume": 514263365.35,
-          "ratioPct": 45.1
+          "shortVolume": 227248027.98,
+          "totalVolume": 494844758.72,
+          "ratioPct": 45.9
         }
       },
       "history": [
+        {
+          "date": "2026-08-28",
+          "marketRatioPct": 51.0
+        },
         {
           "date": "2026-08-27",
           "marketRatioPct": 50.1
@@ -422,72 +426,68 @@
         {
           "date": "2026-08-03",
           "marketRatioPct": 50.7
-        },
-        {
-          "date": "2026-07-31",
-          "marketRatioPct": 51.0
         }
       ],
       "abnormalTickers": [
         {
-          "symbol": "QVML",
-          "ratioPct": 99.0,
-          "totalVolume": 2146250.0
+          "symbol": "SPTB",
+          "ratioPct": 99.7,
+          "totalVolume": 3272345.0
         },
         {
-          "symbol": "SPTM",
-          "ratioPct": 96.3,
-          "totalVolume": 2621044.0
+          "symbol": "GIGL",
+          "ratioPct": 98.0,
+          "totalVolume": 1171079.0
         },
         {
-          "symbol": "VGSH",
-          "ratioPct": 95.7,
-          "totalVolume": 18940513.0
-        },
-        {
-          "symbol": "SCHO",
-          "ratioPct": 94.8,
-          "totalVolume": 18997907.0
-        },
-        {
-          "symbol": "SSO",
-          "ratioPct": 93.0,
-          "totalVolume": 5265751.0
-        },
-        {
-          "symbol": "SDCI",
-          "ratioPct": 92.6,
-          "totalVolume": 1290470.0
-        },
-        {
-          "symbol": "JAZZ",
-          "ratioPct": 92.0,
-          "totalVolume": 3064873.0
-        },
-        {
-          "symbol": "SWKS",
-          "ratioPct": 88.9,
-          "totalVolume": 1926939.0
-        },
-        {
-          "symbol": "EVRG",
-          "ratioPct": 88.4,
-          "totalVolume": 2524923.0
+          "symbol": "CRUX",
+          "ratioPct": 96.4,
+          "totalVolume": 1072201.0
         },
         {
           "symbol": "SPTS",
-          "ratioPct": 88.4,
-          "totalVolume": 2134457.0
+          "ratioPct": 93.7,
+          "totalVolume": 2828583.0
         },
         {
-          "symbol": "IAGG",
-          "ratioPct": 85.8,
-          "totalVolume": 1085344.0
+          "symbol": "SCHO",
+          "ratioPct": 92.4,
+          "totalVolume": 10643569.0
         },
         {
-          "symbol": "INDA",
-          "ratioPct": 85.5,
-          "totalVolume": 1097670.0
+          "symbol": "SM",
+          "ratioPct": 89.7,
+          "totalVolume": 2177326.0
+        },
+        {
+          "symbol": "FLTR",
+          "ratioPct": 89.1,
+          "totalVolume": 2706849.0
+        },
+        {
+          "symbol": "SWKS",
+          "ratioPct": 88.8,
+          "totalVolume": 1625563.0
+        },
+        {
+          "symbol": "FLRN",
+          "ratioPct": 88.7,
+          "totalVolume": 1355425.0
+        },
+        {
+          "symbol": "VGSH",
+          "ratioPct": 88.0,
+          "totalVolume": 6529909.0
+        },
+        {
+          "symbol": "SBS",
+          "ratioPct": 86.1,
+          "totalVolume": 12700849.0
+        },
+        {
+          "symbol": "ICSH",
+          "ratioPct": 85.7,
+          "totalVolume": 1380100.0
         }
       ],
       "missingRecentFiles": [],
@@ -498,8 +498,8 @@
       "name": "SEC Form 4 内部人交易快照",
       "source": "https://www.sec.gov/edgar/search/",
       "sourceType": "official_sec_form4",
-      "updatedAt": "2026-08-27",
-      "value": "90日卖出 $1120.5M · 买入 $10.2M · 卖出股票 19只 · 买入股票 2只",
+      "updatedAt": "2026-08-28",
+      "value": "90日卖出 $1118.6M · 买入 $10.2M · 卖出股票 19只 · 买入股票 2只",
       "status": "distribution",
       "lookbackDays": 90,
       "tickerUniverse": [
@@ -698,7 +698,7 @@
         "JNPR",
         "PSTG"
       ],
-      "sellValueUsd": 1120457480.03,
+      "sellValueUsd": 1118592656.47,
       "buyValueUsd": 10201939.11,
       "tickerTotals": {
         "ALAB": {
@@ -756,9 +756,9 @@
           "purchaseCount": 0
         },
         "CRWV": {
-          "sellValueUsd": 50951734.91,
+          "sellValueUsd": 50554162.1,
           "buyValueUsd": 0,
-          "saleCount": 41,
+          "saleCount": 43,
           "purchaseCount": 0
         },
         "EQIX": {
@@ -798,7 +798,7 @@
           "purchaseCount": 0
         },
         "MU": {
-          "sellValueUsd": 135792634.85,
+          "sellValueUsd": 134325384.1,
           "buyValueUsd": 0,
           "saleCount": 90,
           "purchaseCount": 0
@@ -839,7 +839,7 @@
         },
         {
           "ticker": "MU",
-          "valueUsd": 135792634.85
+          "valueUsd": 134325384.1
         },
         {
           "ticker": "CRDO",
@@ -851,7 +851,7 @@
         },
         {
           "ticker": "CRWV",
-          "valueUsd": 50951734.91
+          "valueUsd": 50554162.1
         },
         {
           "ticker": "AMD",
@@ -2687,6 +2687,22 @@
         },
         {
           "ticker": "MU",
+          "transactionDate": "2026-06-26",
+          "filingDate": "2026-08-28",
+          "accessionNumber": "0001798757-26-000007",
+          "ownerName": "Bjorlin Alexis",
+          "ownerTitle": null,
+          "isDirector": false,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 25.0,
+          "price": 1132.33,
+          "valueUsd": 28308.25,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000179875726000007/0001798757-26-000007.txt"
+        },
+        {
+          "ticker": "MU",
           "transactionDate": "2026-08-21",
           "filingDate": "2026-08-25",
           "accessionNumber": "0001242654-26-000015",
@@ -4108,22 +4124,6 @@
           "price": 1095.88,
           "valueUsd": 306846.4,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000163206326000003/0001632063-26-000003.txt"
-        },
-        {
-          "ticker": "MU",
-          "transactionDate": "2026-06-30",
-          "filingDate": "2026-07-02",
-          "accessionNumber": "0001453368-26-000001",
-          "ownerName": "Dugle Lynn A",
-          "ownerTitle": null,
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1300.0,
-          "price": 1150.43,
-          "valueUsd": 1495559.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000145336826000001/0001453368-26-000001.txt"
         },
         {
           "ticker": "MRVL",
@@ -5868,6 +5868,470 @@
           "price": 250.28,
           "valueUsd": 50056.0,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026048456/0001628280-26-048456.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-08-21",
+          "filingDate": "2026-08-21",
+          "accessionNumber": "0000804328-26-000092",
+          "ownerName": "Grech Patricia Y",
+          "ownerTitle": "SVP, Chief Accounting Officer",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 625.0,
+          "price": 162.85,
+          "valueUsd": 101781.25,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000092/0000804328-26-000092.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-08-12",
+          "filingDate": "2026-08-12",
+          "accessionNumber": "0000804328-26-000091",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 260.0,
+          "price": 161.7729,
+          "valueUsd": 42060.95,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-08-12",
+          "filingDate": "2026-08-12",
+          "accessionNumber": "0000804328-26-000091",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 748.0,
+          "price": 162.5579,
+          "valueUsd": 121593.31,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-08-12",
+          "filingDate": "2026-08-12",
+          "accessionNumber": "0000804328-26-000091",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 1080.0,
+          "price": 163.4452,
+          "valueUsd": 176520.82,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-08-12",
+          "filingDate": "2026-08-12",
+          "accessionNumber": "0000804328-26-000091",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 248.0,
+          "price": 164.7277,
+          "valueUsd": 40852.47,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-08-12",
+          "filingDate": "2026-08-12",
+          "accessionNumber": "0000804328-26-000091",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 164.0,
+          "price": 165.3368,
+          "valueUsd": 27115.24,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-08-03",
+          "filingDate": "2026-08-03",
+          "accessionNumber": "0000804328-26-000090",
+          "ownerName": "ACE HEATHER S",
+          "ownerTitle": "EVP, Chief HR Officer",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 3200.0,
+          "price": 147.04,
+          "valueUsd": 470528.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000090/0000804328-26-000090.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-07-14",
+          "filingDate": "2026-07-14",
+          "accessionNumber": "0000804328-26-000074",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 581.0,
+          "price": 178.268,
+          "valueUsd": 103573.71,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-07-14",
+          "filingDate": "2026-07-14",
+          "accessionNumber": "0000804328-26-000074",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 535.0,
+          "price": 179.1281,
+          "valueUsd": 95833.53,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-07-14",
+          "filingDate": "2026-07-14",
+          "accessionNumber": "0000804328-26-000074",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 329.0,
+          "price": 180.2122,
+          "valueUsd": 59289.81,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-07-14",
+          "filingDate": "2026-07-14",
+          "accessionNumber": "0000804328-26-000074",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 240.0,
+          "price": 181.2325,
+          "valueUsd": 43495.8,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-07-14",
+          "filingDate": "2026-07-14",
+          "accessionNumber": "0000804328-26-000074",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 377.0,
+          "price": 182.3101,
+          "valueUsd": 68730.91,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-07-14",
+          "filingDate": "2026-07-14",
+          "accessionNumber": "0000804328-26-000074",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 166.0,
+          "price": 183.1468,
+          "valueUsd": 30402.37,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-07-14",
+          "filingDate": "2026-07-14",
+          "accessionNumber": "0000804328-26-000074",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 59.0,
+          "price": 183.9827,
+          "valueUsd": 10854.98,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-07-14",
+          "filingDate": "2026-07-14",
+          "accessionNumber": "0000804328-26-000074",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 108.0,
+          "price": 186.2592,
+          "valueUsd": 20115.99,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-07-14",
+          "filingDate": "2026-07-14",
+          "accessionNumber": "0000804328-26-000074",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 61.0,
+          "price": 187.1542,
+          "valueUsd": 11416.41,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-07-14",
+          "filingDate": "2026-07-14",
+          "accessionNumber": "0000804328-26-000074",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 12.0,
+          "price": 187.9,
+          "valueUsd": 2254.8,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-07-14",
+          "filingDate": "2026-07-14",
+          "accessionNumber": "0000804328-26-000074",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 32.0,
+          "price": 189.4247,
+          "valueUsd": 6061.59,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-06-11",
+          "filingDate": "2026-06-11",
+          "accessionNumber": "0000804328-26-000071",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 294.0,
+          "price": 193.8062,
+          "valueUsd": 56979.02,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-06-11",
+          "filingDate": "2026-06-11",
+          "accessionNumber": "0000804328-26-000071",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 750.0,
+          "price": 194.6516,
+          "valueUsd": 145988.7,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-06-11",
+          "filingDate": "2026-06-11",
+          "accessionNumber": "0000804328-26-000071",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 343.0,
+          "price": 195.4826,
+          "valueUsd": 67050.53,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-06-11",
+          "filingDate": "2026-06-11",
+          "accessionNumber": "0000804328-26-000071",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 48.0,
+          "price": 196.425,
+          "valueUsd": 9428.4,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-06-11",
+          "filingDate": "2026-06-11",
+          "accessionNumber": "0000804328-26-000071",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 120.0,
+          "price": 197.7785,
+          "valueUsd": 23733.42,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-06-11",
+          "filingDate": "2026-06-11",
+          "accessionNumber": "0000804328-26-000071",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 102.0,
+          "price": 198.5383,
+          "valueUsd": 20250.91,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-06-11",
+          "filingDate": "2026-06-11",
+          "accessionNumber": "0000804328-26-000071",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 177.0,
+          "price": 199.7067,
+          "valueUsd": 35348.09,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-06-11",
+          "filingDate": "2026-06-11",
+          "accessionNumber": "0000804328-26-000071",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 180.0,
+          "price": 200.5393,
+          "valueUsd": 36097.07,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-06-11",
+          "filingDate": "2026-06-11",
+          "accessionNumber": "0000804328-26-000071",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 108.0,
+          "price": 201.6944,
+          "valueUsd": 21783.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-06-11",
+          "filingDate": "2026-06-11",
+          "accessionNumber": "0000804328-26-000071",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 215.0,
+          "price": 202.7471,
+          "valueUsd": 43590.63,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-06-11",
+          "filingDate": "2026-06-11",
+          "accessionNumber": "0000804328-26-000071",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 163.0,
+          "price": 203.2518,
+          "valueUsd": 33130.04,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
         },
         {
           "ticker": "ALAB",
@@ -8062,470 +8526,6 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000006/0001134727-26-000006.txt"
         },
         {
-          "ticker": "QCOM",
-          "transactionDate": "2026-08-21",
-          "filingDate": "2026-08-21",
-          "accessionNumber": "0000804328-26-000092",
-          "ownerName": "Grech Patricia Y",
-          "ownerTitle": "SVP, Chief Accounting Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 625.0,
-          "price": 162.85,
-          "valueUsd": 101781.25,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000092/0000804328-26-000092.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-08-12",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0000804328-26-000091",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 260.0,
-          "price": 161.7729,
-          "valueUsd": 42060.95,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-08-12",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0000804328-26-000091",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 748.0,
-          "price": 162.5579,
-          "valueUsd": 121593.31,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-08-12",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0000804328-26-000091",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1080.0,
-          "price": 163.4452,
-          "valueUsd": 176520.82,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-08-12",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0000804328-26-000091",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 248.0,
-          "price": 164.7277,
-          "valueUsd": 40852.47,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-08-12",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0000804328-26-000091",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 164.0,
-          "price": 165.3368,
-          "valueUsd": 27115.24,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-08-03",
-          "filingDate": "2026-08-03",
-          "accessionNumber": "0000804328-26-000090",
-          "ownerName": "ACE HEATHER S",
-          "ownerTitle": "EVP, Chief HR Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3200.0,
-          "price": 147.04,
-          "valueUsd": 470528.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000090/0000804328-26-000090.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-07-14",
-          "filingDate": "2026-07-14",
-          "accessionNumber": "0000804328-26-000074",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 581.0,
-          "price": 178.268,
-          "valueUsd": 103573.71,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-07-14",
-          "filingDate": "2026-07-14",
-          "accessionNumber": "0000804328-26-000074",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 535.0,
-          "price": 179.1281,
-          "valueUsd": 95833.53,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-07-14",
-          "filingDate": "2026-07-14",
-          "accessionNumber": "0000804328-26-000074",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 329.0,
-          "price": 180.2122,
-          "valueUsd": 59289.81,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-07-14",
-          "filingDate": "2026-07-14",
-          "accessionNumber": "0000804328-26-000074",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 240.0,
-          "price": 181.2325,
-          "valueUsd": 43495.8,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-07-14",
-          "filingDate": "2026-07-14",
-          "accessionNumber": "0000804328-26-000074",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 377.0,
-          "price": 182.3101,
-          "valueUsd": 68730.91,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-07-14",
-          "filingDate": "2026-07-14",
-          "accessionNumber": "0000804328-26-000074",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 166.0,
-          "price": 183.1468,
-          "valueUsd": 30402.37,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-07-14",
-          "filingDate": "2026-07-14",
-          "accessionNumber": "0000804328-26-000074",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 59.0,
-          "price": 183.9827,
-          "valueUsd": 10854.98,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-07-14",
-          "filingDate": "2026-07-14",
-          "accessionNumber": "0000804328-26-000074",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 108.0,
-          "price": 186.2592,
-          "valueUsd": 20115.99,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-07-14",
-          "filingDate": "2026-07-14",
-          "accessionNumber": "0000804328-26-000074",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 61.0,
-          "price": 187.1542,
-          "valueUsd": 11416.41,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-07-14",
-          "filingDate": "2026-07-14",
-          "accessionNumber": "0000804328-26-000074",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 12.0,
-          "price": 187.9,
-          "valueUsd": 2254.8,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-07-14",
-          "filingDate": "2026-07-14",
-          "accessionNumber": "0000804328-26-000074",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 32.0,
-          "price": 189.4247,
-          "valueUsd": 6061.59,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000074/0000804328-26-000074.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-11",
-          "accessionNumber": "0000804328-26-000071",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 294.0,
-          "price": 193.8062,
-          "valueUsd": 56979.02,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-11",
-          "accessionNumber": "0000804328-26-000071",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 750.0,
-          "price": 194.6516,
-          "valueUsd": 145988.7,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-11",
-          "accessionNumber": "0000804328-26-000071",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 343.0,
-          "price": 195.4826,
-          "valueUsd": 67050.53,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-11",
-          "accessionNumber": "0000804328-26-000071",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 48.0,
-          "price": 196.425,
-          "valueUsd": 9428.4,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-11",
-          "accessionNumber": "0000804328-26-000071",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 120.0,
-          "price": 197.7785,
-          "valueUsd": 23733.42,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-11",
-          "accessionNumber": "0000804328-26-000071",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 102.0,
-          "price": 198.5383,
-          "valueUsd": 20250.91,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-11",
-          "accessionNumber": "0000804328-26-000071",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 177.0,
-          "price": 199.7067,
-          "valueUsd": 35348.09,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-11",
-          "accessionNumber": "0000804328-26-000071",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 180.0,
-          "price": 200.5393,
-          "valueUsd": 36097.07,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-11",
-          "accessionNumber": "0000804328-26-000071",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 108.0,
-          "price": 201.6944,
-          "valueUsd": 21783.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-11",
-          "accessionNumber": "0000804328-26-000071",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 215.0,
-          "price": 202.7471,
-          "valueUsd": 43590.63,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-11",
-          "accessionNumber": "0000804328-26-000071",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 163.0,
-          "price": 203.2518,
-          "valueUsd": 33130.04,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000071/0000804328-26-000071.txt"
-        },
-        {
           "ticker": "LRCX",
           "transactionDate": "2026-08-06",
           "filingDate": "2026-08-07",
@@ -9310,102 +9310,6 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/820318/000089914026000726/0000899140-26-000726.txt"
         },
         {
-          "ticker": "KLAC",
-          "transactionDate": "2026-08-13",
-          "filingDate": "2026-08-14",
-          "accessionNumber": "0001193125-26-352187",
-          "ownerName": "Lorig Brian",
-          "ownerTitle": "EVP, KLA Global Services",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 59586.0,
-          "price": 208.13,
-          "valueUsd": 12401634.18,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526352187/0001193125-26-352187.txt"
-        },
-        {
-          "ticker": "KLAC",
-          "transactionDate": "2026-08-12",
-          "filingDate": "2026-08-13",
-          "accessionNumber": "0001193125-26-349139",
-          "ownerName": "Higgins Bren D.",
-          "ownerTitle": "EVP & Chief Financial Officer",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 31500.0,
-          "price": 209.87,
-          "valueUsd": 6610905.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526349139/0001193125-26-349139.txt"
-        },
-        {
-          "ticker": "KLAC",
-          "transactionDate": "2026-08-11",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0001193125-26-346812",
-          "ownerName": "Khan Ahmad A.",
-          "ownerTitle": "President, Semi. Prod. & Cust.",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 33180.0,
-          "price": 198.95,
-          "valueUsd": 6601161.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526346812/0001193125-26-346812.txt"
-        },
-        {
-          "ticker": "KLAC",
-          "transactionDate": "2026-08-11",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0001193125-26-346811",
-          "ownerName": "WALLACE RICHARD P",
-          "ownerTitle": "President and CEO",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 87568.0,
-          "price": 198.95,
-          "valueUsd": 17421653.6,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526346811/0001193125-26-346811.txt"
-        },
-        {
-          "ticker": "KLAC",
-          "transactionDate": "2026-08-10",
-          "filingDate": "2026-08-11",
-          "accessionNumber": "0001193125-26-344581",
-          "ownerName": "Kirloskar Virendra A",
-          "ownerTitle": "SVP & Chief Accounting Officer",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 529.0,
-          "price": 204.56,
-          "valueUsd": 108212.24,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526344581/0001193125-26-344581.txt"
-        },
-        {
-          "ticker": "KLAC",
-          "transactionDate": "2026-08-10",
-          "filingDate": "2026-08-11",
-          "accessionNumber": "0001193125-26-344579",
-          "ownerName": "Wilkinson Mary Beth",
-          "ownerTitle": "EVP, CLO and Secretary",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1661.0,
-          "price": 204.56,
-          "valueUsd": 339774.16,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526344579/0001193125-26-344579.txt"
-        },
-        {
           "ticker": "AMAT",
           "transactionDate": "2026-08-25",
           "filingDate": "2026-08-27",
@@ -9852,6 +9756,102 @@
           "price": 590.7649,
           "valueUsd": 5092984.2,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044039/0001628280-26-044039.txt"
+        },
+        {
+          "ticker": "KLAC",
+          "transactionDate": "2026-08-13",
+          "filingDate": "2026-08-14",
+          "accessionNumber": "0001193125-26-352187",
+          "ownerName": "Lorig Brian",
+          "ownerTitle": "EVP, KLA Global Services",
+          "isDirector": false,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 59586.0,
+          "price": 208.13,
+          "valueUsd": 12401634.18,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526352187/0001193125-26-352187.txt"
+        },
+        {
+          "ticker": "KLAC",
+          "transactionDate": "2026-08-12",
+          "filingDate": "2026-08-13",
+          "accessionNumber": "0001193125-26-349139",
+          "ownerName": "Higgins Bren D.",
+          "ownerTitle": "EVP & Chief Financial Officer",
+          "isDirector": false,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 31500.0,
+          "price": 209.87,
+          "valueUsd": 6610905.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526349139/0001193125-26-349139.txt"
+        },
+        {
+          "ticker": "KLAC",
+          "transactionDate": "2026-08-11",
+          "filingDate": "2026-08-12",
+          "accessionNumber": "0001193125-26-346812",
+          "ownerName": "Khan Ahmad A.",
+          "ownerTitle": "President, Semi. Prod. & Cust.",
+          "isDirector": false,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 33180.0,
+          "price": 198.95,
+          "valueUsd": 6601161.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526346812/0001193125-26-346812.txt"
+        },
+        {
+          "ticker": "KLAC",
+          "transactionDate": "2026-08-11",
+          "filingDate": "2026-08-12",
+          "accessionNumber": "0001193125-26-346811",
+          "ownerName": "WALLACE RICHARD P",
+          "ownerTitle": "President and CEO",
+          "isDirector": false,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 87568.0,
+          "price": 198.95,
+          "valueUsd": 17421653.6,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526346811/0001193125-26-346811.txt"
+        },
+        {
+          "ticker": "KLAC",
+          "transactionDate": "2026-08-10",
+          "filingDate": "2026-08-11",
+          "accessionNumber": "0001193125-26-344581",
+          "ownerName": "Kirloskar Virendra A",
+          "ownerTitle": "SVP & Chief Accounting Officer",
+          "isDirector": false,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 529.0,
+          "price": 204.56,
+          "valueUsd": 108212.24,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526344581/0001193125-26-344581.txt"
+        },
+        {
+          "ticker": "KLAC",
+          "transactionDate": "2026-08-10",
+          "filingDate": "2026-08-11",
+          "accessionNumber": "0001193125-26-344579",
+          "ownerName": "Wilkinson Mary Beth",
+          "ownerTitle": "EVP, CLO and Secretary",
+          "isDirector": false,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 1661.0,
+          "price": 204.56,
+          "valueUsd": 339774.16,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526344579/0001193125-26-344579.txt"
         },
         {
           "ticker": "LITE",
@@ -10444,6 +10444,54 @@
           "price": 860.0367,
           "valueUsd": 629546.86,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
+        },
+        {
+          "ticker": "CRWV",
+          "transactionDate": "2026-08-26",
+          "filingDate": "2026-08-28",
+          "accessionNumber": "0001769628-26-000414",
+          "ownerName": "McVeety Kristen J",
+          "ownerTitle": "GC and Secretary",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 724.0,
+          "price": 87.3888,
+          "valueUsd": 63269.49,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000414/0001769628-26-000414.txt"
+        },
+        {
+          "ticker": "CRWV",
+          "transactionDate": "2026-08-26",
+          "filingDate": "2026-08-28",
+          "accessionNumber": "0001769628-26-000414",
+          "ownerName": "McVeety Kristen J",
+          "ownerTitle": "GC and Secretary",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 1144.0,
+          "price": 88.1822,
+          "valueUsd": 100880.44,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000414/0001769628-26-000414.txt"
+        },
+        {
+          "ticker": "CRWV",
+          "transactionDate": "2026-08-26",
+          "filingDate": "2026-08-28",
+          "accessionNumber": "0001769628-26-000414",
+          "ownerName": "McVeety Kristen J",
+          "ownerTitle": "GC and Secretary",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 232.0,
+          "price": 89.2439,
+          "valueUsd": 20704.58,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000414/0001769628-26-000414.txt"
         },
         {
           "ticker": "CRWV",
@@ -11084,342 +11132,6 @@
           "price": 91.88,
           "valueUsd": 331686.8,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000402/0001769628-26-000402.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-20",
-          "filingDate": "2026-08-21",
-          "accessionNumber": "0001769628-26-000400",
-          "ownerName": "Jain Sachin",
-          "ownerTitle": "Chief Operating Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 6339.0,
-          "price": 91.88,
-          "valueUsd": 582427.32,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000400/0001769628-26-000400.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001596532-26-000216",
-          "ownerName": "Ullal Jayshree",
-          "ownerTitle": "CEO and Chairperson",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3281.0,
-          "price": 191.1012,
-          "valueUsd": 627003.04,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000216/0001596532-26-000216.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001596532-26-000216",
-          "ownerName": "Ullal Jayshree",
-          "ownerTitle": "CEO and Chairperson",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 10128.0,
-          "price": 191.9859,
-          "valueUsd": 1944433.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000216/0001596532-26-000216.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001596532-26-000216",
-          "ownerName": "Ullal Jayshree",
-          "ownerTitle": "CEO and Chairperson",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 400.0,
-          "price": 192.6375,
-          "valueUsd": 77055.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000216/0001596532-26-000216.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-21",
-          "filingDate": "2026-08-25",
-          "accessionNumber": "0001596532-26-000214",
-          "ownerName": "Battles Kelly Bodnar",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 70.0,
-          "price": 184.7679,
-          "valueUsd": 12933.75,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000214/0001596532-26-000214.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-21",
-          "filingDate": "2026-08-25",
-          "accessionNumber": "0001596532-26-000214",
-          "ownerName": "Battles Kelly Bodnar",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 64.0,
-          "price": 185.6091,
-          "valueUsd": 11878.98,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000214/0001596532-26-000214.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-21",
-          "filingDate": "2026-08-25",
-          "accessionNumber": "0001596532-26-000214",
-          "ownerName": "Battles Kelly Bodnar",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 35.0,
-          "price": 186.926,
-          "valueUsd": 6542.41,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000214/0001596532-26-000214.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-21",
-          "filingDate": "2026-08-25",
-          "accessionNumber": "0001596532-26-000214",
-          "ownerName": "Battles Kelly Bodnar",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 40.0,
-          "price": 187.7738,
-          "valueUsd": 7510.95,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000214/0001596532-26-000214.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-21",
-          "filingDate": "2026-08-25",
-          "accessionNumber": "0001596532-26-000214",
-          "ownerName": "Battles Kelly Bodnar",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 213.0,
-          "price": 188.692,
-          "valueUsd": 40191.4,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000214/0001596532-26-000214.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-20",
-          "filingDate": "2026-08-24",
-          "accessionNumber": "0001596532-26-000210",
-          "ownerName": "Duda Kenneth",
-          "ownerTitle": "President and CTO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4197.0,
-          "price": 184.3297,
-          "valueUsd": 773631.75,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-20",
-          "filingDate": "2026-08-24",
-          "accessionNumber": "0001596532-26-000210",
-          "ownerName": "Duda Kenneth",
-          "ownerTitle": "President and CTO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 5750.0,
-          "price": 185.1821,
-          "valueUsd": 1064797.07,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-20",
-          "filingDate": "2026-08-24",
-          "accessionNumber": "0001596532-26-000210",
-          "ownerName": "Duda Kenneth",
-          "ownerTitle": "President and CTO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 6568.0,
-          "price": 186.1257,
-          "valueUsd": 1222473.6,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-20",
-          "filingDate": "2026-08-24",
-          "accessionNumber": "0001596532-26-000210",
-          "ownerName": "Duda Kenneth",
-          "ownerTitle": "President and CTO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 818.0,
-          "price": 186.9698,
-          "valueUsd": 152941.3,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-20",
-          "filingDate": "2026-08-24",
-          "accessionNumber": "0001596532-26-000210",
-          "ownerName": "Duda Kenneth",
-          "ownerTitle": "President and CTO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3875.0,
-          "price": 184.3297,
-          "valueUsd": 714277.59,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-20",
-          "filingDate": "2026-08-24",
-          "accessionNumber": "0001596532-26-000210",
-          "ownerName": "Duda Kenneth",
-          "ownerTitle": "President and CTO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 5308.0,
-          "price": 185.1821,
-          "valueUsd": 982946.59,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-20",
-          "filingDate": "2026-08-24",
-          "accessionNumber": "0001596532-26-000210",
-          "ownerName": "Duda Kenneth",
-          "ownerTitle": "President and CTO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 6063.0,
-          "price": 186.1257,
-          "valueUsd": 1128480.12,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-20",
-          "filingDate": "2026-08-24",
-          "accessionNumber": "0001596532-26-000210",
-          "ownerName": "Duda Kenneth",
-          "ownerTitle": "President and CTO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 754.0,
-          "price": 186.9698,
-          "valueUsd": 140975.23,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-20",
-          "filingDate": "2026-08-24",
-          "accessionNumber": "0001596532-26-000210",
-          "ownerName": "Duda Kenneth",
-          "ownerTitle": "President and CTO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2422.0,
-          "price": 184.3297,
-          "valueUsd": 446446.53,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-20",
-          "filingDate": "2026-08-24",
-          "accessionNumber": "0001596532-26-000210",
-          "ownerName": "Duda Kenneth",
-          "ownerTitle": "President and CTO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3317.0,
-          "price": 185.1821,
-          "valueUsd": 614249.03,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-20",
-          "filingDate": "2026-08-24",
-          "accessionNumber": "0001596532-26-000210",
-          "ownerName": "Duda Kenneth",
-          "ownerTitle": "President and CTO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3789.0,
-          "price": 186.1257,
-          "valueUsd": 705230.28,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-08-20",
-          "filingDate": "2026-08-24",
-          "accessionNumber": "0001596532-26-000210",
-          "ownerName": "Duda Kenneth",
-          "ownerTitle": "President and CTO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 472.0,
-          "price": 186.9698,
-          "valueUsd": 88249.75,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
         },
         {
           "ticker": "NBIS",
@@ -12094,6 +11806,326 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1513845/000151384526000074/0001513845-26-000074.txt"
         },
         {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-25",
+          "filingDate": "2026-08-27",
+          "accessionNumber": "0001596532-26-000216",
+          "ownerName": "Ullal Jayshree",
+          "ownerTitle": "CEO and Chairperson",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 3281.0,
+          "price": 191.1012,
+          "valueUsd": 627003.04,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000216/0001596532-26-000216.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-25",
+          "filingDate": "2026-08-27",
+          "accessionNumber": "0001596532-26-000216",
+          "ownerName": "Ullal Jayshree",
+          "ownerTitle": "CEO and Chairperson",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 10128.0,
+          "price": 191.9859,
+          "valueUsd": 1944433.2,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000216/0001596532-26-000216.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-25",
+          "filingDate": "2026-08-27",
+          "accessionNumber": "0001596532-26-000216",
+          "ownerName": "Ullal Jayshree",
+          "ownerTitle": "CEO and Chairperson",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 400.0,
+          "price": 192.6375,
+          "valueUsd": 77055.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000216/0001596532-26-000216.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-21",
+          "filingDate": "2026-08-25",
+          "accessionNumber": "0001596532-26-000214",
+          "ownerName": "Battles Kelly Bodnar",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 70.0,
+          "price": 184.7679,
+          "valueUsd": 12933.75,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000214/0001596532-26-000214.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-21",
+          "filingDate": "2026-08-25",
+          "accessionNumber": "0001596532-26-000214",
+          "ownerName": "Battles Kelly Bodnar",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 64.0,
+          "price": 185.6091,
+          "valueUsd": 11878.98,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000214/0001596532-26-000214.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-21",
+          "filingDate": "2026-08-25",
+          "accessionNumber": "0001596532-26-000214",
+          "ownerName": "Battles Kelly Bodnar",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 35.0,
+          "price": 186.926,
+          "valueUsd": 6542.41,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000214/0001596532-26-000214.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-21",
+          "filingDate": "2026-08-25",
+          "accessionNumber": "0001596532-26-000214",
+          "ownerName": "Battles Kelly Bodnar",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 40.0,
+          "price": 187.7738,
+          "valueUsd": 7510.95,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000214/0001596532-26-000214.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-21",
+          "filingDate": "2026-08-25",
+          "accessionNumber": "0001596532-26-000214",
+          "ownerName": "Battles Kelly Bodnar",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 213.0,
+          "price": 188.692,
+          "valueUsd": 40191.4,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000214/0001596532-26-000214.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-20",
+          "filingDate": "2026-08-24",
+          "accessionNumber": "0001596532-26-000210",
+          "ownerName": "Duda Kenneth",
+          "ownerTitle": "President and CTO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 4197.0,
+          "price": 184.3297,
+          "valueUsd": 773631.75,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-20",
+          "filingDate": "2026-08-24",
+          "accessionNumber": "0001596532-26-000210",
+          "ownerName": "Duda Kenneth",
+          "ownerTitle": "President and CTO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 5750.0,
+          "price": 185.1821,
+          "valueUsd": 1064797.07,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-20",
+          "filingDate": "2026-08-24",
+          "accessionNumber": "0001596532-26-000210",
+          "ownerName": "Duda Kenneth",
+          "ownerTitle": "President and CTO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 6568.0,
+          "price": 186.1257,
+          "valueUsd": 1222473.6,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-20",
+          "filingDate": "2026-08-24",
+          "accessionNumber": "0001596532-26-000210",
+          "ownerName": "Duda Kenneth",
+          "ownerTitle": "President and CTO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 818.0,
+          "price": 186.9698,
+          "valueUsd": 152941.3,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-20",
+          "filingDate": "2026-08-24",
+          "accessionNumber": "0001596532-26-000210",
+          "ownerName": "Duda Kenneth",
+          "ownerTitle": "President and CTO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 3875.0,
+          "price": 184.3297,
+          "valueUsd": 714277.59,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-20",
+          "filingDate": "2026-08-24",
+          "accessionNumber": "0001596532-26-000210",
+          "ownerName": "Duda Kenneth",
+          "ownerTitle": "President and CTO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 5308.0,
+          "price": 185.1821,
+          "valueUsd": 982946.59,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-20",
+          "filingDate": "2026-08-24",
+          "accessionNumber": "0001596532-26-000210",
+          "ownerName": "Duda Kenneth",
+          "ownerTitle": "President and CTO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 6063.0,
+          "price": 186.1257,
+          "valueUsd": 1128480.12,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-20",
+          "filingDate": "2026-08-24",
+          "accessionNumber": "0001596532-26-000210",
+          "ownerName": "Duda Kenneth",
+          "ownerTitle": "President and CTO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 754.0,
+          "price": 186.9698,
+          "valueUsd": 140975.23,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-20",
+          "filingDate": "2026-08-24",
+          "accessionNumber": "0001596532-26-000210",
+          "ownerName": "Duda Kenneth",
+          "ownerTitle": "President and CTO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 2422.0,
+          "price": 184.3297,
+          "valueUsd": 446446.53,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-20",
+          "filingDate": "2026-08-24",
+          "accessionNumber": "0001596532-26-000210",
+          "ownerName": "Duda Kenneth",
+          "ownerTitle": "President and CTO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 3317.0,
+          "price": 185.1821,
+          "valueUsd": 614249.03,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-20",
+          "filingDate": "2026-08-24",
+          "accessionNumber": "0001596532-26-000210",
+          "ownerName": "Duda Kenneth",
+          "ownerTitle": "President and CTO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 3789.0,
+          "price": 186.1257,
+          "valueUsd": 705230.28,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
+        },
+        {
+          "ticker": "ANET",
+          "transactionDate": "2026-08-20",
+          "filingDate": "2026-08-24",
+          "accessionNumber": "0001596532-26-000210",
+          "ownerName": "Duda Kenneth",
+          "ownerTitle": "President and CTO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 472.0,
+          "price": 186.9698,
+          "valueUsd": 88249.75,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000210/0001596532-26-000210.txt"
+        },
+        {
           "ticker": "EQIX",
           "transactionDate": "2026-08-20",
           "filingDate": "2026-08-20",
@@ -12738,7 +12770,7 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000522/0001046179-26-000522.txt"
         }
       ],
-      "transactionCount": 721,
+      "transactionCount": 723,
       "threshold": "90日内部人公开市场卖出≥$50M、净卖出≥$25M、且涉及≥3只样本股：内部人卖出证据偏强；公开市场买入≥$5M、买入额≥卖出额1.5倍、且涉及≥2只样本股：内部人买入/承接证据偏强；其他中性。",
       "limitations": "SEC Form 4 只覆盖公司内部人交易，不等于机构13F持仓或暗池/期权流；大型科技公司高管10b5-1计划性卖出很常见，必须结合价格、宽度、成交量和公告背景判断。"
     }
@@ -12746,19 +12778,7 @@
   "fetchErrors": [
     {
       "source": "aaii_bull_bear",
-      "error": "The read operation timed out"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DLR",
-      "accession": "0001263157-26-000008",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DLR",
-      "accession": "0001206882-26-000004",
-      "error": "HTTP Error 429: Too Many Requests"
+      "error": "parser returned no data"
     },
     {
       "source": "sec_form4_insider_activity",
@@ -12776,6 +12796,36 @@
       "source": "sec_form4_insider_activity",
       "ticker": "EQIX",
       "accession": "0001101239-26-000119",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DLR",
+      "accession": "0001697749-26-000004",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DLR",
+      "accession": "0001263157-26-000008",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DLR",
+      "accession": "0001206882-26-000004",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "VRT",
+      "accession": "0001628280-26-045754",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "VRT",
+      "accession": "0001628280-26-045753",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -12806,6 +12856,24 @@
       "source": "sec_form4_insider_activity",
       "ticker": "VRT",
       "accession": "0001628280-26-045748",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "APLD",
+      "accession": "0001628280-26-052805",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "APLD",
+      "accession": "0001391935-26-000005",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "APLD",
+      "accession": "0002050897-26-000002",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -12924,54 +12992,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0001083301-26-000170",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0001083301-26-000169",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0001083301-26-000154",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0001083301-26-000153",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0000950142-26-001962",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0000950142-26-001960",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0000950142-26-001959",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0000950142-26-001958",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "CORZ",
       "accession": "0000905148-26-003935",
       "error": "HTTP Error 429: Too Many Requests"
@@ -13020,6 +13040,78 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0001083301-26-000172",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0001083301-26-000170",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0001083301-26-000169",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0001083301-26-000154",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0001083301-26-000153",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0000950142-26-001962",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0000950142-26-001960",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0000950142-26-001959",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CLSK",
+      "accession": "0001193125-26-352934",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CLSK",
+      "accession": "0001193125-26-352931",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CLSK",
+      "accession": "0001193125-26-352927",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CLSK",
+      "accession": "0001193125-26-352919",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "HUT",
       "accession": "0001964789-26-000038",
       "error": "HTTP Error 429: Too Many Requests"
@@ -13064,78 +13156,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "HUT",
       "accession": "0001964789-26-000020",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CLSK",
-      "accession": "0001193125-26-352934",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CLSK",
-      "accession": "0001193125-26-352931",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CLSK",
-      "accession": "0001193125-26-352927",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CLSK",
-      "accession": "0001193125-26-352919",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0002080157-26-000010",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0001444157-26-000022",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0001032553-26-000035",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0001998826-26-000016",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0002080157-26-000008",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0001032553-26-000033",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0001032553-26-000031",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0001444157-26-000020",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -13232,6 +13252,54 @@
       "source": "sec_form4_insider_activity",
       "ticker": "HPE",
       "accession": "0001584883-26-000003",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0002080157-26-000010",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0001444157-26-000022",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0001032553-26-000035",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0001998826-26-000016",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0002080157-26-000008",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0001032553-26-000033",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0001032553-26-000031",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0001444157-26-000020",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -13398,8 +13466,8 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "GEV",
-      "accession": "0001996810-26-000134",
+      "ticker": "SMR",
+      "accession": "0001922054-26-000003",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -13446,8 +13514,8 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001822966-26-000071",
+      "ticker": "GEV",
+      "accession": "0001996810-26-000134",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -13722,6 +13790,42 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "GE",
+      "accession": "0001953063-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "GE",
+      "accession": "0002052951-26-000007",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "GE",
+      "accession": "0002015929-26-000007",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "GE",
+      "accession": "0001216503-26-000008",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "GE",
+      "accession": "0001671730-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "GE",
+      "accession": "0001868758-26-000010",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "NRG",
       "accession": "0001225208-26-006985",
       "error": "HTTP Error 429: Too Many Requests"
@@ -13766,78 +13870,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "NRG",
       "accession": "0001225208-26-006978",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GE",
-      "accession": "0001953063-26-000009",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GE",
-      "accession": "0002052951-26-000007",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GE",
-      "accession": "0002015929-26-000007",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GE",
-      "accession": "0001216503-26-000008",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GE",
-      "accession": "0001671730-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GE",
-      "accession": "0001868758-26-000010",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HUBB",
-      "accession": "0001628280-26-057712",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HUBB",
-      "accession": "0001628280-26-057706",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HUBB",
-      "accession": "0001628280-26-057702",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HUBB",
-      "accession": "0001628280-26-056794",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HUBB",
-      "accession": "0001628280-26-047669",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HUBB",
-      "accession": "0001628280-26-047666",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -13890,8 +13922,38 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "DUK",
-      "accession": "0001491154-26-000006",
+      "ticker": "HUBB",
+      "accession": "0001628280-26-057712",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HUBB",
+      "accession": "0001628280-26-057706",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HUBB",
+      "accession": "0001628280-26-057702",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HUBB",
+      "accession": "0001628280-26-056794",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HUBB",
+      "accession": "0001628280-26-047669",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HUBB",
+      "accession": "0001628280-26-047666",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -13922,6 +13984,12 @@
       "source": "sec_form4_insider_activity",
       "ticker": "NEE",
       "accession": "0001240752-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DUK",
+      "accession": "0001491154-26-000006",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -14347,6 +14415,12 @@
     {
       "source": "sec_form4_insider_activity",
       "ticker": "CRM",
+      "accession": "0001108524-26-000192",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRM",
       "accession": "0001108524-26-000182",
       "error": "HTTP Error 429: Too Many Requests"
     },
@@ -14384,12 +14458,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "CRM",
       "accession": "0001108524-26-000170",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRM",
-      "accession": "0001108524-26-000168",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -14443,6 +14511,12 @@
     {
       "source": "sec_form4_insider_activity",
       "ticker": "SNOW",
+      "accession": "0001821737-26-000012",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SNOW",
       "accession": "0001402348-26-000017",
       "error": "HTTP Error 429: Too Many Requests"
     },
@@ -14480,12 +14554,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "SNOW",
       "accession": "0001821737-26-000010",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SNOW",
-      "accession": "0001402348-26-000016",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -14779,6 +14847,18 @@
     {
       "source": "sec_form4_insider_activity",
       "ticker": "IBM",
+      "accession": "0002005007-26-000005",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IBM",
+      "accession": "0001629898-26-000005",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IBM",
       "accession": "0002026599-26-000004",
       "error": "HTTP Error 429: Too Many Requests"
     },
@@ -14810,18 +14890,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "IBM",
       "accession": "0001771933-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IBM",
-      "accession": "0001731814-26-000005",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IBM",
-      "accession": "0001269971-26-000003",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -14886,54 +14954,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "PANW",
-      "accession": "0001882285-26-000020",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PANW",
-      "accession": "0001882285-26-000017",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PANW",
-      "accession": "0001882285-26-000014",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PANW",
-      "accession": "0002055370-26-000004",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PANW",
-      "accession": "0001468233-26-000009",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PANW",
-      "accession": "0001882285-26-000011",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PANW",
-      "accession": "0001193125-26-292777",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PANW",
-      "accession": "0001852540-26-000005",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "RBLX",
       "accession": "0001315098-26-000179",
       "error": "HTTP Error 429: Too Many Requests"
@@ -14982,6 +15002,60 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "PANW",
+      "accession": "0001882285-26-000020",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PANW",
+      "accession": "0001882285-26-000017",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PANW",
+      "accession": "0001882285-26-000014",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PANW",
+      "accession": "0002055370-26-000004",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PANW",
+      "accession": "0001468233-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PANW",
+      "accession": "0001882285-26-000011",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PANW",
+      "accession": "0001193125-26-292777",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PANW",
+      "accession": "0001852540-26-000005",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SYM",
+      "accession": "0001628280-26-059454",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "SYM",
       "accession": "0001877346-26-000021",
       "error": "HTTP Error 429: Too Many Requests"
@@ -15020,12 +15094,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "SYM",
       "accession": "0001654009-26-000011",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SYM",
-      "accession": "0001807561-26-000019",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -15078,54 +15146,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "TER",
-      "accession": "0000904454-26-000464",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "TER",
-      "accession": "0000904454-26-000462",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "TER",
-      "accession": "0000904454-26-000430",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "TER",
-      "accession": "0000904454-26-000412",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "TER",
-      "accession": "0000904454-26-000410",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "TER",
-      "accession": "0000904454-26-000390",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "TER",
-      "accession": "0000904454-26-000385",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "TER",
-      "accession": "0000904454-26-000383",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "ISRG",
       "accession": "0002010300-26-000029",
       "error": "HTTP Error 429: Too Many Requests"
@@ -15170,6 +15190,54 @@
       "source": "sec_form4_insider_activity",
       "ticker": "ISRG",
       "accession": "0001519593-26-000012",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "TER",
+      "accession": "0000904454-26-000464",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "TER",
+      "accession": "0000904454-26-000462",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "TER",
+      "accession": "0000904454-26-000430",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "TER",
+      "accession": "0000904454-26-000412",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "TER",
+      "accession": "0000904454-26-000410",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "TER",
+      "accession": "0000904454-26-000390",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "TER",
+      "accession": "0000904454-26-000385",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "TER",
+      "accession": "0000904454-26-000383",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -15330,54 +15398,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "KTOS",
-      "accession": "0001695434-26-000011",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "KTOS",
-      "accession": "0001014803-26-000009",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "KTOS",
-      "accession": "0001509409-26-000010",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "KTOS",
-      "accession": "0001660112-26-000010",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "KTOS",
-      "accession": "0001082440-26-000005",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "KTOS",
-      "accession": "0001509412-26-000009",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "KTOS",
-      "accession": "0001094718-26-000009",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "KTOS",
-      "accession": "0001695434-26-000010",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "AVAV",
       "accession": "0001184178-26-000022",
       "error": "HTTP Error 429: Too Many Requests"
@@ -15422,6 +15442,54 @@
       "source": "sec_form4_insider_activity",
       "ticker": "AVAV",
       "accession": "0002093054-26-000004",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KTOS",
+      "accession": "0001695434-26-000011",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KTOS",
+      "accession": "0001014803-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KTOS",
+      "accession": "0001509409-26-000010",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KTOS",
+      "accession": "0001660112-26-000010",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KTOS",
+      "accession": "0001082440-26-000005",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KTOS",
+      "accession": "0001509412-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KTOS",
+      "accession": "0001094718-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KTOS",
+      "accession": "0001695434-26-000010",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -15527,11 +15595,6 @@
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "ARK Investment Management",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_13f_institutional_sample",
       "manager": "Renaissance Technologies",
       "error": "HTTP Error 429: Too Many Requests"
     },
@@ -15542,7 +15605,7 @@
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "Coatue Management",
+      "manager": "ARK Investment Management",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -15552,12 +15615,17 @@
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "Berkshire Hathaway",
+      "manager": "Coatue Management",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_13f_institutional_sample",
       "manager": "Tiger Global Management",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_13f_institutional_sample",
+      "manager": "Berkshire Hathaway",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
