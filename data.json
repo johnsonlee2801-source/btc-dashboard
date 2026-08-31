@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-08-30T21:03:05.695208+00:00",
-  "timestamp_cn": "2026-08-31 05:03",
+  "timestamp": "2026-08-31T05:31:06.033632+00:00",
+  "timestamp_cn": "2026-08-31 13:31",
   "price": {
-    "price": 78524,
-    "change24h": 0.56
+    "price": 77983,
+    "change24h": -0.2
   },
   "etf": {
     "sum5d": 924.5,
@@ -18,10 +18,10 @@
     "source": "farside_parsed"
   },
   "onchain": {
-    "mvrv_zscore": 0.8292,
-    "nupl": 0.3272,
-    "mvrv_zscore_as_of": "2026-08-29",
-    "nupl_as_of": "2026-08-29",
+    "mvrv_zscore": 0.8486,
+    "nupl": 0.3281,
+    "mvrv_zscore_as_of": "2026-08-30",
+    "nupl_as_of": "2026-08-30",
     "mvrv_zscore_source": "bitcoin-data.com",
     "nupl_source": "bitcoin-data.com",
     "mvrv_zscore_age_days": 1,
@@ -31,34 +31,34 @@
   },
   "fed": {
     "fed_direction": "hike",
-    "reasoning": "Sep 16, 2026 定价：加息/不降息概率 57.60%，变动 14.4bps",
+    "reasoning": "Sep 16, 2026 定价：加息/不降息概率 57.20%，变动 14.3bps",
     "confidence": "high",
     "source": "rateprobability_api",
-    "as_of": "2026-08-30",
+    "as_of": "2026-08-31",
     "age_days": 0,
     "stale": false
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0057,
-    "avg": 0.0057,
+    "okx": 0.0078,
+    "avg": 0.0078,
     "source": "exchange_public"
   },
   "margin_lending": {
     "btc_daily_rate": 1.219e-05,
     "btc_annual_rate": 0.4449,
     "btc_borrow_limit": 100.0,
-    "open_interest": 27372.0,
+    "open_interest": 27271.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 311.3,
+    "total_b": 311.4,
     "trend": "expand"
   },
   "tips": 2.34,
   "tips_as_of": "2026-08-27",
-  "tips_age_days": 3,
+  "tips_age_days": 4,
   "tips_stale": false
 }
