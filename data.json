@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-08-31T13:45:17.931430+00:00",
-  "timestamp_cn": "2026-08-31 21:45",
+  "timestamp": "2026-08-31T22:49:16.042513+00:00",
+  "timestamp_cn": "2026-09-01 06:49",
   "price": {
-    "price": 78082,
-    "change24h": -0.89
+    "price": 78622,
+    "change24h": 0.26
   },
   "etf": {
-    "sum5d": 586.9,
+    "sum5d": 590.5,
     "days": [
       314.3,
       232.2,
       242.3,
       -201.9,
-      0.0
+      3.6
     ],
     "latest_date": "31 Aug 2026",
     "source": "farside_parsed"
@@ -40,25 +40,25 @@
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.008,
-    "avg": 0.008,
+    "okx": 0.0043,
+    "avg": 0.0043,
     "source": "exchange_public"
   },
   "margin_lending": {
-    "btc_daily_rate": 1.219e-05,
-    "btc_annual_rate": 0.4449,
+    "btc_daily_rate": 1.206e-05,
+    "btc_annual_rate": 0.4402,
     "btc_borrow_limit": 100.0,
-    "open_interest": 27433.0,
+    "open_interest": 27370.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 304.8,
+    "total_b": 310.9,
     "trend": "expand"
   },
-  "tips": 2.34,
-  "tips_as_of": "2026-08-27",
-  "tips_age_days": 4,
+  "tips": 2.42,
+  "tips_as_of": "2026-08-28",
+  "tips_age_days": 3,
   "tips_stale": false
 }
