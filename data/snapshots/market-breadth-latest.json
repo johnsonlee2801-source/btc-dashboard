@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-05T00:12:50Z",
+  "generatedAt": "2026-09-08T00:32:41Z",
   "description": "Daily static market breadth snapshot for stock.flowhunt.net. Free public sources; not investment advice.",
   "sources": {
     "sp500Constituents": "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv",
@@ -24,40 +24,40 @@
       "requested": 503,
       "sampleSize": 502,
       "coveragePct": 99.8,
-      "above20Pct": 45.4,
-      "above50Pct": 50.8,
-      "above200Pct": 65.9,
-      "nearHighPct": 19.9,
-      "newHighPct": 3.6,
-      "nearLowPct": 16.3,
-      "newLowPct": 0.4,
-      "advancePct": 67.3,
-      "declinePct": 32.3,
+      "above20Pct": 35.5,
+      "above50Pct": 47.0,
+      "above200Pct": 63.9,
+      "nearHighPct": 18.1,
+      "newHighPct": 1.6,
+      "nearLowPct": 17.5,
+      "newLowPct": 1.2,
+      "advancePct": 34.7,
+      "declinePct": 65.1,
       "counts": {
-        "above20": 228,
-        "above50": 255,
-        "above200": 331,
-        "nearHigh": 100,
-        "newHigh": 18,
-        "nearLow": 82,
-        "newLow": 2,
-        "advanced": 338,
-        "declined": 162
+        "above20": 178,
+        "above50": 236,
+        "above200": 321,
+        "nearHigh": 91,
+        "newHigh": 8,
+        "nearLow": 88,
+        "newLow": 6,
+        "advanced": 174,
+        "declined": 327
       },
-      "updatedAt": "2026-09-03T13:30:00Z",
+      "updatedAt": "2026-09-04T13:30:00Z",
       "leaders": [
         "ABBV",
         "APD",
         "ABNB",
-        "ALL",
         "AWK",
         "AMP",
         "AMGN",
         "APA",
-        "AAPL",
         "ADM",
-        "AIZ",
-        "ADP"
+        "BAC",
+        "BDX",
+        "BRK.B",
+        "BBY"
       ],
       "laggards": [
         "MMM",
@@ -65,56 +65,52 @@
         "AMD",
         "AFL",
         "AKAM",
+        "ALB",
         "ALGN",
         "LNT",
         "GOOGL",
         "GOOG",
         "MO",
-        "AEE",
-        "AEP"
+        "AMCR"
       ],
-      "status": "neutral",
-      "value": "MA50上方 50.8% · MA200上方 65.9% · 新高/新低 18/2 · 上涨/下跌 338/162"
+      "status": "distribution",
+      "value": "MA50上方 47.0% · MA200上方 63.9% · 新高/新低 8/6 · 上涨/下跌 174/327"
     },
     "nasdaq100": {
       "name": "Nasdaq-100 / QQQ 持仓宽度快照",
       "source": "https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/QQQ/holdings/fund?idType=ticker&interval=monthly&productType=ETF",
-      "sourceUpdatedAt": "2026-09-03",
+      "sourceUpdatedAt": "2026-09-07",
       "requested": 99,
       "sampleSize": 97,
       "coveragePct": 98.0,
-      "above20Pct": 38.1,
-      "above50Pct": 49.5,
-      "above200Pct": 64.9,
-      "nearHighPct": 12.4,
-      "newHighPct": 2.1,
-      "nearLowPct": 10.3,
+      "above20Pct": 33.0,
+      "above50Pct": 44.3,
+      "above200Pct": 63.9,
+      "nearHighPct": 9.3,
+      "newHighPct": 0.0,
+      "nearLowPct": 12.4,
       "newLowPct": 0.0,
-      "advancePct": 60.8,
-      "declinePct": 39.2,
+      "advancePct": 41.2,
+      "declinePct": 58.8,
       "counts": {
-        "above20": 37,
-        "above50": 48,
-        "above200": 63,
-        "nearHigh": 12,
-        "newHigh": 2,
-        "nearLow": 10,
+        "above20": 32,
+        "above50": 43,
+        "above200": 62,
+        "nearHigh": 9,
+        "newHigh": 0,
+        "nearLow": 12,
         "newLow": 0,
-        "advanced": 59,
-        "declined": 38
+        "advanced": 40,
+        "declined": 57
       },
-      "updatedAt": "2026-09-03T13:30:00Z",
+      "updatedAt": "2026-09-04T13:30:00Z",
       "leaders": [
         "NVDA",
-        "AAPL",
         "AMGN",
         "GILD",
         "VRTX",
-        "SBUX",
-        "ADP",
         "REGN",
         "ABNB",
-        "CCEP",
         "KDP",
         "DXCM"
       ],
@@ -122,6 +118,7 @@
         "AMD",
         "GOOGL",
         "GOOG",
+        "TSLA",
         "AVGO",
         "WMT",
         "INTC",
@@ -129,11 +126,10 @@
         "COST",
         "LRCX",
         "AMAT",
-        "PANW",
-        "TXN"
+        "PANW"
       ],
-      "status": "neutral",
-      "value": "MA50上方 49.5% · MA200上方 64.9% · 新高/新低 2/0 · 上涨/下跌 59/38"
+      "status": "distribution",
+      "value": "MA50上方 44.3% · MA200上方 63.9% · 新高/新低 0/0 · 上涨/下跌 40/57"
     }
   },
   "macroIndicators": {
@@ -410,7 +406,9 @@
           "totalVolume": 2430520.0
         }
       ],
-      "missingRecentFiles": [],
+      "missingRecentFiles": [
+        "20260907"
+      ],
       "threshold": "FINRA 场外 short/total ≥58% 或高于20日均值6个百分点：场外短量涌入/派发风险；≤42% 或低于20日均值6个百分点：空头压力缓和/承接改善；其他中性。",
       "limitations": "FINRA Daily Short Sale Volume 仅覆盖 TRF/ADF/ORF 等场外报告口径，不等同于全市场 short interest 或机构空头仓位；做市商对冲会造成噪声。"
     },
@@ -419,7 +417,7 @@
       "source": "https://www.sec.gov/edgar/search/",
       "sourceType": "official_sec_form4",
       "updatedAt": "2026-09-04",
-      "value": "90日卖出 $1477.1M · 买入 $10.2M · 卖出股票 16只 · 买入股票 2只",
+      "value": "90日卖出 $1206.2M · 买入 $10.2M · 卖出股票 11只 · 买入股票 2只",
       "status": "distribution",
       "lookbackDays": 90,
       "tickerUniverse": [
@@ -618,7 +616,7 @@
         "JNPR",
         "PSTG"
       ],
-      "sellValueUsd": 1477104613.14,
+      "sellValueUsd": 1206241245.57,
       "buyValueUsd": 10154165.0,
       "tickerTotals": {
         "ALAB": {
@@ -628,21 +626,15 @@
           "purchaseCount": 0
         },
         "AMAT": {
-          "sellValueUsd": 141021149.11,
+          "sellValueUsd": 71027868.24,
           "buyValueUsd": 0,
-          "saleCount": 27,
+          "saleCount": 7,
           "purchaseCount": 0
         },
         "AMD": {
           "sellValueUsd": 45045752.81,
           "buyValueUsd": 0,
           "saleCount": 44,
-          "purchaseCount": 0
-        },
-        "ANET": {
-          "sellValueUsd": 119811.24,
-          "buyValueUsd": 0,
-          "saleCount": 1,
           "purchaseCount": 0
         },
         "ARM": {
@@ -657,22 +649,10 @@
           "saleCount": 53,
           "purchaseCount": 0
         },
-        "COHR": {
-          "sellValueUsd": 5431664.88,
-          "buyValueUsd": 0,
-          "saleCount": 5,
-          "purchaseCount": 0
-        },
         "CRDO": {
           "sellValueUsd": 70502338.63,
           "buyValueUsd": 0,
           "saleCount": 105,
-          "purchaseCount": 0
-        },
-        "CRWV": {
-          "sellValueUsd": 65840394.4,
-          "buyValueUsd": 0,
-          "saleCount": 25,
           "purchaseCount": 0
         },
         "INTC": {
@@ -681,22 +661,10 @@
           "saleCount": 0,
           "purchaseCount": 1
         },
-        "KLAC": {
-          "sellValueUsd": 43483340.18,
-          "buyValueUsd": 0,
-          "saleCount": 6,
-          "purchaseCount": 0
-        },
-        "LITE": {
-          "sellValueUsd": 46865170.43,
-          "buyValueUsd": 0,
-          "saleCount": 43,
-          "purchaseCount": 0
-        },
         "LRCX": {
-          "sellValueUsd": 84873145.57,
+          "sellValueUsd": 45743440.0,
           "buyValueUsd": 0,
-          "saleCount": 50,
+          "saleCount": 7,
           "purchaseCount": 0
         },
         "MRVL": {
@@ -730,7 +698,7 @@
           "purchaseCount": 2
         }
       },
-      "saleTickerCount": 16,
+      "saleTickerCount": 11,
       "buyTickerCount": 2,
       "topSaleTickers": [
         {
@@ -742,10 +710,6 @@
           "valueUsd": 283696979.83
         },
         {
-          "ticker": "AMAT",
-          "valueUsd": 141021149.11
-        },
-        {
           "ticker": "MU",
           "valueUsd": 134325384.1
         },
@@ -754,24 +718,28 @@
           "valueUsd": 126498592.48
         },
         {
-          "ticker": "LRCX",
-          "valueUsd": 84873145.57
+          "ticker": "AMAT",
+          "valueUsd": 71027868.24
         },
         {
           "ticker": "CRDO",
           "valueUsd": 70502338.63
         },
         {
-          "ticker": "CRWV",
-          "valueUsd": 65840394.4
-        },
-        {
-          "ticker": "LITE",
-          "valueUsd": 46865170.43
+          "ticker": "LRCX",
+          "valueUsd": 45743440.0
         },
         {
           "ticker": "AMD",
           "valueUsd": 45045752.81
+        },
+        {
+          "ticker": "MRVL",
+          "valueUsd": 7404050.12
+        },
+        {
+          "ticker": "ARM",
+          "valueUsd": 2655432.0
         }
       ],
       "topBuyTickers": [
@@ -785,6 +753,166 @@
         }
       ],
       "transactions": [
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-08-31",
+          "filingDate": "2026-09-02",
+          "accessionNumber": "0001199039-26-000012",
+          "ownerName": "STEVENS MARK A",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 447400.0,
+          "price": 220.0959,
+          "valueUsd": 98470905.66,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000012/0001199039-26-000012.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-08-31",
+          "filingDate": "2026-09-02",
+          "accessionNumber": "0001199039-26-000012",
+          "ownerName": "STEVENS MARK A",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 137600.0,
+          "price": 220.9105,
+          "valueUsd": 30397284.8,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000012/0001199039-26-000012.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-09-01",
+          "filingDate": "2026-09-02",
+          "accessionNumber": "0001199039-26-000012",
+          "ownerName": "STEVENS MARK A",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 63501.0,
+          "price": 220.0589,
+          "valueUsd": 13973960.21,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000012/0001199039-26-000012.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-09-02",
+          "filingDate": "2026-09-02",
+          "accessionNumber": "0001199039-26-000012",
+          "ownerName": "STEVENS MARK A",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 300000.0,
+          "price": 220.0761,
+          "valueUsd": 66022830.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000012/0001199039-26-000012.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-09-02",
+          "filingDate": "2026-09-02",
+          "accessionNumber": "0001199039-26-000012",
+          "ownerName": "STEVENS MARK A",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 300000.0,
+          "price": 222.9204,
+          "valueUsd": 66876120.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000012/0001199039-26-000012.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-09-02",
+          "filingDate": "2026-09-02",
+          "accessionNumber": "0001199039-26-000012",
+          "ownerName": "STEVENS MARK A",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 300000.0,
+          "price": 224.0715,
+          "valueUsd": 67221450.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000012/0001199039-26-000012.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-09-02",
+          "filingDate": "2026-09-02",
+          "accessionNumber": "0001199039-26-000012",
+          "ownerName": "STEVENS MARK A",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 300000.0,
+          "price": 226.2704,
+          "valueUsd": 67881120.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000012/0001199039-26-000012.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-08-31",
+          "filingDate": "2026-09-02",
+          "accessionNumber": "0001696841-26-000010",
+          "ownerName": "Teter Timothy S.",
+          "ownerTitle": "EVP, General Counsel and Sec",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 6692.0,
+          "price": 216.8411,
+          "valueUsd": 1451100.64,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000169684126000010/0001696841-26-000010.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-08-31",
+          "filingDate": "2026-09-02",
+          "accessionNumber": "0001696841-26-000010",
+          "ownerName": "Teter Timothy S.",
+          "ownerTitle": "EVP, General Counsel and Sec",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 13913.0,
+          "price": 217.9514,
+          "valueUsd": 3032357.83,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000169684126000010/0001696841-26-000010.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-08-31",
+          "filingDate": "2026-09-02",
+          "accessionNumber": "0001696841-26-000010",
+          "ownerName": "Teter Timothy S.",
+          "ownerTitle": "EVP, General Counsel and Sec",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 9395.0,
+          "price": 218.5265,
+          "valueUsd": 2053056.47,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000169684126000010/0001696841-26-000010.txt"
+        },
         {
           "ticker": "AMD",
           "transactionDate": "2026-08-25",
@@ -1488,166 +1616,6 @@
           "price": 514.91,
           "valueUsd": 7723650.0,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000161/0000002488-26-000161.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-08-31",
-          "filingDate": "2026-09-02",
-          "accessionNumber": "0001199039-26-000012",
-          "ownerName": "STEVENS MARK A",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 447400.0,
-          "price": 220.0959,
-          "valueUsd": 98470905.66,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000012/0001199039-26-000012.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-08-31",
-          "filingDate": "2026-09-02",
-          "accessionNumber": "0001199039-26-000012",
-          "ownerName": "STEVENS MARK A",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 137600.0,
-          "price": 220.9105,
-          "valueUsd": 30397284.8,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000012/0001199039-26-000012.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-09-01",
-          "filingDate": "2026-09-02",
-          "accessionNumber": "0001199039-26-000012",
-          "ownerName": "STEVENS MARK A",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 63501.0,
-          "price": 220.0589,
-          "valueUsd": 13973960.21,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000012/0001199039-26-000012.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-09-02",
-          "filingDate": "2026-09-02",
-          "accessionNumber": "0001199039-26-000012",
-          "ownerName": "STEVENS MARK A",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 300000.0,
-          "price": 220.0761,
-          "valueUsd": 66022830.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000012/0001199039-26-000012.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-09-02",
-          "filingDate": "2026-09-02",
-          "accessionNumber": "0001199039-26-000012",
-          "ownerName": "STEVENS MARK A",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 300000.0,
-          "price": 222.9204,
-          "valueUsd": 66876120.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000012/0001199039-26-000012.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-09-02",
-          "filingDate": "2026-09-02",
-          "accessionNumber": "0001199039-26-000012",
-          "ownerName": "STEVENS MARK A",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 300000.0,
-          "price": 224.0715,
-          "valueUsd": 67221450.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000012/0001199039-26-000012.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-09-02",
-          "filingDate": "2026-09-02",
-          "accessionNumber": "0001199039-26-000012",
-          "ownerName": "STEVENS MARK A",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 300000.0,
-          "price": 226.2704,
-          "valueUsd": 67881120.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000012/0001199039-26-000012.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-08-31",
-          "filingDate": "2026-09-02",
-          "accessionNumber": "0001696841-26-000010",
-          "ownerName": "Teter Timothy S.",
-          "ownerTitle": "EVP, General Counsel and Sec",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 6692.0,
-          "price": 216.8411,
-          "valueUsd": 1451100.64,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000169684126000010/0001696841-26-000010.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-08-31",
-          "filingDate": "2026-09-02",
-          "accessionNumber": "0001696841-26-000010",
-          "ownerName": "Teter Timothy S.",
-          "ownerTitle": "EVP, General Counsel and Sec",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 13913.0,
-          "price": 217.9514,
-          "valueUsd": 3032357.83,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000169684126000010/0001696841-26-000010.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-08-31",
-          "filingDate": "2026-09-02",
-          "accessionNumber": "0001696841-26-000010",
-          "ownerName": "Teter Timothy S.",
-          "ownerTitle": "EVP, General Counsel and Sec",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 9395.0,
-          "price": 218.5265,
-          "valueUsd": 2053056.47,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000169684126000010/0001696841-26-000010.txt"
         },
         {
           "ticker": "TSM",
@@ -2530,22 +2498,6 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000173016826000062/0001730168-26-000062.txt"
         },
         {
-          "ticker": "ARM",
-          "transactionDate": "2026-08-27",
-          "filingDate": "2026-08-31",
-          "accessionNumber": "0001973239-26-000122",
-          "ownerName": "Child Jason",
-          "ownerTitle": "Chief Financial Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 10400.0,
-          "price": 255.33,
-          "valueUsd": 2655432.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1973239/000197323926000122/0001973239-26-000122.txt"
-        },
-        {
           "ticker": "INTC",
           "transactionDate": "2026-08-11",
           "filingDate": "2026-08-14",
@@ -2562,68 +2514,20 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/50863/000005086326000177/0000050863-26-000177.txt"
         },
         {
-          "ticker": "MRVL",
-          "transactionDate": "2026-09-01",
-          "filingDate": "2026-09-02",
-          "accessionNumber": "0001628280-26-060112",
-          "ownerName": "Koopmans Chris",
-          "ownerTitle": "President and COO",
+          "ticker": "ARM",
+          "transactionDate": "2026-08-27",
+          "filingDate": "2026-08-31",
+          "accessionNumber": "0001973239-26-000122",
+          "ownerName": "Child Jason",
+          "ownerTitle": "Chief Financial Officer",
           "isDirector": false,
           "isOfficer": true,
           "code": "S",
           "direction": "sale",
-          "shares": 10000.0,
-          "price": 203.27,
-          "valueUsd": 2032700.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1835632/000162828026060112/0001628280-26-060112.txt"
-        },
-        {
-          "ticker": "MRVL",
-          "transactionDate": "2026-08-17",
-          "filingDate": "2026-08-17",
-          "accessionNumber": "0001628280-26-057525",
-          "ownerName": "MURPHY MATTHEW J",
-          "ownerTitle": "Chairman of the Board and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 7500.0,
-          "price": 236.08,
-          "valueUsd": 1770600.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1835632/000162828026057525/0001628280-26-057525.txt"
-        },
-        {
-          "ticker": "MRVL",
-          "transactionDate": "2026-08-03",
-          "filingDate": "2026-08-03",
-          "accessionNumber": "0001628280-26-051905",
-          "ownerName": "Koopmans Chris",
-          "ownerTitle": "President and COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 10000.0,
-          "price": 180.5,
-          "valueUsd": 1805000.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1835632/000162828026051905/0001628280-26-051905.txt"
-        },
-        {
-          "ticker": "MRVL",
-          "transactionDate": "2026-07-16",
-          "filingDate": "2026-07-16",
-          "accessionNumber": "0001628280-26-048556",
-          "ownerName": "Bharathi Sandeep",
-          "ownerTitle": "President, Data Center Group",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 9013.0,
-          "price": 199.24,
-          "valueUsd": 1795750.12,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1835632/000162828026048556/0001628280-26-048556.txt"
+          "shares": 10400.0,
+          "price": 255.33,
+          "valueUsd": 2655432.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1973239/000197323926000122/0001973239-26-000122.txt"
         },
         {
           "ticker": "MU",
@@ -4064,6 +3968,70 @@
           "price": 1095.88,
           "valueUsd": 306846.4,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/723125/000163206326000003/0001632063-26-000003.txt"
+        },
+        {
+          "ticker": "MRVL",
+          "transactionDate": "2026-09-01",
+          "filingDate": "2026-09-02",
+          "accessionNumber": "0001628280-26-060112",
+          "ownerName": "Koopmans Chris",
+          "ownerTitle": "President and COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 10000.0,
+          "price": 203.27,
+          "valueUsd": 2032700.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1835632/000162828026060112/0001628280-26-060112.txt"
+        },
+        {
+          "ticker": "MRVL",
+          "transactionDate": "2026-08-17",
+          "filingDate": "2026-08-17",
+          "accessionNumber": "0001628280-26-057525",
+          "ownerName": "MURPHY MATTHEW J",
+          "ownerTitle": "Chairman of the Board and CEO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 7500.0,
+          "price": 236.08,
+          "valueUsd": 1770600.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1835632/000162828026057525/0001628280-26-057525.txt"
+        },
+        {
+          "ticker": "MRVL",
+          "transactionDate": "2026-08-03",
+          "filingDate": "2026-08-03",
+          "accessionNumber": "0001628280-26-051905",
+          "ownerName": "Koopmans Chris",
+          "ownerTitle": "President and COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 10000.0,
+          "price": 180.5,
+          "valueUsd": 1805000.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1835632/000162828026051905/0001628280-26-051905.txt"
+        },
+        {
+          "ticker": "MRVL",
+          "transactionDate": "2026-07-16",
+          "filingDate": "2026-07-16",
+          "accessionNumber": "0001628280-26-048556",
+          "ownerName": "Bharathi Sandeep",
+          "ownerTitle": "President, Data Center Group",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 9013.0,
+          "price": 199.24,
+          "valueUsd": 1795750.12,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1835632/000162828026048556/0001628280-26-048556.txt"
         },
         {
           "ticker": "CRDO",
@@ -8066,438 +8034,6 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
         },
         {
-          "ticker": "AMAT",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001628280-26-059277",
-          "ownerName": "Hill Brice",
-          "ownerTitle": "SVP, CFO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 7500.0,
-          "price": 479.2501,
-          "valueUsd": 3594375.75,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026059277/0001628280-26-059277.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-29",
-          "filingDate": "2026-07-01",
-          "accessionNumber": "0001628280-26-046609",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 50332.0,
-          "price": 700.21,
-          "valueUsd": 35242969.72,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026046609/0001628280-26-046609.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-29",
-          "filingDate": "2026-07-01",
-          "accessionNumber": "0001628280-26-046609",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 7989.0,
-          "price": 701.33,
-          "valueUsd": 5602925.37,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026046609/0001628280-26-046609.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-30",
-          "filingDate": "2026-07-01",
-          "accessionNumber": "0001628280-26-046609",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 19970.0,
-          "price": 735.22,
-          "valueUsd": 14682343.4,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026046609/0001628280-26-046609.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-30",
-          "filingDate": "2026-07-01",
-          "accessionNumber": "0001628280-26-046609",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 30.0,
-          "price": 736.05,
-          "valueUsd": 22081.5,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026046609/0001628280-26-046609.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-18",
-          "filingDate": "2026-06-22",
-          "accessionNumber": "0001628280-26-044741",
-          "ownerName": "Raja Prabu G.",
-          "ownerTitle": "President, Semi. Products Grp.",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 10000.0,
-          "price": 633.53,
-          "valueUsd": 6335300.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044741/0001628280-26-044741.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044050",
-          "ownerName": "Iannotti Thomas J",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 9250.0,
-          "price": 599.77,
-          "valueUsd": 5547872.5,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044050/0001628280-26-044050.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-15",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044048",
-          "ownerName": "Nalamasu Omkaram",
-          "ownerTitle": "Senior Vice President, CTO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 6938.0,
-          "price": 590.2,
-          "valueUsd": 4094807.6,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044048/0001628280-26-044048.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-15",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044048",
-          "ownerName": "Nalamasu Omkaram",
-          "ownerTitle": "Senior Vice President, CTO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3799.0,
-          "price": 595.14,
-          "valueUsd": 2260936.86,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044048/0001628280-26-044048.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044048",
-          "ownerName": "Nalamasu Omkaram",
-          "ownerTitle": "Senior Vice President, CTO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3515.0,
-          "price": 590.48,
-          "valueUsd": 2075537.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044048/0001628280-26-044048.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044048",
-          "ownerName": "Nalamasu Omkaram",
-          "ownerTitle": "Senior Vice President, CTO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4782.0,
-          "price": 591.53,
-          "valueUsd": 2828696.46,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044048/0001628280-26-044048.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044048",
-          "ownerName": "Nalamasu Omkaram",
-          "ownerTitle": "Senior Vice President, CTO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2412.0,
-          "price": 592.4,
-          "valueUsd": 1428868.8,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044048/0001628280-26-044048.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044048",
-          "ownerName": "Nalamasu Omkaram",
-          "ownerTitle": "Senior Vice President, CTO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4726.0,
-          "price": 593.58,
-          "valueUsd": 2805259.08,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044048/0001628280-26-044048.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044048",
-          "ownerName": "Nalamasu Omkaram",
-          "ownerTitle": "Senior Vice President, CTO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1125.0,
-          "price": 594.85,
-          "valueUsd": 669206.25,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044048/0001628280-26-044048.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044048",
-          "ownerName": "Nalamasu Omkaram",
-          "ownerTitle": "Senior Vice President, CTO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4028.0,
-          "price": 595.5,
-          "valueUsd": 2398674.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044048/0001628280-26-044048.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044048",
-          "ownerName": "Nalamasu Omkaram",
-          "ownerTitle": "Senior Vice President, CTO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3675.0,
-          "price": 596.52,
-          "valueUsd": 2192211.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044048/0001628280-26-044048.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-15",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044046",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 11273.0,
-          "price": 590.03,
-          "valueUsd": 6651408.19,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044046/0001628280-26-044046.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044046",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 15755.0,
-          "price": 590.52,
-          "valueUsd": 9303642.6,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044046/0001628280-26-044046.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044046",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 9186.0,
-          "price": 591.4,
-          "valueUsd": 5432600.4,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044046/0001628280-26-044046.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044046",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 10411.0,
-          "price": 592.18,
-          "valueUsd": 6165185.98,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044046/0001628280-26-044046.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044046",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4682.0,
-          "price": 593.51,
-          "valueUsd": 2778813.82,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044046/0001628280-26-044046.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044046",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4535.0,
-          "price": 594.74,
-          "valueUsd": 2697145.9,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044046/0001628280-26-044046.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044046",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 5933.0,
-          "price": 595.59,
-          "valueUsd": 3533635.47,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044046/0001628280-26-044046.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044046",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 13505.0,
-          "price": 596.82,
-          "valueUsd": 8060054.1,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044046/0001628280-26-044046.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044046",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4457.0,
-          "price": 597.45,
-          "valueUsd": 2662834.65,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044046/0001628280-26-044046.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044046",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2426.0,
-          "price": 598.56,
-          "valueUsd": 1452106.56,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044046/0001628280-26-044046.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-06-16",
-          "filingDate": "2026-06-17",
-          "accessionNumber": "0001628280-26-044046",
-          "ownerName": "DICKERSON GARY E",
-          "ownerTitle": "President and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 837.0,
-          "price": 599.35,
-          "valueUsd": 501655.95,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044046/0001628280-26-044046.txt"
-        },
-        {
           "ticker": "LRCX",
           "transactionDate": "2026-09-02",
           "filingDate": "2026-09-03",
@@ -8610,1972 +8146,116 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000134360026000009/0001343600-26-000009.txt"
         },
         {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 300.0,
-          "price": 355.71,
-          "valueUsd": 106713.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1393.0,
-          "price": 357.24,
-          "valueUsd": 497635.32,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1100.0,
-          "price": 357.98,
-          "valueUsd": 393778.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3828.0,
-          "price": 359.08,
-          "valueUsd": 1374558.24,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1906.0,
-          "price": 360.15,
-          "valueUsd": 686445.9,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 819.0,
-          "price": 361.21,
-          "valueUsd": 295830.99,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2708.0,
-          "price": 362.4,
-          "valueUsd": 981379.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2345.0,
-          "price": 363.33,
-          "valueUsd": 852008.85,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2300.0,
-          "price": 364.41,
-          "valueUsd": 838143.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1200.0,
-          "price": 365.16,
-          "valueUsd": 438192.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 5803.0,
-          "price": 367.01,
-          "valueUsd": 2129759.03,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4030.0,
-          "price": 368.03,
-          "valueUsd": 1483160.9,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4198.0,
-          "price": 369.16,
-          "valueUsd": 1549733.68,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 5037.0,
-          "price": 370.27,
-          "valueUsd": 1865049.99,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 8233.0,
-          "price": 371.17,
-          "valueUsd": 3055842.61,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 7700.0,
-          "price": 372.23,
-          "valueUsd": 2866171.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-12",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000006",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1600.0,
-          "price": 373.09,
-          "valueUsd": 596944.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000006/0001190639-26-000006.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 974.0,
-          "price": 337.56,
-          "valueUsd": 328783.44,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1083.0,
-          "price": 338.62,
-          "valueUsd": 366725.46,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1895.0,
-          "price": 339.75,
-          "valueUsd": 643826.25,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1277.0,
-          "price": 340.68,
-          "valueUsd": 435048.36,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1070.0,
-          "price": 341.81,
-          "valueUsd": 365736.7,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3644.0,
-          "price": 342.91,
-          "valueUsd": 1249564.04,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1481.0,
-          "price": 343.96,
-          "valueUsd": 509404.76,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3208.0,
-          "price": 344.92,
-          "valueUsd": 1106503.36,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2832.0,
-          "price": 345.84,
-          "valueUsd": 979418.88,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3442.0,
-          "price": 346.79,
-          "valueUsd": 1193651.18,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 6592.0,
-          "price": 347.86,
-          "valueUsd": 2293093.12,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4334.0,
-          "price": 348.73,
-          "valueUsd": 1511395.82,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1517.0,
-          "price": 349.79,
-          "valueUsd": 530631.43,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 36.0,
-          "price": 350.77,
-          "valueUsd": 12627.72,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1172.0,
-          "price": 353.52,
-          "valueUsd": 414325.44,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1461.0,
-          "price": 354.08,
-          "valueUsd": 517310.88,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1331.0,
-          "price": 355.5,
-          "valueUsd": 473170.5,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1653.0,
-          "price": 356.27,
-          "valueUsd": 588914.31,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1455.0,
-          "price": 357.06,
-          "valueUsd": 519522.3,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1880.0,
-          "price": 358.22,
-          "valueUsd": 673453.6,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 780.0,
-          "price": 359.24,
-          "valueUsd": 280207.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 664.0,
-          "price": 360.24,
-          "valueUsd": 239199.36,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1756.0,
-          "price": 361.05,
-          "valueUsd": 634003.8,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2604.0,
-          "price": 362.2,
-          "valueUsd": 943168.8,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 5717.0,
-          "price": 362.95,
-          "valueUsd": 2074985.15,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-06-11",
-          "filingDate": "2026-06-15",
-          "accessionNumber": "0001190639-26-000004",
-          "ownerName": "BRANDT ERIC",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 642.0,
-          "price": 364.0,
-          "valueUsd": 233688.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000119063926000004/0001190639-26-000004.txt"
-        },
-        {
-          "ticker": "KLAC",
-          "transactionDate": "2026-08-13",
-          "filingDate": "2026-08-14",
-          "accessionNumber": "0001193125-26-352187",
-          "ownerName": "Lorig Brian",
-          "ownerTitle": "EVP, KLA Global Services",
+          "ticker": "AMAT",
+          "transactionDate": "2026-08-25",
+          "filingDate": "2026-08-27",
+          "accessionNumber": "0001628280-26-059277",
+          "ownerName": "Hill Brice",
+          "ownerTitle": "SVP, CFO",
           "isDirector": false,
-          "isOfficer": false,
+          "isOfficer": true,
           "code": "S",
           "direction": "sale",
-          "shares": 59586.0,
-          "price": 208.13,
-          "valueUsd": 12401634.18,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526352187/0001193125-26-352187.txt"
+          "shares": 7500.0,
+          "price": 479.2501,
+          "valueUsd": 3594375.75,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026059277/0001628280-26-059277.txt"
         },
         {
-          "ticker": "KLAC",
-          "transactionDate": "2026-08-12",
-          "filingDate": "2026-08-13",
-          "accessionNumber": "0001193125-26-349139",
-          "ownerName": "Higgins Bren D.",
-          "ownerTitle": "EVP & Chief Financial Officer",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 31500.0,
-          "price": 209.87,
-          "valueUsd": 6610905.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526349139/0001193125-26-349139.txt"
-        },
-        {
-          "ticker": "KLAC",
-          "transactionDate": "2026-08-11",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0001193125-26-346812",
-          "ownerName": "Khan Ahmad A.",
-          "ownerTitle": "President, Semi. Prod. & Cust.",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 33180.0,
-          "price": 198.95,
-          "valueUsd": 6601161.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526346812/0001193125-26-346812.txt"
-        },
-        {
-          "ticker": "KLAC",
-          "transactionDate": "2026-08-11",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0001193125-26-346811",
-          "ownerName": "WALLACE RICHARD P",
+          "ticker": "AMAT",
+          "transactionDate": "2026-06-29",
+          "filingDate": "2026-07-01",
+          "accessionNumber": "0001628280-26-046609",
+          "ownerName": "DICKERSON GARY E",
           "ownerTitle": "President and CEO",
-          "isDirector": false,
-          "isOfficer": false,
+          "isDirector": true,
+          "isOfficer": true,
           "code": "S",
           "direction": "sale",
-          "shares": 87568.0,
-          "price": 198.95,
-          "valueUsd": 17421653.6,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526346811/0001193125-26-346811.txt"
+          "shares": 50332.0,
+          "price": 700.21,
+          "valueUsd": 35242969.72,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026046609/0001628280-26-046609.txt"
         },
         {
-          "ticker": "KLAC",
-          "transactionDate": "2026-08-10",
-          "filingDate": "2026-08-11",
-          "accessionNumber": "0001193125-26-344581",
-          "ownerName": "Kirloskar Virendra A",
-          "ownerTitle": "SVP & Chief Accounting Officer",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 529.0,
-          "price": 204.56,
-          "valueUsd": 108212.24,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526344581/0001193125-26-344581.txt"
-        },
-        {
-          "ticker": "KLAC",
-          "transactionDate": "2026-08-10",
-          "filingDate": "2026-08-11",
-          "accessionNumber": "0001193125-26-344579",
-          "ownerName": "Wilkinson Mary Beth",
-          "ownerTitle": "EVP, CLO and Secretary",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1661.0,
-          "price": 204.56,
-          "valueUsd": 339774.16,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526344579/0001193125-26-344579.txt"
-        },
-        {
-          "ticker": "COHR",
-          "transactionDate": "2026-09-02",
-          "filingDate": "2026-09-04",
-          "accessionNumber": "0000899140-26-001054",
-          "ownerName": "Neal-Graves Lisa",
-          "ownerTitle": null,
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2200.0,
-          "price": 268.42,
-          "valueUsd": 590524.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/820318/000089914026001054/0000899140-26-001054.txt"
-        },
-        {
-          "ticker": "COHR",
-          "transactionDate": "2026-08-31",
-          "filingDate": "2026-09-02",
-          "accessionNumber": "0000899140-26-001048",
-          "ownerName": "Digirolomo Enrico",
-          "ownerTitle": null,
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2272.0,
-          "price": 276.8479,
-          "valueUsd": 628998.43,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/820318/000089914026001048/0000899140-26-001048.txt"
-        },
-        {
-          "ticker": "COHR",
-          "transactionDate": "2026-08-31",
-          "filingDate": "2026-09-02",
-          "accessionNumber": "0000899140-26-001047",
-          "ownerName": "SKAGGS STEPHEN A",
-          "ownerTitle": null,
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2272.0,
-          "price": 276.8758,
-          "valueUsd": 629061.82,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/820318/000089914026001047/0000899140-26-001047.txt"
-        },
-        {
-          "ticker": "COHR",
-          "transactionDate": "2026-08-31",
-          "filingDate": "2026-09-01",
-          "accessionNumber": "0000899140-26-001037",
-          "ownerName": "Eng Julie Sheridan",
-          "ownerTitle": "Chief Technology Officer",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 7047.0,
-          "price": 276.8319,
-          "valueUsd": 1950834.4,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/820318/000089914026001037/0000899140-26-001037.txt"
-        },
-        {
-          "ticker": "COHR",
-          "transactionDate": "2026-09-01",
-          "filingDate": "2026-09-01",
-          "accessionNumber": "0000899140-26-001037",
-          "ownerName": "Eng Julie Sheridan",
-          "ownerTitle": "Chief Technology Officer",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 6030.0,
-          "price": 270.6876,
-          "valueUsd": 1632246.23,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/820318/000089914026001037/0000899140-26-001037.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-09-02",
-          "filingDate": "2026-09-04",
-          "accessionNumber": "0001489550-26-000009",
-          "ownerName": "Wupen Yuen",
-          "ownerTitle": "PRESIDENT, GLOBAL BUS. UNITS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 500.0,
-          "price": 864.49,
-          "valueUsd": 432245.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000148955026000009/0001489550-26-000009.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-09-03",
-          "filingDate": "2026-09-04",
-          "accessionNumber": "0001489550-26-000009",
-          "ownerName": "Wupen Yuen",
-          "ownerTitle": "PRESIDENT, GLOBAL BUS. UNITS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 500.0,
-          "price": 870.01,
-          "valueUsd": 435005.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000148955026000009/0001489550-26-000009.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-09-04",
-          "filingDate": "2026-09-04",
-          "accessionNumber": "0001489550-26-000009",
-          "ownerName": "Wupen Yuen",
-          "ownerTitle": "PRESIDENT, GLOBAL BUS. UNITS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 500.0,
-          "price": 860.0,
-          "valueUsd": 430000.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000148955026000009/0001489550-26-000009.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-28",
-          "filingDate": "2026-09-01",
-          "accessionNumber": "0001489550-26-000008",
-          "ownerName": "Wupen Yuen",
-          "ownerTitle": "PRESIDENT, GLOBAL BUS. UNITS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 500.0,
-          "price": 940.95,
-          "valueUsd": 470475.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000148955026000008/0001489550-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-31",
-          "filingDate": "2026-09-01",
-          "accessionNumber": "0001489550-26-000008",
-          "ownerName": "Wupen Yuen",
-          "ownerTitle": "PRESIDENT, GLOBAL BUS. UNITS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 500.0,
-          "price": 895.0,
-          "valueUsd": 447500.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000148955026000008/0001489550-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-09-01",
-          "filingDate": "2026-09-01",
-          "accessionNumber": "0001489550-26-000008",
-          "ownerName": "Wupen Yuen",
-          "ownerTitle": "PRESIDENT, GLOBAL BUS. UNITS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 500.0,
-          "price": 901.04,
-          "valueUsd": 450520.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000148955026000008/0001489550-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-27",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001573338-26-000017",
-          "ownerName": "HURLSTON MICHAEL E.",
+          "ticker": "AMAT",
+          "transactionDate": "2026-06-29",
+          "filingDate": "2026-07-01",
+          "accessionNumber": "0001628280-26-046609",
+          "ownerName": "DICKERSON GARY E",
           "ownerTitle": "President and CEO",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 548.0,
-          "price": 958.66,
-          "valueUsd": 525345.68,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157333826000017/0001573338-26-000017.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-27",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001489550-26-000007",
-          "ownerName": "Wupen Yuen",
-          "ownerTitle": "PRESIDENT, GLOBAL BUS. UNITS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 500.0,
-          "price": 958.66,
-          "valueUsd": 479330.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000148955026000007/0001489550-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 360.0,
-          "price": 842.2161,
-          "valueUsd": 303197.8,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1213.0,
-          "price": 843.6014,
-          "valueUsd": 1023288.5,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1053.0,
-          "price": 844.6082,
-          "valueUsd": 889372.43,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 631.0,
-          "price": 845.6299,
-          "valueUsd": 533592.47,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2073.0,
-          "price": 846.4448,
-          "valueUsd": 1754680.07,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2121.0,
-          "price": 847.516,
-          "valueUsd": 1797581.44,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1102.0,
-          "price": 848.6576,
-          "valueUsd": 935220.68,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1528.0,
-          "price": 849.7055,
-          "valueUsd": 1298350.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3017.0,
-          "price": 850.6556,
-          "valueUsd": 2566427.95,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4426.0,
-          "price": 851.6762,
-          "valueUsd": 3769518.86,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3711.0,
-          "price": 852.6005,
-          "valueUsd": 3164000.46,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2465.0,
-          "price": 853.6179,
-          "valueUsd": 2104168.12,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3486.0,
-          "price": 854.8859,
-          "valueUsd": 2980132.25,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 800.0,
-          "price": 855.8411,
-          "valueUsd": 684672.88,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4676.0,
-          "price": 856.7089,
-          "valueUsd": 4005970.82,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3511.0,
-          "price": 857.95,
-          "valueUsd": 3012262.45,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 188.0,
-          "price": 858.8163,
-          "valueUsd": 161457.46,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001648256-26-000008",
-          "ownerName": "Retort Vincent",
-          "ownerTitle": "SEE REMARKS",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2302.0,
-          "price": 860.052,
-          "valueUsd": 1979839.7,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000164825626000008/0001648256-26-000008.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 205.0,
-          "price": 842.3932,
-          "valueUsd": 172690.61,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 280.0,
-          "price": 843.6821,
-          "valueUsd": 236230.99,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 360.0,
-          "price": 844.6617,
-          "valueUsd": 304078.21,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 570.0,
-          "price": 845.959,
-          "valueUsd": 482196.63,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 456.0,
-          "price": 847.0044,
-          "valueUsd": 386234.01,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 491.0,
-          "price": 847.9411,
-          "valueUsd": 416339.08,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 600.0,
-          "price": 849.1433,
-          "valueUsd": 509485.98,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 600.0,
-          "price": 850.4378,
-          "valueUsd": 510262.68,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 970.0,
-          "price": 851.3098,
-          "valueUsd": 825770.51,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1998.0,
-          "price": 852.3285,
-          "valueUsd": 1702952.34,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 851.0,
-          "price": 853.5373,
-          "valueUsd": 726360.24,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1080.0,
-          "price": 854.8428,
-          "valueUsd": 923230.22,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 273.0,
-          "price": 855.8929,
-          "valueUsd": 233658.76,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1679.0,
-          "price": 856.698,
-          "valueUsd": 1438395.94,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 815.0,
-          "price": 857.9592,
-          "valueUsd": 699236.75,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 40.0,
-          "price": 858.64,
-          "valueUsd": 34345.6,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "LITE",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001570465-26-000007",
-          "ownerName": "Kim Jae",
-          "ownerTitle": "SVP, GENERAL COUNSEL",
-          "isDirector": false,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 732.0,
-          "price": 860.0367,
-          "valueUsd": 629546.86,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1633978/000157046526000007/0001570465-26-000007.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-09-01",
-          "filingDate": "2026-09-03",
-          "accessionNumber": "0001769628-26-000416",
-          "ownerName": "McVeety Kristen J",
-          "ownerTitle": "GC and Secretary",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 55506.0,
-          "price": 81.1642,
-          "valueUsd": 4505100.09,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000416/0001769628-26-000416.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-09-01",
-          "filingDate": "2026-09-03",
-          "accessionNumber": "0001769628-26-000416",
-          "ownerName": "McVeety Kristen J",
-          "ownerTitle": "GC and Secretary",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 94307.0,
-          "price": 81.8457,
-          "valueUsd": 7718622.43,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000416/0001769628-26-000416.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-09-01",
-          "filingDate": "2026-09-03",
-          "accessionNumber": "0001769628-26-000416",
-          "ownerName": "McVeety Kristen J",
-          "ownerTitle": "GC and Secretary",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 6187.0,
-          "price": 82.4966,
-          "valueUsd": 510406.46,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000416/0001769628-26-000416.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-09-01",
-          "filingDate": "2026-09-03",
-          "accessionNumber": "0001769628-26-000415",
-          "ownerName": "Intrator Michael N",
-          "ownerTitle": "CEO and President",
           "isDirector": true,
           "isOfficer": true,
           "code": "S",
           "direction": "sale",
-          "shares": 63315.0,
-          "price": 81.2014,
-          "valueUsd": 5141266.64,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000415/0001769628-26-000415.txt"
+          "shares": 7989.0,
+          "price": 701.33,
+          "valueUsd": 5602925.37,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026046609/0001628280-26-046609.txt"
         },
         {
-          "ticker": "CRWV",
-          "transactionDate": "2026-09-01",
-          "filingDate": "2026-09-03",
-          "accessionNumber": "0001769628-26-000415",
-          "ownerName": "Intrator Michael N",
-          "ownerTitle": "CEO and President",
+          "ticker": "AMAT",
+          "transactionDate": "2026-06-30",
+          "filingDate": "2026-07-01",
+          "accessionNumber": "0001628280-26-046609",
+          "ownerName": "DICKERSON GARY E",
+          "ownerTitle": "President and CEO",
           "isDirector": true,
           "isOfficer": true,
           "code": "S",
           "direction": "sale",
-          "shares": 130609.0,
-          "price": 81.8476,
-          "valueUsd": 10690033.19,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000415/0001769628-26-000415.txt"
+          "shares": 19970.0,
+          "price": 735.22,
+          "valueUsd": 14682343.4,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026046609/0001628280-26-046609.txt"
         },
         {
-          "ticker": "CRWV",
-          "transactionDate": "2026-09-01",
-          "filingDate": "2026-09-03",
-          "accessionNumber": "0001769628-26-000415",
-          "ownerName": "Intrator Michael N",
-          "ownerTitle": "CEO and President",
+          "ticker": "AMAT",
+          "transactionDate": "2026-06-30",
+          "filingDate": "2026-07-01",
+          "accessionNumber": "0001628280-26-046609",
+          "ownerName": "DICKERSON GARY E",
+          "ownerTitle": "President and CEO",
           "isDirector": true,
           "isOfficer": true,
           "code": "S",
           "direction": "sale",
-          "shares": 6076.0,
-          "price": 82.5396,
-          "valueUsd": 501510.61,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000415/0001769628-26-000415.txt"
+          "shares": 30.0,
+          "price": 736.05,
+          "valueUsd": 22081.5,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026046609/0001628280-26-046609.txt"
         },
         {
-          "ticker": "CRWV",
-          "transactionDate": "2026-09-01",
-          "filingDate": "2026-09-03",
-          "accessionNumber": "0001769628-26-000415",
-          "ownerName": "Intrator Michael N",
-          "ownerTitle": "CEO and President",
+          "ticker": "AMAT",
+          "transactionDate": "2026-06-18",
+          "filingDate": "2026-06-22",
+          "accessionNumber": "0001628280-26-044741",
+          "ownerName": "Raja Prabu G.",
+          "ownerTitle": "President, Semi. Products Grp.",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 10000.0,
+          "price": 633.53,
+          "valueUsd": 6335300.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044741/0001628280-26-044741.txt"
+        },
+        {
+          "ticker": "AMAT",
+          "transactionDate": "2026-06-16",
+          "filingDate": "2026-06-17",
+          "accessionNumber": "0001628280-26-044050",
+          "ownerName": "Iannotti Thomas J",
+          "ownerTitle": null,
           "isDirector": true,
-          "isOfficer": true,
+          "isOfficer": false,
           "code": "S",
           "direction": "sale",
-          "shares": 34092.0,
-          "price": 81.2014,
-          "valueUsd": 2768318.13,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000415/0001769628-26-000415.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-09-01",
-          "filingDate": "2026-09-03",
-          "accessionNumber": "0001769628-26-000415",
-          "ownerName": "Intrator Michael N",
-          "ownerTitle": "CEO and President",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 70329.0,
-          "price": 81.8476,
-          "valueUsd": 5756259.86,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000415/0001769628-26-000415.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-09-01",
-          "filingDate": "2026-09-03",
-          "accessionNumber": "0001769628-26-000415",
-          "ownerName": "Intrator Michael N",
-          "ownerTitle": "CEO and President",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3271.0,
-          "price": 82.5396,
-          "valueUsd": 269987.03,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000415/0001769628-26-000415.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-26",
-          "filingDate": "2026-08-28",
-          "accessionNumber": "0001769628-26-000414",
-          "ownerName": "McVeety Kristen J",
-          "ownerTitle": "GC and Secretary",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 724.0,
-          "price": 87.3888,
-          "valueUsd": 63269.49,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000414/0001769628-26-000414.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-26",
-          "filingDate": "2026-08-28",
-          "accessionNumber": "0001769628-26-000414",
-          "ownerName": "McVeety Kristen J",
-          "ownerTitle": "GC and Secretary",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1144.0,
-          "price": 88.1822,
-          "valueUsd": 100880.44,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000414/0001769628-26-000414.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-26",
-          "filingDate": "2026-08-28",
-          "accessionNumber": "0001769628-26-000414",
-          "ownerName": "McVeety Kristen J",
-          "ownerTitle": "GC and Secretary",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 232.0,
-          "price": 89.2439,
-          "valueUsd": 20704.58,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000414/0001769628-26-000414.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001769628-26-000412",
-          "ownerName": "Intrator Michael N",
-          "ownerTitle": "CEO and President",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 134067.0,
-          "price": 88.3052,
-          "valueUsd": 11838813.25,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000412/0001769628-26-000412.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001769628-26-000412",
-          "ownerName": "Intrator Michael N",
-          "ownerTitle": "CEO and President",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 62293.0,
-          "price": 89.1719,
-          "valueUsd": 5554785.17,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000412/0001769628-26-000412.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001769628-26-000412",
-          "ownerName": "Intrator Michael N",
-          "ownerTitle": "CEO and President",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3640.0,
-          "price": 89.9306,
-          "valueUsd": 327347.38,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000412/0001769628-26-000412.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001769628-26-000412",
-          "ownerName": "Intrator Michael N",
-          "ownerTitle": "CEO and President",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 72186.0,
-          "price": 88.3052,
-          "valueUsd": 6374399.17,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000412/0001769628-26-000412.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001769628-26-000412",
-          "ownerName": "Intrator Michael N",
-          "ownerTitle": "CEO and President",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 33546.0,
-          "price": 89.1718,
-          "valueUsd": 2991357.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000412/0001769628-26-000412.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001769628-26-000412",
-          "ownerName": "Intrator Michael N",
-          "ownerTitle": "CEO and President",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1960.0,
-          "price": 89.9306,
-          "valueUsd": 176263.98,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000412/0001769628-26-000412.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001769628-26-000411",
-          "ownerName": "Agrawal Nitin",
-          "ownerTitle": "Chief Financial Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3909.0,
-          "price": 88.371,
-          "valueUsd": 345442.24,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000411/0001769628-26-000411.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001769628-26-000411",
-          "ownerName": "Agrawal Nitin",
-          "ownerTitle": "Chief Financial Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1500.0,
-          "price": 89.2448,
-          "valueUsd": 133867.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000411/0001769628-26-000411.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001769628-26-000411",
-          "ownerName": "Agrawal Nitin",
-          "ownerTitle": "Chief Financial Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 100.0,
-          "price": 90.04,
-          "valueUsd": 9004.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000411/0001769628-26-000411.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-24",
-          "filingDate": "2026-08-26",
-          "accessionNumber": "0001769628-26-000410",
-          "ownerName": "McBee Brannin",
-          "ownerTitle": "Chief Development Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 97.0,
-          "price": 83.9506,
-          "valueUsd": 8143.21,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000410/0001769628-26-000410.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-24",
-          "filingDate": "2026-08-26",
-          "accessionNumber": "0001769628-26-000410",
-          "ownerName": "McBee Brannin",
-          "ownerTitle": "Chief Development Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 75.0,
-          "price": 84.6781,
-          "valueUsd": 6350.86,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000410/0001769628-26-000410.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-24",
-          "filingDate": "2026-08-26",
-          "accessionNumber": "0001769628-26-000410",
-          "ownerName": "McBee Brannin",
-          "ownerTitle": "Chief Development Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 243.0,
-          "price": 86.0297,
-          "valueUsd": 20905.22,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000410/0001769628-26-000410.txt"
-        },
-        {
-          "ticker": "CRWV",
-          "transactionDate": "2026-08-24",
-          "filingDate": "2026-08-26",
-          "accessionNumber": "0001769628-26-000410",
-          "ownerName": "McBee Brannin",
-          "ownerTitle": "Chief Development Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 85.0,
-          "price": 86.5479,
-          "valueUsd": 7356.57,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1769628/000176962826000410/0001769628-26-000410.txt"
-        },
-        {
-          "ticker": "ANET",
-          "transactionDate": "2026-09-01",
-          "filingDate": "2026-09-03",
-          "accessionNumber": "0001596532-26-000222",
-          "ownerName": "Breithaupt Chantelle Yvette",
-          "ownerTitle": "Senior Vice President, CFO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 612.0,
-          "price": 195.77,
-          "valueUsd": 119811.24,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1596532/000159653226000222/0001596532-26-000222.txt"
+          "shares": 9250.0,
+          "price": 599.77,
+          "valueUsd": 5547872.5,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026044050/0001628280-26-044050.txt"
         }
       ],
       "topSales": [
@@ -10756,20 +8436,20 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926078348/0001104659-26-078348.txt"
         },
         {
-          "ticker": "KLAC",
-          "transactionDate": "2026-08-11",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0001193125-26-346811",
-          "ownerName": "WALLACE RICHARD P",
-          "ownerTitle": "President and CEO",
-          "isDirector": false,
+          "ticker": "AVGO",
+          "transactionDate": "2026-06-24",
+          "filingDate": "2026-06-26",
+          "accessionNumber": "0001104659-26-078348",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
           "isOfficer": false,
           "code": "S",
           "direction": "sale",
-          "shares": 87568.0,
-          "price": 198.95,
-          "valueUsd": 17421653.6,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/319201/000119312526346811/0001193125-26-346811.txt"
+          "shares": 43302.0,
+          "price": 384.58,
+          "valueUsd": 16653083.16,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926078348/0001104659-26-078348.txt"
         }
       ],
       "topPurchases": [
@@ -10822,7 +8502,7 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000596/0001046179-26-000596.txt"
         }
       ],
-      "transactionCount": 612,
+      "transactionCount": 469,
       "threshold": "90日内部人公开市场卖出≥$50M、净卖出≥$25M、且涉及≥3只样本股：内部人卖出证据偏强；公开市场买入≥$5M、买入额≥卖出额1.5倍、且涉及≥2只样本股：内部人买入/承接证据偏强；其他中性。",
       "limitations": "SEC Form 4 只覆盖公司内部人交易，不等于机构13F持仓或暗池/期权流；大型科技公司高管10b5-1计划性卖出很常见，必须结合价格、宽度、成交量和公告背景判断。"
     }
@@ -10859,6 +8539,210 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "LRCX",
+      "accession": "0001190639-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "LRCX",
+      "accession": "0001190639-26-000004",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AMAT",
+      "accession": "0001628280-26-044048",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AMAT",
+      "accession": "0001628280-26-044046",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KLAC",
+      "accession": "0001193125-26-352187",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KLAC",
+      "accession": "0001193125-26-349139",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KLAC",
+      "accession": "0001193125-26-346812",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KLAC",
+      "accession": "0001193125-26-346811",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KLAC",
+      "accession": "0001193125-26-344581",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KLAC",
+      "accession": "0001193125-26-344579",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KLAC",
+      "accession": "0001193125-26-342341",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "KLAC",
+      "accession": "0001193125-26-342340",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "COHR",
+      "accession": "0000899140-26-001054",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "COHR",
+      "accession": "0000899140-26-001048",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "COHR",
+      "accession": "0000899140-26-001047",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "COHR",
+      "accession": "0000899140-26-001040",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "COHR",
+      "accession": "0000899140-26-001039",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "COHR",
+      "accession": "0000899140-26-001038",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "COHR",
+      "accession": "0000899140-26-001037",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "COHR",
+      "accession": "0000899140-26-001036",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "LITE",
+      "accession": "0001489550-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "LITE",
+      "accession": "0001489550-26-000008",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "LITE",
+      "accession": "0001573338-26-000017",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "LITE",
+      "accession": "0001573338-26-000016",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "LITE",
+      "accession": "0001489550-26-000007",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "LITE",
+      "accession": "0001648256-26-000008",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "LITE",
+      "accession": "0001570465-26-000007",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "LITE",
+      "accession": "0001664898-26-000005",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000416",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000415",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000414",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000412",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000411",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000410",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "CRWV",
       "accession": "0001769628-26-000409",
       "error": "HTTP Error 429: Too Many Requests"
@@ -10867,6 +8751,54 @@
       "source": "sec_form4_insider_activity",
       "ticker": "CRWV",
       "accession": "0001769628-26-000406",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DLR",
+      "accession": "0001500081-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DLR",
+      "accession": "0001392404-26-000008",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DLR",
+      "accession": "0001684062-26-000016",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DLR",
+      "accession": "0001798457-26-000016",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NBIS",
+      "accession": "0001513845-26-000110",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NBIS",
+      "accession": "0001513845-26-000108",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NBIS",
+      "accession": "0001513845-26-000106",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NBIS",
+      "accession": "0001513845-26-000104",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -10895,26 +8827,32 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "DLR",
-      "accession": "0001500081-26-000009",
+      "ticker": "EQIX",
+      "accession": "0001101239-26-000152",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "DLR",
-      "accession": "0001392404-26-000008",
+      "ticker": "EQIX",
+      "accession": "0001101239-26-000151",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "DLR",
-      "accession": "0001684062-26-000016",
+      "ticker": "EQIX",
+      "accession": "0001101239-26-000150",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "DLR",
-      "accession": "0001798457-26-000016",
+      "ticker": "EQIX",
+      "accession": "0001101239-26-000149",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ANET",
+      "accession": "0001596532-26-000222",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -10957,36 +8895,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "ANET",
       "accession": "0001596532-26-000210",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000152",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000151",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000150",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000149",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000123",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -11039,48 +8947,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "IREN",
-      "accession": "0000950103-26-009969",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IREN",
-      "accession": "0000950103-26-009962",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IREN",
-      "accession": "0000950103-26-009961",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IREN",
-      "accession": "0000950103-26-009958",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IREN",
-      "accession": "0000950103-26-009957",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IREN",
-      "accession": "0000950103-26-009949",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IREN",
-      "accession": "0000950103-26-009947",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "APLD",
       "accession": "0001628280-26-054432",
       "error": "HTTP Error 429: Too Many Requests"
@@ -11125,6 +8991,48 @@
       "source": "sec_form4_insider_activity",
       "ticker": "APLD",
       "accession": "0001628280-26-045215",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IREN",
+      "accession": "0000950103-26-009969",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IREN",
+      "accession": "0000950103-26-009962",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IREN",
+      "accession": "0000950103-26-009961",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IREN",
+      "accession": "0000950103-26-009958",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IREN",
+      "accession": "0000950103-26-009957",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IREN",
+      "accession": "0000950103-26-009949",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IREN",
+      "accession": "0000950103-26-009947",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -11177,78 +9085,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0001628280-26-059897",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0001083301-26-000172",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0001083301-26-000170",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0001083301-26-000169",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0001083301-26-000154",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0001083301-26-000153",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0000950142-26-001962",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "WULF",
-      "accession": "0000950142-26-001960",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CLSK",
-      "accession": "0001193125-26-352934",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CLSK",
-      "accession": "0001193125-26-352931",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CLSK",
-      "accession": "0001193125-26-352927",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CLSK",
-      "accession": "0001193125-26-352919",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "CORZ",
       "accession": "0000905148-26-004062",
       "error": "HTTP Error 429: Too Many Requests"
@@ -11297,6 +9133,78 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "CLSK",
+      "accession": "0001193125-26-352934",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CLSK",
+      "accession": "0001193125-26-352931",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CLSK",
+      "accession": "0001193125-26-352927",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CLSK",
+      "accession": "0001193125-26-352919",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0001628280-26-059897",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0001083301-26-000172",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0001083301-26-000170",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0001083301-26-000169",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0001083301-26-000154",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0001083301-26-000153",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0000950142-26-001962",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "WULF",
+      "accession": "0000950142-26-001960",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "HUT",
       "accession": "0001964789-26-000038",
       "error": "HTTP Error 429: Too Many Requests"
@@ -11341,54 +9249,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "HUT",
       "accession": "0001964789-26-000020",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0001032553-26-000037",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0002080157-26-000010",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0001444157-26-000022",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0001032553-26-000035",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0001998826-26-000016",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0002080157-26-000008",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0001032553-26-000033",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIEN",
-      "accession": "0001032553-26-000031",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -11489,6 +9349,54 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0001032553-26-000037",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0002080157-26-000010",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0001444157-26-000022",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0001032553-26-000035",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0001998826-26-000016",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0002080157-26-000008",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0001032553-26-000033",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CIEN",
+      "accession": "0001032553-26-000031",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "NTAP",
       "accession": "0001193125-26-357081",
       "error": "HTTP Error 429: Too Many Requests"
@@ -11573,44 +9481,14 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001922054-26-000003",
+      "ticker": "TLN",
+      "accession": "0001628280-26-048330",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001957490-26-000004",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001922054-26-000001",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001983680-26-000001",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001822966-26-000079",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001822966-26-000078",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001822966-26-000076",
+      "ticker": "TLN",
+      "accession": "0001628280-26-043879",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -11663,20 +9541,44 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "TLN",
-      "accession": "0001628280-26-048330",
+      "ticker": "SMR",
+      "accession": "0001922054-26-000003",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "TLN",
-      "accession": "0001628280-26-043879",
+      "ticker": "SMR",
+      "accession": "0001957490-26-000004",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "TLN",
-      "accession": "0001628280-26-041583",
+      "ticker": "SMR",
+      "accession": "0001922054-26-000001",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SMR",
+      "accession": "0001983680-26-000001",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SMR",
+      "accession": "0001822966-26-000079",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SMR",
+      "accession": "0001822966-26-000078",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SMR",
+      "accession": "0001822966-26-000076",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -11717,50 +9619,32 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "UUUU",
-      "accession": "0000912282-26-001080",
+      "ticker": "BWXT",
+      "accession": "0001123292-26-001224",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "UUUU",
-      "accession": "0001385849-26-000034",
+      "ticker": "BWXT",
+      "accession": "0001123292-26-001199",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "UUUU",
-      "accession": "0001385849-26-000033",
+      "ticker": "BWXT",
+      "accession": "0001123292-26-001111",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "UUUU",
-      "accession": "0001385849-26-000032",
+      "ticker": "BWXT",
+      "accession": "0001123292-26-000970",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "UUUU",
-      "accession": "0001385849-26-000031",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "UUUU",
-      "accession": "0001385849-26-000030",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "UUUU",
-      "accession": "0000912282-26-000955",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "UUUU",
-      "accession": "0001385849-26-000023",
+      "ticker": "BWXT",
+      "accession": "0001123292-26-000969",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -11861,50 +9745,50 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-001224",
+      "ticker": "UUUU",
+      "accession": "0000912282-26-001080",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-001199",
+      "ticker": "UUUU",
+      "accession": "0001385849-26-000034",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-001111",
+      "ticker": "UUUU",
+      "accession": "0001385849-26-000033",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-000970",
+      "ticker": "UUUU",
+      "accession": "0001385849-26-000032",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-000969",
+      "ticker": "UUUU",
+      "accession": "0001385849-26-000031",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-000831",
+      "ticker": "UUUU",
+      "accession": "0001385849-26-000030",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-000830",
+      "ticker": "UUUU",
+      "accession": "0000912282-26-000955",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-000828",
+      "ticker": "UUUU",
+      "accession": "0001385849-26-000023",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -12143,42 +10027,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "AEE",
-      "accession": "0002093849-26-000008",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AEE",
-      "accession": "0001878241-26-000010",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AEE",
-      "accession": "0001002910-26-000026",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AEE",
-      "accession": "0002094778-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AEE",
-      "accession": "0002137318-26-000005",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AEE",
-      "accession": "0002093735-26-000010",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "SO",
       "accession": "0001193125-26-383301",
       "error": "HTTP Error 429: Too Many Requests"
@@ -12223,6 +10071,42 @@
       "source": "sec_form4_insider_activity",
       "ticker": "SO",
       "accession": "0001193125-26-293691",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AEE",
+      "accession": "0002093849-26-000008",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AEE",
+      "accession": "0001878241-26-000010",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AEE",
+      "accession": "0001002910-26-000026",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AEE",
+      "accession": "0002094778-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AEE",
+      "accession": "0002137318-26-000005",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AEE",
+      "accession": "0002093735-26-000010",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -12323,54 +10207,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "MSFT",
-      "accession": "0000789019-26-000161",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MSFT",
-      "accession": "0000789019-26-000159",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MSFT",
-      "accession": "0000789019-26-000158",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MSFT",
-      "accession": "0000789019-26-000157",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MSFT",
-      "accession": "0000789019-26-000156",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MSFT",
-      "accession": "0000789019-26-000155",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MSFT",
-      "accession": "0000789019-26-000154",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MSFT",
-      "accession": "0000789019-26-000153",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "GOOGL",
       "accession": "0001193125-26-382332",
       "error": "HTTP Error 429: Too Many Requests"
@@ -12419,6 +10255,66 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "MSFT",
+      "accession": "0000789019-26-000161",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "MSFT",
+      "accession": "0000789019-26-000159",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "MSFT",
+      "accession": "0000789019-26-000158",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "MSFT",
+      "accession": "0000789019-26-000157",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "MSFT",
+      "accession": "0000789019-26-000156",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "MSFT",
+      "accession": "0000789019-26-000155",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "MSFT",
+      "accession": "0000789019-26-000154",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "MSFT",
+      "accession": "0000789019-26-000153",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ORCL",
+      "accession": "0001341439-26-000066",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ORCL",
+      "accession": "0001341439-26-000064",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "AAPL",
       "accession": "0001140361-26-035636",
       "error": "HTTP Error 429: Too Many Requests"
@@ -12457,18 +10353,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "AAPL",
       "accession": "0001140361-26-025620",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ORCL",
-      "accession": "0001341439-26-000066",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ORCL",
-      "accession": "0001341439-26-000064",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -12767,54 +10651,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000300",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000299",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000298",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000297",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000296",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000295",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000294",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000293",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "MDB",
       "accession": "0001628280-26-057659",
       "error": "HTTP Error 429: Too Many Requests"
@@ -12859,6 +10695,54 @@
       "source": "sec_form4_insider_activity",
       "ticker": "MDB",
       "accession": "0001628280-26-046997",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000300",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000299",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000298",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000297",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000296",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000295",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000294",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000293",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -12959,6 +10843,54 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "APP",
+      "accession": "0001846998-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "APP",
+      "accession": "0002003065-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "APP",
+      "accession": "0002133947-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "APP",
+      "accession": "0001848395-26-000013",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "APP",
+      "accession": "0002133938-26-000004",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "APP",
+      "accession": "0001348636-26-000005",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "APP",
+      "accession": "0001848493-26-000008",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "APP",
+      "accession": "0001209189-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "IBM",
       "accession": "0002005007-26-000005",
       "error": "HTTP Error 429: Too Many Requests"
@@ -13055,62 +10987,8 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "APP",
-      "accession": "0001846998-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "APP",
-      "accession": "0002003065-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "APP",
-      "accession": "0002133947-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "APP",
-      "accession": "0001848395-26-000013",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "APP",
-      "accession": "0002133938-26-000004",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "APP",
-      "accession": "0001348636-26-000005",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "APP",
-      "accession": "0001848493-26-000008",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "APP",
-      "accession": "0001209189-26-000009",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "TSLA",
       "accession": "0001104659-26-075213",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "TSLA",
-      "accession": "0001104659-26-071970",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -13211,6 +11089,54 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001601830-26-000103",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0002020969-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0002006495-26-000012",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001712276-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001856094-26-000014",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001856094-26-000011",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001601830-26-000092",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001601830-26-000091",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "SYM",
       "accession": "0001203561-26-000025",
       "error": "HTTP Error 429: Too Many Requests"
@@ -13303,54 +11229,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "TER",
       "accession": "0000904454-26-000385",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001601830-26-000103",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0002020969-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0002006495-26-000012",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001712276-26-000009",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001856094-26-000014",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001856094-26-000011",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001601830-26-000092",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001601830-26-000091",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -13451,48 +11329,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-012124",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-011715",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-010616",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-010610",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-010609",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-010608",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-010607",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "AUR",
       "accession": "0001609637-26-000008",
       "error": "HTTP Error 429: Too Many Requests"
@@ -13537,6 +11373,48 @@
       "source": "sec_form4_insider_activity",
       "ticker": "AUR",
       "accession": "0001193125-26-340526",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-012124",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-011715",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-010616",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-010610",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-010609",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-010608",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-010607",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -13756,14 +11634,8 @@
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
-      "source": "sec_form4_insider_activity",
-      "ticker": "JD",
-      "accession": "0001104659-26-071102",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
       "source": "sec_13f_institutional_sample",
-      "manager": "Renaissance Technologies",
+      "manager": "ARK Investment Management",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -13773,7 +11645,7 @@
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "ARK Investment Management",
+      "manager": "Renaissance Technologies",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -13788,12 +11660,12 @@
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "Tiger Global Management",
+      "manager": "Coatue Management",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "Coatue Management",
+      "manager": "Tiger Global Management",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
