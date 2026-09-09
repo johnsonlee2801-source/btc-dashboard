@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-09-08T21:08:04.143426+00:00",
-  "timestamp_cn": "2026-09-09 05:08",
+  "timestamp": "2026-09-09T04:39:09.668729+00:00",
+  "timestamp_cn": "2026-09-09 12:39",
   "price": {
-    "price": 78530,
-    "change24h": -0.86
+    "price": 78912,
+    "change24h": 0.14
   },
   "etf": {
     "sum5d": 770.0,
@@ -18,10 +18,10 @@
     "source": "farside_parsed"
   },
   "onchain": {
-    "mvrv_zscore": 0.9116,
-    "nupl": 0.3332,
-    "mvrv_zscore_as_of": "2026-09-07",
-    "nupl_as_of": "2026-09-07",
+    "mvrv_zscore": 0.8725,
+    "nupl": 0.3276,
+    "mvrv_zscore_as_of": "2026-09-08",
+    "nupl_as_of": "2026-09-08",
     "mvrv_zscore_source": "bitcoin-data.com",
     "nupl_source": "bitcoin-data.com",
     "mvrv_zscore_age_days": 1,
@@ -31,37 +31,37 @@
   },
   "fed": {
     "fed_direction": "cut1",
-    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 8.0%（Exactly 0 cuts 平均 92.0%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 7.8%（Exactly 0 cuts 平均 92.2%）；非 CME 期货源，作为 403 fallback",
     "confidence": "medium",
     "source": "oddpool_fed_rate_cut_count",
-    "cut_probability": 8.0,
-    "zero_cut_probability": 92.0,
+    "cut_probability": 7.8,
+    "zero_cut_probability": 92.2,
     "year": "2026",
-    "as_of": "2026-09-08",
+    "as_of": "2026-09-09",
     "age_days": 0,
     "stale": false
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0032,
-    "avg": 0.0032,
+    "okx": 0.0035,
+    "avg": 0.0035,
     "source": "exchange_public"
   },
   "margin_lending": {
-    "btc_daily_rate": 1.202e-05,
-    "btc_annual_rate": 0.4387,
+    "btc_daily_rate": 1.217e-05,
+    "btc_annual_rate": 0.4442,
     "btc_borrow_limit": 100.0,
-    "open_interest": 27550.0,
+    "open_interest": 27622.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 311.0,
+    "total_b": 311.1,
     "trend": "expand"
   },
   "tips": 2.43,
   "tips_as_of": "2026-09-04",
-  "tips_age_days": 4,
+  "tips_age_days": 5,
   "tips_stale": false
 }
