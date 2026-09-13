@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-09-12T20:31:37.051275+00:00",
-  "timestamp_cn": "2026-09-13 04:31",
+  "timestamp": "2026-09-13T04:44:15.377412+00:00",
+  "timestamp_cn": "2026-09-13 12:44",
   "price": {
-    "price": 77178,
-    "change24h": -0.2
+    "price": 77199,
+    "change24h": -0.05
   },
   "etf": {
     "sum5d": -288.1,
@@ -18,10 +18,10 @@
     "source": "farside_parsed"
   },
   "onchain": {
-    "mvrv_zscore": 0.8941,
-    "nupl": 0.3393,
-    "mvrv_zscore_as_of": "2026-09-05",
-    "nupl_as_of": "2026-09-05",
+    "mvrv_zscore": 0.8969,
+    "nupl": 0.3429,
+    "mvrv_zscore_as_of": "2026-09-06",
+    "nupl_as_of": "2026-09-06",
     "mvrv_zscore_source": "bitcoin-data.com",
     "nupl_source": "bitcoin-data.com",
     "mvrv_zscore_age_days": 7,
@@ -31,27 +31,27 @@
   },
   "fed": {
     "fed_direction": "cut1",
-    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 6.9%（Exactly 0 cuts 平均 93.1%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 7.0%（Exactly 0 cuts 平均 93.0%）；非 CME 期货源，作为 403 fallback",
     "confidence": "medium",
     "source": "oddpool_fed_rate_cut_count",
-    "cut_probability": 6.9,
-    "zero_cut_probability": 93.1,
+    "cut_probability": 7.0,
+    "zero_cut_probability": 93.0,
     "year": "2026",
-    "as_of": "2026-09-12",
+    "as_of": "2026-09-13",
     "age_days": 0,
     "stale": false
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.01,
-    "avg": 0.01,
+    "okx": 0.0096,
+    "avg": 0.0096,
     "source": "exchange_public"
   },
   "margin_lending": {
-    "btc_daily_rate": 1.195e-05,
-    "btc_annual_rate": 0.4362,
+    "btc_daily_rate": 1.223e-05,
+    "btc_annual_rate": 0.4464,
     "btc_borrow_limit": 100.0,
-    "open_interest": 27528.0,
+    "open_interest": 27585.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
@@ -62,6 +62,6 @@
   },
   "tips": 2.55,
   "tips_as_of": "2026-09-10",
-  "tips_age_days": 2,
+  "tips_age_days": 3,
   "tips_stale": false
 }
