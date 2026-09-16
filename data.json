@@ -1,27 +1,27 @@
 {
-  "timestamp": "2026-09-15T21:18:35.793731+00:00",
-  "timestamp_cn": "2026-09-16 05:18",
+  "timestamp": "2026-09-16T04:46:55.934270+00:00",
+  "timestamp_cn": "2026-09-16 12:46",
   "price": {
-    "price": 75805,
-    "change24h": -3.85
+    "price": 75897,
+    "change24h": -2.19
   },
   "etf": {
-    "sum5d": -256.2,
+    "sum5d": -706.6,
     "days": [
       -120.2,
       -282.7,
       -13.2,
       159.9,
-      0.0
+      -450.4
     ],
     "latest_date": "15 Sep 2026",
     "source": "farside_parsed"
   },
   "onchain": {
-    "mvrv_zscore": 0.8725,
-    "nupl": 0.3276,
-    "mvrv_zscore_as_of": "2026-09-08",
-    "nupl_as_of": "2026-09-08",
+    "mvrv_zscore": 0.8495,
+    "nupl": 0.3247,
+    "mvrv_zscore_as_of": "2026-09-09",
+    "nupl_as_of": "2026-09-09",
     "mvrv_zscore_source": "bitcoin-data.com",
     "nupl_source": "bitcoin-data.com",
     "mvrv_zscore_age_days": 7,
@@ -31,37 +31,37 @@
   },
   "fed": {
     "fed_direction": "cut1",
-    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 6.8%（Exactly 0 cuts 平均 93.2%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 7.2%（Exactly 0 cuts 平均 92.8%）；非 CME 期货源，作为 403 fallback",
     "confidence": "medium",
     "source": "oddpool_fed_rate_cut_count",
-    "cut_probability": 6.8,
-    "zero_cut_probability": 93.2,
+    "cut_probability": 7.2,
+    "zero_cut_probability": 92.8,
     "year": "2026",
-    "as_of": "2026-09-15",
+    "as_of": "2026-09-16",
     "age_days": 0,
     "stale": false
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0027,
-    "avg": 0.0027,
+    "okx": 0.0052,
+    "avg": 0.0052,
     "source": "exchange_public"
   },
   "margin_lending": {
-    "btc_daily_rate": 1.203e-05,
-    "btc_annual_rate": 0.4391,
+    "btc_daily_rate": 1.162e-05,
+    "btc_annual_rate": 0.4241,
     "btc_borrow_limit": 100.0,
-    "open_interest": 27840.0,
+    "open_interest": 28129.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 311.3,
+    "total_b": 310.7,
     "trend": "expand"
   },
   "tips": 2.6,
   "tips_as_of": "2026-09-14",
-  "tips_age_days": 1,
+  "tips_age_days": 2,
   "tips_stale": false
 }
