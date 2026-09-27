@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-09-26T21:07:51.450120+00:00",
-  "timestamp_cn": "2026-09-27 05:07",
+  "timestamp": "2026-09-27T05:15:56.945905+00:00",
+  "timestamp_cn": "2026-09-27 13:15",
   "price": {
-    "price": 84081,
-    "change24h": 0.49
+    "price": 84359,
+    "change24h": 0.47
   },
   "etf": {
     "sum5d": 2385.8,
@@ -18,10 +18,10 @@
     "source": "farside_parsed"
   },
   "onchain": {
-    "mvrv_zscore": 0.9259,
-    "nupl": 0.3493,
-    "mvrv_zscore_as_of": "2026-09-19",
-    "nupl_as_of": "2026-09-19",
+    "mvrv_zscore": 0.9372,
+    "nupl": 0.3485,
+    "mvrv_zscore_as_of": "2026-09-20",
+    "nupl_as_of": "2026-09-20",
     "mvrv_zscore_source": "bitcoin-data.com",
     "nupl_source": "bitcoin-data.com",
     "mvrv_zscore_age_days": 7,
@@ -31,37 +31,37 @@
   },
   "fed": {
     "fed_direction": "cut1",
-    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 4.2%（Exactly 0 cuts 平均 95.8%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 4.1%（Exactly 0 cuts 平均 95.9%）；非 CME 期货源，作为 403 fallback",
     "confidence": "medium",
     "source": "oddpool_fed_rate_cut_count",
-    "cut_probability": 4.2,
-    "zero_cut_probability": 95.8,
+    "cut_probability": 4.1,
+    "zero_cut_probability": 95.9,
     "year": "2026",
-    "as_of": "2026-09-26",
+    "as_of": "2026-09-27",
     "age_days": 0,
     "stale": false
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0006,
-    "avg": 0.0006,
+    "okx": -0.0002,
+    "avg": -0.0002,
     "source": "exchange_public"
   },
   "margin_lending": {
     "btc_daily_rate": 1.169e-05,
     "btc_annual_rate": 0.4267,
     "btc_borrow_limit": 100.0,
-    "open_interest": 28331.0,
+    "open_interest": 28205.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 313.6,
+    "total_b": 313.0,
     "trend": "expand"
   },
   "tips": 2.85,
   "tips_as_of": "2026-09-24",
-  "tips_age_days": 2,
+  "tips_age_days": 3,
   "tips_stale": false
 }
