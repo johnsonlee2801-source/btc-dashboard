@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-09-30T01:22:04Z",
+  "generatedAt": "2026-10-01T01:21:57Z",
   "description": "Daily static market breadth snapshot for stock.flowhunt.net. Free public sources; not investment advice.",
   "sources": {
     "sp500Constituents": "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv",
@@ -24,25 +24,25 @@
       "requested": 503,
       "sampleSize": 503,
       "coveragePct": 100.0,
-      "above20Pct": 29.4,
-      "above50Pct": 24.5,
-      "above200Pct": 43.5,
-      "nearHighPct": 10.7,
-      "newHighPct": 2.2,
-      "nearLowPct": 28.6,
-      "newLowPct": 7.6,
-      "advancePct": 32.6,
-      "declinePct": 66.6,
+      "above20Pct": 26.8,
+      "above50Pct": 24.7,
+      "above200Pct": 42.7,
+      "nearHighPct": 10.1,
+      "newHighPct": 1.6,
+      "nearLowPct": 28.8,
+      "newLowPct": 5.6,
+      "advancePct": 39.2,
+      "declinePct": 59.8,
       "counts": {
-        "above20": 148,
-        "above50": 123,
-        "above200": 219,
-        "nearHigh": 54,
-        "newHigh": 11,
-        "nearLow": 144,
-        "newLow": 38,
-        "advanced": 164,
-        "declined": 335
+        "above20": 135,
+        "above50": 124,
+        "above200": 215,
+        "nearHigh": 51,
+        "newHigh": 8,
+        "nearLow": 145,
+        "newLow": 28,
+        "advanced": 197,
+        "declined": 301
       },
       "updatedAt": "2026-09-29T13:30:00Z",
       "leaders": [
@@ -50,10 +50,10 @@
         "AMD",
         "A",
         "AME",
+        "AMGN",
         "APH",
         "AAPL",
         "ANET",
-        "BDX",
         "TECH",
         "BIIB",
         "CRL",
@@ -63,7 +63,6 @@
         "MMM",
         "AOS",
         "ABT",
-        "ACN",
         "ADBE",
         "AFL",
         "APD",
@@ -71,45 +70,48 @@
         "AKAM",
         "ALB",
         "ARE",
-        "ALGN"
+        "ALGN",
+        "ALLE"
       ],
       "status": "distribution",
-      "value": "MA50上方 24.5% · MA200上方 43.5% · 新高/新低 11/38 · 上涨/下跌 164/335"
+      "value": "MA50上方 24.7% · MA200上方 42.7% · 新高/新低 8/28 · 上涨/下跌 197/301"
     },
     "nasdaq100": {
       "name": "Nasdaq-100 / QQQ 持仓宽度快照",
       "source": "https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/QQQ/holdings/fund?idType=ticker&interval=monthly&productType=ETF",
-      "sourceUpdatedAt": "2026-09-28",
+      "sourceUpdatedAt": "2026-09-29",
       "requested": 98,
       "sampleSize": 98,
       "coveragePct": 100.0,
-      "above20Pct": 55.1,
+      "above20Pct": 51.0,
       "above50Pct": 45.9,
-      "above200Pct": 54.1,
-      "nearHighPct": 9.2,
+      "above200Pct": 52.0,
+      "nearHighPct": 11.2,
       "newHighPct": 1.0,
-      "nearLowPct": 19.4,
+      "nearLowPct": 20.4,
       "newLowPct": 2.0,
-      "advancePct": 36.7,
-      "declinePct": 63.3,
+      "advancePct": 48.0,
+      "declinePct": 51.0,
       "counts": {
-        "above20": 54,
+        "above20": 50,
         "above50": 45,
-        "above200": 53,
-        "nearHigh": 9,
+        "above200": 51,
+        "nearHigh": 11,
         "newHigh": 1,
-        "nearLow": 19,
+        "nearLow": 20,
         "newLow": 2,
-        "advanced": 36,
-        "declined": 62
+        "advanced": 47,
+        "declined": 50
       },
-      "updatedAt": "2026-09-28T13:30:00Z",
+      "updatedAt": "2026-09-29T13:30:00Z",
       "leaders": [
         "NVDA",
         "AAPL",
         "AMD",
+        "META",
         "PANW",
         "CRWD",
+        "AMGN",
         "GILD",
         "FTNT",
         "WBD",
@@ -123,14 +125,14 @@
         "WMT",
         "CSCO",
         "COST",
-        "AMAT",
         "NFLX",
         "LIN",
+        "PEP",
         "TMUS",
-        "PEP"
+        "WDC"
       ],
       "status": "neutral",
-      "value": "MA50上方 45.9% · MA200上方 54.1% · 新高/新低 1/2 · 上涨/下跌 36/62"
+      "value": "MA50上方 45.9% · MA200上方 52.0% · 新高/新低 1/2 · 上涨/下跌 47/50"
     }
   },
   "macroIndicators": {
@@ -233,37 +235,41 @@
     },
     "finra_short_sale_volume": {
       "name": "FINRA 场外短量占比自动快照",
-      "source": "https://cdn.finra.org/equity/regsho/daily/CNMSshvol20260929.txt",
+      "source": "https://cdn.finra.org/equity/regsho/daily/CNMSshvol20260930.txt",
       "sourceType": "official_txt",
-      "updatedAt": "2026-09-29",
-      "value": "市场 50.9% · 20日均 51.0% · S&P500 45.3% · QQQ 46.1%",
+      "updatedAt": "2026-09-30",
+      "value": "市场 51.7% · 20日均 51.0% · S&P500 46.7% · QQQ 44.5%",
       "status": "neutral",
-      "marketRatioPct": 50.9,
+      "marketRatioPct": 51.7,
       "marketAverage20dPct": 51.0,
-      "sp500RatioPct": 45.3,
-      "qqqRatioPct": 46.1,
+      "sp500RatioPct": 46.7,
+      "qqqRatioPct": 44.5,
       "latest": {
-        "date": "2026-09-29",
+        "date": "2026-09-30",
         "market": {
-          "tickerCount": 12346,
-          "shortVolume": 3684986200.19,
-          "totalVolume": 7233334645.74,
-          "ratioPct": 50.9
+          "tickerCount": 12370,
+          "shortVolume": 3942484791.76,
+          "totalVolume": 7629919321.3,
+          "ratioPct": 51.7
         },
         "sp500": {
           "tickerCount": 501,
-          "shortVolume": 502259014.09,
-          "totalVolume": 1109683509.92,
-          "ratioPct": 45.3
+          "shortVolume": 526228877.08,
+          "totalVolume": 1127635663.38,
+          "ratioPct": 46.7
         },
         "qqq": {
           "tickerCount": 98,
-          "shortVolume": 199297636.0,
-          "totalVolume": 432472180.69,
-          "ratioPct": 46.1
+          "shortVolume": 201031081.67,
+          "totalVolume": 451966112.83,
+          "ratioPct": 44.5
         }
       },
       "history": [
+        {
+          "date": "2026-09-30",
+          "marketRatioPct": 51.7
+        },
         {
           "date": "2026-09-29",
           "marketRatioPct": 50.9
@@ -339,72 +345,68 @@
         {
           "date": "2026-09-02",
           "marketRatioPct": 50.4
-        },
-        {
-          "date": "2026-09-01",
-          "marketRatioPct": 50.3
         }
       ],
       "abnormalTickers": [
         {
-          "symbol": "SKOR",
+          "symbol": "DRES",
+          "ratioPct": 100.0,
+          "totalVolume": 1477385.0
+        },
+        {
+          "symbol": "NUDM",
+          "ratioPct": 99.4,
+          "totalVolume": 1782884.0
+        },
+        {
+          "symbol": "FLGV",
+          "ratioPct": 99.1,
+          "totalVolume": 6371478.0
+        },
+        {
+          "symbol": "BBHY",
           "ratioPct": 97.7,
-          "totalVolume": 2175260.0
+          "totalVolume": 1902664.0
         },
         {
-          "symbol": "CRUX",
-          "ratioPct": 95.9,
-          "totalVolume": 1888571.0
+          "symbol": "DFAL",
+          "ratioPct": 97.6,
+          "totalVolume": 1097402.0
         },
         {
-          "symbol": "TDTT",
-          "ratioPct": 94.4,
-          "totalVolume": 2785419.0
+          "symbol": "FSM",
+          "ratioPct": 97.0,
+          "totalVolume": 18499865.0
         },
         {
-          "symbol": "VFH",
-          "ratioPct": 93.4,
-          "totalVolume": 1791810.0
+          "symbol": "IQQ",
+          "ratioPct": 97.0,
+          "totalVolume": 3129973.0
         },
         {
-          "symbol": "NBSD",
+          "symbol": "IBTK",
+          "ratioPct": 96.9,
+          "totalVolume": 1620048.0
+        },
+        {
+          "symbol": "FHLC",
+          "ratioPct": 96.0,
+          "totalVolume": 1096364.0
+        },
+        {
+          "symbol": "AHRT",
+          "ratioPct": 93.0,
+          "totalVolume": 1931776.0
+        },
+        {
+          "symbol": "BALT",
+          "ratioPct": 92.5,
+          "totalVolume": 1529648.0
+        },
+        {
+          "symbol": "BKV",
           "ratioPct": 92.3,
-          "totalVolume": 1151823.0
-        },
-        {
-          "symbol": "IBTI",
-          "ratioPct": 92.3,
-          "totalVolume": 1058156.0
-        },
-        {
-          "symbol": "JHCP",
-          "ratioPct": 91.0,
-          "totalVolume": 1419652.0
-        },
-        {
-          "symbol": "BSP",
-          "ratioPct": 90.7,
-          "totalVolume": 1007565.0
-        },
-        {
-          "symbol": "PAVE",
-          "ratioPct": 90.6,
-          "totalVolume": 2395154.0
-        },
-        {
-          "symbol": "DBMF",
-          "ratioPct": 88.7,
-          "totalVolume": 2049739.0
-        },
-        {
-          "symbol": "TKC",
-          "ratioPct": 88.7,
-          "totalVolume": 1100309.0
-        },
-        {
-          "symbol": "BLCR",
-          "ratioPct": 87.7,
-          "totalVolume": 1566957.0
+          "totalVolume": 1296885.0
         }
       ],
       "missingRecentFiles": [
@@ -418,7 +420,7 @@
       "source": "https://www.sec.gov/edgar/search/",
       "sourceType": "official_sec_form4",
       "updatedAt": "2026-09-29",
-      "value": "90日卖出 $1054.8M · 买入 $10.0M · 卖出股票 12只 · 买入股票 2只",
+      "value": "90日卖出 $1054.3M · 买入 $10.0M · 卖出股票 12只 · 买入股票 2只",
       "status": "distribution",
       "lookbackDays": 90,
       "tickerUniverse": [
@@ -617,7 +619,7 @@
         "JNPR",
         "PSTG"
       ],
-      "sellValueUsd": 1054813305.39,
+      "sellValueUsd": 1054303381.35,
       "buyValueUsd": 10040066.2,
       "tickerTotals": {
         "ALAB": {
@@ -687,9 +689,9 @@
           "purchaseCount": 0
         },
         "QCOM": {
-          "sellValueUsd": 4952413.07,
+          "sellValueUsd": 4442489.03,
           "buyValueUsd": 0,
-          "saleCount": 18,
+          "saleCount": 12,
           "purchaseCount": 0
         },
         "SMCI": {
@@ -760,134 +762,6 @@
         }
       ],
       "transactions": [
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-09-21",
-          "filingDate": "2026-09-23",
-          "accessionNumber": "0001696841-26-000014",
-          "ownerName": "Teter Timothy S.",
-          "ownerTitle": "EVP, General Counsel and Sec",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 12483.0,
-          "price": 222.1932,
-          "valueUsd": 2773637.72,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000169684126000014/0001696841-26-000014.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-09-21",
-          "filingDate": "2026-09-23",
-          "accessionNumber": "0001696841-26-000014",
-          "ownerName": "Teter Timothy S.",
-          "ownerTitle": "EVP, General Counsel and Sec",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 13478.0,
-          "price": 223.0489,
-          "valueUsd": 3006253.07,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000169684126000014/0001696841-26-000014.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-09-21",
-          "filingDate": "2026-09-23",
-          "accessionNumber": "0001696841-26-000014",
-          "ownerName": "Teter Timothy S.",
-          "ownerTitle": "EVP, General Counsel and Sec",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4499.0,
-          "price": 223.7479,
-          "valueUsd": 1006641.8,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000169684126000014/0001696841-26-000014.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-09-18",
-          "filingDate": "2026-09-22",
-          "accessionNumber": "0001199039-26-000016",
-          "ownerName": "STEVENS MARK A",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1356000.0,
-          "price": 219.7219,
-          "valueUsd": 297942896.4,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000016/0001199039-26-000016.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-09-18",
-          "filingDate": "2026-09-22",
-          "accessionNumber": "0001199039-26-000016",
-          "ownerName": "STEVENS MARK A",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 10000.0,
-          "price": 220.4199,
-          "valueUsd": 2204199.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000016/0001199039-26-000016.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-09-17",
-          "filingDate": "2026-09-18",
-          "accessionNumber": "0001588670-26-000014",
-          "ownerName": "Kress Colette",
-          "ownerTitle": "EVP & Chief Financial Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4681.0,
-          "price": 218.0144,
-          "valueUsd": 1020525.41,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000158867026000014/0001588670-26-000014.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-09-17",
-          "filingDate": "2026-09-18",
-          "accessionNumber": "0001588670-26-000014",
-          "ownerName": "Kress Colette",
-          "ownerTitle": "EVP & Chief Financial Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 20369.0,
-          "price": 219.0172,
-          "valueUsd": 4461161.35,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000158867026000014/0001588670-26-000014.txt"
-        },
-        {
-          "ticker": "NVDA",
-          "transactionDate": "2026-09-17",
-          "filingDate": "2026-09-18",
-          "accessionNumber": "0001588670-26-000014",
-          "ownerName": "Kress Colette",
-          "ownerTitle": "EVP & Chief Financial Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 9868.0,
-          "price": 219.5932,
-          "valueUsd": 2166945.7,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000158867026000014/0001588670-26-000014.txt"
-        },
         {
           "ticker": "AVGO",
           "transactionDate": "2026-09-23",
@@ -2503,6 +2377,134 @@
           "price": 76.2,
           "valueUsd": 11353.8,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000644/0001046179-26-000644.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-09-21",
+          "filingDate": "2026-09-23",
+          "accessionNumber": "0001696841-26-000014",
+          "ownerName": "Teter Timothy S.",
+          "ownerTitle": "EVP, General Counsel and Sec",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 12483.0,
+          "price": 222.1932,
+          "valueUsd": 2773637.72,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000169684126000014/0001696841-26-000014.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-09-21",
+          "filingDate": "2026-09-23",
+          "accessionNumber": "0001696841-26-000014",
+          "ownerName": "Teter Timothy S.",
+          "ownerTitle": "EVP, General Counsel and Sec",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 13478.0,
+          "price": 223.0489,
+          "valueUsd": 3006253.07,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000169684126000014/0001696841-26-000014.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-09-21",
+          "filingDate": "2026-09-23",
+          "accessionNumber": "0001696841-26-000014",
+          "ownerName": "Teter Timothy S.",
+          "ownerTitle": "EVP, General Counsel and Sec",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 4499.0,
+          "price": 223.7479,
+          "valueUsd": 1006641.8,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000169684126000014/0001696841-26-000014.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-09-18",
+          "filingDate": "2026-09-22",
+          "accessionNumber": "0001199039-26-000016",
+          "ownerName": "STEVENS MARK A",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 1356000.0,
+          "price": 219.7219,
+          "valueUsd": 297942896.4,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000016/0001199039-26-000016.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-09-18",
+          "filingDate": "2026-09-22",
+          "accessionNumber": "0001199039-26-000016",
+          "ownerName": "STEVENS MARK A",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 10000.0,
+          "price": 220.4199,
+          "valueUsd": 2204199.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000119903926000016/0001199039-26-000016.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-09-17",
+          "filingDate": "2026-09-18",
+          "accessionNumber": "0001588670-26-000014",
+          "ownerName": "Kress Colette",
+          "ownerTitle": "EVP & Chief Financial Officer",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 4681.0,
+          "price": 218.0144,
+          "valueUsd": 1020525.41,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000158867026000014/0001588670-26-000014.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-09-17",
+          "filingDate": "2026-09-18",
+          "accessionNumber": "0001588670-26-000014",
+          "ownerName": "Kress Colette",
+          "ownerTitle": "EVP & Chief Financial Officer",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 20369.0,
+          "price": 219.0172,
+          "valueUsd": 4461161.35,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000158867026000014/0001588670-26-000014.txt"
+        },
+        {
+          "ticker": "NVDA",
+          "transactionDate": "2026-09-17",
+          "filingDate": "2026-09-18",
+          "accessionNumber": "0001588670-26-000014",
+          "ownerName": "Kress Colette",
+          "ownerTitle": "EVP & Chief Financial Officer",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 9868.0,
+          "price": 219.5932,
+          "valueUsd": 2166945.7,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1045810/000158867026000014/0001588670-26-000014.txt"
         },
         {
           "ticker": "INTC",
@@ -4633,38 +4635,6 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026061180/0001628280-26-061180.txt"
         },
         {
-          "ticker": "AMAT",
-          "transactionDate": "2026-09-08",
-          "filingDate": "2026-09-10",
-          "accessionNumber": "0001628280-26-061408",
-          "ownerName": "BRUNER JUDY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1000.0,
-          "price": 465.0,
-          "valueUsd": 465000.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026061408/0001628280-26-061408.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001628280-26-059277",
-          "ownerName": "Hill Brice",
-          "ownerTitle": "SVP, CFO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 7500.0,
-          "price": 479.2501,
-          "valueUsd": 3594375.75,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026059277/0001628280-26-059277.txt"
-        },
-        {
           "ticker": "ALAB",
           "transactionDate": "2026-09-02",
           "filingDate": "2026-09-03",
@@ -6249,6 +6219,38 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000148439426000009/0001484394-26-000009.txt"
         },
         {
+          "ticker": "AMAT",
+          "transactionDate": "2026-09-08",
+          "filingDate": "2026-09-10",
+          "accessionNumber": "0001628280-26-061408",
+          "ownerName": "BRUNER JUDY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 1000.0,
+          "price": 465.0,
+          "valueUsd": 465000.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026061408/0001628280-26-061408.txt"
+        },
+        {
+          "ticker": "AMAT",
+          "transactionDate": "2026-08-25",
+          "filingDate": "2026-08-27",
+          "accessionNumber": "0001628280-26-059277",
+          "ownerName": "Hill Brice",
+          "ownerTitle": "SVP, CFO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 7500.0,
+          "price": 479.2501,
+          "valueUsd": 3594375.75,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026059277/0001628280-26-059277.txt"
+        },
+        {
           "ticker": "QCOM",
           "transactionDate": "2026-09-25",
           "filingDate": "2026-09-25",
@@ -6439,102 +6441,6 @@
           "price": 170.0,
           "valueUsd": 35360.0,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000093/0000804328-26-000093.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-08-21",
-          "filingDate": "2026-08-21",
-          "accessionNumber": "0000804328-26-000092",
-          "ownerName": "Grech Patricia Y",
-          "ownerTitle": "SVP, Chief Accounting Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 625.0,
-          "price": 162.85,
-          "valueUsd": 101781.25,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000092/0000804328-26-000092.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-08-12",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0000804328-26-000091",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 260.0,
-          "price": 161.7729,
-          "valueUsd": 42060.95,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-08-12",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0000804328-26-000091",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 748.0,
-          "price": 162.5579,
-          "valueUsd": 121593.31,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-08-12",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0000804328-26-000091",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1080.0,
-          "price": 163.4452,
-          "valueUsd": 176520.82,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-08-12",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0000804328-26-000091",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 248.0,
-          "price": 164.7277,
-          "valueUsd": 40852.47,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-08-12",
-          "filingDate": "2026-08-12",
-          "accessionNumber": "0000804328-26-000091",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 164.0,
-          "price": 165.3368,
-          "valueUsd": 27115.24,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
         },
         {
           "ticker": "LRCX",
@@ -6973,1920 +6879,9 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000652/0001046179-26-000652.txt"
         }
       ],
-      "transactionCount": 368,
+      "transactionCount": 362,
       "threshold": "90日内部人公开市场卖出≥$50M、净卖出≥$25M、且涉及≥3只样本股：内部人卖出证据偏强；公开市场买入≥$5M、买入额≥卖出额1.5倍、且涉及≥2只样本股：内部人买入/承接证据偏强；其他中性。",
       "limitations": "SEC Form 4 只覆盖公司内部人交易，不等于机构13F持仓或暗池/期权流；大型科技公司高管10b5-1计划性卖出很常见，必须结合价格、宽度、成交量和公告背景判断。"
-    },
-    "sec_13f_institutional_sample": {
-      "name": "SEC 13F 样本机构持仓慢变量",
-      "source": "https://www.sec.gov/data-research/sec-markets-data/form-13f-data-sets",
-      "sourceType": "official_sec_13f",
-      "updatedAt": "2026-08-14",
-      "value": "样本机构AI/Mag7持仓 $184.5B · 较上季 +36.5% · 增/减 49/68",
-      "status": "neutral",
-      "tickerUniverse": [
-        "AAPL",
-        "ADBE",
-        "AEE",
-        "AES",
-        "ALAB",
-        "AMAT",
-        "AMD",
-        "AMZN",
-        "ANET",
-        "APLD",
-        "APP",
-        "ARM",
-        "ASML",
-        "AUR",
-        "AVAV",
-        "AVGO",
-        "BABA",
-        "BIDU",
-        "BWXT",
-        "CCJ",
-        "CEG",
-        "CIEN",
-        "CIFR",
-        "CLSK",
-        "COHR",
-        "CORZ",
-        "CRDO",
-        "CRM",
-        "CRWD",
-        "CRWV",
-        "DDOG",
-        "DELL",
-        "DLR",
-        "DUK",
-        "DUOL",
-        "EQIX",
-        "ETN",
-        "GE",
-        "GEHC",
-        "GEV",
-        "GOOGL",
-        "HPE",
-        "HUBB",
-        "HUT",
-        "IBM",
-        "INTC",
-        "IREN",
-        "ISRG",
-        "JD",
-        "JNPR",
-        "KLAC",
-        "KTOS",
-        "LEU",
-        "LITE",
-        "LRCX",
-        "MBLY",
-        "MDB",
-        "META",
-        "MRVL",
-        "MSFT",
-        "MU",
-        "NBIS",
-        "NEE",
-        "NNE",
-        "NOW",
-        "NRG",
-        "NTAP",
-        "NVDA",
-        "OKLO",
-        "ORCL",
-        "PANW",
-        "PATH",
-        "PDD",
-        "PLTR",
-        "POWL",
-        "PSTG",
-        "QBTS",
-        "QCOM",
-        "RBLX",
-        "RXRX",
-        "SHOP",
-        "SMCI",
-        "SMR",
-        "SNOW",
-        "SO",
-        "SYM",
-        "TER",
-        "TLN",
-        "TSLA",
-        "TSM",
-        "UEC",
-        "UUUU",
-        "VRT",
-        "VST",
-        "WULF"
-      ],
-      "managerCount": 5,
-      "currentValueUsd": 184478649396.0,
-      "previousValueUsd": 135164411211.0,
-      "valueChangePct": 36.5,
-      "increasedPositions": 49,
-      "decreasedPositions": 68,
-      "unchangedPositions": 3,
-      "managers": [
-        {
-          "name": "Coatue Management",
-          "cik": "0001135730",
-          "currentFilingDate": "2026-08-14",
-          "currentReportDate": "2026-06-30",
-          "previousFilingDate": "2026-05-15",
-          "previousReportDate": "2026-03-31",
-          "targetValueUsd": 31079109244.0,
-          "previousTargetValueUsd": 19090357021.0,
-          "targetTickerCount": 22,
-          "changes": [
-            {
-              "manager": "Coatue Management",
-              "ticker": "LRCX",
-              "direction": "decrease",
-              "shares": 9441603.0,
-              "previousShares": 10043505.0,
-              "shareChange": -601902.0,
-              "shareChangePct": -6.0,
-              "valueUsd": 4091329827.0,
-              "previousValueUsd": 2145895279.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "MU",
-              "direction": "increase",
-              "shares": 3142269.0,
-              "previousShares": 165931.0,
-              "shareChange": 2976338.0,
-              "shareChangePct": 1793.7,
-              "valueUsd": 3627089685.0,
-              "previousValueUsd": 56058129.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "GEV",
-              "direction": "decrease",
-              "shares": 2558164.0,
-              "previousShares": 2572358.0,
-              "shareChange": -14194.0,
-              "shareChangePct": -0.6,
-              "valueUsd": 3005484557.0,
-              "previousValueUsd": 2245411301.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "AMZN",
-              "direction": "increase",
-              "shares": 11834799.0,
-              "previousShares": 7930766.0,
-              "shareChange": 3904033.0,
-              "shareChangePct": 49.2,
-              "valueUsd": 2820705995.0,
-              "previousValueUsd": 1651740634.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "AVGO",
-              "direction": "increase",
-              "shares": 5846831.0,
-              "previousShares": 5503852.0,
-              "shareChange": 342979.0,
-              "shareChangePct": 6.2,
-              "valueUsd": 2208640410.0,
-              "previousValueUsd": 1703497233.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "ETN",
-              "direction": "increase",
-              "shares": 4968415.0,
-              "previousShares": 4748498.0,
-              "shareChange": 219917.0,
-              "shareChangePct": 4.6,
-              "valueUsd": 2117140999.0,
-              "previousValueUsd": 1698395280.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "GOOGL",
-              "direction": "increase",
-              "shares": 5764646.0,
-              "previousShares": 5429311.0,
-              "shareChange": 335335.0,
-              "shareChangePct": 6.2,
-              "valueUsd": 2056441626.0,
-              "previousValueUsd": 1560471553.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "INTC",
-              "direction": "increase",
-              "shares": 12084027.0,
-              "previousShares": 0,
-              "shareChange": 12084027.0,
-              "shareChangePct": 100.0,
-              "valueUsd": 1687292689.0,
-              "previousValueUsd": 0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "META",
-              "direction": "decrease",
-              "shares": 2526048.0,
-              "previousShares": 2812056.0,
-              "shareChange": -286008.0,
-              "shareChangePct": -10.2,
-              "valueUsd": 1422897577.0,
-              "previousValueUsd": 1608861600.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "EQIX",
-              "direction": "increase",
-              "shares": 1273517.0,
-              "previousShares": 1090886.0,
-              "shareChange": 182631.0,
-              "shareChangePct": 16.7,
-              "valueUsd": 1327501387.0,
-              "previousValueUsd": 1069330093.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "NVDA",
-              "direction": "decrease",
-              "shares": 6055197.0,
-              "previousShares": 6331620.0,
-              "shareChange": -276423.0,
-              "shareChangePct": -4.4,
-              "valueUsd": 1211584367.0,
-              "previousValueUsd": 1104234528.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "CEG",
-              "direction": "flat",
-              "shares": 4632475.0,
-              "previousShares": 4632475.0,
-              "shareChange": 0.0,
-              "shareChangePct": 0.0,
-              "valueUsd": 1150567816.0,
-              "previousValueUsd": 1293618644.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "HUT",
-              "direction": "increase",
-              "shares": 9715476.0,
-              "previousShares": 0,
-              "shareChange": 9715476.0,
-              "shareChangePct": 100.0,
-              "valueUsd": 1121603127.0,
-              "previousValueUsd": 0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "MSFT",
-              "direction": "increase",
-              "shares": 2936409.0,
-              "previousShares": 2480017.0,
-              "shareChange": 456392.0,
-              "shareChangePct": 18.4,
-              "valueUsd": 1095339285.0,
-              "previousValueUsd": 918027893.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "APP",
-              "direction": "decrease",
-              "shares": 1171189.0,
-              "previousShares": 1290008.0,
-              "shareChange": -118819.0,
-              "shareChangePct": -9.2,
-              "valueUsd": 603431708.0,
-              "previousValueUsd": 513423184.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "ASML",
-              "direction": "decrease",
-              "shares": 295406.0,
-              "previousShares": 496234.0,
-              "shareChange": -200828.0,
-              "shareChangePct": -40.5,
-              "valueUsd": 587692513.0,
-              "previousValueUsd": 655440753.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "ISRG",
-              "direction": "decrease",
-              "shares": 793704.0,
-              "previousShares": 855225.0,
-              "shareChange": -61521.0,
-              "shareChangePct": -7.2,
-              "valueUsd": 315640206.0,
-              "previousValueUsd": 394250172.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "VRT",
-              "direction": "decrease",
-              "shares": 806594.0,
-              "previousShares": 981633.0,
-              "shareChange": -175039.0,
-              "shareChangePct": -17.8,
-              "valueUsd": 270063803.0,
-              "previousValueUsd": 245977597.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "QCOM",
-              "direction": "flat",
-              "shares": 1387312.0,
-              "previousShares": 1387312.0,
-              "shareChange": 0.0,
-              "shareChangePct": 0.0,
-              "valueUsd": 256361384.0,
-              "previousValueUsd": 178658039.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "AMD",
-              "direction": "increase",
-              "shares": 95987.0,
-              "previousShares": 0,
-              "shareChange": 95987.0,
-              "shareChangePct": 100.0,
-              "valueUsd": 55759808.0,
-              "previousValueUsd": 0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "TSLA",
-              "direction": "increase",
-              "shares": 59963.0,
-              "previousShares": 58838.0,
-              "shareChange": 1125.0,
-              "shareChangePct": 1.9,
-              "valueUsd": 25220437.0,
-              "previousValueUsd": 21873026.0
-            },
-            {
-              "manager": "Coatue Management",
-              "ticker": "PATH",
-              "direction": "decrease",
-              "shares": 1961365.0,
-              "previousShares": 2269557.0,
-              "shareChange": -308192.0,
-              "shareChangePct": -13.6,
-              "valueUsd": 21320038.0,
-              "previousValueUsd": 25192083.0
-            }
-          ]
-        },
-        {
-          "name": "Tiger Global Management",
-          "cik": "0001167483",
-          "currentFilingDate": "2026-08-14",
-          "currentReportDate": "2026-06-30",
-          "previousFilingDate": "2026-05-15",
-          "previousReportDate": "2026-03-31",
-          "targetValueUsd": 13161321106.0,
-          "previousTargetValueUsd": 13451917665.0,
-          "targetTickerCount": 14,
-          "changes": [
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "AMZN",
-              "direction": "decrease",
-              "shares": 9683558.0,
-              "previousShares": 10000000.0,
-              "shareChange": -316442.0,
-              "shareChangePct": -3.2,
-              "valueUsd": 2307979214.0,
-              "previousValueUsd": 2082700000.0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "NVDA",
-              "direction": "decrease",
-              "shares": 11198773.0,
-              "previousShares": 12011752.0,
-              "shareChange": -812979.0,
-              "shareChangePct": -6.8,
-              "valueUsd": 2240762490.0,
-              "previousValueUsd": 2094849549.0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "GOOGL",
-              "direction": "decrease",
-              "shares": 5805687.0,
-              "previousShares": 10631402.0,
-              "shareChange": -4825715.0,
-              "shareChangePct": -45.4,
-              "valueUsd": 2074778363.0,
-              "previousValueUsd": 3057165959.0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "META",
-              "direction": "decrease",
-              "shares": 2823180.0,
-              "previousShares": 3086864.0,
-              "shareChange": -263684.0,
-              "shareChangePct": -8.5,
-              "valueUsd": 1590269062.0,
-              "previousValueUsd": 1766087500.0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "LRCX",
-              "direction": "decrease",
-              "shares": 3163495.0,
-              "previousShares": 3900439.0,
-              "shareChange": -736944.0,
-              "shareChangePct": -18.9,
-              "valueUsd": 1370837288.0,
-              "previousValueUsd": 833367797.0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "GEV",
-              "direction": "decrease",
-              "shares": 797511.0,
-              "previousShares": 972994.0,
-              "shareChange": -175483.0,
-              "shareChangePct": -18.0,
-              "valueUsd": 936963773.0,
-              "previousValueUsd": 849326463.0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "MSFT",
-              "direction": "decrease",
-              "shares": 2266913.0,
-              "previousShares": 2500000.0,
-              "shareChange": -233087.0,
-              "shareChangePct": -9.3,
-              "valueUsd": 845603887.0,
-              "previousValueUsd": 925425000.0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "AVGO",
-              "direction": "decrease",
-              "shares": 1754062.0,
-              "previousShares": 3584814.0,
-              "shareChange": -1830752.0,
-              "shareChangePct": -51.1,
-              "valueUsd": 662596921.0,
-              "previousValueUsd": 1109535781.0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "INTC",
-              "direction": "increase",
-              "shares": 4252690.0,
-              "previousShares": 1638700.0,
-              "shareChange": 2613990.0,
-              "shareChangePct": 159.5,
-              "valueUsd": 593803105.0,
-              "previousValueUsd": 72315831.0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "AMD",
-              "direction": "increase",
-              "shares": 674727.0,
-              "previousShares": 0,
-              "shareChange": 674727.0,
-              "shareChangePct": 100.0,
-              "valueUsd": 391955662.0,
-              "previousValueUsd": 0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "NOW",
-              "direction": "decrease",
-              "shares": 873485.0,
-              "previousShares": 1500000.0,
-              "shareChange": -626515.0,
-              "shareChangePct": -41.8,
-              "valueUsd": 86719591.0,
-              "previousValueUsd": 156825000.0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "APLD",
-              "direction": "increase",
-              "shares": 885000.0,
-              "previousShares": 0,
-              "shareChange": 885000.0,
-              "shareChangePct": 100.0,
-              "valueUsd": 33010500.0,
-              "previousValueUsd": 0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "CORZ",
-              "direction": "increase",
-              "shares": 817000.0,
-              "previousShares": 0,
-              "shareChange": 817000.0,
-              "shareChangePct": 100.0,
-              "valueUsd": 20907030.0,
-              "previousValueUsd": 0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "JD",
-              "direction": "decrease",
-              "shares": 201500.0,
-              "previousShares": 344309.0,
-              "shareChange": -142809.0,
-              "shareChangePct": -41.5,
-              "valueUsd": 5134220.0,
-              "previousValueUsd": 10181217.0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "APP",
-              "direction": "decrease",
-              "shares": 0,
-              "previousShares": 1000000.0,
-              "shareChange": -1000000.0,
-              "shareChangePct": -100.0,
-              "valueUsd": 0,
-              "previousValueUsd": 398000000.0
-            },
-            {
-              "manager": "Tiger Global Management",
-              "ticker": "LITE",
-              "direction": "decrease",
-              "shares": 0,
-              "previousShares": 136800.0,
-              "shareChange": -136800.0,
-              "shareChangePct": -100.0,
-              "valueUsd": 0,
-              "previousValueUsd": 96137568.0
-            }
-          ]
-        },
-        {
-          "name": "D. E. Shaw",
-          "cik": "0001009207",
-          "currentFilingDate": "2026-08-14",
-          "currentReportDate": "2026-06-30",
-          "previousFilingDate": "2026-05-15",
-          "previousReportDate": "2026-03-31",
-          "targetValueUsd": 36523833740.0,
-          "previousTargetValueUsd": 28150349344.0,
-          "targetTickerCount": 78,
-          "changes": [
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "GOOGL",
-              "direction": "increase",
-              "shares": 34376941.0,
-              "previousShares": 11848104.0,
-              "shareChange": 22528837.0,
-              "shareChangePct": 190.1,
-              "valueUsd": 6206230461.0,
-              "previousValueUsd": 3403549302.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "NVDA",
-              "direction": "increase",
-              "shares": 20042818.0,
-              "previousShares": 14705215.0,
-              "shareChange": 5337603.0,
-              "shareChangePct": 36.3,
-              "valueUsd": 4010367454.0,
-              "previousValueUsd": 2564589496.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "AMZN",
-              "direction": "increase",
-              "shares": 10945883.0,
-              "previousShares": 4731224.0,
-              "shareChange": 6214659.0,
-              "shareChangePct": 131.4,
-              "valueUsd": 2608841754.0,
-              "previousValueUsd": 985372022.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "META",
-              "direction": "increase",
-              "shares": 5726263.0,
-              "previousShares": 3013619.0,
-              "shareChange": 2712644.0,
-              "shareChangePct": 90.0,
-              "valueUsd": 1965976312.0,
-              "previousValueUsd": 1125169057.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "TSLA",
-              "direction": "decrease",
-              "shares": 4349492.0,
-              "previousShares": 4357393.0,
-              "shareChange": -7901.0,
-              "shareChangePct": -0.2,
-              "valueUsd": 1829396335.0,
-              "previousValueUsd": 1619860848.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "AMD",
-              "direction": "decrease",
-              "shares": 3082478.0,
-              "previousShares": 3853311.0,
-              "shareChange": -770833.0,
-              "shareChangePct": -20.0,
-              "valueUsd": 1790642295.0,
-              "previousValueUsd": 783879057.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "CRWD",
-              "direction": "increase",
-              "shares": 2133301.0,
-              "previousShares": 1814468.0,
-              "shareChange": 318833.0,
-              "shareChangePct": 17.6,
-              "valueUsd": 1628007325.0,
-              "previousValueUsd": 708386452.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "AAPL",
-              "direction": "decrease",
-              "shares": 5836678.0,
-              "previousShares": 7111420.0,
-              "shareChange": -1274742.0,
-              "shareChangePct": -17.9,
-              "valueUsd": 1625391000.0,
-              "previousValueUsd": 1775337796.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "MSFT",
-              "direction": "decrease",
-              "shares": 3563793.0,
-              "previousShares": 6167970.0,
-              "shareChange": -2604177.0,
-              "shareChangePct": -42.2,
-              "valueUsd": 1329366065.0,
-              "previousValueUsd": 2283197455.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "INTC",
-              "direction": "decrease",
-              "shares": 15854330.0,
-              "previousShares": 23653643.0,
-              "shareChange": -7799313.0,
-              "shareChangePct": -33.0,
-              "valueUsd": 1291044320.0,
-              "previousValueUsd": 831544091.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "AVGO",
-              "direction": "decrease",
-              "shares": 2722161.0,
-              "previousShares": 6527708.0,
-              "shareChange": -3805547.0,
-              "shareChangePct": -58.3,
-              "valueUsd": 1028296318.0,
-              "previousValueUsd": 2020390903.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "MU",
-              "direction": "decrease",
-              "shares": 768773.0,
-              "previousShares": 3658476.0,
-              "shareChange": -2889703.0,
-              "shareChangePct": -79.0,
-              "valueUsd": 887386987.0,
-              "previousValueUsd": 1235979531.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "MRVL",
-              "direction": "increase",
-              "shares": 2504623.0,
-              "previousShares": 330520.0,
-              "shareChange": 2174103.0,
-              "shareChangePct": 657.8,
-              "valueUsd": 746102146.0,
-              "previousValueUsd": 32738006.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "COHR",
-              "direction": "increase",
-              "shares": 1642670.0,
-              "previousShares": 112502.0,
-              "shareChange": 1530168.0,
-              "shareChangePct": 1360.1,
-              "valueUsd": 647984035.0,
-              "previousValueUsd": 26799101.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "SMCI",
-              "direction": "increase",
-              "shares": 434661600.0,
-              "previousShares": 105897324.0,
-              "shareChange": 328764276.0,
-              "shareChangePct": 310.5,
-              "valueUsd": 644964577.0,
-              "previousValueUsd": 98623482.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "LITE",
-              "direction": "decrease",
-              "shares": 6288011.0,
-              "previousShares": 79890006.0,
-              "shareChange": -73601995.0,
-              "shareChangePct": -92.1,
-              "valueUsd": 642372255.0,
-              "previousValueUsd": 815263317.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "ORCL",
-              "direction": "increase",
-              "shares": 5008423.0,
-              "previousShares": 4494832.0,
-              "shareChange": 513591.0,
-              "shareChangePct": 11.4,
-              "valueUsd": 533417651.0,
-              "previousValueUsd": 415964763.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "DELL",
-              "direction": "increase",
-              "shares": 1964210.0,
-              "previousShares": 89860.0,
-              "shareChange": 1874350.0,
-              "shareChangePct": 2085.9,
-              "valueUsd": 472267121.0,
-              "previousValueUsd": 7876677.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "GE",
-              "direction": "decrease",
-              "shares": 1061594.0,
-              "previousShares": 1648817.0,
-              "shareChange": -587223.0,
-              "shareChangePct": -35.6,
-              "valueUsd": 396749526.0,
-              "previousValueUsd": 467884800.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "APLD",
-              "direction": "increase",
-              "shares": 73098821.0,
-              "previousShares": 58463941.0,
-              "shareChange": 14634880.0,
-              "shareChangePct": 25.0,
-              "valueUsd": 392021700.0,
-              "previousValueUsd": 226781469.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "PLTR",
-              "direction": "decrease",
-              "shares": 3261919.0,
-              "previousShares": 3898671.0,
-              "shareChange": -636752.0,
-              "shareChangePct": -16.3,
-              "valueUsd": 380568090.0,
-              "previousValueUsd": 570297594.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "HPE",
-              "direction": "decrease",
-              "shares": 4900032.0,
-              "previousShares": 5796582.0,
-              "shareChange": -896550.0,
-              "shareChangePct": -15.5,
-              "valueUsd": 359811121.0,
-              "previousValueUsd": 197058160.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "ALAB",
-              "direction": "decrease",
-              "shares": 680298.0,
-              "previousShares": 1519561.0,
-              "shareChange": -839263.0,
-              "shareChangePct": -55.2,
-              "valueUsd": 328597540.0,
-              "previousValueUsd": 166543886.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "CLSK",
-              "direction": "increase",
-              "shares": 104072140.0,
-              "previousShares": 57510424.0,
-              "shareChange": 46561716.0,
-              "shareChangePct": 81.0,
-              "valueUsd": 285355078.0,
-              "previousValueUsd": 104842247.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "EQIX",
-              "direction": "increase",
-              "shares": 266210.0,
-              "previousShares": 230211.0,
-              "shareChange": 35999.0,
-              "shareChangePct": 15.6,
-              "valueUsd": 277494642.0,
-              "previousValueUsd": 225662030.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "NEE",
-              "direction": "increase",
-              "shares": 5394532.0,
-              "previousShares": 5378534.0,
-              "shareChange": 15998.0,
-              "shareChangePct": 0.3,
-              "valueUsd": 277004144.0,
-              "previousValueUsd": 289628723.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "SHOP",
-              "direction": "increase",
-              "shares": 2394385.0,
-              "previousShares": 1454594.0,
-              "shareChange": 939791.0,
-              "shareChangePct": 64.6,
-              "valueUsd": 273391126.0,
-              "previousValueUsd": 172543940.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "CRDO",
-              "direction": "increase",
-              "shares": 917288.0,
-              "previousShares": 681046.0,
-              "shareChange": 236242.0,
-              "shareChangePct": 34.7,
-              "valueUsd": 249456472.0,
-              "previousValueUsd": 63929788.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "MDB",
-              "direction": "decrease",
-              "shares": 710220.0,
-              "previousShares": 931570.0,
-              "shareChange": -221350.0,
-              "shareChangePct": -23.8,
-              "valueUsd": 238562898.0,
-              "previousValueUsd": 228020389.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "HUT",
-              "direction": "decrease",
-              "shares": 1912131.0,
-              "previousShares": 3002186.0,
-              "shareChange": -1090055.0,
-              "shareChangePct": -36.3,
-              "valueUsd": 220722397.0,
-              "previousValueUsd": 140820860.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "RBLX",
-              "direction": "decrease",
-              "shares": 3937546.0,
-              "previousShares": 4514911.0,
-              "shareChange": -577365.0,
-              "shareChangePct": -12.8,
-              "valueUsd": 214123752.0,
-              "previousValueUsd": 255363366.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "CCJ",
-              "direction": "increase",
-              "shares": 1854263.0,
-              "previousShares": 832001.0,
-              "shareChange": 1022262.0,
-              "shareChangePct": 122.9,
-              "valueUsd": 188842295.0,
-              "previousValueUsd": 90413432.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "BABA",
-              "direction": "decrease",
-              "shares": 132304473.0,
-              "previousShares": 418226244.0,
-              "shareChange": -285921771.0,
-              "shareChangePct": -68.4,
-              "valueUsd": 156668981.0,
-              "previousValueUsd": 671378945.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "AUR",
-              "direction": "decrease",
-              "shares": 22374639.0,
-              "previousShares": 29260125.0,
-              "shareChange": -6885486.0,
-              "shareChangePct": -23.5,
-              "valueUsd": 152595038.0,
-              "previousValueUsd": 120551715.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "JD",
-              "direction": "increase",
-              "shares": 132797335.0,
-              "previousShares": 974453.0,
-              "shareChange": 131822882.0,
-              "shareChangePct": 13527.9,
-              "valueUsd": 136630706.0,
-              "previousValueUsd": 28814575.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "ISRG",
-              "direction": "decrease",
-              "shares": 340267.0,
-              "previousShares": 576508.0,
-              "shareChange": -236241.0,
-              "shareChangePct": -41.0,
-              "valueUsd": 135317380.0,
-              "previousValueUsd": 265764423.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "VST",
-              "direction": "increase",
-              "shares": 848413.0,
-              "previousShares": 267148.0,
-              "shareChange": 581265.0,
-              "shareChangePct": 217.6,
-              "valueUsd": 134583754.0,
-              "previousValueUsd": 40160359.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "NRG",
-              "direction": "decrease",
-              "shares": 914737.0,
-              "previousShares": 954278.0,
-              "shareChange": -39541.0,
-              "shareChangePct": -4.1,
-              "valueUsd": 133606487.0,
-              "previousValueUsd": 139458187.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "QCOM",
-              "direction": "increase",
-              "shares": 704098.0,
-              "previousShares": 9300.0,
-              "shareChange": 694798.0,
-              "shareChangePct": 7470.9,
-              "valueUsd": 130110269.0,
-              "previousValueUsd": 1197654.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "ANET",
-              "direction": "decrease",
-              "shares": 624439.0,
-              "previousShares": 992305.0,
-              "shareChange": -367866.0,
-              "shareChangePct": -37.1,
-              "valueUsd": 106079697.0,
-              "previousValueUsd": 121835207.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "TER",
-              "direction": "decrease",
-              "shares": 198782.0,
-              "previousShares": 866712.0,
-              "shareChange": -667930.0,
-              "shareChangePct": -77.1,
-              "valueUsd": 96178682.0,
-              "previousValueUsd": 256945439.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "IBM",
-              "direction": "decrease",
-              "shares": 338010.0,
-              "previousShares": 440533.0,
-              "shareChange": -102523.0,
-              "shareChangePct": -23.3,
-              "valueUsd": 95051793.0,
-              "previousValueUsd": 106780794.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "LRCX",
-              "direction": "decrease",
-              "shares": 206424.0,
-              "previousShares": 946616.0,
-              "shareChange": -740192.0,
-              "shareChangePct": -78.2,
-              "valueUsd": 89449712.0,
-              "previousValueUsd": 202253974.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "ETN",
-              "direction": "increase",
-              "shares": 301597.0,
-              "previousShares": 151978.0,
-              "shareChange": 149619.0,
-              "shareChangePct": 98.4,
-              "valueUsd": 88032044.0,
-              "previousValueUsd": 51354919.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "CORZ",
-              "direction": "increase",
-              "shares": 3345544.0,
-              "previousShares": 61333.0,
-              "shareChange": 3284211.0,
-              "shareChangePct": 5354.7,
-              "valueUsd": 85612471.0,
-              "previousValueUsd": 917542.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "NOW",
-              "direction": "decrease",
-              "shares": 842016.0,
-              "previousShares": 3474317.0,
-              "shareChange": -2632301.0,
-              "shareChangePct": -75.8,
-              "valueUsd": 83595349.0,
-              "previousValueUsd": 363239843.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "WULF",
-              "direction": "decrease",
-              "shares": 3367041.0,
-              "previousShares": 4214041.0,
-              "shareChange": -847000.0,
-              "shareChangePct": -20.1,
-              "valueUsd": 83165913.0,
-              "previousValueUsd": 60808612.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "GEV",
-              "direction": "increase",
-              "shares": 65033.0,
-              "previousShares": 48832.0,
-              "shareChange": 16201.0,
-              "shareChangePct": 33.2,
-              "valueUsd": 76404671.0,
-              "previousValueUsd": 42625453.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "ADBE",
-              "direction": "decrease",
-              "shares": 359156.0,
-              "previousShares": 367208.0,
-              "shareChange": -8052.0,
-              "shareChangePct": -2.2,
-              "valueUsd": 73634163.0,
-              "previousValueUsd": 89260921.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "ASML",
-              "direction": "decrease",
-              "shares": 34386.0,
-              "previousShares": 415578.0,
-              "shareChange": -381192.0,
-              "shareChangePct": -91.7,
-              "valueUsd": 68408884.0,
-              "previousValueUsd": 548907890.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "CIEN",
-              "direction": "increase",
-              "shares": 133195.0,
-              "previousShares": 8912.0,
-              "shareChange": 124283.0,
-              "shareChangePct": 1394.6,
-              "valueUsd": 65340139.0,
-              "previousValueUsd": 3459906.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "PANW",
-              "direction": "increase",
-              "shares": 184064.0,
-              "previousShares": 133240.0,
-              "shareChange": 50824.0,
-              "shareChangePct": 38.1,
-              "valueUsd": 62769505.0,
-              "previousValueUsd": 21361037.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "SNOW",
-              "direction": "decrease",
-              "shares": 209813.0,
-              "previousShares": 22150453.0,
-              "shareChange": -21940640.0,
-              "shareChangePct": -99.1,
-              "valueUsd": 53397409.0,
-              "previousValueUsd": 48894727.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "PATH",
-              "direction": "increase",
-              "shares": 4719704.0,
-              "previousShares": 1170903.0,
-              "shareChange": 3548801.0,
-              "shareChangePct": 303.1,
-              "valueUsd": 51303183.0,
-              "previousValueUsd": 12997024.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "APP",
-              "direction": "decrease",
-              "shares": 95196.0,
-              "previousShares": 303499.0,
-              "shareChange": -208303.0,
-              "shareChangePct": -68.6,
-              "valueUsd": 49047834.0,
-              "previousValueUsd": 120792602.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "NTAP",
-              "direction": "increase",
-              "shares": 309551.0,
-              "previousShares": 117039.0,
-              "shareChange": 192512.0,
-              "shareChangePct": 164.5,
-              "valueUsd": 47906113.0,
-              "previousValueUsd": 11983623.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "CRM",
-              "direction": "decrease",
-              "shares": 267186.0,
-              "previousShares": 645704.0,
-              "shareChange": -378518.0,
-              "shareChangePct": -58.6,
-              "valueUsd": 41857359.0,
-              "previousValueUsd": 120533565.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "DDOG",
-              "direction": "increase",
-              "shares": 749705.0,
-              "previousShares": 658000.0,
-              "shareChange": 91705.0,
-              "shareChangePct": 13.9,
-              "valueUsd": 38536747.0,
-              "previousValueUsd": 6842704.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "SO",
-              "direction": "increase",
-              "shares": 461319.0,
-              "previousShares": 401758.0,
-              "shareChange": 59561.0,
-              "shareChangePct": 14.8,
-              "valueUsd": 37840251.0,
-              "previousValueUsd": 37396428.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "GEHC",
-              "direction": "decrease",
-              "shares": 418089.0,
-              "previousShares": 470374.0,
-              "shareChange": -52285.0,
-              "shareChangePct": -11.1,
-              "valueUsd": 26761877.0,
-              "previousValueUsd": 33481221.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "DUK",
-              "direction": "decrease",
-              "shares": 189596.0,
-              "previousShares": 112889598.0,
-              "shareChange": -112700002.0,
-              "shareChangePct": -99.8,
-              "valueUsd": 23999062.0,
-              "previousValueUsd": 126734526.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "DUOL",
-              "direction": "decrease",
-              "shares": 196726.0,
-              "previousShares": 280428.0,
-              "shareChange": -83702.0,
-              "shareChangePct": -29.8,
-              "valueUsd": 22627424.0,
-              "previousValueUsd": 27641788.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "AVAV",
-              "direction": "increase",
-              "shares": 22844000.0,
-              "previousShares": 2341.0,
-              "shareChange": 22841659.0,
-              "shareChangePct": 975722.3,
-              "valueUsd": 21713471.0,
-              "previousValueUsd": 428520.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "UUUU",
-              "direction": "decrease",
-              "shares": 3883530.0,
-              "previousShares": 5611223.0,
-              "shareChange": -1727693.0,
-              "shareChangePct": -30.8,
-              "valueUsd": 18317175.0,
-              "previousValueUsd": 51580588.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "VRT",
-              "direction": "decrease",
-              "shares": 54056.0,
-              "previousShares": 147135.0,
-              "shareChange": -93079.0,
-              "shareChangePct": -63.3,
-              "valueUsd": 18099029.0,
-              "previousValueUsd": 36869089.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "IREN",
-              "direction": "decrease",
-              "shares": 354696.0,
-              "previousShares": 6433607.0,
-              "shareChange": -6078911.0,
-              "shareChangePct": -94.5,
-              "valueUsd": 16220248.0,
-              "previousValueUsd": 220544048.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "CRWV",
-              "direction": "decrease",
-              "shares": 74794.0,
-              "previousShares": 569252.0,
-              "shareChange": -494458.0,
-              "shareChangePct": -86.9,
-              "valueUsd": 7444995.0,
-              "previousValueUsd": 44099953.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "LEU",
-              "direction": "decrease",
-              "shares": 37357.0,
-              "previousShares": 275396.0,
-              "shareChange": -238039.0,
-              "shareChangePct": -86.4,
-              "valueUsd": 6271119.0,
-              "previousValueUsd": 47805992.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "CEG",
-              "direction": "decrease",
-              "shares": 22690.0,
-              "previousShares": 125739.0,
-              "shareChange": -103049.0,
-              "shareChangePct": -82.0,
-              "valueUsd": 5635515.0,
-              "previousValueUsd": 35112616.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "BWXT",
-              "direction": "increase",
-              "shares": 19629.0,
-              "previousShares": 18629.0,
-              "shareChange": 1000.0,
-              "shareChangePct": 5.4,
-              "valueUsd": 3820785.0,
-              "previousValueUsd": 3809444.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "MBLY",
-              "direction": "decrease",
-              "shares": 255241.0,
-              "previousShares": 448001.0,
-              "shareChange": -192760.0,
-              "shareChangePct": -43.0,
-              "valueUsd": 2470732.0,
-              "previousValueUsd": 3077766.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "ARM",
-              "direction": "decrease",
-              "shares": 5764.0,
-              "previousShares": 306620.0,
-              "shareChange": -300856.0,
-              "shareChangePct": -98.1,
-              "valueUsd": 2043741.0,
-              "previousValueUsd": 46385473.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "UEC",
-              "direction": "decrease",
-              "shares": 175749.0,
-              "previousShares": 252732.0,
-              "shareChange": -76983.0,
-              "shareChangePct": -30.5,
-              "valueUsd": 1873485.0,
-              "previousValueUsd": 3411882.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "PDD",
-              "direction": "increase",
-              "shares": 17473.0,
-              "previousShares": 10940.0,
-              "shareChange": 6533.0,
-              "shareChangePct": 59.7,
-              "valueUsd": 1332840.0,
-              "previousValueUsd": 1117849.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "NBIS",
-              "direction": "increase",
-              "shares": 2489.0,
-              "previousShares": 0,
-              "shareChange": 2489.0,
-              "shareChangePct": 100.0,
-              "valueUsd": 687387.0,
-              "previousValueUsd": 0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "KTOS",
-              "direction": "decrease",
-              "shares": 5009.0,
-              "previousShares": 46888.0,
-              "shareChange": -41879.0,
-              "shareChangePct": -89.3,
-              "valueUsd": 249749.0,
-              "previousValueUsd": 3306072.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "SYM",
-              "direction": "decrease",
-              "shares": 5478.0,
-              "previousShares": 248510.0,
-              "shareChange": -243032.0,
-              "shareChangePct": -97.8,
-              "valueUsd": 246236.0,
-              "previousValueUsd": 13220732.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "RXRX",
-              "direction": "decrease",
-              "shares": 37914.0,
-              "previousShares": 46008.0,
-              "shareChange": -8094.0,
-              "shareChangePct": -17.6,
-              "valueUsd": 139144.0,
-              "previousValueUsd": 141245.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "BIDU",
-              "direction": "decrease",
-              "shares": 0,
-              "previousShares": 180377.0,
-              "shareChange": -180377.0,
-              "shareChangePct": -100.0,
-              "valueUsd": 0,
-              "previousValueUsd": 20097606.0
-            },
-            {
-              "manager": "D. E. Shaw",
-              "ticker": "TLN",
-              "direction": "decrease",
-              "shares": 0,
-              "previousShares": 2045.0,
-              "shareChange": -2045.0,
-              "shareChangePct": -100.0,
-              "valueUsd": 0,
-              "previousValueUsd": 652826.0
-            }
-          ]
-        },
-        {
-          "name": "Millennium Management",
-          "cik": "0001273087",
-          "currentFilingDate": "2026-08-14",
-          "currentReportDate": "2026-06-30",
-          "previousFilingDate": "2026-05-15",
-          "previousReportDate": "2026-03-31",
-          "targetValueUsd": 0,
-          "previousTargetValueUsd": 0,
-          "targetTickerCount": 0,
-          "changes": []
-        },
-        {
-          "name": "Berkshire Hathaway",
-          "cik": "0001067983",
-          "currentFilingDate": "2026-08-14",
-          "currentReportDate": "2026-06-30",
-          "previousFilingDate": "2026-05-15",
-          "previousReportDate": "2026-03-31",
-          "targetValueUsd": 103714385306.0,
-          "previousTargetValueUsd": 74471787181.0,
-          "targetTickerCount": 2,
-          "changes": [
-            {
-              "manager": "Berkshire Hathaway",
-              "ticker": "AAPL",
-              "direction": "flat",
-              "shares": 227917808.0,
-              "previousShares": 227917808.0,
-              "shareChange": 0.0,
-              "shareChangePct": 0.0,
-              "valueUsd": 65950296923.0,
-              "previousValueUsd": 57843260493.0
-            },
-            {
-              "manager": "Berkshire Hathaway",
-              "ticker": "GOOGL",
-              "direction": "increase",
-              "shares": 105979600.0,
-              "previousShares": 57835013.0,
-              "shareChange": 48144587.0,
-              "shareChangePct": 83.2,
-              "valueUsd": 37764088383.0,
-              "previousValueUsd": 16628526688.0
-            }
-          ]
-        }
-      ],
-      "topIncreases": [
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "SMCI",
-          "direction": "increase",
-          "shares": 434661600.0,
-          "previousShares": 105897324.0,
-          "shareChange": 328764276.0,
-          "shareChangePct": 310.5,
-          "valueUsd": 644964577.0,
-          "previousValueUsd": 98623482.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "JD",
-          "direction": "increase",
-          "shares": 132797335.0,
-          "previousShares": 974453.0,
-          "shareChange": 131822882.0,
-          "shareChangePct": 13527.9,
-          "valueUsd": 136630706.0,
-          "previousValueUsd": 28814575.0
-        },
-        {
-          "manager": "Berkshire Hathaway",
-          "ticker": "GOOGL",
-          "direction": "increase",
-          "shares": 105979600.0,
-          "previousShares": 57835013.0,
-          "shareChange": 48144587.0,
-          "shareChangePct": 83.2,
-          "valueUsd": 37764088383.0,
-          "previousValueUsd": 16628526688.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "CLSK",
-          "direction": "increase",
-          "shares": 104072140.0,
-          "previousShares": 57510424.0,
-          "shareChange": 46561716.0,
-          "shareChangePct": 81.0,
-          "valueUsd": 285355078.0,
-          "previousValueUsd": 104842247.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "AVAV",
-          "direction": "increase",
-          "shares": 22844000.0,
-          "previousShares": 2341.0,
-          "shareChange": 22841659.0,
-          "shareChangePct": 975722.3,
-          "valueUsd": 21713471.0,
-          "previousValueUsd": 428520.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "GOOGL",
-          "direction": "increase",
-          "shares": 34376941.0,
-          "previousShares": 11848104.0,
-          "shareChange": 22528837.0,
-          "shareChangePct": 190.1,
-          "valueUsd": 6206230461.0,
-          "previousValueUsd": 3403549302.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "APLD",
-          "direction": "increase",
-          "shares": 73098821.0,
-          "previousShares": 58463941.0,
-          "shareChange": 14634880.0,
-          "shareChangePct": 25.0,
-          "valueUsd": 392021700.0,
-          "previousValueUsd": 226781469.0
-        },
-        {
-          "manager": "Coatue Management",
-          "ticker": "INTC",
-          "direction": "increase",
-          "shares": 12084027.0,
-          "previousShares": 0,
-          "shareChange": 12084027.0,
-          "shareChangePct": 100.0,
-          "valueUsd": 1687292689.0,
-          "previousValueUsd": 0
-        },
-        {
-          "manager": "Coatue Management",
-          "ticker": "HUT",
-          "direction": "increase",
-          "shares": 9715476.0,
-          "previousShares": 0,
-          "shareChange": 9715476.0,
-          "shareChangePct": 100.0,
-          "valueUsd": 1121603127.0,
-          "previousValueUsd": 0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "AMZN",
-          "direction": "increase",
-          "shares": 10945883.0,
-          "previousShares": 4731224.0,
-          "shareChange": 6214659.0,
-          "shareChangePct": 131.4,
-          "valueUsd": 2608841754.0,
-          "previousValueUsd": 985372022.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "NVDA",
-          "direction": "increase",
-          "shares": 20042818.0,
-          "previousShares": 14705215.0,
-          "shareChange": 5337603.0,
-          "shareChangePct": 36.3,
-          "valueUsd": 4010367454.0,
-          "previousValueUsd": 2564589496.0
-        },
-        {
-          "manager": "Coatue Management",
-          "ticker": "AMZN",
-          "direction": "increase",
-          "shares": 11834799.0,
-          "previousShares": 7930766.0,
-          "shareChange": 3904033.0,
-          "shareChangePct": 49.2,
-          "valueUsd": 2820705995.0,
-          "previousValueUsd": 1651740634.0
-        }
-      ],
-      "topDecreases": [
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "BABA",
-          "direction": "decrease",
-          "shares": 132304473.0,
-          "previousShares": 418226244.0,
-          "shareChange": -285921771.0,
-          "shareChangePct": -68.4,
-          "valueUsd": 156668981.0,
-          "previousValueUsd": 671378945.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "DUK",
-          "direction": "decrease",
-          "shares": 189596.0,
-          "previousShares": 112889598.0,
-          "shareChange": -112700002.0,
-          "shareChangePct": -99.8,
-          "valueUsd": 23999062.0,
-          "previousValueUsd": 126734526.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "LITE",
-          "direction": "decrease",
-          "shares": 6288011.0,
-          "previousShares": 79890006.0,
-          "shareChange": -73601995.0,
-          "shareChangePct": -92.1,
-          "valueUsd": 642372255.0,
-          "previousValueUsd": 815263317.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "SNOW",
-          "direction": "decrease",
-          "shares": 209813.0,
-          "previousShares": 22150453.0,
-          "shareChange": -21940640.0,
-          "shareChangePct": -99.1,
-          "valueUsd": 53397409.0,
-          "previousValueUsd": 48894727.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "INTC",
-          "direction": "decrease",
-          "shares": 15854330.0,
-          "previousShares": 23653643.0,
-          "shareChange": -7799313.0,
-          "shareChangePct": -33.0,
-          "valueUsd": 1291044320.0,
-          "previousValueUsd": 831544091.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "AUR",
-          "direction": "decrease",
-          "shares": 22374639.0,
-          "previousShares": 29260125.0,
-          "shareChange": -6885486.0,
-          "shareChangePct": -23.5,
-          "valueUsd": 152595038.0,
-          "previousValueUsd": 120551715.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "IREN",
-          "direction": "decrease",
-          "shares": 354696.0,
-          "previousShares": 6433607.0,
-          "shareChange": -6078911.0,
-          "shareChangePct": -94.5,
-          "valueUsd": 16220248.0,
-          "previousValueUsd": 220544048.0
-        },
-        {
-          "manager": "Tiger Global Management",
-          "ticker": "GOOGL",
-          "direction": "decrease",
-          "shares": 5805687.0,
-          "previousShares": 10631402.0,
-          "shareChange": -4825715.0,
-          "shareChangePct": -45.4,
-          "valueUsd": 2074778363.0,
-          "previousValueUsd": 3057165959.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "AVGO",
-          "direction": "decrease",
-          "shares": 2722161.0,
-          "previousShares": 6527708.0,
-          "shareChange": -3805547.0,
-          "shareChangePct": -58.3,
-          "valueUsd": 1028296318.0,
-          "previousValueUsd": 2020390903.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "MU",
-          "direction": "decrease",
-          "shares": 768773.0,
-          "previousShares": 3658476.0,
-          "shareChange": -2889703.0,
-          "shareChangePct": -79.0,
-          "valueUsd": 887386987.0,
-          "previousValueUsd": 1235979531.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "NOW",
-          "direction": "decrease",
-          "shares": 842016.0,
-          "previousShares": 3474317.0,
-          "shareChange": -2632301.0,
-          "shareChangePct": -75.8,
-          "valueUsd": 83595349.0,
-          "previousValueUsd": 363239843.0
-        },
-        {
-          "manager": "D. E. Shaw",
-          "ticker": "MSFT",
-          "direction": "decrease",
-          "shares": 3563793.0,
-          "previousShares": 6167970.0,
-          "shareChange": -2604177.0,
-          "shareChangePct": -42.2,
-          "valueUsd": 1329366065.0,
-          "previousValueUsd": 2283197455.0
-        }
-      ],
-      "threshold": "样本持仓市值较上季下降≥10%、且减持位置占比≥60%：机构样本持仓收缩/派发压力；上升≥10%、且增持位置占比≥60%：机构样本暴露增加/承接改善；否则中性。",
-      "limitations": "13F 是季度披露，最多滞后45天；只覆盖样本机构多头持仓，不含空头、衍生品完整风险、盘中交易或非13F证券。CUSIP/ticker 映射采用白名单与发行人名称匹配，适合慢变量观察，不适合短线交易信号。"
-    },
-    "sec_ftd_settlement_pressure": {
-      "name": "SEC FTD 结算压力快照",
-      "source": "https://www.sec.gov/data-research/sec-markets-data/fails-deliver-data",
-      "sourceType": "official_sec_ftd_zip",
-      "updatedAt": "20260914",
-      "value": "样本FTD $136.5M · 活跃 49只 · 异常 6只",
-      "status": "distribution",
-      "latestDate": "20260914",
-      "latestNotionalUsd": 136547298.75,
-      "averageNotionalUsd": 196621982.68,
-      "activeTickerCount": 49,
-      "abnormalTickerCount": 6,
-      "files": [
-        "https://www.sec.gov/files/data/fails-deliver-data/cnsfails202609a.zip",
-        "https://www.sec.gov/files/data/fails-deliver-data/cnsfails202608b.zip",
-        "https://www.sec.gov/files/data/fails-deliver-data/cnsfails202608a.zip",
-        "https://www.sec.gov/files/data/fails-deliver-data/cnsfails202607b.zip"
-      ],
-      "topTickers": [
-        {
-          "symbol": "AMD",
-          "latestDate": "20260914",
-          "fails": 104880,
-          "price": 516.13,
-          "notionalUsd": 54131714.4,
-          "maxNotionalUsd": 78550013.29,
-          "avgNotionalUsd": 11259405.93,
-          "notionalVsAvg": 4.81
-        },
-        {
-          "symbol": "PLTR",
-          "latestDate": "20260914",
-          "fails": 108732,
-          "price": 167.23,
-          "notionalUsd": 18183252.36,
-          "maxNotionalUsd": 73542252.82,
-          "avgNotionalUsd": 7607655.29,
-          "notionalVsAvg": 2.39
-        },
-        {
-          "symbol": "DLR",
-          "latestDate": "20260914",
-          "fails": 67910,
-          "price": 188.58,
-          "notionalUsd": 12806467.8,
-          "maxNotionalUsd": 45069807.36,
-          "avgNotionalUsd": 6890638.89,
-          "notionalVsAvg": 1.86
-        },
-        {
-          "symbol": "META",
-          "latestDate": "20260914",
-          "fails": 13800,
-          "price": 648.03,
-          "notionalUsd": 8942814.0,
-          "maxNotionalUsd": 108932867.11,
-          "avgNotionalUsd": 11336576.83,
-          "notionalVsAvg": 0.79
-        },
-        {
-          "symbol": "AAPL",
-          "latestDate": "20260914",
-          "fails": 15390,
-          "price": 332.27,
-          "notionalUsd": 5113635.3,
-          "maxNotionalUsd": 20643153.96,
-          "avgNotionalUsd": 2717319.78,
-          "notionalVsAvg": 1.88
-        },
-        {
-          "symbol": "MSFT",
-          "latestDate": "20260914",
-          "fails": 6700,
-          "price": 495.63,
-          "notionalUsd": 3320721.0,
-          "maxNotionalUsd": 525294106.0,
-          "avgNotionalUsd": 20851869.07,
-          "notionalVsAvg": 0.16
-        },
-        {
-          "symbol": "DUK",
-          "latestDate": "20260914",
-          "fails": 27077,
-          "price": 119.42,
-          "notionalUsd": 3233535.34,
-          "maxNotionalUsd": 22681175.58,
-          "avgNotionalUsd": 4829491.3,
-          "notionalVsAvg": 0.67
-        },
-        {
-          "symbol": "NBIS",
-          "latestDate": "20260914",
-          "fails": 13625,
-          "price": 224.55,
-          "notionalUsd": 3059493.75,
-          "maxNotionalUsd": 113606582.4,
-          "avgNotionalUsd": 18004867.88,
-          "notionalVsAvg": 0.17
-        },
-        {
-          "symbol": "QBTS",
-          "latestDate": "20260914",
-          "fails": 156097,
-          "price": 16.8,
-          "notionalUsd": 2622429.6,
-          "maxNotionalUsd": 23404771.8,
-          "avgNotionalUsd": 2132820.87,
-          "notionalVsAvg": 1.23
-        },
-        {
-          "symbol": "TSM",
-          "latestDate": "20260914",
-          "fails": 5902,
-          "price": 433.24,
-          "notionalUsd": 2556982.48,
-          "maxNotionalUsd": 16165057.86,
-          "avgNotionalUsd": 2858684.13,
-          "notionalVsAvg": 0.89
-        },
-        {
-          "symbol": "DELL",
-          "latestDate": "20260914",
-          "fails": 4405,
-          "price": 567.29,
-          "notionalUsd": 2498912.45,
-          "maxNotionalUsd": 176976664.41,
-          "avgNotionalUsd": 9044839.91,
-          "notionalVsAvg": 0.28
-        },
-        {
-          "symbol": "COHR",
-          "latestDate": "20260914",
-          "fails": 7324,
-          "price": 305.37,
-          "notionalUsd": 2236529.88,
-          "maxNotionalUsd": 42838512.5,
-          "avgNotionalUsd": 4324836.12,
-          "notionalVsAvg": 0.52
-        }
-      ],
-      "threshold": "样本最新 FTD 名义金额≥$250M 或异常股票≥5只：结算压力升温/派发压力线索；≤$50M 且无异常股票：结算压力低/承接改善；其他中性。异常股票指单票FTD名义金额≥$10M或高于近期均值3倍。",
-      "limitations": "FTD 是 NSCC CNS 系统的交割失败余额，不是每日新增失败数；可能来自多种长/短交易原因，不等于裸卖空或机构交易行为证据。SEC 通常半月披露，存在延迟；价格字段为前一日收盘价且SEC不保证与其他源完全一致。"
     }
   },
   "fetchErrors": [
@@ -8921,26 +6916,32 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "AMAT",
-      "accession": "0001628280-26-047328",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "ALAB",
       "accession": "0001134727-26-000010",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "QCOM",
-      "accession": "0000804328-26-000090",
+      "ticker": "AMAT",
+      "accession": "0001628280-26-047328",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
       "ticker": "QCOM",
-      "accession": "0000804328-26-000074",
+      "accession": "0000804328-26-000092",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "QCOM",
+      "accession": "0000804328-26-000091",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "LRCX",
+      "accession": "0001642415-26-000010",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -9006,6 +7007,12 @@
     {
       "source": "sec_form4_insider_activity",
       "ticker": "LITE",
+      "accession": "0001489550-26-000015",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "LITE",
       "accession": "0001489550-26-000014",
       "error": "HTTP Error 429: Too Many Requests"
     },
@@ -9043,60 +7050,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "LITE",
       "accession": "0001489550-26-000008",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "LITE",
-      "accession": "0001573338-26-000017",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001769628-26-000435",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001769628-26-000434",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001769628-26-000433",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001104659-26-109005",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001769628-26-000430",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001769628-26-000427",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001769628-26-000426",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001769628-26-000419",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -9149,26 +7102,86 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000435",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000434",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000433",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001104659-26-109005",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000430",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000427",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000426",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000419",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "DLR",
       "accession": "0001500081-26-000009",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "DLR",
-      "accession": "0001392404-26-000008",
+      "ticker": "EQIX",
+      "accession": "0001101239-26-000153",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "DLR",
-      "accession": "0001684062-26-000016",
+      "ticker": "EQIX",
+      "accession": "0001101239-26-000152",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "DLR",
-      "accession": "0001798457-26-000016",
+      "ticker": "EQIX",
+      "accession": "0001101239-26-000151",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "EQIX",
+      "accession": "0001101239-26-000150",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "EQIX",
+      "accession": "0001101239-26-000149",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -9269,62 +7282,14 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000153",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000152",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000151",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000150",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000149",
+      "ticker": "CIFR",
+      "accession": "0001123292-26-001333",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
       "ticker": "CIFR",
       "accession": "0001887623-26-000016",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIFR",
-      "accession": "0002090886-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIFR",
-      "accession": "0001887627-26-000008",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIFR",
-      "accession": "0001887616-26-000020",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CIFR",
-      "accession": "0001887623-26-000014",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -9377,6 +7342,18 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "HUT",
+      "accession": "0001964789-26-000040",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HUT",
+      "accession": "0001964789-26-000038",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "APLD",
       "accession": "0001900445-26-000004",
       "error": "HTTP Error 429: Too Many Requests"
@@ -9415,24 +7392,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "APLD",
       "accession": "0001628280-26-047508",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "APLD",
-      "accession": "0001144879-26-000040",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HUT",
-      "accession": "0001964789-26-000040",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HUT",
-      "accession": "0001964789-26-000038",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -9486,6 +7445,12 @@
     {
       "source": "sec_form4_insider_activity",
       "ticker": "CORZ",
+      "accession": "0000905148-26-004306",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CORZ",
       "accession": "0000905148-26-004258",
       "error": "HTTP Error 429: Too Many Requests"
     },
@@ -9523,12 +7488,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "CORZ",
       "accession": "0000905148-26-003881",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CORZ",
-      "accession": "0000905148-26-003841",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -9677,6 +7636,54 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "HPE",
+      "accession": "0001233171-26-000012",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HPE",
+      "accession": "0001648401-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HPE",
+      "accession": "0001189179-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HPE",
+      "accession": "0001584883-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HPE",
+      "accession": "0001560849-26-000007",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NNE",
+      "accession": "0001493152-26-041402",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NNE",
+      "accession": "0001493152-26-041362",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NNE",
+      "accession": "0001493152-26-041359",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "NTAP",
       "accession": "0001193125-26-405401",
       "error": "HTTP Error 429: Too Many Requests"
@@ -9725,80 +7732,50 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "NNE",
-      "accession": "0001493152-26-041402",
+      "ticker": "SMR",
+      "accession": "0001922054-26-000003",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "NNE",
-      "accession": "0001493152-26-041362",
+      "ticker": "SMR",
+      "accession": "0001957490-26-000004",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "NNE",
-      "accession": "0001493152-26-041359",
+      "ticker": "SMR",
+      "accession": "0001922054-26-000001",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "HPE",
-      "accession": "0001233171-26-000012",
+      "ticker": "SMR",
+      "accession": "0001983680-26-000001",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "HPE",
-      "accession": "0001648401-26-000009",
+      "ticker": "CEG",
+      "accession": "0000905148-26-003642",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "HPE",
-      "accession": "0001189179-26-000009",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HPE",
-      "accession": "0001584883-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HPE",
-      "accession": "0001560849-26-000007",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HPE",
-      "accession": "0001023219-26-000013",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HPE",
-      "accession": "0001166598-26-000010",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HPE",
-      "accession": "0001655996-26-000012",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "OKLO",
-      "accession": "0002147680-26-000012",
+      "ticker": "CEG",
+      "accession": "0000905148-26-003498",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
       "ticker": "OKLO",
       "accession": "0002146828-26-000008",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "OKLO",
+      "accession": "0002147680-26-000012",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -9839,44 +7816,8 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "CEG",
-      "accession": "0000905148-26-003642",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CEG",
-      "accession": "0000905148-26-003498",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "TLN",
       "accession": "0001628280-26-048330",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001922054-26-000003",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001957490-26-000004",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001922054-26-000001",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001983680-26-000001",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -10055,6 +7996,24 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "GE",
+      "accession": "0001953063-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "GE",
+      "accession": "0002052951-26-000007",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "GE",
+      "accession": "0002015929-26-000007",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "NRG",
       "accession": "0001225208-26-007712",
       "error": "HTTP Error 429: Too Many Requests"
@@ -10157,36 +8116,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "GE",
-      "accession": "0001953063-26-000009",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GE",
-      "accession": "0002052951-26-000007",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GE",
-      "accession": "0002015929-26-000007",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GE",
-      "accession": "0001216503-26-000008",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GE",
-      "accession": "0001671730-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "NEE",
       "accession": "0001950032-26-000014",
       "error": "HTTP Error 429: Too Many Requests"
@@ -10213,6 +8142,36 @@
       "source": "sec_form4_insider_activity",
       "ticker": "NEE",
       "accession": "0001950032-26-000012",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SO",
+      "accession": "0001193125-26-383301",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SO",
+      "accession": "0001193125-26-383300",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SO",
+      "accession": "0001193125-26-381193",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SO",
+      "accession": "0001193125-26-340057",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SO",
+      "accession": "0001193125-26-331835",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -10255,6 +8214,12 @@
       "source": "sec_form4_insider_activity",
       "ticker": "HUBB",
       "accession": "0001628280-26-047666",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DUK",
+      "accession": "0001771398-26-000005",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -10307,50 +8272,50 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "SO",
-      "accession": "0001193125-26-383301",
+      "ticker": "GEHC",
+      "accession": "0001694002-26-000011",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "SO",
-      "accession": "0001193125-26-383300",
+      "ticker": "GEHC",
+      "accession": "0002027284-26-000013",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "SO",
-      "accession": "0001193125-26-381193",
+      "ticker": "GEHC",
+      "accession": "0001951605-26-000008",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "SO",
-      "accession": "0001193125-26-340057",
+      "ticker": "GEHC",
+      "accession": "0001952158-26-000008",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "SO",
-      "accession": "0001193125-26-331835",
+      "ticker": "GEHC",
+      "accession": "0001960652-26-000011",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "SO",
-      "accession": "0001193125-26-294114",
+      "ticker": "GEHC",
+      "accession": "0001465175-26-000025",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "SO",
-      "accession": "0001193125-26-293692",
+      "ticker": "GEHC",
+      "accession": "0001657919-26-000009",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "SO",
-      "accession": "0001193125-26-293691",
+      "ticker": "GEHC",
+      "accession": "0002131383-26-000006",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -10451,54 +8416,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "GEHC",
-      "accession": "0001694002-26-000011",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GEHC",
-      "accession": "0002027284-26-000013",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GEHC",
-      "accession": "0001951605-26-000008",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GEHC",
-      "accession": "0001952158-26-000008",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GEHC",
-      "accession": "0001960652-26-000011",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GEHC",
-      "accession": "0001465175-26-000025",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GEHC",
-      "accession": "0001657919-26-000009",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "GEHC",
-      "accession": "0002131383-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "GOOGL",
       "accession": "0001193125-26-408019",
       "error": "HTTP Error 429: Too Many Requests"
@@ -10548,6 +8465,12 @@
     {
       "source": "sec_form4_insider_activity",
       "ticker": "META",
+      "accession": "0000950103-26-014886",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "META",
       "accession": "0000950103-26-014647",
       "error": "HTTP Error 429: Too Many Requests"
     },
@@ -10585,12 +8508,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "META",
       "accession": "0000950103-26-013794",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "META",
-      "accession": "0000950103-26-013672",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -10739,102 +8656,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "CRM",
-      "accession": "0001108524-26-000225",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRM",
-      "accession": "0001108524-26-000220",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRM",
-      "accession": "0001108524-26-000217",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRM",
-      "accession": "0001108524-26-000214",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRM",
-      "accession": "0001108524-26-000212",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRM",
-      "accession": "0001108524-26-000208",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRM",
-      "accession": "0001108524-26-000206",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRM",
-      "accession": "0001108524-26-000199",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SNOW",
-      "accession": "0001628280-26-063478",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SNOW",
-      "accession": "0001628280-26-063476",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SNOW",
-      "accession": "0001628280-26-063114",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SNOW",
-      "accession": "0001628280-26-063112",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SNOW",
-      "accession": "0001628280-26-063110",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SNOW",
-      "accession": "0001628280-26-063108",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SNOW",
-      "accession": "0001628280-26-063106",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SNOW",
-      "accession": "0001628280-26-063104",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "PLTR",
       "accession": "0001823952-26-000022",
       "error": "HTTP Error 429: Too Many Requests"
@@ -10931,6 +8752,102 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "CRM",
+      "accession": "0001108524-26-000225",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRM",
+      "accession": "0001108524-26-000220",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRM",
+      "accession": "0001108524-26-000217",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRM",
+      "accession": "0001108524-26-000214",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRM",
+      "accession": "0001108524-26-000212",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRM",
+      "accession": "0001108524-26-000208",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRM",
+      "accession": "0001108524-26-000206",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRM",
+      "accession": "0001108524-26-000199",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SNOW",
+      "accession": "0001628280-26-063478",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SNOW",
+      "accession": "0001628280-26-063476",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SNOW",
+      "accession": "0001628280-26-063114",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SNOW",
+      "accession": "0001628280-26-063112",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SNOW",
+      "accession": "0001628280-26-063110",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SNOW",
+      "accession": "0001628280-26-063108",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SNOW",
+      "accession": "0001628280-26-063106",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SNOW",
+      "accession": "0001628280-26-063104",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "SHOP",
       "accession": "0001193125-26-377117",
       "error": "HTTP Error 429: Too Many Requests"
@@ -10975,60 +8892,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "MDB",
       "accession": "0001628280-26-047293",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MDB",
-      "accession": "0001628280-26-047001",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000320",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000318",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000316",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000315",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000314",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000310",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000309",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "DDOG",
-      "accession": "0001561550-26-000306",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -11081,6 +8944,54 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000320",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000318",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000316",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000315",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000314",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000310",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000309",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DDOG",
+      "accession": "0001561550-26-000306",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "DUOL",
       "accession": "0001628280-26-063709",
       "error": "HTTP Error 429: Too Many Requests"
@@ -11125,6 +9036,18 @@
       "source": "sec_form4_insider_activity",
       "ticker": "DUOL",
       "accession": "0001628280-26-058019",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IBM",
+      "accession": "0002005007-26-000005",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IBM",
+      "accession": "0001629898-26-000005",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -11177,50 +9100,14 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "IBM",
-      "accession": "0002005007-26-000005",
+      "ticker": "TSLA",
+      "accession": "0001104659-26-106432",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "IBM",
-      "accession": "0001629898-26-000005",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IBM",
-      "accession": "0002026599-26-000004",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IBM",
-      "accession": "0001630253-26-000004",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IBM",
-      "accession": "0001196985-26-000003",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IBM",
-      "accession": "0001628797-26-000003",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IBM",
-      "accession": "0001765271-26-000003",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IBM",
-      "accession": "0001771933-26-000006",
+      "ticker": "CRWD",
+      "accession": "0001778564-26-000175",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -11263,18 +9150,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "CRWD",
       "accession": "0001778564-26-000168",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWD",
-      "accession": "0001778610-26-000022",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "TSLA",
-      "accession": "0001104659-26-106432",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -11423,54 +9298,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001601830-26-000110",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001601830-26-000105",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001601830-26-000103",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0002020969-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0002006495-26-000012",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001712276-26-000009",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001856094-26-000014",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001856094-26-000011",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "TER",
       "accession": "0000904454-26-000498",
       "error": "HTTP Error 429: Too Many Requests"
@@ -11567,6 +9394,54 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001601830-26-000110",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001601830-26-000105",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001601830-26-000103",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0002020969-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0002006495-26-000012",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001712276-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001856094-26-000014",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001856094-26-000011",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "PATH",
       "accession": "0002127293-26-000010",
       "error": "HTTP Error 429: Too Many Requests"
@@ -11611,54 +9486,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "PATH",
       "accession": "0001855778-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-013910",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-012124",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-011715",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-010616",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-010610",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-010609",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-010608",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "MBLY",
-      "accession": "0000950103-26-010607",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -11711,68 +9538,50 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001790261-26-000020",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-013910",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001184178-26-000024",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-012124",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001730997-26-000006",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-011715",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001184178-26-000022",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-010616",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001790261-26-000018",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-010610",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001790261-26-000016",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-010609",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001184178-26-000020",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-010608",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001538012-26-000008",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "BIDU",
-      "accession": "0001193125-26-343278",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "BIDU",
-      "accession": "0001193125-26-341314",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "BIDU",
-      "accession": "0001193125-26-341308",
+      "ticker": "MBLY",
+      "accession": "0000950103-26-010607",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -11825,6 +9634,42 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "BIDU",
+      "accession": "0001193125-26-343278",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "BIDU",
+      "accession": "0001193125-26-341314",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "BIDU",
+      "accession": "0001193125-26-341308",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PDD",
+      "accession": "0001104659-26-105483",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PDD",
+      "accession": "0001104659-26-104422",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PDD",
+      "accession": "0001104659-26-089995",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "BABA",
       "accession": "0001193125-26-405912",
       "error": "HTTP Error 429: Too Many Requests"
@@ -11873,6 +9718,54 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001790261-26-000020",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001184178-26-000024",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001730997-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001184178-26-000022",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001790261-26-000018",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001790261-26-000016",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001184178-26-000020",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001538012-26-000008",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "JD",
       "accession": "0001104659-26-109750",
       "error": "HTTP Error 429: Too Many Requests"
@@ -11902,33 +9795,8 @@
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PDD",
-      "accession": "0001104659-26-105483",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PDD",
-      "accession": "0001104659-26-104422",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PDD",
-      "accession": "0001104659-26-089995",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PDD",
-      "accession": "0001104659-26-080480",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PDD",
-      "accession": "0001104659-26-080479",
+      "source": "sec_13f_institutional_sample",
+      "manager": "Renaissance Technologies",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -11938,12 +9806,40 @@
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "Renaissance Technologies",
+      "manager": "Citadel Advisors",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "Citadel Advisors",
+      "manager": "Millennium Management",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_13f_institutional_sample",
+      "manager": "Coatue Management",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_13f_institutional_sample",
+      "manager": "Tiger Global Management",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_13f_institutional_sample",
+      "manager": "Berkshire Hathaway",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_13f_institutional_sample",
+      "manager": "D. E. Shaw",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_13f_institutional_sample",
+      "error": "parser returned no data"
+    },
+    {
+      "source": "sec_ftd_settlement_pressure",
       "error": "HTTP Error 429: Too Many Requests"
     }
   ],
