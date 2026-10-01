@@ -1,27 +1,27 @@
 {
-  "timestamp": "2026-09-30T22:13:18.910587+00:00",
-  "timestamp_cn": "2026-10-01 06:13",
+  "timestamp": "2026-10-01T05:48:34.325306+00:00",
+  "timestamp_cn": "2026-10-01 13:48",
   "price": {
-    "price": 83609,
-    "change24h": 0.0
+    "price": 84190,
+    "change24h": 0.93
   },
   "etf": {
-    "sum5d": 422.4,
+    "sum5d": 273.7,
     "days": [
       190.7,
       134.5,
       31.0,
       66.2,
-      0.0
+      -148.7
     ],
     "latest_date": "30 Sep 2026",
     "source": "farside_parsed"
   },
   "onchain": {
-    "mvrv_zscore": 1.0948,
+    "mvrv_zscore": 1.0328,
     "nupl": 0.371,
-    "mvrv_zscore_as_of": "2026-09-23",
-    "nupl_as_of": "2026-09-23",
+    "mvrv_zscore_as_of": "2026-09-24",
+    "nupl_as_of": "2026-09-24",
     "mvrv_zscore_source": "bitcoin-data.com",
     "nupl_source": "bitcoin-data.com",
     "mvrv_zscore_age_days": 7,
@@ -31,37 +31,37 @@
   },
   "fed": {
     "fed_direction": "cut1",
-    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 4.1%（Exactly 0 cuts 平均 95.9%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 3.7%（Exactly 0 cuts 平均 96.3%）；非 CME 期货源，作为 403 fallback",
     "confidence": "medium",
     "source": "oddpool_fed_rate_cut_count",
-    "cut_probability": 4.1,
-    "zero_cut_probability": 95.9,
+    "cut_probability": 3.7,
+    "zero_cut_probability": 96.3,
     "year": "2026",
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-01",
     "age_days": 0,
     "stale": false
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0042,
-    "avg": 0.0042,
+    "okx": 0.0054,
+    "avg": 0.0054,
     "source": "exchange_public"
   },
   "margin_lending": {
-    "btc_daily_rate": 1.177e-05,
-    "btc_annual_rate": 0.4296,
+    "btc_daily_rate": 1.157e-05,
+    "btc_annual_rate": 0.4223,
     "btc_borrow_limit": 100.0,
-    "open_interest": 27516.0,
+    "open_interest": 28038.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 312.7,
+    "total_b": 312.6,
     "trend": "expand"
   },
   "tips": 2.91,
   "tips_as_of": "2026-09-29",
-  "tips_age_days": 1,
+  "tips_age_days": 2,
   "tips_stale": false
 }
