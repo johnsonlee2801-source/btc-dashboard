@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-01T01:21:57Z",
+  "generatedAt": "2026-10-02T01:43:44Z",
   "description": "Daily static market breadth snapshot for stock.flowhunt.net. Free public sources; not investment advice.",
   "sources": {
     "sp500Constituents": "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv",
@@ -24,39 +24,39 @@
       "requested": 503,
       "sampleSize": 503,
       "coveragePct": 100.0,
-      "above20Pct": 26.8,
-      "above50Pct": 24.7,
-      "above200Pct": 42.7,
-      "nearHighPct": 10.1,
-      "newHighPct": 1.6,
-      "nearLowPct": 28.8,
-      "newLowPct": 5.6,
-      "advancePct": 39.2,
-      "declinePct": 59.8,
+      "above20Pct": 25.0,
+      "above50Pct": 22.9,
+      "above200Pct": 40.8,
+      "nearHighPct": 8.5,
+      "newHighPct": 1.4,
+      "nearLowPct": 30.6,
+      "newLowPct": 6.4,
+      "advancePct": 58.8,
+      "declinePct": 40.6,
       "counts": {
-        "above20": 135,
-        "above50": 124,
-        "above200": 215,
-        "nearHigh": 51,
-        "newHigh": 8,
-        "nearLow": 145,
-        "newLow": 28,
-        "advanced": 197,
-        "declined": 301
+        "above20": 126,
+        "above50": 115,
+        "above200": 205,
+        "nearHigh": 43,
+        "newHigh": 7,
+        "nearLow": 154,
+        "newLow": 32,
+        "advanced": 296,
+        "declined": 204
       },
-      "updatedAt": "2026-09-29T13:30:00Z",
+      "updatedAt": "2026-10-01T13:30:00Z",
       "leaders": [
         "ABBV",
         "AMD",
         "A",
         "AME",
-        "AMGN",
         "APH",
         "AAPL",
         "ANET",
         "TECH",
         "BIIB",
         "CRL",
+        "CVX",
         "CRWD"
       ],
       "laggards": [
@@ -74,46 +74,45 @@
         "ALLE"
       ],
       "status": "distribution",
-      "value": "MA50上方 24.7% · MA200上方 42.7% · 新高/新低 8/28 · 上涨/下跌 197/301"
+      "value": "MA50上方 22.9% · MA200上方 40.8% · 新高/新低 7/32 · 上涨/下跌 296/204"
     },
     "nasdaq100": {
       "name": "Nasdaq-100 / QQQ 持仓宽度快照",
       "source": "https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/QQQ/holdings/fund?idType=ticker&interval=monthly&productType=ETF",
-      "sourceUpdatedAt": "2026-09-29",
+      "sourceUpdatedAt": "2026-09-30",
       "requested": 98,
       "sampleSize": 98,
       "coveragePct": 100.0,
-      "above20Pct": 51.0,
-      "above50Pct": 45.9,
+      "above20Pct": 43.9,
+      "above50Pct": 43.9,
       "above200Pct": 52.0,
-      "nearHighPct": 11.2,
-      "newHighPct": 1.0,
-      "nearLowPct": 20.4,
-      "newLowPct": 2.0,
-      "advancePct": 48.0,
-      "declinePct": 51.0,
+      "nearHighPct": 10.2,
+      "newHighPct": 3.1,
+      "nearLowPct": 21.4,
+      "newLowPct": 4.1,
+      "advancePct": 57.1,
+      "declinePct": 41.8,
       "counts": {
-        "above20": 50,
-        "above50": 45,
+        "above20": 43,
+        "above50": 43,
         "above200": 51,
-        "nearHigh": 11,
-        "newHigh": 1,
-        "nearLow": 20,
-        "newLow": 2,
-        "advanced": 47,
-        "declined": 50
+        "nearHigh": 10,
+        "newHigh": 3,
+        "nearLow": 21,
+        "newLow": 4,
+        "advanced": 56,
+        "declined": 41
       },
-      "updatedAt": "2026-09-29T13:30:00Z",
+      "updatedAt": "2026-10-01T13:30:00Z",
       "leaders": [
         "NVDA",
         "AAPL",
         "AMD",
-        "META",
         "PANW",
         "CRWD",
-        "AMGN",
-        "GILD",
         "FTNT",
+        "DDOG",
+        "LITE",
         "WBD",
         "FAST"
       ],
@@ -126,13 +125,13 @@
         "CSCO",
         "COST",
         "NFLX",
+        "AMGN",
         "LIN",
-        "PEP",
         "TMUS",
-        "WDC"
+        "PEP"
       ],
-      "status": "neutral",
-      "value": "MA50上方 45.9% · MA200上方 52.0% · 新高/新低 1/2 · 上涨/下跌 47/50"
+      "status": "distribution",
+      "value": "MA50上方 43.9% · MA200上方 52.0% · 新高/新低 3/4 · 上涨/下跌 56/41"
     }
   },
   "macroIndicators": {
@@ -235,37 +234,41 @@
     },
     "finra_short_sale_volume": {
       "name": "FINRA 场外短量占比自动快照",
-      "source": "https://cdn.finra.org/equity/regsho/daily/CNMSshvol20260930.txt",
+      "source": "https://cdn.finra.org/equity/regsho/daily/CNMSshvol20261001.txt",
       "sourceType": "official_txt",
-      "updatedAt": "2026-09-30",
-      "value": "市场 51.7% · 20日均 51.0% · S&P500 46.7% · QQQ 44.5%",
+      "updatedAt": "2026-10-01",
+      "value": "市场 51.7% · 20日均 51.1% · S&P500 46.6% · QQQ 45.9%",
       "status": "neutral",
       "marketRatioPct": 51.7,
-      "marketAverage20dPct": 51.0,
-      "sp500RatioPct": 46.7,
-      "qqqRatioPct": 44.5,
+      "marketAverage20dPct": 51.1,
+      "sp500RatioPct": 46.6,
+      "qqqRatioPct": 45.9,
       "latest": {
-        "date": "2026-09-30",
+        "date": "2026-10-01",
         "market": {
-          "tickerCount": 12370,
-          "shortVolume": 3942484791.76,
-          "totalVolume": 7629919321.3,
+          "tickerCount": 12341,
+          "shortVolume": 3990579110.42,
+          "totalVolume": 7718263111.45,
           "ratioPct": 51.7
         },
         "sp500": {
           "tickerCount": 501,
-          "shortVolume": 526228877.08,
-          "totalVolume": 1127635663.38,
-          "ratioPct": 46.7
+          "shortVolume": 589499110.48,
+          "totalVolume": 1263828969.67,
+          "ratioPct": 46.6
         },
         "qqq": {
           "tickerCount": 98,
-          "shortVolume": 201031081.67,
-          "totalVolume": 451966112.83,
-          "ratioPct": 44.5
+          "shortVolume": 216495375.2,
+          "totalVolume": 471743438.52,
+          "ratioPct": 45.9
         }
       },
       "history": [
+        {
+          "date": "2026-10-01",
+          "marketRatioPct": 51.7
+        },
         {
           "date": "2026-09-30",
           "marketRatioPct": 51.7
@@ -341,72 +344,68 @@
         {
           "date": "2026-09-03",
           "marketRatioPct": 50.9
-        },
-        {
-          "date": "2026-09-02",
-          "marketRatioPct": 50.4
         }
       ],
       "abnormalTickers": [
         {
-          "symbol": "DRES",
-          "ratioPct": 100.0,
-          "totalVolume": 1477385.0
+          "symbol": "STBF",
+          "ratioPct": 99.1,
+          "totalVolume": 1537897.0
+        },
+        {
+          "symbol": "EEMO",
+          "ratioPct": 98.8,
+          "totalVolume": 2004479.0
+        },
+        {
+          "symbol": "ZOCT",
+          "ratioPct": 97.8,
+          "totalVolume": 1398379.0
+        },
+        {
+          "symbol": "VPLS",
+          "ratioPct": 96.8,
+          "totalVolume": 1495472.0
         },
         {
           "symbol": "NUDM",
-          "ratioPct": 99.4,
-          "totalVolume": 1782884.0
+          "ratioPct": 95.7,
+          "totalVolume": 1886378.0
         },
         {
-          "symbol": "FLGV",
-          "ratioPct": 99.1,
-          "totalVolume": 6371478.0
+          "symbol": "XTEN",
+          "ratioPct": 94.5,
+          "totalVolume": 1058774.0
         },
         {
-          "symbol": "BBHY",
-          "ratioPct": 97.7,
-          "totalVolume": 1902664.0
+          "symbol": "BLCR",
+          "ratioPct": 94.4,
+          "totalVolume": 2545779.0
         },
         {
-          "symbol": "DFAL",
-          "ratioPct": 97.6,
-          "totalVolume": 1097402.0
+          "symbol": "FTMH",
+          "ratioPct": 93.8,
+          "totalVolume": 1635026.0
         },
         {
-          "symbol": "FSM",
-          "ratioPct": 97.0,
-          "totalVolume": 18499865.0
+          "symbol": "EAGL",
+          "ratioPct": 93.2,
+          "totalVolume": 1355907.0
         },
         {
-          "symbol": "IQQ",
-          "ratioPct": 97.0,
-          "totalVolume": 3129973.0
+          "symbol": "IALT",
+          "ratioPct": 91.6,
+          "totalVolume": 5824692.0
         },
         {
-          "symbol": "IBTK",
-          "ratioPct": 96.9,
-          "totalVolume": 1620048.0
+          "symbol": "EVTR",
+          "ratioPct": 89.2,
+          "totalVolume": 1861280.0
         },
         {
-          "symbol": "FHLC",
-          "ratioPct": 96.0,
-          "totalVolume": 1096364.0
-        },
-        {
-          "symbol": "AHRT",
-          "ratioPct": 93.0,
-          "totalVolume": 1931776.0
-        },
-        {
-          "symbol": "BALT",
-          "ratioPct": 92.5,
-          "totalVolume": 1529648.0
-        },
-        {
-          "symbol": "BKV",
-          "ratioPct": 92.3,
-          "totalVolume": 1296885.0
+          "symbol": "USFR",
+          "ratioPct": 86.8,
+          "totalVolume": 10943594.0
         }
       ],
       "missingRecentFiles": [
@@ -419,8 +418,8 @@
       "name": "SEC Form 4 内部人交易快照",
       "source": "https://www.sec.gov/edgar/search/",
       "sourceType": "official_sec_form4",
-      "updatedAt": "2026-09-29",
-      "value": "90日卖出 $1054.3M · 买入 $10.0M · 卖出股票 12只 · 买入股票 2只",
+      "updatedAt": "2026-10-01",
+      "value": "90日卖出 $1054.1M · 买入 $10.0M · 卖出股票 12只 · 买入股票 2只",
       "status": "distribution",
       "lookbackDays": 90,
       "tickerUniverse": [
@@ -619,19 +618,19 @@
         "JNPR",
         "PSTG"
       ],
-      "sellValueUsd": 1054303381.35,
+      "sellValueUsd": 1054064678.92,
       "buyValueUsd": 10040066.2,
       "tickerTotals": {
         "ALAB": {
-          "sellValueUsd": 122606501.35,
+          "sellValueUsd": 126498592.48,
           "buyValueUsd": 0,
-          "saleCount": 99,
+          "saleCount": 115,
           "purchaseCount": 0
         },
         "AMAT": {
-          "sellValueUsd": 4059375.75,
+          "sellValueUsd": 465000.0,
           "buyValueUsd": 0,
-          "saleCount": 2,
+          "saleCount": 1,
           "purchaseCount": 0
         },
         "AMD": {
@@ -653,9 +652,9 @@
           "purchaseCount": 0
         },
         "CRDO": {
-          "sellValueUsd": 39092454.59,
+          "sellValueUsd": 44425612.74,
           "buyValueUsd": 0,
-          "saleCount": 29,
+          "saleCount": 38,
           "purchaseCount": 0
         },
         "INTC": {
@@ -665,15 +664,15 @@
           "purchaseCount": 1
         },
         "LRCX": {
-          "sellValueUsd": 40504440.18,
+          "sellValueUsd": 31504440.18,
           "buyValueUsd": 0,
-          "saleCount": 7,
+          "saleCount": 6,
           "purchaseCount": 0
         },
         "MRVL": {
-          "sellValueUsd": 9079475.12,
+          "sellValueUsd": 11699975.12,
           "buyValueUsd": 0,
-          "saleCount": 5,
+          "saleCount": 6,
           "purchaseCount": 0
         },
         "MU": {
@@ -689,9 +688,9 @@
           "purchaseCount": 0
         },
         "QCOM": {
-          "sellValueUsd": 4442489.03,
+          "sellValueUsd": 4952413.07,
           "buyValueUsd": 0,
-          "saleCount": 12,
+          "saleCount": 18,
           "purchaseCount": 0
         },
         "SMCI": {
@@ -724,19 +723,19 @@
         },
         {
           "ticker": "ALAB",
-          "valueUsd": 122606501.35
+          "valueUsd": 126498592.48
         },
         {
           "ticker": "AMD",
           "valueUsd": 94150924.56
         },
         {
-          "ticker": "LRCX",
-          "valueUsd": 40504440.18
+          "ticker": "CRDO",
+          "valueUsd": 44425612.74
         },
         {
-          "ticker": "CRDO",
-          "valueUsd": 39092454.59
+          "ticker": "LRCX",
+          "valueUsd": 31504440.18
         },
         {
           "ticker": "SMCI",
@@ -744,7 +743,7 @@
         },
         {
           "ticker": "MRVL",
-          "valueUsd": 9079475.12
+          "valueUsd": 11699975.12
         },
         {
           "ticker": "ARM",
@@ -1065,6 +1064,134 @@
           "price": 379.188,
           "valueUsd": 9479700.0,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000173016826000066/0001730168-26-000066.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000656",
+          "ownerName": "Wu Yi-Huang",
+          "ownerTitle": "VP",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 40.0,
+          "price": 76.2,
+          "valueUsd": 3048.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000656/0001046179-26-000656.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000655",
+          "ownerName": "Yoo Chue-San",
+          "ownerTitle": "VP",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 53.0,
+          "price": 76.2,
+          "valueUsd": 4038.6,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000655/0001046179-26-000655.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000654",
+          "ownerName": "Yeap Choh Fei",
+          "ownerTitle": "SVP",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 54.0,
+          "price": 76.2,
+          "valueUsd": 4114.8,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000654/0001046179-26-000654.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000653",
+          "ownerName": "Zhang Kevin Xiaoqiang",
+          "ownerTitle": "SVP and Deputy Co-COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 61.0,
+          "price": 76.2,
+          "valueUsd": 4648.2,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000653/0001046179-26-000653.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000652",
+          "ownerName": "Yuan Lipen",
+          "ownerTitle": "VP",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 41.0,
+          "price": 76.2,
+          "valueUsd": 3124.2,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000652/0001046179-26-000652.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000648",
+          "ownerName": "Mii Yuh-Jier",
+          "ownerTitle": "EVP and Co-COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 71.0,
+          "price": 76.2,
+          "valueUsd": 5410.2,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000648/0001046179-26-000648.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000646",
+          "ownerName": "Wu Shien-Yang",
+          "ownerTitle": "SVP",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 57.0,
+          "price": 76.2,
+          "valueUsd": 4343.4,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000646/0001046179-26-000646.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000644",
+          "ownerName": "Wei Che-Chia",
+          "ownerTitle": "Chairman and CEO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 149.0,
+          "price": 76.2,
+          "valueUsd": 11353.8,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000644/0001046179-26-000644.txt"
         },
         {
           "ticker": "AMD",
@@ -2249,134 +2376,6 @@
           "price": 488.69,
           "valueUsd": 1462649.17,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000165/0000002488-26-000165.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000656",
-          "ownerName": "Wu Yi-Huang",
-          "ownerTitle": "VP",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 40.0,
-          "price": 76.2,
-          "valueUsd": 3048.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000656/0001046179-26-000656.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000655",
-          "ownerName": "Yoo Chue-San",
-          "ownerTitle": "VP",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 53.0,
-          "price": 76.2,
-          "valueUsd": 4038.6,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000655/0001046179-26-000655.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000654",
-          "ownerName": "Yeap Choh Fei",
-          "ownerTitle": "SVP",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 54.0,
-          "price": 76.2,
-          "valueUsd": 4114.8,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000654/0001046179-26-000654.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000653",
-          "ownerName": "Zhang Kevin Xiaoqiang",
-          "ownerTitle": "SVP and Deputy Co-COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 61.0,
-          "price": 76.2,
-          "valueUsd": 4648.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000653/0001046179-26-000653.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000652",
-          "ownerName": "Yuan Lipen",
-          "ownerTitle": "VP",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 41.0,
-          "price": 76.2,
-          "valueUsd": 3124.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000652/0001046179-26-000652.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000648",
-          "ownerName": "Mii Yuh-Jier",
-          "ownerTitle": "EVP and Co-COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 71.0,
-          "price": 76.2,
-          "valueUsd": 5410.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000648/0001046179-26-000648.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000646",
-          "ownerName": "Wu Shien-Yang",
-          "ownerTitle": "SVP",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 57.0,
-          "price": 76.2,
-          "valueUsd": 4343.4,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000646/0001046179-26-000646.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000644",
-          "ownerName": "Wei Che-Chia",
-          "ownerTitle": "Chairman and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 149.0,
-          "price": 76.2,
-          "valueUsd": 11353.8,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000644/0001046179-26-000644.txt"
         },
         {
           "ticker": "NVDA",
@@ -3996,6 +3995,22 @@
         },
         {
           "ticker": "MRVL",
+          "transactionDate": "2026-10-01",
+          "filingDate": "2026-10-01",
+          "accessionNumber": "0001628280-26-064351",
+          "ownerName": "Koopmans Chris",
+          "ownerTitle": "President and COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 10000.0,
+          "price": 262.05,
+          "valueUsd": 2620500.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1835632/000162828026064351/0001628280-26-064351.txt"
+        },
+        {
+          "ticker": "MRVL",
           "transactionDate": "2026-09-15",
           "filingDate": "2026-09-15",
           "accessionNumber": "0001628280-26-062124",
@@ -4169,6 +4184,150 @@
           "price": 40.0,
           "valueUsd": 4000000.0,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1375365/000139294126000014/0001392941-26-000014.txt"
+        },
+        {
+          "ticker": "CRDO",
+          "transactionDate": "2026-09-29",
+          "filingDate": "2026-10-01",
+          "accessionNumber": "0001628280-26-064300",
+          "ownerName": "Cheng Chi Fung",
+          "ownerTitle": "Chief Technology Officer",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 300.0,
+          "price": 189.6467,
+          "valueUsd": 56894.01,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026064300/0001628280-26-064300.txt"
+        },
+        {
+          "ticker": "CRDO",
+          "transactionDate": "2026-09-29",
+          "filingDate": "2026-10-01",
+          "accessionNumber": "0001628280-26-064300",
+          "ownerName": "Cheng Chi Fung",
+          "ownerTitle": "Chief Technology Officer",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 900.0,
+          "price": 191.4544,
+          "valueUsd": 172308.96,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026064300/0001628280-26-064300.txt"
+        },
+        {
+          "ticker": "CRDO",
+          "transactionDate": "2026-09-29",
+          "filingDate": "2026-10-01",
+          "accessionNumber": "0001628280-26-064300",
+          "ownerName": "Cheng Chi Fung",
+          "ownerTitle": "Chief Technology Officer",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 8366.0,
+          "price": 192.4774,
+          "valueUsd": 1610265.93,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026064300/0001628280-26-064300.txt"
+        },
+        {
+          "ticker": "CRDO",
+          "transactionDate": "2026-09-29",
+          "filingDate": "2026-10-01",
+          "accessionNumber": "0001628280-26-064300",
+          "ownerName": "Cheng Chi Fung",
+          "ownerTitle": "Chief Technology Officer",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 6332.0,
+          "price": 193.24,
+          "valueUsd": 1223595.68,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026064300/0001628280-26-064300.txt"
+        },
+        {
+          "ticker": "CRDO",
+          "transactionDate": "2026-09-29",
+          "filingDate": "2026-10-01",
+          "accessionNumber": "0001628280-26-064300",
+          "ownerName": "Cheng Chi Fung",
+          "ownerTitle": "Chief Technology Officer",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 4426.0,
+          "price": 194.3727,
+          "valueUsd": 860293.57,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026064300/0001628280-26-064300.txt"
+        },
+        {
+          "ticker": "CRDO",
+          "transactionDate": "2026-09-29",
+          "filingDate": "2026-10-01",
+          "accessionNumber": "0001628280-26-064300",
+          "ownerName": "Cheng Chi Fung",
+          "ownerTitle": "Chief Technology Officer",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 2985.0,
+          "price": 195.3981,
+          "valueUsd": 583263.33,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026064300/0001628280-26-064300.txt"
+        },
+        {
+          "ticker": "CRDO",
+          "transactionDate": "2026-09-29",
+          "filingDate": "2026-10-01",
+          "accessionNumber": "0001628280-26-064300",
+          "ownerName": "Cheng Chi Fung",
+          "ownerTitle": "Chief Technology Officer",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 1591.0,
+          "price": 196.2563,
+          "valueUsd": 312243.77,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026064300/0001628280-26-064300.txt"
+        },
+        {
+          "ticker": "CRDO",
+          "transactionDate": "2026-09-29",
+          "filingDate": "2026-10-01",
+          "accessionNumber": "0001628280-26-064300",
+          "ownerName": "Cheng Chi Fung",
+          "ownerTitle": "Chief Technology Officer",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 1500.0,
+          "price": 197.2113,
+          "valueUsd": 295816.95,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026064300/0001628280-26-064300.txt"
+        },
+        {
+          "ticker": "CRDO",
+          "transactionDate": "2026-09-29",
+          "filingDate": "2026-10-01",
+          "accessionNumber": "0001628280-26-064300",
+          "ownerName": "Cheng Chi Fung",
+          "ownerTitle": "Chief Technology Officer",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 1100.0,
+          "price": 198.6145,
+          "valueUsd": 218475.95,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026064300/0001628280-26-064300.txt"
         },
         {
           "ticker": "CRDO",
@@ -4633,6 +4792,294 @@
           "price": 170.0,
           "valueUsd": 644300.0,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026061180/0001628280-26-061180.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-09-25",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0000804328-26-000096",
+          "ownerName": "AMON CRISTIANO R",
+          "ownerTitle": "President & CEO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 10000.0,
+          "price": 200.0,
+          "valueUsd": 2000000.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000096/0000804328-26-000096.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-09-21",
+          "filingDate": "2026-09-23",
+          "accessionNumber": "0000804328-26-000095",
+          "ownerName": "AMON CRISTIANO R",
+          "ownerTitle": "President & CEO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 10000.0,
+          "price": 195.0,
+          "valueUsd": 1950000.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000095/0000804328-26-000095.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-09-11",
+          "filingDate": "2026-09-11",
+          "accessionNumber": "0000804328-26-000094",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 32.0,
+          "price": 177.6169,
+          "valueUsd": 5683.74,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-09-11",
+          "filingDate": "2026-09-11",
+          "accessionNumber": "0000804328-26-000094",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 36.0,
+          "price": 178.6308,
+          "valueUsd": 6430.71,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-09-11",
+          "filingDate": "2026-09-11",
+          "accessionNumber": "0000804328-26-000094",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 48.0,
+          "price": 179.7613,
+          "valueUsd": 8628.54,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-09-11",
+          "filingDate": "2026-09-11",
+          "accessionNumber": "0000804328-26-000094",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 82.0,
+          "price": 180.8706,
+          "valueUsd": 14831.39,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-09-11",
+          "filingDate": "2026-09-11",
+          "accessionNumber": "0000804328-26-000094",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 696.0,
+          "price": 181.8905,
+          "valueUsd": 126595.79,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-09-11",
+          "filingDate": "2026-09-11",
+          "accessionNumber": "0000804328-26-000094",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 508.0,
+          "price": 182.6937,
+          "valueUsd": 92808.4,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-09-11",
+          "filingDate": "2026-09-11",
+          "accessionNumber": "0000804328-26-000094",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 739.0,
+          "price": 183.8443,
+          "valueUsd": 135860.94,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-09-11",
+          "filingDate": "2026-09-11",
+          "accessionNumber": "0000804328-26-000094",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 347.0,
+          "price": 184.6275,
+          "valueUsd": 64065.74,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-09-11",
+          "filingDate": "2026-09-11",
+          "accessionNumber": "0000804328-26-000094",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 12.0,
+          "price": 185.315,
+          "valueUsd": 2223.78,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-08-31",
+          "filingDate": "2026-08-31",
+          "accessionNumber": "0000804328-26-000093",
+          "ownerName": "Grech Patricia Y",
+          "ownerTitle": "SVP, Chief Accounting Officer",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 208.0,
+          "price": 170.0,
+          "valueUsd": 35360.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000093/0000804328-26-000093.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-08-21",
+          "filingDate": "2026-08-21",
+          "accessionNumber": "0000804328-26-000092",
+          "ownerName": "Grech Patricia Y",
+          "ownerTitle": "SVP, Chief Accounting Officer",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 625.0,
+          "price": 162.85,
+          "valueUsd": 101781.25,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000092/0000804328-26-000092.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-08-12",
+          "filingDate": "2026-08-12",
+          "accessionNumber": "0000804328-26-000091",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 260.0,
+          "price": 161.7729,
+          "valueUsd": 42060.95,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-08-12",
+          "filingDate": "2026-08-12",
+          "accessionNumber": "0000804328-26-000091",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 748.0,
+          "price": 162.5579,
+          "valueUsd": 121593.31,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-08-12",
+          "filingDate": "2026-08-12",
+          "accessionNumber": "0000804328-26-000091",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 1080.0,
+          "price": 163.4452,
+          "valueUsd": 176520.82,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-08-12",
+          "filingDate": "2026-08-12",
+          "accessionNumber": "0000804328-26-000091",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 248.0,
+          "price": 164.7277,
+          "valueUsd": 40852.47,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
+        },
+        {
+          "ticker": "QCOM",
+          "transactionDate": "2026-08-12",
+          "filingDate": "2026-08-12",
+          "accessionNumber": "0000804328-26-000091",
+          "ownerName": "Palkhiwala Akash J.",
+          "ownerTitle": "EVP, CFO & COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 164.0,
+          "price": 165.3368,
+          "valueUsd": 27115.24,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000091/0000804328-26-000091.txt"
         },
         {
           "ticker": "ALAB",
@@ -6219,6 +6666,262 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000148439426000009/0001484394-26-000009.txt"
         },
         {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 971.0,
+          "price": 451.9579,
+          "valueUsd": 438851.12,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 265.0,
+          "price": 453.1203,
+          "valueUsd": 120076.88,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 436.0,
+          "price": 453.8275,
+          "valueUsd": 197868.79,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 720.0,
+          "price": 454.9213,
+          "valueUsd": 327543.34,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 637.0,
+          "price": 455.8887,
+          "valueUsd": 290401.1,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 747.0,
+          "price": 456.9733,
+          "valueUsd": 341359.06,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 1006.0,
+          "price": 457.9983,
+          "valueUsd": 460746.29,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 845.0,
+          "price": 459.0184,
+          "valueUsd": 387870.55,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 334.0,
+          "price": 460.0732,
+          "valueUsd": 153664.45,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 468.0,
+          "price": 461.4695,
+          "valueUsd": 215967.73,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 629.0,
+          "price": 462.4406,
+          "valueUsd": 290875.14,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 496.0,
+          "price": 463.3543,
+          "valueUsd": 229823.73,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 307.0,
+          "price": 464.4516,
+          "valueUsd": 142586.64,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 75.0,
+          "price": 466.1309,
+          "valueUsd": 34959.82,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 219.0,
+          "price": 466.8959,
+          "valueUsd": 102250.2,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
+          "ticker": "ALAB",
+          "transactionDate": "2026-07-01",
+          "filingDate": "2026-07-06",
+          "accessionNumber": "0001134727-26-000010",
+          "ownerName": "ALBA MANUEL",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 336.0,
+          "price": 467.9949,
+          "valueUsd": 157246.29,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1736297/000113472726000010/0001134727-26-000010.txt"
+        },
+        {
           "ticker": "AMAT",
           "transactionDate": "2026-09-08",
           "filingDate": "2026-09-10",
@@ -6233,214 +6936,6 @@
           "price": 465.0,
           "valueUsd": 465000.0,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026061408/0001628280-26-061408.txt"
-        },
-        {
-          "ticker": "AMAT",
-          "transactionDate": "2026-08-25",
-          "filingDate": "2026-08-27",
-          "accessionNumber": "0001628280-26-059277",
-          "ownerName": "Hill Brice",
-          "ownerTitle": "SVP, CFO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 7500.0,
-          "price": 479.2501,
-          "valueUsd": 3594375.75,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/6951/000162828026059277/0001628280-26-059277.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-09-25",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0000804328-26-000096",
-          "ownerName": "AMON CRISTIANO R",
-          "ownerTitle": "President & CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 10000.0,
-          "price": 200.0,
-          "valueUsd": 2000000.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000096/0000804328-26-000096.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-09-21",
-          "filingDate": "2026-09-23",
-          "accessionNumber": "0000804328-26-000095",
-          "ownerName": "AMON CRISTIANO R",
-          "ownerTitle": "President & CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 10000.0,
-          "price": 195.0,
-          "valueUsd": 1950000.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000095/0000804328-26-000095.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-09-11",
-          "filingDate": "2026-09-11",
-          "accessionNumber": "0000804328-26-000094",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 32.0,
-          "price": 177.6169,
-          "valueUsd": 5683.74,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-09-11",
-          "filingDate": "2026-09-11",
-          "accessionNumber": "0000804328-26-000094",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 36.0,
-          "price": 178.6308,
-          "valueUsd": 6430.71,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-09-11",
-          "filingDate": "2026-09-11",
-          "accessionNumber": "0000804328-26-000094",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 48.0,
-          "price": 179.7613,
-          "valueUsd": 8628.54,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-09-11",
-          "filingDate": "2026-09-11",
-          "accessionNumber": "0000804328-26-000094",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 82.0,
-          "price": 180.8706,
-          "valueUsd": 14831.39,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-09-11",
-          "filingDate": "2026-09-11",
-          "accessionNumber": "0000804328-26-000094",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 696.0,
-          "price": 181.8905,
-          "valueUsd": 126595.79,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-09-11",
-          "filingDate": "2026-09-11",
-          "accessionNumber": "0000804328-26-000094",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 508.0,
-          "price": 182.6937,
-          "valueUsd": 92808.4,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-09-11",
-          "filingDate": "2026-09-11",
-          "accessionNumber": "0000804328-26-000094",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 739.0,
-          "price": 183.8443,
-          "valueUsd": 135860.94,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-09-11",
-          "filingDate": "2026-09-11",
-          "accessionNumber": "0000804328-26-000094",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 347.0,
-          "price": 184.6275,
-          "valueUsd": 64065.74,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-09-11",
-          "filingDate": "2026-09-11",
-          "accessionNumber": "0000804328-26-000094",
-          "ownerName": "Palkhiwala Akash J.",
-          "ownerTitle": "EVP, CFO & COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 12.0,
-          "price": 185.315,
-          "valueUsd": 2223.78,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000094/0000804328-26-000094.txt"
-        },
-        {
-          "ticker": "QCOM",
-          "transactionDate": "2026-08-31",
-          "filingDate": "2026-08-31",
-          "accessionNumber": "0000804328-26-000093",
-          "ownerName": "Grech Patricia Y",
-          "ownerTitle": "SVP, Chief Accounting Officer",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 208.0,
-          "price": 170.0,
-          "valueUsd": 35360.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/804328/000080432826000093/0000804328-26-000093.txt"
         },
         {
           "ticker": "LRCX",
@@ -6537,22 +7032,6 @@
           "price": 302.46,
           "valueUsd": 1512300.0,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000164241526000012/0001642415-26-000012.txt"
-        },
-        {
-          "ticker": "LRCX",
-          "transactionDate": "2026-08-06",
-          "filingDate": "2026-08-07",
-          "accessionNumber": "0001343600-26-000011",
-          "ownerName": "ARCHER TIMOTHY",
-          "ownerTitle": "President and CEO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 30000.0,
-          "price": 300.0,
-          "valueUsd": 9000000.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/707549/000134360026000011/0001343600-26-000011.txt"
         }
       ],
       "topSales": [
@@ -6879,7 +7358,7 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000652/0001046179-26-000652.txt"
         }
       ],
-      "transactionCount": 362,
+      "transactionCount": 392,
       "threshold": "90日内部人公开市场卖出≥$50M、净卖出≥$25M、且涉及≥3只样本股：内部人卖出证据偏强；公开市场买入≥$5M、买入额≥卖出额1.5倍、且涉及≥2只样本股：内部人买入/承接证据偏强；其他中性。",
       "limitations": "SEC Form 4 只覆盖公司内部人交易，不等于机构13F持仓或暗池/期权流；大型科技公司高管10b5-1计划性卖出很常见，必须结合价格、宽度、成交量和公告背景判断。"
     }
@@ -6916,8 +7395,8 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "ALAB",
-      "accession": "0001134727-26-000010",
+      "ticker": "AMAT",
+      "accession": "0001628280-26-059277",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -6928,14 +7407,8 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "QCOM",
-      "accession": "0000804328-26-000092",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "QCOM",
-      "accession": "0000804328-26-000091",
+      "ticker": "LRCX",
+      "accession": "0001343600-26-000011",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -7054,6 +7527,54 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000437",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000435",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000434",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000433",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001104659-26-109005",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000430",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000427",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRWV",
+      "accession": "0001769628-26-000426",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "COHR",
       "accession": "0000899140-26-001064",
       "error": "HTTP Error 429: Too Many Requests"
@@ -7102,86 +7623,14 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001769628-26-000435",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001769628-26-000434",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001769628-26-000433",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001104659-26-109005",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001769628-26-000430",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001769628-26-000427",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001769628-26-000426",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRWV",
-      "accession": "0001769628-26-000419",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "DLR",
       "accession": "0001500081-26-000009",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000153",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000152",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000151",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000150",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "EQIX",
-      "accession": "0001101239-26-000149",
+      "ticker": "NBIS",
+      "accession": "0001513845-26-000118",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -7228,8 +7677,32 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "NBIS",
-      "accession": "0001513845-26-000102",
+      "ticker": "EQIX",
+      "accession": "0001101239-26-000153",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "EQIX",
+      "accession": "0001101239-26-000152",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "EQIX",
+      "accession": "0001101239-26-000151",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "EQIX",
+      "accession": "0001101239-26-000150",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "EQIX",
+      "accession": "0001101239-26-000149",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -7342,18 +7815,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "HUT",
-      "accession": "0001964789-26-000040",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HUT",
-      "accession": "0001964789-26-000038",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "APLD",
       "accession": "0001900445-26-000004",
       "error": "HTTP Error 429: Too Many Requests"
@@ -7392,6 +7853,24 @@
       "source": "sec_form4_insider_activity",
       "ticker": "APLD",
       "accession": "0001628280-26-047508",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HUT",
+      "accession": "0001104659-26-112496",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HUT",
+      "accession": "0001964789-26-000040",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HUT",
+      "accession": "0001964789-26-000038",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -7493,6 +7972,42 @@
     {
       "source": "sec_form4_insider_activity",
       "ticker": "CLSK",
+      "accession": "0001193125-26-411086",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CLSK",
+      "accession": "0001193125-26-411078",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CLSK",
+      "accession": "0001193125-26-411073",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CLSK",
+      "accession": "0001193125-26-411070",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CLSK",
+      "accession": "0001193125-26-411065",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CLSK",
+      "accession": "0001193125-26-411064",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CLSK",
       "accession": "0001193125-26-388317",
       "error": "HTTP Error 429: Too Many Requests"
     },
@@ -7500,42 +8015,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "CLSK",
       "accession": "0001193125-26-388315",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CLSK",
-      "accession": "0001193125-26-388309",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CLSK",
-      "accession": "0001193125-26-388305",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CLSK",
-      "accession": "0001193125-26-386880",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CLSK",
-      "accession": "0001193125-26-386878",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CLSK",
-      "accession": "0001193125-26-386877",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CLSK",
-      "accession": "0001193125-26-386874",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -7588,6 +8067,42 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "HPE",
+      "accession": "0001560849-26-000010",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HPE",
+      "accession": "0001233171-26-000012",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HPE",
+      "accession": "0001648401-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HPE",
+      "accession": "0001189179-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HPE",
+      "accession": "0001584883-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "HPE",
+      "accession": "0001560849-26-000007",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "DELL",
       "accession": "0001662205-26-000016",
       "error": "HTTP Error 429: Too Many Requests"
@@ -7636,32 +8151,26 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "HPE",
-      "accession": "0001233171-26-000012",
+      "ticker": "SMR",
+      "accession": "0001922054-26-000003",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "HPE",
-      "accession": "0001648401-26-000009",
+      "ticker": "SMR",
+      "accession": "0001957490-26-000004",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "HPE",
-      "accession": "0001189179-26-000009",
+      "ticker": "SMR",
+      "accession": "0001922054-26-000001",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "HPE",
-      "accession": "0001584883-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "HPE",
-      "accession": "0001560849-26-000007",
+      "ticker": "SMR",
+      "accession": "0001983680-26-000001",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -7680,6 +8189,12 @@
       "source": "sec_form4_insider_activity",
       "ticker": "NNE",
       "accession": "0001493152-26-041359",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NTAP",
+      "accession": "0001193125-26-410739",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -7722,48 +8237,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "NTAP",
       "accession": "0001193125-26-390642",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "NTAP",
-      "accession": "0002008967-26-000013",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001922054-26-000003",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001957490-26-000004",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001922054-26-000001",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SMR",
-      "accession": "0001983680-26-000001",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CEG",
-      "accession": "0000905148-26-003642",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CEG",
-      "accession": "0000905148-26-003498",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -7816,14 +8289,20 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "TLN",
-      "accession": "0001628280-26-048330",
+      "ticker": "CEG",
+      "accession": "0000905148-26-003642",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "LEU",
-      "accession": "0001628280-26-056649",
+      "ticker": "CEG",
+      "accession": "0000905148-26-003498",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "TLN",
+      "accession": "0001628280-26-048330",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -7852,50 +8331,8 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-001246",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-001245",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-001244",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-001243",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-001242",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-001241",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-001240",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "BWXT",
-      "accession": "0001123292-26-001239",
+      "ticker": "LEU",
+      "accession": "0001628280-26-056649",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -7944,6 +8381,54 @@
       "source": "sec_form4_insider_activity",
       "ticker": "UEC",
       "accession": "0001437749-26-025280",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "BWXT",
+      "accession": "0001123292-26-001246",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "BWXT",
+      "accession": "0001123292-26-001245",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "BWXT",
+      "accession": "0001123292-26-001244",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "BWXT",
+      "accession": "0001123292-26-001243",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "BWXT",
+      "accession": "0001123292-26-001242",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "BWXT",
+      "accession": "0001123292-26-001241",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "BWXT",
+      "accession": "0001123292-26-001240",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "BWXT",
+      "accession": "0001123292-26-001239",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -8014,6 +8499,36 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "ETN",
+      "accession": "0001104659-26-105152",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ETN",
+      "accession": "0001104659-26-097160",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ETN",
+      "accession": "0001104659-26-095928",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ETN",
+      "accession": "0001104659-26-092801",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ETN",
+      "accession": "0001104659-26-091116",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "NRG",
       "accession": "0001225208-26-007712",
       "error": "HTTP Error 429: Too Many Requests"
@@ -8058,36 +8573,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "NRG",
       "accession": "0001225208-26-006979",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ETN",
-      "accession": "0001104659-26-105152",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ETN",
-      "accession": "0001104659-26-097160",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ETN",
-      "accession": "0001104659-26-095928",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ETN",
-      "accession": "0001104659-26-092801",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ETN",
-      "accession": "0001104659-26-091116",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -8146,36 +8631,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "SO",
-      "accession": "0001193125-26-383301",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SO",
-      "accession": "0001193125-26-383300",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SO",
-      "accession": "0001193125-26-381193",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SO",
-      "accession": "0001193125-26-340057",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "SO",
-      "accession": "0001193125-26-331835",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "HUBB",
       "accession": "0001628280-26-062525",
       "error": "HTTP Error 429: Too Many Requests"
@@ -8214,6 +8669,42 @@
       "source": "sec_form4_insider_activity",
       "ticker": "HUBB",
       "accession": "0001628280-26-047666",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SO",
+      "accession": "0001193125-26-410627",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SO",
+      "accession": "0001193125-26-383301",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SO",
+      "accession": "0001193125-26-383300",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SO",
+      "accession": "0001193125-26-381193",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SO",
+      "accession": "0001193125-26-340057",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SO",
+      "accession": "0001193125-26-331835",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -8320,54 +8811,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "QBTS",
-      "accession": "0002156505-26-000004",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "QBTS",
-      "accession": "0002128527-26-000004",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "QBTS",
-      "accession": "0002129321-26-000015",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "QBTS",
-      "accession": "0001974777-26-000018",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "QBTS",
-      "accession": "0001346345-26-000008",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "QBTS",
-      "accession": "0001974777-26-000016",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "QBTS",
-      "accession": "0002129321-26-000013",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "QBTS",
-      "accession": "0002129321-26-000011",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "MSFT",
       "accession": "0000789019-26-000224",
       "error": "HTTP Error 429: Too Many Requests"
@@ -8464,6 +8907,54 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "QBTS",
+      "accession": "0002156505-26-000004",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "QBTS",
+      "accession": "0002128527-26-000004",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "QBTS",
+      "accession": "0002129321-26-000015",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "QBTS",
+      "accession": "0001974777-26-000018",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "QBTS",
+      "accession": "0001346345-26-000008",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "QBTS",
+      "accession": "0001974777-26-000016",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "QBTS",
+      "accession": "0002129321-26-000013",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "QBTS",
+      "accession": "0002129321-26-000011",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "META",
       "accession": "0000950103-26-014886",
       "error": "HTTP Error 429: Too Many Requests"
@@ -8508,6 +8999,54 @@
       "source": "sec_form4_insider_activity",
       "ticker": "META",
       "accession": "0000950103-26-013794",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ORCL",
+      "accession": "0001341439-26-000099",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ORCL",
+      "accession": "0001341439-26-000096",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ORCL",
+      "accession": "0001341439-26-000094",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ORCL",
+      "accession": "0001341439-26-000092",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ORCL",
+      "accession": "0001341439-26-000090",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ORCL",
+      "accession": "0001341439-26-000088",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ORCL",
+      "accession": "0001341439-26-000086",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ORCL",
+      "accession": "0001341439-26-000084",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -8561,6 +9100,12 @@
     {
       "source": "sec_form4_insider_activity",
       "ticker": "AAPL",
+      "accession": "0001140361-26-038307",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AAPL",
       "accession": "0001140361-26-038028",
       "error": "HTTP Error 429: Too Many Requests"
     },
@@ -8598,156 +9143,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "AAPL",
       "accession": "0001140361-26-037584",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AAPL",
-      "accession": "0001140361-26-037020",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ORCL",
-      "accession": "0001341439-26-000096",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ORCL",
-      "accession": "0001341439-26-000094",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ORCL",
-      "accession": "0001341439-26-000092",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ORCL",
-      "accession": "0001341439-26-000090",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ORCL",
-      "accession": "0001341439-26-000088",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ORCL",
-      "accession": "0001341439-26-000086",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ORCL",
-      "accession": "0001341439-26-000084",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ORCL",
-      "accession": "0001341439-26-000083",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PLTR",
-      "accession": "0001823952-26-000022",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PLTR",
-      "accession": "0001840244-26-000016",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PLTR",
-      "accession": "0001705189-26-000015",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PLTR",
-      "accession": "0001823951-26-000009",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PLTR",
-      "accession": "0001823952-26-000020",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PLTR",
-      "accession": "0001824159-26-000013",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PLTR",
-      "accession": "0001824159-26-000011",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PLTR",
-      "accession": "0001840244-26-000015",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "NOW",
-      "accession": "0001667422-26-000036",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "NOW",
-      "accession": "0001649609-26-000035",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "NOW",
-      "accession": "0001659774-26-000012",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "NOW",
-      "accession": "0001334944-26-000034",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "NOW",
-      "accession": "0001649609-26-000032",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "NOW",
-      "accession": "0001667422-26-000033",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "NOW",
-      "accession": "0002111929-26-000016",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "NOW",
-      "accession": "0001465391-26-000030",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -8800,6 +9195,54 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "PLTR",
+      "accession": "0001823940-26-000010",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PLTR",
+      "accession": "0001823923-26-000011",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PLTR",
+      "accession": "0001705189-26-000017",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PLTR",
+      "accession": "0001823952-26-000022",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PLTR",
+      "accession": "0001840244-26-000016",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PLTR",
+      "accession": "0001705189-26-000015",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PLTR",
+      "accession": "0001823951-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PLTR",
+      "accession": "0001823952-26-000020",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "SNOW",
       "accession": "0001628280-26-063478",
       "error": "HTTP Error 429: Too Many Requests"
@@ -8844,6 +9287,54 @@
       "source": "sec_form4_insider_activity",
       "ticker": "SNOW",
       "accession": "0001628280-26-063104",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NOW",
+      "accession": "0001667422-26-000036",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NOW",
+      "accession": "0001649609-26-000035",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NOW",
+      "accession": "0001659774-26-000012",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NOW",
+      "accession": "0001334944-26-000034",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NOW",
+      "accession": "0001649609-26-000032",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NOW",
+      "accession": "0001667422-26-000033",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NOW",
+      "accession": "0002111929-26-000016",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "NOW",
+      "accession": "0001465391-26-000030",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -8896,54 +9387,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "ADBE",
-      "accession": "0001224154-26-000003",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ADBE",
-      "accession": "0000796343-26-000153",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ADBE",
-      "accession": "0000796343-26-000152",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ADBE",
-      "accession": "0000796343-26-000151",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ADBE",
-      "accession": "0000796343-26-000139",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ADBE",
-      "accession": "0000796343-26-000137",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ADBE",
-      "accession": "0000796343-26-000135",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "ADBE",
-      "accession": "0000796343-26-000134",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "DDOG",
       "accession": "0001561550-26-000320",
       "error": "HTTP Error 429: Too Many Requests"
@@ -8988,6 +9431,54 @@
       "source": "sec_form4_insider_activity",
       "ticker": "DDOG",
       "accession": "0001561550-26-000306",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ADBE",
+      "accession": "0001224154-26-000003",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ADBE",
+      "accession": "0000796343-26-000153",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ADBE",
+      "accession": "0000796343-26-000152",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ADBE",
+      "accession": "0000796343-26-000151",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ADBE",
+      "accession": "0000796343-26-000139",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ADBE",
+      "accession": "0000796343-26-000137",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ADBE",
+      "accession": "0000796343-26-000135",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "ADBE",
+      "accession": "0000796343-26-000134",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -9040,18 +9531,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "IBM",
-      "accession": "0002005007-26-000005",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IBM",
-      "accession": "0001629898-26-000005",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "APP",
       "accession": "0001846998-26-000006",
       "error": "HTTP Error 429: Too Many Requests"
@@ -9096,12 +9575,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "APP",
       "accession": "0001209189-26-000009",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "TSLA",
-      "accession": "0001104659-26-106432",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -9154,6 +9627,66 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "IBM",
+      "accession": "0001630253-26-000005",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IBM",
+      "accession": "0001453149-26-000008",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IBM",
+      "accession": "0001769389-26-000005",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IBM",
+      "accession": "0001269971-26-000004",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IBM",
+      "accession": "0001731814-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IBM",
+      "accession": "0001771933-26-000007",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IBM",
+      "accession": "0001765271-26-000004",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IBM",
+      "accession": "0001628797-26-000004",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "TSLA",
+      "accession": "0001104659-26-106432",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "PANW",
+      "accession": "0001682260-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "PANW",
       "accession": "0001852540-26-000007",
       "error": "HTTP Error 429: Too Many Requests"
@@ -9192,12 +9725,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "PANW",
       "accession": "0002055370-26-000007",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "PANW",
-      "accession": "0001882285-26-000022",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -9298,6 +9825,54 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001601830-26-000110",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001601830-26-000105",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001601830-26-000103",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0002020969-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0002006495-26-000012",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001712276-26-000009",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001856094-26-000014",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "accession": "0001856094-26-000011",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "TER",
       "accession": "0000904454-26-000498",
       "error": "HTTP Error 429: Too Many Requests"
@@ -9394,54 +9969,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001601830-26-000110",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001601830-26-000105",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001601830-26-000103",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0002020969-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0002006495-26-000012",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001712276-26-000009",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001856094-26-000014",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
-      "accession": "0001856094-26-000011",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "PATH",
       "accession": "0002127293-26-000010",
       "error": "HTTP Error 429: Too Many Requests"
@@ -9491,6 +10018,18 @@
     {
       "source": "sec_form4_insider_activity",
       "ticker": "AUR",
+      "accession": "0001828108-26-000086",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AUR",
+      "accession": "0001828108-26-000085",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AUR",
       "accession": "0001552781-26-000495",
       "error": "HTTP Error 429: Too Many Requests"
     },
@@ -9522,18 +10061,6 @@
       "source": "sec_form4_insider_activity",
       "ticker": "AUR",
       "accession": "0001552781-26-000454",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AUR",
-      "accession": "0001193125-26-349383",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AUR",
-      "accession": "0001193125-26-344685",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -9652,6 +10179,54 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001790261-26-000020",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001184178-26-000024",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001730997-26-000006",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001184178-26-000022",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001790261-26-000018",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001790261-26-000016",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001184178-26-000020",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "AVAV",
+      "accession": "0001538012-26-000008",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "PDD",
       "accession": "0001104659-26-105483",
       "error": "HTTP Error 429: Too Many Requests"
@@ -9718,54 +10293,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001790261-26-000020",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001184178-26-000024",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001730997-26-000006",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001184178-26-000022",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001790261-26-000018",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001790261-26-000016",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001184178-26-000020",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "AVAV",
-      "accession": "0001538012-26-000008",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "JD",
       "accession": "0001104659-26-109750",
       "error": "HTTP Error 429: Too Many Requests"
@@ -9796,7 +10323,7 @@
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "Renaissance Technologies",
+      "manager": "Citadel Advisors",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -9806,7 +10333,7 @@
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "Citadel Advisors",
+      "manager": "Renaissance Technologies",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -9816,7 +10343,7 @@
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "Coatue Management",
+      "manager": "D. E. Shaw",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -9826,12 +10353,12 @@
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "Berkshire Hathaway",
+      "manager": "Coatue Management",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "D. E. Shaw",
+      "manager": "Berkshire Hathaway",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
