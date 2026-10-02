@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-02T12:30:38.281561+00:00",
-  "timestamp_cn": "2026-10-02 20:30",
+  "timestamp": "2026-10-02T22:11:47.262356+00:00",
+  "timestamp_cn": "2026-10-03 06:11",
   "price": {
-    "price": 86574,
-    "change24h": 3.19
+    "price": 84472,
+    "change24h": -0.32
   },
   "etf": {
     "sum5d": 51.2,
@@ -31,11 +31,11 @@
   },
   "fed": {
     "fed_direction": "cut1",
-    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 3.8%（Exactly 0 cuts 平均 96.2%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 4.2%（Exactly 0 cuts 平均 95.8%）；非 CME 期货源，作为 403 fallback",
     "confidence": "medium",
     "source": "oddpool_fed_rate_cut_count",
-    "cut_probability": 3.8,
-    "zero_cut_probability": 96.2,
+    "cut_probability": 4.2,
+    "zero_cut_probability": 95.8,
     "year": "2026",
     "as_of": "2026-10-02",
     "age_days": 0,
@@ -43,25 +43,25 @@
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0073,
-    "avg": 0.0073,
+    "okx": 0.0009,
+    "avg": 0.0009,
     "source": "exchange_public"
   },
   "margin_lending": {
-    "btc_daily_rate": 1.179e-05,
-    "btc_annual_rate": 0.4303,
+    "btc_daily_rate": 1.178e-05,
+    "btc_annual_rate": 0.43,
     "btc_borrow_limit": 100.0,
-    "open_interest": 29070.0,
+    "open_interest": 28541.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 313.3,
+    "total_b": 312.4,
     "trend": "expand"
   },
-  "tips": 2.93,
-  "tips_as_of": "2026-09-30",
-  "tips_age_days": 2,
+  "tips": 2.88,
+  "tips_as_of": "2026-10-01",
+  "tips_age_days": 1,
   "tips_stale": false
 }
