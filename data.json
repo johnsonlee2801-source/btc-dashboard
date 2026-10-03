@@ -1,27 +1,27 @@
 {
-  "timestamp": "2026-10-02T22:11:47.262356+00:00",
-  "timestamp_cn": "2026-10-03 06:11",
+  "timestamp": "2026-10-03T05:15:41.355606+00:00",
+  "timestamp_cn": "2026-10-03 13:15",
   "price": {
-    "price": 84472,
-    "change24h": -0.32
+    "price": 84558,
+    "change24h": -2.3
   },
   "etf": {
-    "sum5d": 51.2,
+    "sum5d": 82.9,
     "days": [
       31.0,
       66.2,
       -148.7,
       102.7,
-      0.0
+      31.7
     ],
     "latest_date": "02 Oct 2026",
     "source": "farside_parsed"
   },
   "onchain": {
-    "mvrv_zscore": 1.0332,
-    "nupl": 0.3684,
-    "mvrv_zscore_as_of": "2026-09-25",
-    "nupl_as_of": "2026-09-25",
+    "mvrv_zscore": 1.0198,
+    "nupl": 0.3702,
+    "mvrv_zscore_as_of": "2026-09-26",
+    "nupl_as_of": "2026-09-26",
     "mvrv_zscore_source": "bitcoin-data.com",
     "nupl_source": "bitcoin-data.com",
     "mvrv_zscore_age_days": 7,
@@ -31,37 +31,37 @@
   },
   "fed": {
     "fed_direction": "cut1",
-    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 4.2%（Exactly 0 cuts 平均 95.8%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 4.0%（Exactly 0 cuts 平均 96.0%）；非 CME 期货源，作为 403 fallback",
     "confidence": "medium",
     "source": "oddpool_fed_rate_cut_count",
-    "cut_probability": 4.2,
-    "zero_cut_probability": 95.8,
+    "cut_probability": 4.0,
+    "zero_cut_probability": 96.0,
     "year": "2026",
-    "as_of": "2026-10-02",
+    "as_of": "2026-10-03",
     "age_days": 0,
     "stale": false
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0009,
-    "avg": 0.0009,
+    "okx": 0.0026,
+    "avg": 0.0026,
     "source": "exchange_public"
   },
   "margin_lending": {
-    "btc_daily_rate": 1.178e-05,
-    "btc_annual_rate": 0.43,
+    "btc_daily_rate": 1.173e-05,
+    "btc_annual_rate": 0.4281,
     "btc_borrow_limit": 100.0,
-    "open_interest": 28541.0,
+    "open_interest": 28742.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 312.4,
+    "total_b": 312.8,
     "trend": "expand"
   },
   "tips": 2.88,
   "tips_as_of": "2026-10-01",
-  "tips_age_days": 1,
+  "tips_age_days": 2,
   "tips_stale": false
 }
