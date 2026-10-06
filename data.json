@@ -1,20 +1,20 @@
 {
-  "timestamp": "2026-10-06T06:17:18.350789+00:00",
-  "timestamp_cn": "2026-10-06 14:17",
+  "timestamp": "2026-10-06T18:19:59.000305+00:00",
+  "timestamp_cn": "2026-10-07 02:19",
   "price": {
-    "price": 85138,
-    "change24h": -0.93
+    "price": 85750,
+    "change24h": 0.33
   },
   "etf": {
-    "sum5d": 120.3,
+    "sum5d": 54.1,
     "days": [
-      66.2,
       -148.7,
       102.7,
       189.9,
-      -89.8
+      -89.8,
+      0.0
     ],
-    "latest_date": "05 Oct 2026",
+    "latest_date": "06 Oct 2026",
     "source": "farside_parsed"
   },
   "onchain": {
@@ -43,21 +43,21 @@
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0062,
-    "avg": 0.0062,
+    "okx": 0.0041,
+    "avg": 0.0041,
     "source": "exchange_public"
   },
   "margin_lending": {
-    "btc_daily_rate": 1.185e-05,
-    "btc_annual_rate": 0.4325,
+    "btc_daily_rate": 1.157e-05,
+    "btc_annual_rate": 0.4223,
     "btc_borrow_limit": 100.0,
-    "open_interest": 28878.0,
+    "open_interest": 30038.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 314.0,
+    "total_b": 314.1,
     "trend": "expand"
   },
   "tips": 2.92,
