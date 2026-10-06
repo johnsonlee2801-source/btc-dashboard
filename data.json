@@ -1,32 +1,32 @@
 {
-  "timestamp": "2026-10-06T00:01:25.004335+00:00",
-  "timestamp_cn": "2026-10-06 08:01",
+  "timestamp": "2026-10-06T06:17:18.350789+00:00",
+  "timestamp_cn": "2026-10-06 14:17",
   "price": {
-    "price": 85825,
-    "change24h": -0.77
+    "price": 85138,
+    "change24h": -0.93
   },
   "etf": {
-    "sum5d": 210.1,
+    "sum5d": 120.3,
     "days": [
       66.2,
       -148.7,
       102.7,
       189.9,
-      0.0
+      -89.8
     ],
     "latest_date": "05 Oct 2026",
     "source": "farside_parsed"
   },
   "onchain": {
-    "mvrv_zscore": 1.0316,
-    "nupl": 0.3637,
-    "mvrv_zscore_as_of": "2026-09-28",
-    "nupl_as_of": "2026-09-28",
+    "mvrv_zscore": 0.9998,
+    "nupl": 0.3638,
+    "mvrv_zscore_as_of": "2026-09-29",
+    "nupl_as_of": "2026-09-29",
     "mvrv_zscore_source": "bitcoin-data.com",
     "nupl_source": "bitcoin-data.com",
-    "mvrv_zscore_age_days": 8,
+    "mvrv_zscore_age_days": 7,
     "mvrv_zscore_stale": true,
-    "nupl_age_days": 8,
+    "nupl_age_days": 7,
     "nupl_stale": true
   },
   "fed": {
@@ -43,21 +43,21 @@
   },
   "funding_rate": {
     "bn": null,
-    "okx": -0.0001,
-    "avg": -0.0001,
+    "okx": 0.0062,
+    "avg": 0.0062,
     "source": "exchange_public"
   },
   "margin_lending": {
-    "btc_daily_rate": 1.173e-05,
-    "btc_annual_rate": 0.4281,
+    "btc_daily_rate": 1.185e-05,
+    "btc_annual_rate": 0.4325,
     "btc_borrow_limit": 100.0,
-    "open_interest": 28536.0,
+    "open_interest": 28878.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 314.1,
+    "total_b": 314.0,
     "trend": "expand"
   },
   "tips": 2.92,
