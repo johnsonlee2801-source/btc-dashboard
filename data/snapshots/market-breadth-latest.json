@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-03T01:15:11Z",
+  "generatedAt": "2026-10-06T02:21:32Z",
   "description": "Daily static market breadth snapshot for stock.flowhunt.net. Free public sources; not investment advice.",
   "sources": {
     "sp500Constituents": "https://raw.githubusercontent.com/datasets/s-and-p-500-companies/main/data/constituents.csv",
@@ -24,27 +24,27 @@
       "requested": 503,
       "sampleSize": 503,
       "coveragePct": 100.0,
-      "above20Pct": 25.0,
-      "above50Pct": 22.9,
-      "above200Pct": 40.8,
-      "nearHighPct": 8.5,
-      "newHighPct": 1.4,
-      "nearLowPct": 30.6,
-      "newLowPct": 6.4,
-      "advancePct": 58.8,
-      "declinePct": 40.6,
+      "above20Pct": 34.8,
+      "above50Pct": 26.8,
+      "above200Pct": 43.1,
+      "nearHighPct": 10.3,
+      "newHighPct": 3.6,
+      "nearLowPct": 29.6,
+      "newLowPct": 3.0,
+      "advancePct": 63.0,
+      "declinePct": 36.4,
       "counts": {
-        "above20": 126,
-        "above50": 115,
-        "above200": 205,
-        "nearHigh": 43,
-        "newHigh": 7,
-        "nearLow": 154,
-        "newLow": 32,
-        "advanced": 296,
-        "declined": 204
+        "above20": 175,
+        "above50": 135,
+        "above200": 217,
+        "nearHigh": 52,
+        "newHigh": 18,
+        "nearLow": 149,
+        "newLow": 15,
+        "advanced": 317,
+        "declined": 183
       },
-      "updatedAt": "2026-10-01T13:30:00Z",
+      "updatedAt": "2026-10-05T13:30:00Z",
       "leaders": [
         "ABBV",
         "AMD",
@@ -56,8 +56,8 @@
         "TECH",
         "BIIB",
         "CRL",
-        "CVX",
-        "CRWD"
+        "CRWD",
+        "DDOG"
       ],
       "laggards": [
         "MMM",
@@ -74,40 +74,42 @@
         "ALLE"
       ],
       "status": "distribution",
-      "value": "MA50上方 22.9% · MA200上方 40.8% · 新高/新低 7/32 · 上涨/下跌 296/204"
+      "value": "MA50上方 26.8% · MA200上方 43.1% · 新高/新低 18/15 · 上涨/下跌 317/183"
     },
     "nasdaq100": {
       "name": "Nasdaq-100 / QQQ 持仓宽度快照",
       "source": "https://dng-api.invesco.com/cache/v1/accounts/en_US/shareclasses/QQQ/holdings/fund?idType=ticker&interval=monthly&productType=ETF",
-      "sourceUpdatedAt": "2026-10-01",
+      "sourceUpdatedAt": "2026-10-03",
       "requested": 98,
       "sampleSize": 98,
       "coveragePct": 100.0,
-      "above20Pct": 43.9,
-      "above50Pct": 43.9,
-      "above200Pct": 52.0,
-      "nearHighPct": 10.2,
-      "newHighPct": 3.1,
-      "nearLowPct": 21.4,
-      "newLowPct": 4.1,
-      "advancePct": 57.1,
-      "declinePct": 41.8,
+      "above20Pct": 58.2,
+      "above50Pct": 48.0,
+      "above200Pct": 56.1,
+      "nearHighPct": 12.2,
+      "newHighPct": 6.1,
+      "nearLowPct": 19.4,
+      "newLowPct": 3.1,
+      "advancePct": 63.3,
+      "declinePct": 34.7,
       "counts": {
-        "above20": 43,
-        "above50": 43,
-        "above200": 51,
-        "nearHigh": 10,
-        "newHigh": 3,
-        "nearLow": 21,
-        "newLow": 4,
-        "advanced": 56,
-        "declined": 41
+        "above20": 57,
+        "above50": 47,
+        "above200": 55,
+        "nearHigh": 12,
+        "newHigh": 6,
+        "nearLow": 19,
+        "newLow": 3,
+        "advanced": 62,
+        "declined": 34
       },
-      "updatedAt": "2026-10-01T13:30:00Z",
+      "updatedAt": "2026-10-05T13:30:00Z",
       "leaders": [
         "NVDA",
         "AAPL",
+        "MSFT",
         "AMD",
+        "META",
         "PANW",
         "CRWD",
         "FTNT",
@@ -118,20 +120,20 @@
       ],
       "laggards": [
         "AMZN",
-        "GOOGL",
-        "GOOG",
         "AVGO",
         "WMT",
-        "CSCO",
         "COST",
         "NFLX",
         "AMGN",
-        "LIN",
         "TMUS",
-        "PEP"
+        "PEP",
+        "WDC",
+        "VRTX",
+        "BKNG",
+        "SBUX"
       ],
-      "status": "distribution",
-      "value": "MA50上方 43.9% · MA200上方 52.0% · 新高/新低 3/4 · 上涨/下跌 56/41"
+      "status": "neutral",
+      "value": "MA50上方 48.0% · MA200上方 56.1% · 新高/新低 6/3 · 上涨/下跌 62/34"
     }
   },
   "macroIndicators": {
@@ -234,37 +236,41 @@
     },
     "finra_short_sale_volume": {
       "name": "FINRA 场外短量占比自动快照",
-      "source": "https://cdn.finra.org/equity/regsho/daily/CNMSshvol20261002.txt",
+      "source": "https://cdn.finra.org/equity/regsho/daily/CNMSshvol20261005.txt",
       "sourceType": "official_txt",
-      "updatedAt": "2026-10-02",
-      "value": "市场 52.3% · 20日均 51.2% · S&P500 49.5% · QQQ 46.4%",
+      "updatedAt": "2026-10-05",
+      "value": "市场 51.8% · 20日均 51.2% · S&P500 48.2% · QQQ 48.4%",
       "status": "neutral",
-      "marketRatioPct": 52.3,
+      "marketRatioPct": 51.8,
       "marketAverage20dPct": 51.2,
-      "sp500RatioPct": 49.5,
-      "qqqRatioPct": 46.4,
+      "sp500RatioPct": 48.2,
+      "qqqRatioPct": 48.4,
       "latest": {
-        "date": "2026-10-02",
+        "date": "2026-10-05",
         "market": {
-          "tickerCount": 12463,
-          "shortVolume": 3958035002.73,
-          "totalVolume": 7574474083.53,
-          "ratioPct": 52.3
+          "tickerCount": 12335,
+          "shortVolume": 3730675963.86,
+          "totalVolume": 7205705057.71,
+          "ratioPct": 51.8
         },
         "sp500": {
           "tickerCount": 501,
-          "shortVolume": 591911218.97,
-          "totalVolume": 1196364549.03,
-          "ratioPct": 49.5
+          "shortVolume": 536524822.92,
+          "totalVolume": 1113915842.06,
+          "ratioPct": 48.2
         },
         "qqq": {
           "tickerCount": 98,
-          "shortVolume": 221245842.4,
-          "totalVolume": 476651399.39,
-          "ratioPct": 46.4
+          "shortVolume": 226499468.67,
+          "totalVolume": 467965180.19,
+          "ratioPct": 48.4
         }
       },
       "history": [
+        {
+          "date": "2026-10-05",
+          "marketRatioPct": 51.8
+        },
         {
           "date": "2026-10-02",
           "marketRatioPct": 52.3
@@ -340,77 +346,71 @@
         {
           "date": "2026-09-08",
           "marketRatioPct": 50.9
-        },
-        {
-          "date": "2026-09-04",
-          "marketRatioPct": 51.1
         }
       ],
       "abnormalTickers": [
         {
-          "symbol": "TRUC",
-          "ratioPct": 100.0,
-          "totalVolume": 1341995.0
+          "symbol": "XBB",
+          "ratioPct": 99.8,
+          "totalVolume": 1002786.0
         },
         {
-          "symbol": "DUSB",
-          "ratioPct": 98.3,
-          "totalVolume": 8974496.0
+          "symbol": "DDFG",
+          "ratioPct": 99.6,
+          "totalVolume": 2655047.0
         },
         {
-          "symbol": "FTCA",
-          "ratioPct": 96.3,
-          "totalVolume": 7680953.0
+          "symbol": "AFIF",
+          "ratioPct": 97.8,
+          "totalVolume": 8851445.0
         },
         {
-          "symbol": "LDRT",
-          "ratioPct": 96.2,
-          "totalVolume": 1045189.0
+          "symbol": "FLJP",
+          "ratioPct": 95.9,
+          "totalVolume": 2745725.0
         },
         {
-          "symbol": "BSJR",
-          "ratioPct": 95.1,
-          "totalVolume": 1108951.0
+          "symbol": "BNDY",
+          "ratioPct": 93.3,
+          "totalVolume": 1862839.0
         },
         {
-          "symbol": "CGHM",
-          "ratioPct": 94.6,
-          "totalVolume": 5591975.0
-        },
-        {
-          "symbol": "BMO",
-          "ratioPct": 94.2,
-          "totalVolume": 1629612.0
-        },
-        {
-          "symbol": "BLCR",
+          "symbol": "MIR",
           "ratioPct": 90.8,
-          "totalVolume": 1048683.0
+          "totalVolume": 1646197.0
+        },
+        {
+          "symbol": "CCO",
+          "ratioPct": 89.3,
+          "totalVolume": 1632851.0
         },
         {
           "symbol": "EMXC",
-          "ratioPct": 90.2,
-          "totalVolume": 1256910.0
+          "ratioPct": 89.0,
+          "totalVolume": 1652836.0
         },
         {
-          "symbol": "DFUS",
-          "ratioPct": 89.9,
-          "totalVolume": 1015851.0
+          "symbol": "CCEP",
+          "ratioPct": 88.4,
+          "totalVolume": 1139691.0
         },
         {
-          "symbol": "BSV",
-          "ratioPct": 85.7,
-          "totalVolume": 4592453.0
+          "symbol": "WRD",
+          "ratioPct": 86.6,
+          "totalVolume": 2006269.0
         },
         {
-          "symbol": "USFD",
+          "symbol": "BAB",
           "ratioPct": 85.6,
-          "totalVolume": 1592175.0
+          "totalVolume": 1358129.0
+        },
+        {
+          "symbol": "MDT",
+          "ratioPct": 84.9,
+          "totalVolume": 17903023.0
         }
       ],
-      "missingRecentFiles": [
-        "20260907"
-      ],
+      "missingRecentFiles": [],
       "threshold": "FINRA 场外 short/total ≥58% 或高于20日均值6个百分点：场外短量涌入/派发风险；≤42% 或低于20日均值6个百分点：空头压力缓和/承接改善；其他中性。",
       "limitations": "FINRA Daily Short Sale Volume 仅覆盖 TRF/ADF/ORF 等场外报告口径，不等同于全市场 short interest 或机构空头仓位；做市商对冲会造成噪声。"
     },
@@ -418,8 +418,8 @@
       "name": "SEC Form 4 内部人交易快照",
       "source": "https://www.sec.gov/edgar/search/",
       "sourceType": "official_sec_form4",
-      "updatedAt": "2026-10-02",
-      "value": "90日卖出 $856.0M · 买入 $10.0M · 卖出股票 8只 · 买入股票 2只",
+      "updatedAt": "2026-10-05",
+      "value": "90日卖出 $844.5M · 买入 $10.0M · 卖出股票 8只 · 买入股票 2只",
       "status": "distribution",
       "lookbackDays": 90,
       "tickerUniverse": [
@@ -618,7 +618,7 @@
         "JNPR",
         "PSTG"
       ],
-      "sellValueUsd": 856024335.11,
+      "sellValueUsd": 844541360.39,
       "buyValueUsd": 10040066.2,
       "tickerTotals": {
         "AMD": {
@@ -640,9 +640,9 @@
           "purchaseCount": 0
         },
         "CRDO": {
-          "sellValueUsd": 54042187.74,
+          "sellValueUsd": 42559213.02,
           "buyValueUsd": 0,
-          "saleCount": 38,
+          "saleCount": 24,
           "purchaseCount": 0
         },
         "INTC": {
@@ -703,7 +703,7 @@
         },
         {
           "ticker": "CRDO",
-          "valueUsd": 54042187.74
+          "valueUsd": 42559213.02
         },
         {
           "ticker": "SMCI",
@@ -729,6 +729,438 @@
         }
       ],
       "transactions": [
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 22624.0,
+          "price": 354.75,
+          "valueUsd": 8025864.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 22946.0,
+          "price": 355.55,
+          "valueUsd": 8158450.3,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 10058.0,
+          "price": 356.59,
+          "valueUsd": 3586582.22,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 6959.0,
+          "price": 357.66,
+          "valueUsd": 2488955.94,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 4560.0,
+          "price": 358.47,
+          "valueUsd": 1634623.2,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 2162.0,
+          "price": 359.48,
+          "valueUsd": 777195.76,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 397.0,
+          "price": 360.76,
+          "valueUsd": 143221.72,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 512.0,
+          "price": 361.48,
+          "valueUsd": 185077.76,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 186809.0,
+          "price": 354.71,
+          "valueUsd": 66263020.39,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 230031.0,
+          "price": 355.5,
+          "valueUsd": 81776020.5,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 85221.0,
+          "price": 356.58,
+          "valueUsd": 30388104.18,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 50998.0,
+          "price": 357.52,
+          "valueUsd": 18232804.96,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 44618.0,
+          "price": 358.42,
+          "valueUsd": 15991983.56,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 22579.0,
+          "price": 359.44,
+          "valueUsd": 8115795.76,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 407.0,
+          "price": 361.18,
+          "valueUsd": 147000.26,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-09-23",
+          "filingDate": "2026-09-25",
+          "accessionNumber": "0001104659-26-110983",
+          "ownerName": "SAMUELI HENRY",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 11309.0,
+          "price": 361.79,
+          "valueUsd": 4091483.11,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-07-10",
+          "filingDate": "2026-07-14",
+          "accessionNumber": "0001730168-26-000070",
+          "ownerName": "Brazeal Mark David",
+          "ownerTitle": "Chief Legal & Corp Affairs Ofc",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 25000.0,
+          "price": 401.329,
+          "valueUsd": 10033225.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000173016826000070/0001730168-26-000070.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-07-08",
+          "filingDate": "2026-07-10",
+          "accessionNumber": "0001730168-26-000068",
+          "ownerName": "DELLY GAYLA J",
+          "ownerTitle": null,
+          "isDirector": true,
+          "isOfficer": false,
+          "code": "S",
+          "direction": "sale",
+          "shares": 1890.0,
+          "price": 385.38,
+          "valueUsd": 728368.2,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000173016826000068/0001730168-26-000068.txt"
+        },
+        {
+          "ticker": "AVGO",
+          "transactionDate": "2026-07-08",
+          "filingDate": "2026-07-10",
+          "accessionNumber": "0001730168-26-000066",
+          "ownerName": "Brazeal Mark David",
+          "ownerTitle": "Chief Legal & Corp Affairs Ofc",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 25000.0,
+          "price": 379.188,
+          "valueUsd": 9479700.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000173016826000066/0001730168-26-000066.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000656",
+          "ownerName": "Wu Yi-Huang",
+          "ownerTitle": "VP",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 40.0,
+          "price": 76.2,
+          "valueUsd": 3048.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000656/0001046179-26-000656.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000655",
+          "ownerName": "Yoo Chue-San",
+          "ownerTitle": "VP",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 53.0,
+          "price": 76.2,
+          "valueUsd": 4038.6,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000655/0001046179-26-000655.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000654",
+          "ownerName": "Yeap Choh Fei",
+          "ownerTitle": "SVP",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 54.0,
+          "price": 76.2,
+          "valueUsd": 4114.8,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000654/0001046179-26-000654.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000653",
+          "ownerName": "Zhang Kevin Xiaoqiang",
+          "ownerTitle": "SVP and Deputy Co-COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 61.0,
+          "price": 76.2,
+          "valueUsd": 4648.2,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000653/0001046179-26-000653.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000652",
+          "ownerName": "Yuan Lipen",
+          "ownerTitle": "VP",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 41.0,
+          "price": 76.2,
+          "valueUsd": 3124.2,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000652/0001046179-26-000652.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000648",
+          "ownerName": "Mii Yuh-Jier",
+          "ownerTitle": "EVP and Co-COO",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 71.0,
+          "price": 76.2,
+          "valueUsd": 5410.2,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000648/0001046179-26-000648.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000646",
+          "ownerName": "Wu Shien-Yang",
+          "ownerTitle": "SVP",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 57.0,
+          "price": 76.2,
+          "valueUsd": 4343.4,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000646/0001046179-26-000646.txt"
+        },
+        {
+          "ticker": "TSM",
+          "transactionDate": "2026-09-07",
+          "filingDate": "2026-09-09",
+          "accessionNumber": "0001046179-26-000644",
+          "ownerName": "Wei Che-Chia",
+          "ownerTitle": "Chairman and CEO",
+          "isDirector": true,
+          "isOfficer": true,
+          "code": "P",
+          "direction": "purchase",
+          "shares": 149.0,
+          "price": 76.2,
+          "valueUsd": 11353.8,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000644/0001046179-26-000644.txt"
+        },
         {
           "ticker": "AMD",
           "transactionDate": "2026-09-15",
@@ -1912,438 +2344,6 @@
           "price": 488.69,
           "valueUsd": 1462649.17,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/2488/000000248826000165/0000002488-26-000165.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 22624.0,
-          "price": 354.75,
-          "valueUsd": 8025864.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 22946.0,
-          "price": 355.55,
-          "valueUsd": 8158450.3,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 10058.0,
-          "price": 356.59,
-          "valueUsd": 3586582.22,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 6959.0,
-          "price": 357.66,
-          "valueUsd": 2488955.94,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4560.0,
-          "price": 358.47,
-          "valueUsd": 1634623.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2162.0,
-          "price": 359.48,
-          "valueUsd": 777195.76,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 397.0,
-          "price": 360.76,
-          "valueUsd": 143221.72,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 512.0,
-          "price": 361.48,
-          "valueUsd": 185077.76,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 186809.0,
-          "price": 354.71,
-          "valueUsd": 66263020.39,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 230031.0,
-          "price": 355.5,
-          "valueUsd": 81776020.5,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 85221.0,
-          "price": 356.58,
-          "valueUsd": 30388104.18,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 50998.0,
-          "price": 357.52,
-          "valueUsd": 18232804.96,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 44618.0,
-          "price": 358.42,
-          "valueUsd": 15991983.56,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 22579.0,
-          "price": 359.44,
-          "valueUsd": 8115795.76,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 407.0,
-          "price": 361.18,
-          "valueUsd": 147000.26,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-09-23",
-          "filingDate": "2026-09-25",
-          "accessionNumber": "0001104659-26-110983",
-          "ownerName": "SAMUELI HENRY",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 11309.0,
-          "price": 361.79,
-          "valueUsd": 4091483.11,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000110465926110983/0001104659-26-110983.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-07-10",
-          "filingDate": "2026-07-14",
-          "accessionNumber": "0001730168-26-000070",
-          "ownerName": "Brazeal Mark David",
-          "ownerTitle": "Chief Legal & Corp Affairs Ofc",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 25000.0,
-          "price": 401.329,
-          "valueUsd": 10033225.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000173016826000070/0001730168-26-000070.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-07-08",
-          "filingDate": "2026-07-10",
-          "accessionNumber": "0001730168-26-000068",
-          "ownerName": "DELLY GAYLA J",
-          "ownerTitle": null,
-          "isDirector": true,
-          "isOfficer": false,
-          "code": "S",
-          "direction": "sale",
-          "shares": 1890.0,
-          "price": 385.38,
-          "valueUsd": 728368.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000173016826000068/0001730168-26-000068.txt"
-        },
-        {
-          "ticker": "AVGO",
-          "transactionDate": "2026-07-08",
-          "filingDate": "2026-07-10",
-          "accessionNumber": "0001730168-26-000066",
-          "ownerName": "Brazeal Mark David",
-          "ownerTitle": "Chief Legal & Corp Affairs Ofc",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 25000.0,
-          "price": 379.188,
-          "valueUsd": 9479700.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1730168/000173016826000066/0001730168-26-000066.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000656",
-          "ownerName": "Wu Yi-Huang",
-          "ownerTitle": "VP",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 40.0,
-          "price": 76.2,
-          "valueUsd": 3048.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000656/0001046179-26-000656.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000655",
-          "ownerName": "Yoo Chue-San",
-          "ownerTitle": "VP",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 53.0,
-          "price": 76.2,
-          "valueUsd": 4038.6,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000655/0001046179-26-000655.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000654",
-          "ownerName": "Yeap Choh Fei",
-          "ownerTitle": "SVP",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 54.0,
-          "price": 76.2,
-          "valueUsd": 4114.8,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000654/0001046179-26-000654.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000653",
-          "ownerName": "Zhang Kevin Xiaoqiang",
-          "ownerTitle": "SVP and Deputy Co-COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 61.0,
-          "price": 76.2,
-          "valueUsd": 4648.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000653/0001046179-26-000653.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000652",
-          "ownerName": "Yuan Lipen",
-          "ownerTitle": "VP",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 41.0,
-          "price": 76.2,
-          "valueUsd": 3124.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000652/0001046179-26-000652.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000648",
-          "ownerName": "Mii Yuh-Jier",
-          "ownerTitle": "EVP and Co-COO",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 71.0,
-          "price": 76.2,
-          "valueUsd": 5410.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000648/0001046179-26-000648.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000646",
-          "ownerName": "Wu Shien-Yang",
-          "ownerTitle": "SVP",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 57.0,
-          "price": 76.2,
-          "valueUsd": 4343.4,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000646/0001046179-26-000646.txt"
-        },
-        {
-          "ticker": "TSM",
-          "transactionDate": "2026-09-07",
-          "filingDate": "2026-09-09",
-          "accessionNumber": "0001046179-26-000644",
-          "ownerName": "Wei Che-Chia",
-          "ownerTitle": "Chairman and CEO",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "P",
-          "direction": "purchase",
-          "shares": 149.0,
-          "price": 76.2,
-          "valueUsd": 11353.8,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000644/0001046179-26-000644.txt"
         },
         {
           "ticker": "NVDA",
@@ -3852,6 +3852,22 @@
         {
           "ticker": "CRDO",
           "transactionDate": "2026-10-01",
+          "filingDate": "2026-10-05",
+          "accessionNumber": "0001628280-26-064939",
+          "ownerName": "Laufman James",
+          "ownerTitle": "Chief Legal Officer, Secretary",
+          "isDirector": false,
+          "isOfficer": true,
+          "code": "S",
+          "direction": "sale",
+          "shares": 5000.0,
+          "price": 205.0,
+          "valueUsd": 1025000.0,
+          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026064939/0001628280-26-064939.txt"
+        },
+        {
+          "ticker": "CRDO",
+          "transactionDate": "2026-10-01",
           "filingDate": "2026-10-02",
           "accessionNumber": "0001628280-26-064627",
           "ownerName": "Lam Yat Tung",
@@ -4216,246 +4232,6 @@
           "price": 195.6814,
           "valueUsd": 136976.98,
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026063555/0001628280-26-063555.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-21",
-          "filingDate": "2026-09-23",
-          "accessionNumber": "0001628280-26-063214",
-          "ownerName": "Laufman James",
-          "ownerTitle": "Chief Legal Officer, Secretary",
-          "isDirector": false,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 5000.0,
-          "price": 185.0,
-          "valueUsd": 925000.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026063214/0001628280-26-063214.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-17",
-          "filingDate": "2026-09-21",
-          "accessionNumber": "0001628280-26-062896",
-          "ownerName": "Cheng Chi Fung",
-          "ownerTitle": "Chief Technology Officer",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 2500.0,
-          "price": 164.1203,
-          "valueUsd": 410300.75,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026062896/0001628280-26-062896.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-17",
-          "filingDate": "2026-09-21",
-          "accessionNumber": "0001628280-26-062896",
-          "ownerName": "Cheng Chi Fung",
-          "ownerTitle": "Chief Technology Officer",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4979.0,
-          "price": 165.2063,
-          "valueUsd": 822562.17,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026062896/0001628280-26-062896.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-17",
-          "filingDate": "2026-09-21",
-          "accessionNumber": "0001628280-26-062896",
-          "ownerName": "Cheng Chi Fung",
-          "ownerTitle": "Chief Technology Officer",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 6861.0,
-          "price": 166.0467,
-          "valueUsd": 1139246.41,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026062896/0001628280-26-062896.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-17",
-          "filingDate": "2026-09-21",
-          "accessionNumber": "0001628280-26-062896",
-          "ownerName": "Cheng Chi Fung",
-          "ownerTitle": "Chief Technology Officer",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 8252.0,
-          "price": 167.0594,
-          "valueUsd": 1378574.17,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026062896/0001628280-26-062896.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-17",
-          "filingDate": "2026-09-21",
-          "accessionNumber": "0001628280-26-062896",
-          "ownerName": "Cheng Chi Fung",
-          "ownerTitle": "Chief Technology Officer",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4708.0,
-          "price": 168.0283,
-          "valueUsd": 791077.24,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026062896/0001628280-26-062896.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-17",
-          "filingDate": "2026-09-21",
-          "accessionNumber": "0001628280-26-062896",
-          "ownerName": "Cheng Chi Fung",
-          "ownerTitle": "Chief Technology Officer",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 200.0,
-          "price": 169.1,
-          "valueUsd": 33820.0,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026062896/0001628280-26-062896.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-14",
-          "filingDate": "2026-09-16",
-          "accessionNumber": "0001628280-26-062295",
-          "ownerName": "Brennan William Joseph",
-          "ownerTitle": "Pres & Chief Executive Officer",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3984.0,
-          "price": 150.3949,
-          "valueUsd": 599173.28,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026062295/0001628280-26-062295.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-14",
-          "filingDate": "2026-09-16",
-          "accessionNumber": "0001628280-26-062295",
-          "ownerName": "Brennan William Joseph",
-          "ownerTitle": "Pres & Chief Executive Officer",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4675.0,
-          "price": 151.5354,
-          "valueUsd": 708427.99,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026062295/0001628280-26-062295.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-14",
-          "filingDate": "2026-09-16",
-          "accessionNumber": "0001628280-26-062295",
-          "ownerName": "Brennan William Joseph",
-          "ownerTitle": "Pres & Chief Executive Officer",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 5013.0,
-          "price": 152.4914,
-          "valueUsd": 764439.39,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026062295/0001628280-26-062295.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-14",
-          "filingDate": "2026-09-16",
-          "accessionNumber": "0001628280-26-062295",
-          "ownerName": "Brennan William Joseph",
-          "ownerTitle": "Pres & Chief Executive Officer",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 3000.0,
-          "price": 153.3894,
-          "valueUsd": 460168.2,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026062295/0001628280-26-062295.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-11",
-          "filingDate": "2026-09-15",
-          "accessionNumber": "0001628280-26-062039",
-          "ownerName": "Cheng Chi Fung",
-          "ownerTitle": "Chief Technology Officer",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 600.0,
-          "price": 160.9883,
-          "valueUsd": 96592.98,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026062039/0001628280-26-062039.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-11",
-          "filingDate": "2026-09-15",
-          "accessionNumber": "0001628280-26-062039",
-          "ownerName": "Cheng Chi Fung",
-          "ownerTitle": "Chief Technology Officer",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 12912.0,
-          "price": 162.1843,
-          "valueUsd": 2094123.68,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026062039/0001628280-26-062039.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-11",
-          "filingDate": "2026-09-15",
-          "accessionNumber": "0001628280-26-062039",
-          "ownerName": "Cheng Chi Fung",
-          "ownerTitle": "Chief Technology Officer",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 9585.0,
-          "price": 163.0575,
-          "valueUsd": 1562906.14,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026062039/0001628280-26-062039.txt"
-        },
-        {
-          "ticker": "CRDO",
-          "transactionDate": "2026-09-11",
-          "filingDate": "2026-09-15",
-          "accessionNumber": "0001628280-26-062039",
-          "ownerName": "Cheng Chi Fung",
-          "ownerTitle": "Chief Technology Officer",
-          "isDirector": true,
-          "isOfficer": true,
-          "code": "S",
-          "direction": "sale",
-          "shares": 4403.0,
-          "price": 163.8797,
-          "valueUsd": 721562.32,
-          "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1807794/000162828026062039/0001628280-26-062039.txt"
         }
       ],
       "topSales": [
@@ -4782,152 +4558,9 @@
           "sourceUrl": "https://www.sec.gov/Archives/edgar/data/1046179/000104617926000652/0001046179-26-000652.txt"
         }
       ],
-      "transactionCount": 233,
+      "transactionCount": 219,
       "threshold": "90日内部人公开市场卖出≥$50M、净卖出≥$25M、且涉及≥3只样本股：内部人卖出证据偏强；公开市场买入≥$5M、买入额≥卖出额1.5倍、且涉及≥2只样本股：内部人买入/承接证据偏强；其他中性。",
       "limitations": "SEC Form 4 只覆盖公司内部人交易，不等于机构13F持仓或暗池/期权流；大型科技公司高管10b5-1计划性卖出很常见，必须结合价格、宽度、成交量和公告背景判断。"
-    },
-    "sec_ftd_settlement_pressure": {
-      "name": "SEC FTD 结算压力快照",
-      "source": "https://www.sec.gov/data-research/sec-markets-data/fails-deliver-data",
-      "sourceType": "official_sec_ftd_zip",
-      "updatedAt": "20260914",
-      "value": "样本FTD $136.5M · 活跃 49只 · 异常 6只",
-      "status": "distribution",
-      "latestDate": "20260914",
-      "latestNotionalUsd": 136547298.75,
-      "averageNotionalUsd": 196621982.68,
-      "activeTickerCount": 49,
-      "abnormalTickerCount": 6,
-      "files": [
-        "https://www.sec.gov/files/data/fails-deliver-data/cnsfails202609a.zip",
-        "https://www.sec.gov/files/data/fails-deliver-data/cnsfails202608b.zip",
-        "https://www.sec.gov/files/data/fails-deliver-data/cnsfails202608a.zip",
-        "https://www.sec.gov/files/data/fails-deliver-data/cnsfails202607b.zip"
-      ],
-      "topTickers": [
-        {
-          "symbol": "AMD",
-          "latestDate": "20260914",
-          "fails": 104880,
-          "price": 516.13,
-          "notionalUsd": 54131714.4,
-          "maxNotionalUsd": 78550013.29,
-          "avgNotionalUsd": 11259405.93,
-          "notionalVsAvg": 4.81
-        },
-        {
-          "symbol": "PLTR",
-          "latestDate": "20260914",
-          "fails": 108732,
-          "price": 167.23,
-          "notionalUsd": 18183252.36,
-          "maxNotionalUsd": 73542252.82,
-          "avgNotionalUsd": 7607655.29,
-          "notionalVsAvg": 2.39
-        },
-        {
-          "symbol": "DLR",
-          "latestDate": "20260914",
-          "fails": 67910,
-          "price": 188.58,
-          "notionalUsd": 12806467.8,
-          "maxNotionalUsd": 45069807.36,
-          "avgNotionalUsd": 6890638.89,
-          "notionalVsAvg": 1.86
-        },
-        {
-          "symbol": "META",
-          "latestDate": "20260914",
-          "fails": 13800,
-          "price": 648.03,
-          "notionalUsd": 8942814.0,
-          "maxNotionalUsd": 108932867.11,
-          "avgNotionalUsd": 11336576.83,
-          "notionalVsAvg": 0.79
-        },
-        {
-          "symbol": "AAPL",
-          "latestDate": "20260914",
-          "fails": 15390,
-          "price": 332.27,
-          "notionalUsd": 5113635.3,
-          "maxNotionalUsd": 20643153.96,
-          "avgNotionalUsd": 2717319.78,
-          "notionalVsAvg": 1.88
-        },
-        {
-          "symbol": "MSFT",
-          "latestDate": "20260914",
-          "fails": 6700,
-          "price": 495.63,
-          "notionalUsd": 3320721.0,
-          "maxNotionalUsd": 525294106.0,
-          "avgNotionalUsd": 20851869.07,
-          "notionalVsAvg": 0.16
-        },
-        {
-          "symbol": "DUK",
-          "latestDate": "20260914",
-          "fails": 27077,
-          "price": 119.42,
-          "notionalUsd": 3233535.34,
-          "maxNotionalUsd": 22681175.58,
-          "avgNotionalUsd": 4829491.3,
-          "notionalVsAvg": 0.67
-        },
-        {
-          "symbol": "NBIS",
-          "latestDate": "20260914",
-          "fails": 13625,
-          "price": 224.55,
-          "notionalUsd": 3059493.75,
-          "maxNotionalUsd": 113606582.4,
-          "avgNotionalUsd": 18004867.88,
-          "notionalVsAvg": 0.17
-        },
-        {
-          "symbol": "QBTS",
-          "latestDate": "20260914",
-          "fails": 156097,
-          "price": 16.8,
-          "notionalUsd": 2622429.6,
-          "maxNotionalUsd": 23404771.8,
-          "avgNotionalUsd": 2132820.87,
-          "notionalVsAvg": 1.23
-        },
-        {
-          "symbol": "TSM",
-          "latestDate": "20260914",
-          "fails": 5902,
-          "price": 433.24,
-          "notionalUsd": 2556982.48,
-          "maxNotionalUsd": 16165057.86,
-          "avgNotionalUsd": 2858684.13,
-          "notionalVsAvg": 0.89
-        },
-        {
-          "symbol": "DELL",
-          "latestDate": "20260914",
-          "fails": 4405,
-          "price": 567.29,
-          "notionalUsd": 2498912.45,
-          "maxNotionalUsd": 176976664.41,
-          "avgNotionalUsd": 9044839.91,
-          "notionalVsAvg": 0.28
-        },
-        {
-          "symbol": "COHR",
-          "latestDate": "20260914",
-          "fails": 7324,
-          "price": 305.37,
-          "notionalUsd": 2236529.88,
-          "maxNotionalUsd": 42838512.5,
-          "avgNotionalUsd": 4324836.12,
-          "notionalVsAvg": 0.52
-        }
-      ],
-      "threshold": "样本最新 FTD 名义金额≥$250M 或异常股票≥5只：结算压力升温/派发压力线索；≤$50M 且无异常股票：结算压力低/承接改善；其他中性。异常股票指单票FTD名义金额≥$10M或高于近期均值3倍。",
-      "limitations": "FTD 是 NSCC CNS 系统的交割失败余额，不是每日新增失败数；可能来自多种长/短交易原因，不等于裸卖空或机构交易行为证据。SEC 通常半月披露，存在延迟；价格字段为前一日收盘价且SEC不保证与其他源完全一致。"
     }
   },
   "fetchErrors": [
@@ -4977,11 +4610,6 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "AMAT",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "KLAC",
       "error": "HTTP Error 429: Too Many Requests"
     },
@@ -4992,12 +4620,12 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "COHR",
+      "ticker": "AMAT",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "LITE",
+      "ticker": "COHR",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5012,6 +4640,11 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "LITE",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "ANET",
       "error": "HTTP Error 429: Too Many Requests"
     },
@@ -5022,17 +4655,22 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "VRT",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "EQIX",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "VRT",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "APLD",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IREN",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5043,11 +4681,6 @@
     {
       "source": "sec_form4_insider_activity",
       "ticker": "WULF",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "IREN",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5087,17 +4720,22 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "OKLO",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "NNE",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "OKLO",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "SMR",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "TLN",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5108,11 +4746,6 @@
     {
       "source": "sec_form4_insider_activity",
       "ticker": "CEG",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "TLN",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5137,12 +4770,30 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "UUUU",
+      "ticker": "CCJ",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "CCJ",
+      "ticker": "CRDO",
+      "accession": "0001628280-26-063214",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRDO",
+      "accession": "0001628280-26-062896",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "CRDO",
+      "accession": "0001628280-26-062295",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "UUUU",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5157,17 +4808,12 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "POWL",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "GE",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "NEE",
+      "ticker": "POWL",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5177,12 +4823,22 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "SO",
+      "ticker": "NEE",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
       "ticker": "AEE",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SO",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "DUK",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5202,17 +4858,7 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "DUK",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "MSFT",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "META",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5222,17 +4868,7 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "AMZN",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "AAPL",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "CRM",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5242,7 +4878,12 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "SNOW",
+      "ticker": "AMZN",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "META",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5252,7 +4893,12 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "MDB",
+      "ticker": "CRM",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "SNOW",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5267,6 +4913,11 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "MDB",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "ADBE",
       "error": "HTTP Error 429: Too Many Requests"
     },
@@ -5277,22 +4928,22 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "DUOL",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "APP",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "IBM",
+      "ticker": "DUOL",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
       "ticker": "CRWD",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "IBM",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5317,12 +4968,12 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "RXRX",
+      "ticker": "TER",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "TER",
+      "ticker": "PATH",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5337,17 +4988,7 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "PATH",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
       "ticker": "AUR",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_form4_insider_activity",
-      "ticker": "BIDU",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5357,7 +4998,17 @@
     },
     {
       "source": "sec_form4_insider_activity",
+      "ticker": "RXRX",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
       "ticker": "BABA",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_form4_insider_activity",
+      "ticker": "BIDU",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5367,12 +5018,12 @@
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "PDD",
+      "ticker": "JD",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_form4_insider_activity",
-      "ticker": "JD",
+      "ticker": "PDD",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5382,17 +5033,12 @@
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "Citadel Advisors",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_13f_institutional_sample",
-      "manager": "Millennium Management",
-      "error": "HTTP Error 429: Too Many Requests"
-    },
-    {
-      "source": "sec_13f_institutional_sample",
       "manager": "ARK Investment Management",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_13f_institutional_sample",
+      "manager": "Citadel Advisors",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5402,12 +5048,12 @@
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "D. E. Shaw",
+      "manager": "Millennium Management",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
       "source": "sec_13f_institutional_sample",
-      "manager": "Tiger Global Management",
+      "manager": "D. E. Shaw",
       "error": "HTTP Error 429: Too Many Requests"
     },
     {
@@ -5417,7 +5063,16 @@
     },
     {
       "source": "sec_13f_institutional_sample",
+      "manager": "Tiger Global Management",
+      "error": "HTTP Error 429: Too Many Requests"
+    },
+    {
+      "source": "sec_13f_institutional_sample",
       "error": "parser returned no data"
+    },
+    {
+      "source": "sec_ftd_settlement_pressure",
+      "error": "HTTP Error 429: Too Many Requests"
     }
   ],
   "limitations": "S&P500 constituents come from a public GitHub dataset; Nasdaq-100 uses Invesco QQQ holdings as a practical proxy and can include non-index cash/other rows filtered out. Yahoo spark is a free public endpoint and may throttle. Breadth signals show market structure, not institutional intent by themselves."
