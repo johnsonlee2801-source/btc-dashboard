@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-10T05:49:12.569942+00:00",
-  "timestamp_cn": "2026-10-10 13:49",
+  "timestamp": "2026-10-10T12:28:25.115204+00:00",
+  "timestamp_cn": "2026-10-10 20:28",
   "price": {
-    "price": 82725,
-    "change24h": 0.49
+    "price": 82772,
+    "change24h": -0.33
   },
   "etf": {
     "sum5d": -678.9,
@@ -43,15 +43,15 @@
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0053,
-    "avg": 0.0053,
+    "okx": 0.0016,
+    "avg": 0.0016,
     "source": "exchange_public"
   },
   "margin_lending": {
-    "btc_daily_rate": 1.184e-05,
-    "btc_annual_rate": 0.4322,
+    "btc_daily_rate": 1.157e-05,
+    "btc_annual_rate": 0.4223,
     "btc_borrow_limit": 100.0,
-    "open_interest": 29896.0,
+    "open_interest": 30062.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
