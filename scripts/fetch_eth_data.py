@@ -10,13 +10,14 @@ ETH 链上观察 - 数据抓取脚本
 - Etherscan 公开页面: 前 100 地址持仓占比
 - 以太坊公共节点 (publicnode): 最近 24 小时基础费销毁量
 - DefiLlama: 以太坊链上稳定币市值
+- validatorqueue.com: 质押总量与质押占比（页面内嵌逐日数据，不需要 API key；beaconcha.in 现在要 key）
 - 交易所 ETH 存量与 7 日净流量不在这里抓：页面直接读 data/cex-reserves.json，
   和首页「交易所 BTC / ETH 存量」用同一份数据
 
 原则：抓不到就写 null，页面显示「暂无数据」，并把该项移出评分。
 以前抓取失败会回退到写死的「估计值」（地址数 17.8 亿、质押集中度 58%、长期持有 62%、
 整张持仓分层表、5 家交易所储备……），每天原样发布，看起来像实时数据，还参与了评分。
-质押占比、质押集中度、长期持有占比、持仓分层这几项目前没有可用的免费来源，固定为 null。
+质押集中度、长期持有占比、持仓分层这几项目前没有可用的免费来源，固定为 null。
 """
 
 import json, urllib.request, urllib.error, time, os, re
@@ -185,7 +186,33 @@ def fetch_burn_rate(blocks=7200, chunk=1024):
 
 
 # ============================================================
-# 5. 稳定币市值 - DefiLlama
+# 5. 质押总量 - validatorqueue.com
+# ============================================================
+STAKING_RECORD = re.compile(
+    r'\{"date": "(\d{4}-\d{2}-\d{2})"[^{}]*?"staked_amount": ([\d.]+), "staked_percent": ([\d.]+)')
+
+
+def parse_staking_records(html):
+    """validatorqueue.com 页面内嵌的逐日记录 -> [(date, staked_eth, staked_pct)]，按日期排序。"""
+    return sorted((d, float(a), float(p)) for d, a, p in STAKING_RECORD.findall(html or ""))
+
+
+def fetch_staking():
+    log("抓取质押总量 (validatorqueue.com)...")
+    records = parse_staking_records(http_get("https://www.validatorqueue.com/", headers={"Accept": "text/html"}, timeout=30))
+    if not records:
+        log("  ⚠️ 页面里没有找到质押记录，本项置空")
+        return None
+    as_of, staked, pct = records[-1]
+    if not (0 < pct < 100):
+        log(f"  ⚠️ 质押占比 {pct} 不合理，本项置空")
+        return None
+    log(f"  ✅ 质押 {staked:,.0f} ETH，占供应 {pct}% (数据日期: {as_of})")
+    return {"total_staked": round(staked), "staked_pct": pct, "as_of": as_of}
+
+
+# ============================================================
+# 6. 稳定币市值 - DefiLlama
 # ============================================================
 def fetch_stablecoin_mcap():
     log("抓取 ETH 链上稳定币市值 (DefiLlama)...")
@@ -268,14 +295,20 @@ def main():
 
     result['stablecoin_mcap_b'] = fetch_stablecoin_mcap()
 
-    for f in ('holder_count', 'active_addr_7d', 'whale_top100_pct', 'burn_rate_daily'):
+    staking = fetch_staking() or {}
+    result['staked_pct'] = staking.get('staked_pct')
+    result['total_staked'] = staking.get('total_staked')
+    for f in ('staked_pct', 'total_staked'):
+        if result[f] is not None:
+            as_of[f] = staking['as_of']
+
+    for f in ('holder_count', 'active_addr_7d', 'whale_top100_pct', 'burn_rate_daily', 'staked_pct', 'total_staked'):
         if result[f] is None:
             result[f], as_of[f] = carry_forward(previous, f, today)
             if as_of[f] is None:
                 del as_of[f]
 
     # 目前没有免费且可靠的来源：明确置空，页面显示「暂无可靠数据源」，不参与评分
-    result['staked_pct'] = None
     result['stake_conc_top5'] = None
     result['lth_pct'] = None
     result['distribution'] = None

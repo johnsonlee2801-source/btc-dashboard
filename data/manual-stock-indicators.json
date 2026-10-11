@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
   "description": "手工开启 stock.flowhunt.net 的 Manual/Pending 指标。只填写来自公开来源的真实值；不要为了显示而估算。enabled=true 后会覆盖同 id 指标；CBOE Put/Call 已优先走自动抓取，手工项仅作自动源失效时的备用记录。",
-  "updatedAt": "2026-05-07T10:18:53Z",
+  "updatedAt": "2026-10-12T00:00:00Z",
   "indicators": {
     "bofa_fms_cash": {
       "enabled": true,
-      "value": "Cash 4.3% AUM",
-      "status": "neutral",
-      "updatedAt": "2026-04-15",
+      "value": "Sep-26 Cash 3.9% AUM（8月 3.5%）",
+      "status": "distribution",
+      "updatedAt": "2026-09-15",
       "dataStatus": "Manual",
-      "sourceUrl": "https://www.investing.com/news/stock-market-news/bofa-survey-shows-investors-are-most-bearish-since-june-4612222",
-      "manualNote": "媒体转载 BofA Global Fund Manager Survey：现金水平 4.3%，低于 5% contrarian buy 阈值、高于 4% sell signal 阈值，按中性录入。二手来源，需优先用 BofA 原报告复核。"
+      "sourceUrl": "https://www.tradingview.com/news/macenews:fec1f37da094b:0-bofa-global-research-fund-manager-survey-fund-managers-cut-back-on-risk-in-september-amid-rising-uncertainty/",
+      "manualNote": "BofA Global Fund Manager Survey 2026 年 9 月（调查 9/4–9/10，9/15 发布，190 位基金经理）：现金 3.9%，8 月 3.5%。BofA 现金规则：≤4.0% 为逆向「卖出信号」区，≥5% 为「买入信号」区，按 distribution 录入。二手来源（MNI/TradingView 转载），月度更新；超过 45 天未更新会被接口自动忽略。"
     },
     "finra_margin_debt": {
       "enabled": false,

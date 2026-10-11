@@ -332,7 +332,7 @@
       <div class="metric-card">
         <div class="metric-label">流通供应量</div>
         <div class="metric-value" id="totalSupply">--</div>
-        <div class="metric-sub" id="stakedPct">质押占比：暂无免费数据源</div>
+        <div class="metric-sub" id="stakedPct">质押占比：--</div>
       </div>
     </div>
   </div>
@@ -494,6 +494,7 @@ const ethState = {
   activeAddr: null,
   totalSupply: null,
   stakedPct: null,
+  totalStaked: null,
   // Scores (each 0-5)
   whale100Pct: null,    // top 100 addr hold pct
   exflow7d: null,        // exchange netflow (ETH, positive = outflow = bullish)
@@ -593,7 +594,9 @@ function render() {
   if (ethState.holderCount !== null) setText('holderCount', (ethState.holderCount / 1e6).toFixed(2) + 'M');
   if (ethState.activeAddr !== null) setText('activeAddr', ethState.activeAddr.toLocaleString());
   if (ethState.totalSupply !== null) setText('totalSupply', (ethState.totalSupply / 1e6).toFixed(2) + 'M ETH');
-  if (ethState.stakedPct !== null) setText('stakedPct', '质押占比: ' + ethState.stakedPct.toFixed(1) + '%');
+  setText('stakedPct', ethState.stakedPct !== null
+    ? '质押占比 ' + ethState.stakedPct.toFixed(1) + '%' + (ethState.totalStaked !== null ? '（' + (ethState.totalStaked / 1e6).toFixed(1) + 'M ETH）' : '')
+    : '质押占比：暂无数据');
 
   // Score rows
   const whaleColor = sc.whale >= 4 ? 'var(--green)' : sc.whale >= 3 ? 'var(--yellow)' : 'var(--red)';
@@ -792,6 +795,7 @@ async function fetchEthDataJson() {
     ethState.holderCount = num(d.holder_count);
     ethState.activeAddr = num(d.active_addr_7d);
     ethState.stakedPct = num(d.staked_pct);
+    ethState.totalStaked = num(d.total_staked);
     ethState.whale100Pct = num(d.whale_top100_pct);
     ethState.lthPct = num(d.lth_pct);
     ethState.stakeConc = num(d.stake_conc_top5);

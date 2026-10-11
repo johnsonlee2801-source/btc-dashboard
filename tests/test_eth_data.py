@@ -28,6 +28,17 @@ class WhaleConcentrationTests(unittest.TestCase):
         self.assertAlmostEqual(sum(kept), 2.1)
 
 
+class StakingTests(unittest.TestCase):
+    def test_latest_staking_record_is_picked(self):
+        html = ('<script>var d=[{"date": "2026-10-10", "validators": 1, "staked_amount": 43679166, "staked_percent": 35.77, "apr": 2.6},'
+                '{"date": "2026-10-11", "validators": 1, "staked_amount": 43669573, "staked_percent": 35.77, "apr": 2.6}]</script>')
+        records = eth.parse_staking_records(html)
+        self.assertEqual(records[-1], ("2026-10-11", 43669573.0, 35.77))
+
+    def test_page_without_records_yields_nothing(self):
+        self.assertEqual(eth.parse_staking_records("<html>Just a moment...</html>"), [])
+
+
 class CarryForwardTests(unittest.TestCase):
     def test_recent_value_is_reused_with_its_date(self):
         prev = {"burn_rate_daily": 15.0, "as_of": {"burn_rate_daily": "2026-10-10"}}
@@ -53,7 +64,7 @@ class NoInventedNumbersTests(unittest.TestCase):
 
     def test_unavailable_metrics_are_published_as_null(self):
         data = json.loads((ROOT / "eth-data.json").read_text(encoding="utf-8"))
-        for field in ("staked_pct", "stake_conc_top5", "lth_pct", "distribution"):
+        for field in ("stake_conc_top5", "lth_pct", "distribution"):
             with self.subTest(field=field):
                 self.assertIsNone(data.get(field))
         self.assertNotIn("exchanges", data)
