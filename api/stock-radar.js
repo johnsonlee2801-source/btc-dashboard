@@ -745,13 +745,38 @@ function metric({
   };
 }
 
+// 手工值超过这个天数就不再覆盖自动数据：BofA 现金水平曾以 4 月的数值启用到 10 月，一直参与评分。
+// 月度调查留出半个月余量；没有 updatedAt 的手工值一律视为过期。
+const MANUAL_MAX_AGE_DAYS = 45;
+
+function manualAgeDays(updatedAt, now = Date.now()) {
+  const t = Date.parse(updatedAt || '');
+  return Number.isFinite(t) ? Math.floor((now - t) / 86400000) : null;
+}
+
 /** 计算综合状态 */
-function applyManualIndicatorOverrides(metrics, manualConfig) {
+function applyManualIndicatorOverrides(metrics, manualConfig, now = Date.now()) {
   const indicators = manualConfig?.indicators || {};
   const validStatuses = new Set(['distribution', 'neutral', 'accumulation', 'pending']);
   return metrics.map(metricItem => {
     const override = indicators[metricItem.id];
     if (!override?.enabled) return metricItem;
+
+    const ageDays = manualAgeDays(override.updatedAt, now);
+    if (ageDays === null || ageDays > MANUAL_MAX_AGE_DAYS) {
+      // 过期的手工值不覆盖，保留自动结果（没有自动源时就是 Pending，不计分），并说明原因
+      return Object.assign({}, metricItem, {
+        extras: Object.assign({}, metricItem.extras || {}, {
+          manualOverrideIgnored: {
+            updatedAt: override.updatedAt || null,
+            ageDays,
+            reason: ageDays === null
+              ? '手工值没有日期，已忽略'
+              : `手工值录入于 ${override.updatedAt}，已超过 ${MANUAL_MAX_AGE_DAYS} 天，已忽略`,
+          },
+        }),
+      });
+    }
 
     const status = validStatuses.has(override.status) ? override.status : metricItem.status;
     const dataStatus = ['Manual', 'Cached', 'Live', 'Pending', 'data_unavailable'].includes(override.dataStatus)

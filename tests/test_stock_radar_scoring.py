@@ -31,6 +31,22 @@ def run_aggregate(metrics):
     return json.loads(result.stdout)
 
 
+def run_manual_overrides(metrics, manual_config, now_iso):
+    source = MODULE_PATH.read_text(encoding="utf-8")
+    start = source.index("const MANUAL_MAX_AGE_DAYS")
+    end = source.index("const METRIC_WEIGHTS")
+    script = textwrap.dedent(
+        f"""
+        const metric = m => m;
+        {source[start:end]}
+        const out = applyManualIndicatorOverrides({json.dumps(metrics, ensure_ascii=False)}, {json.dumps(manual_config, ensure_ascii=False)}, Date.parse({json.dumps(now_iso)}));
+        console.log(JSON.stringify(out));
+        """
+    )
+    result = subprocess.run(["node", "--input-type=module", "-e", script], cwd=ROOT, check=True, text=True, capture_output=True)
+    return json.loads(result.stdout)
+
+
 def run_history_fixture():
     source = MODULE_PATH.read_text(encoding="utf-8")
     start = source.index("function computeDistributionDays")
@@ -118,6 +134,23 @@ class StockRadarScoringTests(unittest.TestCase):
         result = run_aggregate(metrics)
 
         self.assertEqual(result["score"], 100)
+
+    def test_fresh_manual_override_applies(self):
+        base = [{"id": "bofa_fms_cash", "status": "pending", "value": None}]
+        cfg = {"indicators": {"bofa_fms_cash": {"enabled": True, "status": "neutral", "value": "Cash 4.3%", "updatedAt": "2026-10-01"}}}
+        out = run_manual_overrides(base, cfg, "2026-10-12T00:00:00Z")
+        self.assertEqual(out[0]["status"], "neutral")
+        self.assertEqual(out[0]["value"], "Cash 4.3%")
+
+    def test_stale_or_undated_manual_override_is_ignored(self):
+        base = [{"id": "bofa_fms_cash", "status": "pending", "value": None}]
+        for updated in ("2026-04-15", None):
+            with self.subTest(updatedAt=updated):
+                cfg = {"indicators": {"bofa_fms_cash": {"enabled": True, "status": "neutral", "value": "Cash 4.3%", "updatedAt": updated}}}
+                out = run_manual_overrides(base, cfg, "2026-10-12T00:00:00Z")
+                self.assertEqual(out[0]["status"], "pending")
+                self.assertIsNone(out[0]["value"])
+                self.assertIn("已忽略", out[0]["extras"]["manualOverrideIgnored"]["reason"])
 
     def test_market_temperature_history_is_chronological_and_bounded(self):
         result = run_history_fixture()
