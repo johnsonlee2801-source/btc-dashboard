@@ -14,6 +14,7 @@ on:
       - Update BTC dashboard data
       - Update ETH on-chain data
       - Update stock breadth snapshot
+      - Update CEX reserves
     types:
       - completed
   workflow_dispatch:
