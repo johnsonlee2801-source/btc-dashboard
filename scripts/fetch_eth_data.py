@@ -2,26 +2,36 @@
 """
 ETH 链上观察 - 数据抓取脚本
 抓取以太坊链上数据，写入 eth-data.json
-每日运行（建议每6小时跑一次）
+每日运行一次
 
 数据源（全免费）：
 - CoinGecko API: ETH 价格、供应量
-- Etherscan API: 持币地址数、顶级持仓地址
-- DefiLlama: 质押数据、稳定币市值
-- BeaconScan: 质押集中度
-- ultrasound.money: ETH 销毁数据
+- Coin Metrics community API: 持币地址数（余额 > 0）、日活跃地址
+- Etherscan 公开页面: 前 100 地址持仓占比
+- 以太坊公共节点 (publicnode): 最近 24 小时基础费销毁量
+- DefiLlama: 以太坊链上稳定币市值
+- 交易所 ETH 存量与 7 日净流量不在这里抓：页面直接读 data/cex-reserves.json，
+  和首页「交易所 BTC / ETH 存量」用同一份数据
+
+原则：抓不到就写 null，页面显示「暂无数据」，并把该项移出评分。
+以前抓取失败会回退到写死的「估计值」（地址数 17.8 亿、质押集中度 58%、长期持有 62%、
+整张持仓分层表、5 家交易所储备……），每天原样发布，看起来像实时数据，还参与了评分。
+质押占比、质押集中度、长期持有占比、持仓分层这几项目前没有可用的免费来源，固定为 null。
 """
 
 import json, urllib.request, urllib.error, time, os, re
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta, date
 
-ETHERSCAN_KEY = os.environ.get("ETHERSCAN_KEY", "")  # 可选，无 key 也能用免费接口
 REPO_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_FILE = os.path.join(REPO_DIR, "eth-data.json")
-GH_TOKEN = os.environ.get("GH_TOKEN", "")
+ETH_RPC = "https://ethereum-rpc.publicnode.com"
+# 抓取失败时，上次的值在这么多天内仍可沿用（页面会显示数据日期）
+CARRY_FORWARD_DAYS = 3
+
 
 def log(msg):
     print(f"[{datetime.now().strftime('%H:%M:%S')}] {msg}")
+
 
 def http_get(url, headers=None, timeout=20):
     h = {
@@ -38,13 +48,26 @@ def http_get(url, headers=None, timeout=20):
         log(f"  fetch error {url[:80]}: {e}")
         return None
 
+
 def safe_json(text):
     if not text:
         return None
     try:
         return json.loads(text)
-    except:
+    except Exception:
         return None
+
+
+def rpc(method, params, timeout=20):
+    body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": method, "params": params}).encode()
+    req = urllib.request.Request(ETH_RPC, data=body, headers={"Content-Type": "application/json", "User-Agent": "Mozilla/5.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return json.loads(r.read()).get("result")
+    except Exception as e:
+        log(f"  rpc error {method}: {e}")
+        return None
+
 
 # ============================================================
 # 1. ETH 基础数据 - CoinGecko
@@ -62,271 +85,147 @@ def fetch_coingecko():
         'price_change_24h': md.get('price_change_percentage_24h'),
         'market_cap': md.get('market_cap', {}).get('usd'),
         'circulating_supply': md.get('circulating_supply'),
-        'holder_count': d.get('community_data', {}).get('blockchain_accounts'),
     }
     log(f"  ✅ 价格: ${result['price_usd']}, 供应: {result['circulating_supply']}")
     return result
 
-# ============================================================
-# 2. ETH 累计地址数 - Etherscan
-# ============================================================
-def fetch_holder_count():
-    log("抓取累计地址数 (Etherscan unique addresses)...")
-    # Etherscan address chart is total unique addresses, not holder addresses.
-    # The frontend labels it explicitly to avoid implying every address holds ETH.
-    url = "https://etherscan.io/chart/address?output=csv"
-    text = http_get(url)
-    if text:
-        lines = text.strip().split('\n')
-        for line in reversed(lines[-5:]):
-            parts = line.split(',')
-            if len(parts) >= 2:
-                try:
-                    count = int(parts[1].strip().strip('"'))
-                    log(f"  ✅ 累计地址数: {count:,}")
-                    return count
-                except:
-                    pass
 
-    # Fallback: estimate from known public data (~1.7B+ unique addresses)
-    log("  ⚠️ 使用估计值")
-    return 1_780_000_000
+# ============================================================
+# 2. 地址数据 - Coin Metrics community
+# ============================================================
+def fetch_coinmetrics_addresses():
+    """持币地址数（余额 > 0 的地址，AdrBalCnt）与近 7 日平均日活跃地址（AdrActCnt）。"""
+    log("抓取地址数据 (Coin Metrics)...")
+    url = ("https://community-api.coinmetrics.io/v4/timeseries/asset-metrics"
+           "?assets=eth&metrics=AdrBalCnt,AdrActCnt&frequency=1d&page_size=7&paging_from=end")
+    d = safe_json(http_get(url, timeout=30))
+    rows = (d or {}).get("data") or []
+    if not rows:
+        return {}
+    out = {"as_of": rows[-1]["time"][:10]}
+    try:
+        out["holder_count"] = int(float(rows[-1]["AdrBalCnt"]))
+    except (KeyError, TypeError, ValueError):
+        pass
+    active = []
+    for r in rows:
+        try:
+            active.append(float(r["AdrActCnt"]))
+        except (KeyError, TypeError, ValueError):
+            pass
+    if active:
+        out["active_addr_7d"] = round(sum(active) / len(active))
+    log(f"  ✅ 持币地址 {out.get('holder_count')} / 7日均活跃 {out.get('active_addr_7d')} (数据日期: {out['as_of']})")
+    return out
+
 
 # ============================================================
 # 3. Top 100 地址持仓占比 - Etherscan 公开页面
 # ============================================================
+# 这些地址的余额不是「某个持有者的仓位」：质押存款合约记录的是历年累计存款（单独就占供应的
+# 七成以上），WETH 是代币合约，跨链桥里是 L2 用户的钱。算进去前 100 地址占比会高达 90%+，毫无意义
+NON_HOLDER_PATTERNS = re.compile(r"Beacon Deposit|Wrapped Ether|Bridge|Portal", re.I)
+
+
+def parse_top_accounts(html):
+    """Etherscan 前 100 地址页 -> [(名称标签, 占比%)]。"""
+    out = []
+    for row in re.findall(r"<tr>(.*?)</tr>", html, re.S):
+        cells = [" ".join(re.sub(r"<[^>]+>", " ", c).split()) for c in re.findall(r"<td[^>]*>(.*?)</td>", row, re.S)]
+        pct = next((c for c in cells if re.fullmatch(r"\d+\.\d+%", c)), None)
+        if pct:
+            out.append((cells[2] if len(cells) > 2 else "", float(pct[:-1])))
+    return out
+
+
 def fetch_whale_concentration():
+    """前 100 地址中，剔除非持有者合约后的持仓占比。"""
     log("抓取鲸鱼地址集中度 (Etherscan)...")
+    html = http_get("https://etherscan.io/accounts/1?ps=100")
+    accounts = parse_top_accounts(html) if html else []
+    if len(accounts) < 100:
+        log(f"  ⚠️ 页面解析失败（只找到 {len(accounts)} 行），本项置空")
+        return None
+    holders = [pct for name, pct in accounts[:100] if not NON_HOLDER_PATTERNS.search(name)]
+    total_pct = round(sum(holders), 2)
+    log(f"  ✅ 前100地址占比（剔除 {100 - len(holders)} 个非持有者合约）: {total_pct}%")
+    return total_pct
 
-    # ETH total supply ~120M
-    total_supply = 120_000_000
-
-    # Top holders page
-    url = "https://etherscan.io/accounts/1?ps=100"
-    html = http_get(url)
-    if not html:
-        return None, None
-
-    # Parse percentages from the table
-    # Pattern: percentage values like "x.xxxxx%"
-    pcts = re.findall(r'(\d+\.\d+)%\s*</td>', html)
-    if len(pcts) >= 10:
-        # Sum top 100 percentages
-        total_pct = sum(float(p) for p in pcts[:100])
-        log(f"  ✅ 前100地址占比: {total_pct:.2f}%")
-
-        # Build distribution tiers from the page
-        return total_pct, None
-
-    # Fallback using known approximate data
-    log("  ⚠️ 使用 Etherscan API 方式获取")
-
-    # Try Etherscan API if key available
-    if ETHERSCAN_KEY:
-        url2 = f"https://api.etherscan.io/api?module=stats&action=ethsupply&apikey={ETHERSCAN_KEY}"
-        d = safe_json(http_get(url2))
-        if d and d.get('result'):
-            supply = int(d['result']) / 1e18
-            log(f"  ✅ ETH供应量: {supply:.0f}")
-
-    return None, None
 
 # ============================================================
-# 4. 质押数据 - DefiLlama
+# 4. ETH 销毁速率 - 公共节点 eth_feeHistory
 # ============================================================
-def fetch_staking():
-    log("抓取质押数据 (DefiLlama)...")
-    url = "https://api.llama.fi/protocol/lido"
-    d = safe_json(http_get(url))
-    staked_eth = None
-    if d and d.get('currentChainTvls'):
-        staked_eth = d['currentChainTvls'].get('Ethereum')
-        if staked_eth and staked_eth > 1e9:
-            staked_eth = staked_eth / (1800)  # rough ETH price conversion
-        log(f"  Lido TVL (ETH estimate): {staked_eth}")
+def fetch_burn_rate(blocks=7200, chunk=1024):
+    """最近约 24 小时（7200 个区块）的基础费销毁量。
 
-    # Beacon chain total staked
-    url2 = "https://beaconcha.in/api/v1/epoch/latest"
-    d2 = safe_json(http_get(url2))
-    total_staked = None
-    if d2 and d2.get('data'):
-        # eligibleether in gwei
-        eligible = d2['data'].get('eligibleether', 0)
-        total_staked = eligible / 1e9  # gwei → ETH
-        log(f"  ✅ 总质押量: {total_staked:.0f} ETH")
+    每个区块销毁 = baseFeePerGas × gasUsed，gasUsed = gasUsedRatio × gasLimit。
+    gasLimit 取最新区块的值（一天内基本不变）。不含 blob 费用的销毁，那部分量级很小。
+    """
+    log("计算 ETH 销毁速率 (公共节点 eth_feeHistory)...")
+    latest = rpc("eth_getBlockByNumber", ["latest", False])
+    if not latest:
+        return None
+    gas_limit = int(latest["gasLimit"], 16)
+    newest = int(latest["number"], 16)
+    burned_wei, counted = 0, 0
+    while counted < blocks:
+        n = min(chunk, blocks - counted)
+        h = rpc("eth_feeHistory", [hex(n), hex(newest - counted), []])
+        if not h or not h.get("gasUsedRatio"):
+            log("  ⚠️ eth_feeHistory 中途失败，本项置空")
+            return None
+        # baseFeePerGas 比 gasUsedRatio 多一项（下一个区块的预估），按区块一一对应
+        for base_fee, ratio in zip(h["baseFeePerGas"], h["gasUsedRatio"]):
+            burned_wei += int(base_fee, 16) * ratio * gas_limit
+        counted += len(h["gasUsedRatio"])
+        time.sleep(0.3)
+    daily = burned_wei / 1e18 * (7200 / counted)
+    log(f"  ✅ 最近 {counted} 个区块销毁约 {daily:,.1f} ETH/天")
+    return round(daily, 1)
 
-    return {
-        'total_staked': total_staked,
-        'lido_approx': staked_eth
-    }
-
-# ============================================================
-# 5. 质押集中度 - Rated Network / beaconcha.in
-# ============================================================
-def fetch_stake_concentration():
-    log("抓取质押集中度...")
-    # Top validators from beaconcha.in
-    url = "https://beaconcha.in/api/v1/validators/leaderboard?limit=10"
-    d = safe_json(http_get(url))
-
-    # Known approximate concentration (Lido ~28%, Coinbase ~12%, Binance ~4%, etc.)
-    # Source: rated.network public data
-    # Top 5 entities: Lido, Coinbase, Figment, Binance, Kraken ~ 55-60%
-    approx_top5 = 58.0  # approximate %
-    log(f"  ✅ 质押前5实体集中度 (估计): {approx_top5}%")
-    return approx_top5
 
 # ============================================================
-# 6. ETH 销毁速率 - ultrasound.money / Etherscan
-# ============================================================
-def fetch_burn_rate():
-    log("抓取 ETH 销毁数据...")
-
-    # Try ultrasound.money public API
-    url = "https://api.ultrasound.money/fees/burn-rates"
-    d = safe_json(http_get(url))
-    if d:
-        # daily rate in ETH
-        daily = d.get('d1', {}).get('burn_rate')
-        if daily:
-            log(f"  ✅ 销毁速率: {daily:.0f} ETH/天")
-            return float(daily)
-
-    # Fallback: Etherscan gas usage based estimate
-    # Rough estimate: ~1000-3000 ETH/day in current environment
-    log("  ⚠️ 使用估计值: 1200 ETH/天")
-    return 1200.0
-
-# ============================================================
-# 7. 交易所净流量 - 估算（CryptoQuant公开数据）
-# ============================================================
-def fetch_exchange_flow():
-    log("抓取交易所 ETH 流量...")
-
-    exchanges = []
-    total_flow = 0
-
-    # CoinGlass public exchange data
-    url = "https://open-api.coinglass.com/public/v2/indicator/exchange_balance?symbol=ETH"
-    d = safe_json(http_get(url, headers={'coinglassSecret': ''}))
-    if d and d.get('data'):
-        for ex in d['data'][:8]:
-            name = ex.get('exchangeName', '')
-            balance = ex.get('balance', 0)
-            change7d = ex.get('change7d', 0)
-            if name and balance:
-                exchanges.append({
-                    'name': name,
-                    'reserve': f"{balance/1000:.1f}K",
-                    'flow': -int(change7d)  # negative change = outflow = bullish
-                })
-                total_flow += -int(change7d)
-
-    if not exchanges:
-        # Fallback: known approximate data
-        log("  ⚠️ 使用近似交易所数据")
-        exchanges = [
-            {'name': 'Binance', 'reserve': '3,200K', 'flow': 12000},
-            {'name': 'Coinbase', 'reserve': '2,800K', 'flow': 8000},
-            {'name': 'Kraken', 'reserve': '1,200K', 'flow': -3000},
-            {'name': 'OKX', 'reserve': '980K', 'flow': 5000},
-            {'name': 'Bybit', 'reserve': '750K', 'flow': 2000},
-        ]
-        total_flow = sum(e['flow'] for e in exchanges)
-
-    log(f"  ✅ 7日交易所净{'流出' if total_flow > 0 else '流入'}: {abs(total_flow):,} ETH")
-    return exchanges, total_flow
-
-# ============================================================
-# 8. 稳定币市值 - DefiLlama
+# 5. 稳定币市值 - DefiLlama
 # ============================================================
 def fetch_stablecoin_mcap():
     log("抓取 ETH 链上稳定币市值 (DefiLlama)...")
-    url = "https://stablecoins.llama.fi/stablecoins?includePrices=false"
-    d = safe_json(http_get(url))
+    d = safe_json(http_get("https://stablecoins.llama.fi/stablecoins?includePrices=false"))
     if not d:
         return None
-
     total = 0
     for sc in d.get('peggedAssets', []):
-        chains = sc.get('chainCirculating', {})
-        eth_data = chains.get('Ethereum', {})
+        eth_data = (sc.get('chainCirculating') or {}).get('Ethereum', {})
         total += eth_data.get('current', {}).get('peggedUSD', 0)
-
     total_b = total / 1e9
     log(f"  ✅ ETH链稳定币: ${total_b:.1f}B")
     return total_b
 
-# ============================================================
-# 9. 长期持有者占比估算
-# ============================================================
-def fetch_lth():
-    log("估算长期持有者占比...")
-    # Glassnode 数据需付费，使用 Santiment 公开数据或估算
-    # Known approximation: ~60-65% of ETH hasn't moved in >1 year
-    # Source: various on-chain analysts' public reports
-    lth_pct = 62.0  # approximate
-    log(f"  ✅ 长期持有者(>1年): {lth_pct}%")
-    return lth_pct
 
 # ============================================================
-# 10. 地址分层分布 (估算 + Etherscan公开数据)
+# 沿用旧值
 # ============================================================
-def fetch_distribution():
-    log("抓取地址分层分布...")
-    # Based on public Etherscan data and known approximations
-    # Data refreshed periodically from public sources
-    distribution = [
-        {
-            'tier': '超级鲸鱼 (>10K ETH)',
-            'count': '~1,200',
-            'eth': '~42M ETH',
-            'pct': 35.0,
-            'signal': 'neutral',
-            'meaning': '交易所冷钱包+机构+早期矿工'
-        },
-        {
-            'tier': '大鲸鱼 (1K-10K ETH)',
-            'count': '~8,500',
-            'eth': '~25M ETH',
-            'pct': 21.0,
-            'signal': 'neutral',
-            'meaning': '高净值个人+小型机构'
-        },
-        {
-            'tier': '鲸鱼 (100-1K ETH)',
-            'count': '~85,000',
-            'eth': '~18M ETH',
-            'pct': 15.0,
-            'signal': 'neutral',
-            'meaning': '中型大额地址/小型基金样本'
-        },
-        {
-            'tier': '大户 (10-100 ETH)',
-            'count': '~550,000',
-            'eth': '~15M ETH',
-            'pct': 12.5,
-            'signal': 'neutral',
-            'meaning': '活跃大额地址样本'
-        },
-        {
-            'tier': '中等 (1-10 ETH)',
-            'count': '~2,500,000',
-            'eth': '~10M ETH',
-            'pct': 8.5,
-            'signal': 'neutral',
-            'meaning': '普通投资者'
-        },
-        {
-            'tier': '小额 (<1 ETH)',
-            'count': '~106,000,000',
-            'eth': '~9M ETH',
-            'pct': 8.0,
-            'signal': 'neutral',
-            'meaning': '散户/DeFi用户/零碎地址'
-        },
-    ]
-    return distribution
+def load_previous():
+    try:
+        with open(DATA_FILE, encoding='utf-8') as f:
+            return json.load(f)
+    except Exception:
+        return {}
+
+
+def carry_forward(previous, field, today):
+    """抓取失败时沿用上次的值，前提是它有日期且不超过 CARRY_FORWARD_DAYS 天。返回 (值, 日期)。"""
+    value, as_of = previous.get(field), (previous.get("as_of") or {}).get(field)
+    if value is None or not as_of:
+        return None, None
+    try:
+        age = (today - date.fromisoformat(as_of)).days
+    except ValueError:
+        return None, None
+    if age > CARRY_FORWARD_DAYS:
+        return None, None
+    log(f"  ↺ {field} 沿用 {as_of} 的值")
+    return value, as_of
+
 
 # ============================================================
 # MAIN
@@ -335,81 +234,59 @@ def main():
     log("=" * 60)
     log("ETH 链上数据抓取开始")
 
+    previous = load_previous()
     now_utc = datetime.now(timezone.utc)
-    now_cn = now_utc + timedelta(hours=8)
-    timestamp_cn = now_cn.strftime('%Y-%m-%d %H:%M GMT+8')
+    today = now_utc.date()
+    timestamp_cn = (now_utc + timedelta(hours=8)).strftime('%Y-%m-%d %H:%M GMT+8')
 
     result = {
         'timestamp': now_utc.isoformat(),
         'timestamp_cn': timestamp_cn,
     }
+    as_of = {}
 
-    # CoinGecko
     cg = fetch_coingecko()
     result['price_usd'] = cg.get('price_usd')
     result['price_change_24h'] = cg.get('price_change_24h')
     result['market_cap'] = cg.get('market_cap')
     result['circulating_supply'] = cg.get('circulating_supply')
 
-    # Holder count
-    result['holder_count'] = fetch_holder_count()
+    addr = fetch_coinmetrics_addresses()
+    result['holder_count'] = addr.get('holder_count')
+    result['active_addr_7d'] = addr.get('active_addr_7d')
+    for f in ('holder_count', 'active_addr_7d'):
+        if result[f] is not None:
+            as_of[f] = addr['as_of']
 
-    # Whale concentration
-    whale_pct, _ = fetch_whale_concentration()
-    result['whale_top100_pct'] = whale_pct if whale_pct else 38.5  # fallback estimate
+    result['whale_top100_pct'] = fetch_whale_concentration()
+    if result['whale_top100_pct'] is not None:
+        as_of['whale_top100_pct'] = today.isoformat()
 
-    # Staking
-    staking = fetch_staking()
-    if staking['total_staked'] and result.get('circulating_supply'):
-        result['staked_pct'] = staking['total_staked'] / result['circulating_supply'] * 100
-        result['total_staked'] = staking['total_staked']
-    else:
-        result['staked_pct'] = 27.8  # known approximate
-        result['total_staked'] = None
-
-    # Stake concentration
-    result['stake_conc_top5'] = fetch_stake_concentration()
-
-    # Burn rate
     result['burn_rate_daily'] = fetch_burn_rate()
+    if result['burn_rate_daily'] is not None:
+        as_of['burn_rate_daily'] = today.isoformat()
 
-    # Exchange flow
-    exchanges, total_flow = fetch_exchange_flow()
-    result['exchanges'] = exchanges
-    result['exchange_netflow_7d'] = total_flow
-
-    # Stablecoin mcap
     result['stablecoin_mcap_b'] = fetch_stablecoin_mcap()
 
-    # LTH
-    result['lth_pct'] = fetch_lth()
+    for f in ('holder_count', 'active_addr_7d', 'whale_top100_pct', 'burn_rate_daily'):
+        if result[f] is None:
+            result[f], as_of[f] = carry_forward(previous, f, today)
+            if as_of[f] is None:
+                del as_of[f]
 
-    # Distribution
-    result['distribution'] = fetch_distribution()
+    # 目前没有免费且可靠的来源：明确置空，页面显示「暂无可靠数据源」，不参与评分
+    result['staked_pct'] = None
+    result['stake_conc_top5'] = None
+    result['lth_pct'] = None
+    result['distribution'] = None
+    result['as_of'] = as_of
 
-    # Active address estimate
-    result['active_addr_7d'] = 450000  # approximate known value
-
-    # Write data file
     with open(DATA_FILE, 'w', encoding='utf-8') as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
     log(f"✅ 写入 {DATA_FILE}")
-
-    # Git push (if GH_TOKEN available)
-    if GH_TOKEN:
-        import subprocess
-        try:
-            subprocess.run(['git', '-C', REPO_DIR, 'add', 'eth-data.json'], check=True)
-            subprocess.run(['git', '-C', REPO_DIR, 'commit', '-m', f'⟠ ETH data update {timestamp_cn}'], check=True)
-            env = os.environ.copy()
-            subprocess.run(['git', '-C', REPO_DIR, 'push'], check=True, env=env)
-            log("✅ Git push 成功")
-        except subprocess.CalledProcessError as e:
-            log(f"Git push 失败: {e}")
-
     log("=" * 60)
-    log("ETH 数据抓取完成")
     return result
+
 
 if __name__ == '__main__':
     main()

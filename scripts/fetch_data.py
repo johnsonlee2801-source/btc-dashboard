@@ -268,6 +268,59 @@ def fetch_bitcoin_data_metric(endpoint, key, label):
     return float(value), as_of
 
 
+def fetch_coinmetrics_btc():
+    """Coin Metrics 社区版（免费）：用市值和 MVRV 比率算 MVRV Z-Score、NUPL，并给出 200 周均线。
+
+    bitcoin-data.com 免费版只给 7 天前的数据（返回里写明 delayed），Coin Metrics 只晚 1 天。
+    - 已实现市值 RC = 市值 / MVRV
+    - NUPL = (市值 - RC) / 市值 = 1 - 1/MVRV
+    - MVRV Z-Score = (市值 - RC) / 市值从 2010 年至今的标准差（与 LookIntoBitcoin 口径一致）
+    - 200 周均线 = 最近 1400 个日收盘价的简单平均
+    """
+    log("抓取链上指标 (Coin Metrics community)...")
+    url = ("https://community-api.coinmetrics.io/v4/timeseries/asset-metrics"
+           "?assets=btc&metrics=CapMrktCurUSD,CapMVRVCur,PriceUSD&frequency=1d&page_size=10000")
+    raw = http_get(url, timeout=60)
+    try:
+        rows = json.loads(raw)["data"] if raw else []
+    except Exception as e:
+        log(f"  ⚠️ Coin Metrics 解析失败: {e}")
+        return None
+
+    caps, z, nupl, as_of = [], None, None, None
+    n = mean = m2 = 0.0  # Welford 累积方差，避免对 5000+ 天反复求标准差
+    for r in rows:
+        try:
+            mc, mvrv = float(r["CapMrktCurUSD"]), float(r["CapMVRVCur"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        if mc <= 0 or mvrv <= 0:
+            continue
+        n += 1
+        delta = mc - mean
+        mean += delta / n
+        m2 += delta * (mc - mean)
+        sd = (m2 / n) ** 0.5
+        if sd > 0:
+            z = (mc - mc / mvrv) / sd
+            nupl = 1 - 1 / mvrv
+            as_of = r["time"][:10]
+
+    prices = []
+    for r in rows:
+        try:
+            prices.append(float(r["PriceUSD"]))
+        except (KeyError, TypeError, ValueError):
+            pass
+    ma200w = round(sum(prices[-1400:]) / 1400) if len(prices) >= 1400 else None
+
+    if z is None:
+        log("  ⚠️ Coin Metrics 没有可用的 MVRV 数据")
+        return None
+    log(f"  ✅ MVRV Z-Score {z:.4f} / NUPL {nupl:.4f} / 200WMA ${ma200w:,} (数据日期: {as_of})")
+    return {"mvrv_zscore": round(z, 4), "nupl": round(nupl, 4), "as_of": as_of, "ma200w": ma200w}
+
+
 def fetch_lookintobitcoin():
     log("抓取链上指标 (lookintobitcoin.com)...")
     mvrv_val = None
@@ -802,7 +855,19 @@ def main(push=False, dry_run=False):
     btc_price = fetch_btc_price()
     if btc_price:
         data["price"] = btc_price
-    onchain = fetch_lookintobitcoin()
+    cm = fetch_coinmetrics_btc()
+    if cm:
+        onchain = {
+            "mvrv_zscore": cm["mvrv_zscore"], "nupl": cm["nupl"],
+            "mvrv_zscore_as_of": cm["as_of"], "nupl_as_of": cm["as_of"],
+            "mvrv_zscore_source": "coinmetrics", "nupl_source": "coinmetrics",
+        }
+        if cm["ma200w"]:
+            data["ma200w"] = {"value": cm["ma200w"], "as_of": cm["as_of"], "source": "coinmetrics"}
+    else:
+        onchain = fetch_lookintobitcoin()
+    if "ma200w" not in data and isinstance(previous_data.get("ma200w"), dict):
+        data["ma200w"] = previous_data["ma200w"]  # 沿用上次，as_of 会如实显示它有多旧
     onchain["mvrv_zscore"] = carry_forward(previous_data, onchain.get("mvrv_zscore"), ["onchain", "mvrv_zscore"], "MVRV Z-Score")
     onchain["nupl"] = carry_forward(previous_data, onchain.get("nupl"), ["onchain", "nupl"], "NUPL")
     mark_onchain_freshness(previous_data, onchain)

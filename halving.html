@@ -361,9 +361,9 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;background:ra
     <div style="font-size:0.9rem;font-weight:600;margin-bottom:1rem;">关键支撑位参考</div>
     <div class="support-grid">
       <div class="sup-card">
-        <div class="sup-label">200 周均线（2026年估算）</div>
-        <div class="sup-val" style="color:var(--green)">$48,000–$55,000</div>
-        <div class="sup-note">历史样本中常被视为长期成本线参考</div>
+        <div class="sup-label">200 周均线</div>
+        <div class="sup-val" style="color:var(--green)" id="ma200wVal">加载中…</div>
+        <div class="sup-note" id="ma200wSub">历史样本中常被视为长期成本线参考</div>
       </div>
       <div class="sup-card">
         <div class="sup-label">前周期 ATH 支撑</div>
@@ -539,7 +539,7 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;background:ra
         <div class="zone neutral">MA 1–2x → 中性</div>
         <div class="zone orange">MA 3x 以上 → 高估警戒区</div>
       </div>
-      <div class="ind-note">2026年4月估算：约 $48,000–$55,000</div>
+      <div class="ind-note" id="ma200wNote">每日按最近 1400 个日收盘价计算（Coin Metrics）</div>
     </div>
     <div class="ind-card">
       <div class="ind-name">Pi Cycle Top</div>
@@ -563,6 +563,19 @@ body::before{content:"";position:fixed;inset:0;pointer-events:none;background:ra
 <br>仅作研究参考，不构成投资建议。</footer>
 
 <script>
+// 200 周均线：每天由 scripts/fetch_data.py 用 Coin Metrics 日收盘价算好，写在 data.json 里
+fetch('/data.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(d => {
+  const m = d && d.ma200w;
+  const val = document.getElementById('ma200wVal');
+  if (!m || typeof m.value !== 'number') { if (val) val.textContent = '暂无数据'; return; }
+  const price = d.price && typeof d.price.price === 'number' ? d.price.price : null;
+  if (val) val.textContent = '$' + m.value.toLocaleString();
+  const sub = document.getElementById('ma200wSub');
+  if (sub) sub.textContent = `截至 ${m.as_of}` + (price ? ` · 现价为其 ${(price / m.value).toFixed(2)} 倍` : '') + ' · 历史样本中常被视为长期成本线参考';
+  const note = document.getElementById('ma200wNote');
+  if (note) note.textContent = `当前约 $${m.value.toLocaleString()}（截至 ${m.as_of}，按最近 1400 个日收盘价计算，Coin Metrics）`;
+}).catch(() => { const val = document.getElementById('ma200wVal'); if (val) val.textContent = '暂无数据'; });
+
 // ─── 日期计算 ───
 const HALVING4 = new Date('2024-04-20');
 const HALVING5 = new Date('2028-04-17');
