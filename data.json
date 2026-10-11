@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-11T13:38:36.581960+00:00",
-  "timestamp_cn": "2026-10-11 21:38",
+  "timestamp": "2026-10-11T13:40:52.698104+00:00",
+  "timestamp_cn": "2026-10-11 21:40",
   "price": {
-    "price": 83011,
-    "change24h": 0.28
+    "price": 83013,
+    "change24h": 0.3
   },
   "etf": {
     "sum5d": -678.9,
@@ -42,31 +42,31 @@
     "stale": false
   },
   "funding_rate": {
-    "bn": 0.0012,
+    "bn": null,
     "okx": -0.0011,
-    "avg": 0.0,
+    "avg": -0.0011,
     "source": "exchange_public"
   },
   "margin_lending": {
     "btc_daily_rate": 1.168e-05,
     "btc_annual_rate": 0.4263,
     "btc_borrow_limit": 100.0,
-    "open_interest": 93368.0,
+    "open_interest": 30034.0,
     "open_interest_usd": null,
-    "open_interest_source": "binance_public",
+    "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
     "total_b": 312.6,
     "trend": "expand"
   },
-  "tips": 2.91,
+  "tips": 2.87,
   "ma200w": {
     "value": 66378,
     "as_of": "2026-10-10",
     "source": "coinmetrics"
   },
-  "tips_as_of": "2026-10-09",
-  "tips_age_days": 2,
+  "tips_as_of": "2026-10-08",
+  "tips_age_days": 3,
   "tips_stale": false
 }
