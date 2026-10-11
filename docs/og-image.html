@@ -1,0 +1,70 @@
+<!doctype html>
+<!-- Source for /og-image.jpg (1200x630). Re-render: python3 docs/render_og.py -->
+<html lang="zh-CN"><head><meta charset="utf-8"><style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1200px; height: 630px; }
+  body { background: #0a0a0f; color: #e8e8f0; font-family: 'PingFang SC', -apple-system, 'Helvetica Neue', sans-serif; position: relative; overflow: hidden; }
+  .grid { position: absolute; inset: 0; background-image: linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px); background-size: 48px 48px; mask-image: radial-gradient(ellipse at 75% 40%, #000 0%, transparent 75%); }
+  .glow { position: absolute; width: 760px; height: 760px; right: -170px; top: -190px; background: radial-gradient(circle, rgba(247,147,26,0.30) 0%, rgba(247,147,26,0.08) 40%, transparent 68%); }
+  .wrap { position: absolute; inset: 0; padding: 64px 72px 56px; display: flex; flex-direction: column; }
+  .brand { display: flex; align-items: center; gap: 14px; font-size: 26px; font-weight: 600; letter-spacing: 0.02em; }
+  .brand .logo { width: 52px; height: 52px; }
+  .brand .sep { color: rgba(255,255,255,0.35); font-weight: 400; }
+  h1 { margin-top: 62px; font-size: 76px; line-height: 1.08; font-weight: 800; letter-spacing: 0.01em; }
+  h1 em { font-style: normal; color: #f7931a; }
+  .sub { margin-top: 20px; font-size: 30px; color: #b4b4c4; }
+  .chips { margin-top: 30px; display: flex; flex-wrap: wrap; gap: 12px; }
+  .chip { padding: 9px 18px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.04); font-size: 21px; color: #d6d6e2; }
+  .band { margin-top: auto; }
+  .bar { height: 14px; border-radius: 999px; background: linear-gradient(90deg, #00d4aa 0%, #7ad97a 28%, #f5c542 52%, #f7931a 74%, #ff4466 100%); box-shadow: 0 0 24px rgba(247,147,26,0.25); }
+  .labels { display: flex; justify-content: space-between; margin-top: 12px; font-size: 19px; color: #9a9aac; }
+  .foot { display: flex; justify-content: space-between; margin-top: 22px; font-size: 20px; color: #888899; }
+  .foot b { color: #e8e8f0; font-weight: 600; }
+  .coin { position: absolute; right: 92px; top: 118px; width: 250px; height: 250px; filter: drop-shadow(0 18px 50px rgba(247,147,26,0.35)); }
+</style></head><body>
+  <div class="grid"></div><div class="glow"></div>
+  <svg class="coin" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#1b1b27"/>
+      <stop offset="100%" stop-color="#0a0a0f"/>
+    </linearGradient>
+    <linearGradient id="coin" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#ffb347"/>
+      <stop offset="100%" stop-color="#f7931a"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg)"/>
+  <circle cx="32" cy="32" r="20" fill="url(#coin)"/>
+  <path d="M35.5 18h-3v4.1c-.9 0-1.8 0-2.7.1V18h-3v4.4c-.7.1-1.4.2-2 .4l.9 3.2c.5-.1 1-.2 1.6-.3v12.8c-.5.1-1.1.2-1.7.3l-.8 3.2c.8.2 1.5.3 2.3.4V46h3v-4.1h2.7V46h3v-4.4c4-.8 6.6-3.1 6.6-6.7 0-2.7-1.4-4.5-4-5.4 1.9-.9 3-2.4 3-4.7 0-3.3-2.4-5.5-6.9-6.2Zm-5.4 7c.8-.1 1.8-.1 2.7-.1 2.3 0 3.5.7 3.5 2.1 0 1.6-1.4 2.3-3.9 2.3h-2.3V25Zm2.8 12.1c-1 0-1.9 0-2.8-.1v-4.9h2.6c2.8 0 4.2.8 4.2 2.4 0 1.7-1.4 2.6-4 2.6Z" fill="#fff6e9"/>
+  <path d="M47 16l1.8 1.8-5.9 5.9-1.8-1.8z" fill="#7df9c1" opacity=".9"/>
+  <path d="M18 47l1.8-1.8 5.9 5.9-1.8 1.8z" fill="#7df9c1" opacity=".9"/>
+</svg>
+  <div class="wrap">
+    <div class="brand"><svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#1b1b27"/>
+      <stop offset="100%" stop-color="#0a0a0f"/>
+    </linearGradient>
+    <linearGradient id="coin" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#ffb347"/>
+      <stop offset="100%" stop-color="#f7931a"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#bg)"/>
+  <circle cx="32" cy="32" r="20" fill="url(#coin)"/>
+  <path d="M35.5 18h-3v4.1c-.9 0-1.8 0-2.7.1V18h-3v4.4c-.7.1-1.4.2-2 .4l.9 3.2c.5-.1 1-.2 1.6-.3v12.8c-.5.1-1.1.2-1.7.3l-.8 3.2c.8.2 1.5.3 2.3.4V46h3v-4.1h2.7V46h3v-4.4c4-.8 6.6-3.1 6.6-6.7 0-2.7-1.4-4.5-4-5.4 1.9-.9 3-2.4 3-4.7 0-3.3-2.4-5.5-6.9-6.2Zm-5.4 7c.8-.1 1.8-.1 2.7-.1 2.3 0 3.5.7 3.5 2.1 0 1.6-1.4 2.3-3.9 2.3h-2.3V25Zm2.8 12.1c-1 0-1.9 0-2.8-.1v-4.9h2.6c2.8 0 4.2.8 4.2 2.4 0 1.7-1.4 2.6-4 2.6Z" fill="#fff6e9"/>
+  <path d="M47 16l1.8 1.8-5.9 5.9-1.8-1.8z" fill="#7df9c1" opacity=".9"/>
+  <path d="M18 47l1.8-1.8 5.9 5.9-1.8 1.8z" fill="#7df9c1" opacity=".9"/>
+</svg>FlowHunt<span class="sep">｜</span>流程猎人</div>
+    <h1>BTC <em>风险温度</em>仪表盘</h1>
+    <div class="sub">用公开数据观察比特币的冷热与周期位置</div>
+    <div class="chips"><span class="chip">MVRV</span><span class="chip">NUPL</span><span class="chip">Puell</span><span class="chip">ETF 资金流</span><span class="chip">宏观流动性</span><span class="chip">交易所存量</span></div>
+    <div class="band">
+      <div class="bar"></div>
+      <div class="labels"><span>低温</span><span>中性</span><span>偏热</span><span>过热</span></div>
+      <div class="foot"><b>btc.flowhunt.net</b><span>仅作研究参考，不构成投资建议</span></div>
+    </div>
+  </div>
+</body></html>
