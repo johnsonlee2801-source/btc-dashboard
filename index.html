@@ -711,7 +711,7 @@
   <div class="sources-card" style="margin-bottom:24px;">
     <h3>⚖️ 综合评分加权逻辑（满分 105 分）</h3>
     <p style="font-size:12px;color:var(--muted);margin-bottom:14px;">
-      投资建议由五个维度加权合成。每个维度独立评分，满足阈值触发评级。<strong>任一一票否决条件触发时，总评自动降为 D 级。</strong>
+      风险温度由五个维度加权合成。每个维度独立打分，总分对应一个温度档位（A+ 最低温，D 最高温），只描述公开数据的冷热，不构成投资建议。<strong>任一一票否决条件触发时，总评自动降为 D 级。</strong>
     </p>
     <table style="width:100%;border-collapse:collapse;font-size:12px;">
       <thead>
@@ -750,7 +750,7 @@
       </tbody>
     </table>
     <div style="margin-top:14px;padding:10px 14px;background:rgba(247,147,26,0.06);border-left:3px solid var(--accent);border-radius:4px;font-size:12px;">
-      <strong>评级对应分数：</strong>
+      <strong>温度档位对应分数：</strong>
       <span style="margin-left:8px;color:var(--green)">A+ ≥90</span>
       <span style="margin-left:8px;color:var(--green)">A ≥78</span>
       <span style="margin-left:8px;color:var(--yellow)">B ≥65</span>
@@ -932,7 +932,7 @@
       <div class="veto-value" id="veto4val">需手动输入</div>
     </div>
     <div style="margin-top:10px; font-size:12px; color:var(--muted);">
-      ⚠️ 以上需在下方「手动输入区」填写链上数据，触发任一条 → 评级自动降为 D
+      ⚠️ 以上需在下方「手动输入区」填写链上数据，触发任一条 → 温度档位自动降为 D（高温）
     </div>
   </div>
 
@@ -976,15 +976,15 @@
 
   <!-- MONITOR -->
   <div class="monitor-box">
-    <h3>🔔 持仓监控 · 减仓触发条件</h3>
+    <h3>🔔 高温警戒线 · 风险复核提示</h3>
     <div class="monitor-row">
       <div class="veto-dot" id="mon1dot" style="background:var(--muted)"></div>
-      <div style="flex:1">MVRV Z-Score 突破 6 → 减仓50%</div>
+      <div style="flex:1">MVRV Z-Score 突破 6 → 链上极热，历史上多出现在周期高点附近</div>
       <div style="color:var(--muted); font-size:12px;" id="mon1val">未触发</div>
     </div>
     <div class="monitor-row">
       <div class="veto-dot" id="mon2dot" style="background:var(--muted)"></div>
-      <div style="flex:1">NUPL 进入狂热区（>0.75）→ 减仓50%</div>
+      <div style="flex:1">NUPL 进入狂热区（>0.75）→ 市场整体浮盈极高</div>
       <div style="color:var(--muted); font-size:12px;" id="mon2val">未触发</div>
     </div>
     <div class="monitor-row">
@@ -994,7 +994,7 @@
     </div>
     <div class="monitor-row">
       <div class="veto-dot" id="mon4dot" style="background:var(--muted)"></div>
-      <div style="flex:1">ETF 连续10日净流出 > 30亿美元 → 减仓预警</div>
+      <div style="flex:1">ETF 连续10日净流出 > 30亿美元 → 资金面明显转弱</div>
       <div style="color:var(--muted); font-size:12px;" id="mon4val">需手动监控</div>
     </div>
   </div>
@@ -1287,7 +1287,7 @@
     <div class="guide-step">
       <div class="guide-step-num">03</div>
       <div class="guide-step-body">
-        <div class="guide-step-title">读懂评级结论</div>
+        <div class="guide-step-title">读懂温度档位</div>
         <div class="guide-step-desc">
           <div class="guide-grade-row"><span class="guide-grade grade-A">A+ ≥90分</span><span>低温区 — 多项公开指标显示风险相对舒缓，适合继续做来源核验</span></div>
           <div class="guide-grade-row"><span class="guide-grade grade-A">A ≥78分</span><span>偏低温 — 宏观、资金和链上信号较友好，但仍需结合个人风险承受能力</span></div>
@@ -1739,7 +1739,7 @@ function calcScores() {
   // 恐惧贪婪指数 (3pts) — 情绪辅助参考
   let fg_score = 1;
   if (state.fg !== null) {
-    if (state.fg <= 20) fg_score = 3;      // 极度恐慌=买入机会
+    if (state.fg <= 20) fg_score = 3;      // 极度恐慌=情绪低温
     else if (state.fg <= 40) fg_score = 2; // 恐惧=偏好
     else if (state.fg <= 60) fg_score = 1; // 中性
     else if (state.fg <= 80) fg_score = 1; // 贪婪=谨慎
@@ -1832,10 +1832,10 @@ function calcScores() {
   // NUPL (7pts) — 全网未实现盈亏
   let nupl_score = 4; // default中性
   if (live.nupl !== null) {
-    if (live.nupl < 0) nupl_score = 7;           // 全网亏损=抄底机会
+    if (live.nupl < 0) nupl_score = 7;           // 全网亏损=极端低温
     else if (live.nupl < 0.25) nupl_score = 6;  // 希望/恐惧区
     else if (live.nupl <= 0.5) nupl_score = 5;  // 乐观/信念区
-    else if (live.nupl <= 0.75) nupl_score = 2; // 贪婪=减仓警告
+    else if (live.nupl <= 0.75) nupl_score = 2; // 贪婪=情绪高温
     else { nupl_score = 0; vetoTriggered = true; } // 极度狂热=一票否决
   }
 
@@ -1853,7 +1853,7 @@ function calcScores() {
   let lth_score = 1;
   if (state.lth === 'accumulate') lth_score = 3;  // LTH增持=强烈看好
   else if (state.lth === 'neutral') lth_score = 2;
-  else if (state.lth === 'distribute') lth_score = 0; // LTH派发=减仓信号
+  else if (state.lth === 'distribute') lth_score = 0; // LTH派发=升温信号
 
   s3 = Math.min(30, mvrv_score + lthmvrv_score + nupl_score + puell_score + lth_score);
 
@@ -1892,7 +1892,7 @@ function calcScores() {
   // 30日价格变化 (4pts) — 动量参考
   let p30_score = 2;
   if (state.p30d !== null) {
-    if (state.p30d <= -30) p30_score = 4;           // 深度回调=买入机会
+    if (state.p30d <= -30) p30_score = 4;           // 深度回调=价格低温
     else if (state.p30d <= -15) p30_score = 3;      // 中度回调
     else if (state.p30d > -15 && state.p30d < 20) p30_score = 2; // 正常波动
     else if (state.p30d >= 20 && state.p30d < 40) p30_score = 1; // 短期过热
@@ -2088,7 +2088,7 @@ function render() {
   if(mon3El) mon3El.style.background = mon3ok===null?'var(--muted)':mon3ok?'var(--green)':'var(--red)';
   setText('mon3val', mon3ok===null?'计算中':mon3ok?('价格 $'+Math.round(state.price).toLocaleString()+' > MA200 ✅'):('价格 $'+Math.round(state.price).toLocaleString()+' < MA200 ⚠️'));
 
-  // 持仓监控同样只用未过期的值，判定口径与公布的 > 6 / > 0.75 一致。
+  // 高温警戒线同样只用未过期的值，判定口径与公布的 > 6 / > 0.75 一致。
   const mon1ok = veto.mvrv === null ? null : veto.mvrv <= 6;
   document.getElementById('mon1dot').style.background = mon1ok===null?'var(--muted)':mon1ok?'var(--green)':'var(--red)';
   setText('mon1val', veto.mvrv===null?(state.mvrv===null?'需输入MVRV':'数据陈旧，暂不判定'):mon1ok?'当前 '+veto.mvrv+' ✅':'⚠️ MVRV='+veto.mvrv+' 超过警戒线');
