@@ -5,3 +5,16 @@
 .gitignore
 *.pyc
 __pycache__/
+# Source, tooling and design files: none of these are served by the site
+scripts/
+tests/
+docs/
+.github/
+.claude/
+.pytest_cache/
+.cc-suite.md
+*.docx
+*.py
+2026-04-08-*.png
+# Superseded by og-image.jpg (1200x630); vercel.json redirects the old URL
+og-image.png

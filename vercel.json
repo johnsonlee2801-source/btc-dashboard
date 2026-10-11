@@ -54,6 +54,11 @@
       ],
       "destination": "/stock",
       "permanent": false
+    },
+    {
+      "source": "/og-image.png",
+      "destination": "/og-image.jpg",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -128,6 +133,10 @@
     {
       "source": "/pricing",
       "destination": "/pricing.html"
+    },
+    {
+      "source": "/favicon.ico",
+      "destination": "/favicon.svg"
     }
   ],
   "headers": [
@@ -143,6 +152,15 @@
           "value": "Authorization, Content-Type, X-Device-Id"
         }
       ]
+    },
+    {
+      "source": "/(.*)\\.(png|jpg|svg|ico)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=86400, stale-while-revalidate=604800"
+        }
+      ]
     }
   ],
   "crons": [
@@ -150,8 +168,5 @@
       "path": "/api/price-alert",
       "schedule": "0 0 * * *"
     }
-  ],
-  "env": {
-    "SERVER_CHAN_KEY": "SCT339144T5tXBi49zR7PS3flaPkJvgCVS"
-  }
+  ]
 }

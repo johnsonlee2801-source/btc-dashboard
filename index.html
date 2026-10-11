@@ -12,16 +12,18 @@
 <meta property="og:url" content="https://btc.flowhunt.net/">
 <meta property="og:title" content="BTC 风险温度仪表盘｜FlowHunt">
 <meta property="og:description" content="整合 MVRV、NUPL、Puell Multiple、ETF 资金流和宏观指标，用公开数据观察比特币风险温度。仅作研究参考，不构成投资建议。">
-<meta property="og:image" content="https://btc.flowhunt.net/og-image.png">
+<meta property="og:image" content="https://btc.flowhunt.net/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:site_name" content="FlowHunt｜流程猎人 · 算盘">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="BTC 风险温度仪表盘｜FlowHunt">
 <meta name="twitter:description" content="用链上、宏观和 ETF 资金流观察比特币风险温度。仅作研究参考，不构成投资建议。">
-<meta name="twitter:image" content="https://btc.flowhunt.net/og-image.png">
+<meta name="twitter:image" content="https://btc.flowhunt.net/og-image.jpg">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="shortcut icon" href="/favicon.svg">
-<link rel="apple-touch-icon" href="/og-image.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -674,11 +676,11 @@
       </div>
       <div class="price-stat">
         <div class="price-stat-val" id="cexReserveTotal">--</div>
-        <div class="price-stat-label">CEX总储备</div>
+        <div class="price-stat-label">CEX总储备（预览数据）</div>
       </div>
       <div class="price-stat">
         <div class="price-stat-val" id="cexReserveDelta7d">--</div>
-        <div class="price-stat-label">CEX 7D变化</div>
+        <div class="price-stat-label">CEX 7D变化（预览数据）</div>
       </div>
       <div class="price-stat">
         <div class="price-stat-val loading" id="btcDominance">--.-%</div>
@@ -1136,12 +1138,12 @@
       <div>
         <div class="reserve-kicker">ON-CHAIN FLOW</div>
         <div class="reserve-title">交易所 BTC 储备变化</div>
-        <div class="reserve-subtitle">新增一个更像专业资金流看板的区块：先把结构、视觉和交互做完整，后续再接实时 API。当前展示为实验预览数据，用于确定页面方向和信息层级。</div>
+        <div class="reserve-subtitle">交易所储备的结构与趋势看板。本区块尚未接入实时数据源，下方数字均为预览数据，不代表真实链上余额，请勿据此判断资金流向。</div>
       </div>
       <div class="reserve-meta">
         <div class="reserve-badge"><strong>状态</strong> UI 首发版</div>
         <div class="reserve-badge"><strong>数据源</strong> 实验预览数据</div>
-        <div class="reserve-badge"><strong>更新</strong> <span id="reserveUpdatedAt">--</span></div>
+        <div class="reserve-badge"><strong>更新</strong> <span id="reserveUpdatedAt">未接入实时数据</span></div>
         <div class="reserve-tabs">
           <button class="reserve-tab active" data-range="24h">24H</button>
           <button class="reserve-tab" data-range="7d">7D</button>
@@ -1338,7 +1340,7 @@
 // STATE
 // ============================================================
 
-const reservePreview = { updatedAt: new Date().toISOString(), exchanges: [
+const reservePreview = { updatedAt: null, exchanges: [
   { name: 'Binance', short: 'BI', reserve: 598320, usd: '$41.8B', change: { '24h': 8120, '7d': -12440, '30d': 18220 }, history: { '7d': [591400,592220,593180,594050,595400,596700,598320], '30d': [580400,581100,582900,584200,585700,586300,587900,589500,591400,592100,593200,593900,592700,591200,590800,589700,588600,589300,590100,591500,592600,593300,594100,594800,595400,595900,596300,596900,597500,598320], '90d': [548000,549200,550400,551100,552300,553500,554400,555600,556800,557700,558200,559100,560300,561600,562800,564000,565100,566300,567700,568900,570100,571400,572900,574100,575500,576200,577100,578400,579300,580100,581000,581900,582700,583600,584500,585300,586100,586900,587800,588600,589500,590300,591100,591900,592800,593500,594100,594800,595400,596200,597100,598320] } },
   { name: 'Coinbase', short: 'CB', reserve: 432180, usd: '$30.2B', change: { '24h': -9460, '7d': -18120, '30d': -24780 }, history: { '7d': [441500,440400,439600,438900,437200,435100,432180], '30d': [456900,456000,455100,454500,453700,452900,452000,451500,450800,449900,449100,448300,447500,446600,445800,445200,444400,443700,442900,442100,441500,440800,440100,439500,438900,437800,436900,435900,434800,432180], '90d': [481000,480200,479600,478900,478100,477300,476500,475900,475100,474400,473700,472900,472200,471400,470700,469900,469100,468400,467700,467000,466200,465500,464800,464000,463300,462400,461800,460900,460100,459400,458700,458000,457200,456500,455800,455100,454400,453800,453100,452500,451800,451100,450300,449600,448900,448100,447400,446700,445800,444900,443800,432180] } },
   { name: 'OKX', short: 'OK', reserve: 128440, usd: '$8.97B', change: { '24h': 3210, '7d': 6840, '30d': 10920 }, history: { '7d': [124500,124980,125400,126020,126780,127640,128440], '30d': [117520,117900,118240,118600,118920,119280,119740,120100,120420,120780,121040,121300,121620,121980,122320,122700,123120,123480,123860,124120,124500,124980,125400,125760,126020,126340,126780,127120,127760,128440], '90d': [108400,108700,109100,109500,109900,110200,110600,110900,111300,111700,112000,112400,112900,113300,113700,114100,114500,114900,115300,115700,116000,116400,116800,117100,117520,117900,118240,118600,118920,119280,119740,120100,120420,120780,121040,121300,121620,121980,122320,122700,123120,123480,123860,124120,124500,124980,125400,126020,126780,127640,128000,128440] } },
@@ -1351,7 +1353,7 @@ function formatReserveDelta(num) { const sign = num > 0 ? '+' : ''; return `${si
 function formatReserveBtc(num) { if (num >= 1000000) return `${(num/1000000).toFixed(2)}M BTC`; return `${Math.round(num).toLocaleString()} BTC`; }
 function reserveClass(num) { return num > 0 ? 'reserve-pos' : num < 0 ? 'reserve-neg' : ''; }
 function reserveTrendLabel(ex) { const d7 = ex.change['7d']; if (d7 > 3000) return { text: '↑ 持续流入', cls: 'inflow' }; if (d7 < -3000) return { text: '↓ 持续流出', cls: 'outflow' }; return { text: '→ 震荡', cls: 'neutral' }; }
-function renderReserveSummary() { const all = reservePreview.exchanges; const total = all.reduce((s, ex) => s + ex.reserve, 0); const totalUsd = all.reduce((s, ex) => s + parseFloat(ex.usd.replace(/[$B]/g,'')), 0); const d24 = all.reduce((s, ex) => s + ex.change['24h'], 0); const d7 = all.reduce((s, ex) => s + ex.change['7d'], 0); const d30 = all.reduce((s, ex) => s + ex.change['30d'], 0); const inflow = [...all].sort((a,b)=>b.change[reserveState.range]-a.change[reserveState.range])[0]; const outflow = [...all].sort((a,b)=>a.change[reserveState.range]-b.change[reserveState.range])[0]; document.getElementById('reserveUpdatedAt').textContent = new Date(reservePreview.updatedAt).toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}); document.getElementById('reserveTotalBtc').textContent = formatReserveBtc(total); document.getElementById('reserveTotalUsd').textContent = `≈ $${totalUsd.toFixed(2)}B`; for (const [id,val] of [['reserve24h',d24],['reserve7d',d7],['reserve30d',d30]]) { const el=document.getElementById(id); el.textContent = formatReserveDelta(val); el.className='reserve-stat-value '+reserveClass(val); } document.getElementById('reserveTopInflow').textContent = inflow.name; document.getElementById('reserveTopInflowSub').textContent = `${reserveState.range.toUpperCase()} ${formatReserveDelta(inflow.change[reserveState.range])}`; document.getElementById('reserveTopOutflow').textContent = outflow.name; document.getElementById('reserveTopOutflowSub').textContent = `${reserveState.range.toUpperCase()} ${formatReserveDelta(outflow.change[reserveState.range])}`; }
+function renderReserveSummary() { const all = reservePreview.exchanges; const total = all.reduce((s, ex) => s + ex.reserve, 0); const totalUsd = all.reduce((s, ex) => s + parseFloat(ex.usd.replace(/[$B]/g,'')), 0); const d24 = all.reduce((s, ex) => s + ex.change['24h'], 0); const d7 = all.reduce((s, ex) => s + ex.change['7d'], 0); const d30 = all.reduce((s, ex) => s + ex.change['30d'], 0); const inflow = [...all].sort((a,b)=>b.change[reserveState.range]-a.change[reserveState.range])[0]; const outflow = [...all].sort((a,b)=>a.change[reserveState.range]-b.change[reserveState.range])[0]; if (reservePreview.updatedAt) document.getElementById('reserveUpdatedAt').textContent = new Date(reservePreview.updatedAt).toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}); document.getElementById('reserveTotalBtc').textContent = formatReserveBtc(total); document.getElementById('reserveTotalUsd').textContent = `≈ $${totalUsd.toFixed(2)}B`; for (const [id,val] of [['reserve24h',d24],['reserve7d',d7],['reserve30d',d30]]) { const el=document.getElementById(id); el.textContent = formatReserveDelta(val); el.className='reserve-stat-value '+reserveClass(val); } document.getElementById('reserveTopInflow').textContent = inflow.name; document.getElementById('reserveTopInflowSub').textContent = `${reserveState.range.toUpperCase()} ${formatReserveDelta(inflow.change[reserveState.range])}`; document.getElementById('reserveTopOutflow').textContent = outflow.name; document.getElementById('reserveTopOutflowSub').textContent = `${reserveState.range.toUpperCase()} ${formatReserveDelta(outflow.change[reserveState.range])}`; }
 function renderTopReserveStat() { const all = reservePreview.exchanges || []; if (!all.length) return; const total = all.reduce((s, ex) => s + ex.reserve, 0); const d7 = all.reduce((s, ex) => s + ex.change['7d'], 0); const totalEl = document.getElementById('cexReserveTotal'); const deltaEl = document.getElementById('cexReserveDelta7d'); if (totalEl) { totalEl.textContent = formatReserveBtc(total); totalEl.className = 'price-stat-val'; } if (deltaEl) { deltaEl.textContent = formatReserveDelta(d7); deltaEl.className = 'price-stat-val ' + reserveClass(d7); } }
 function renderReserveTable() { const rows = [...reservePreview.exchanges].sort((a,b)=>b.reserve-a.reserve).map((ex, idx) => { const trend = reserveTrendLabel(ex); return `<tr><td>${idx+1}</td><td><div class="reserve-ex"><span class="reserve-logo">${ex.short}</span>${ex.name}</div></td><td>${Math.round(ex.reserve).toLocaleString()} BTC</td><td>${ex.usd}</td><td class="${reserveClass(ex.change['24h'])}">${formatReserveDelta(ex.change['24h'])}</td><td class="${reserveClass(ex.change['7d'])}">${formatReserveDelta(ex.change['7d'])}</td><td class="${reserveClass(ex.change['30d'])}">${formatReserveDelta(ex.change['30d'])}</td><td><span class="reserve-trend ${trend.cls}">${trend.text}</span></td></tr>`; }).join(''); document.getElementById('reserveTableBody').innerHTML = rows; }
 function renderReserveChart() { const ex = reservePreview.exchanges.find(x => x.name === reserveState.exchange) || reservePreview.exchanges[0]; const data = ex.history[reserveState.chartRange]; const svg = document.getElementById('reserveChart'); const w = 440, h = 210, padX = 12, padY = 16; const min = Math.min(...data), max = Math.max(...data), span = Math.max(1, max-min); const pts = data.map((v,i)=>{ const x = padX + (i/(data.length-1||1))*(w-padX*2); const y = h-padY - ((v-min)/span)*(h-padY*2); return `${x},${y}`; }); const points = pts.join(' '); const last = data[data.length-1], first = data[0], delta = last-first; const stroke = delta >= 0 ? '#f7931a' : '#00d4aa'; const area = `M ${padX} ${h-padY} L ${pts.map(p=>p.replace(',', ' ')).join(' L ')} L ${w-padX} ${h-padY} Z`; const end = pts[pts.length-1].split(','); svg.innerHTML = `<defs><linearGradient id="reserveArea" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="${stroke}" stop-opacity="0.28"></stop><stop offset="100%" stop-color="${stroke}" stop-opacity="0"></stop></linearGradient></defs><path d="${area}" fill="url(#reserveArea)"></path><polyline fill="none" stroke="${stroke}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${points}"></polyline><line x1="12" y1="16" x2="12" y2="194" stroke="rgba(255,255,255,0.08)"></line><line x1="12" y1="194" x2="428" y2="194" stroke="rgba(255,255,255,0.08)"></line><text x="16" y="26" fill="rgba(255,255,255,0.46)" font-size="11">${Math.round(max).toLocaleString()} BTC</text><text x="16" y="188" fill="rgba(255,255,255,0.32)" font-size="11">${Math.round(min).toLocaleString()} BTC</text><circle cx="${end[0]}" cy="${end[1]}" r="4" fill="${stroke}"></circle>`; const pct = ((delta/first)*100).toFixed(1); const direction = delta >= 0 ? '上升' : '下降'; document.getElementById('reserveInsight').textContent = `${ex.name} 在过去 ${reserveState.chartRange.toUpperCase()} 的 BTC 储备整体${direction} ${Math.abs(delta).toLocaleString()} BTC（${pct}%）。这类变化更适合配合价格、ETF 与链上估值一起看，不建议单点解读。`; }
@@ -1468,16 +1470,34 @@ async function fetchFG() {
 }
 
 async function fetchRealtimePrice() {
+  // 先走同源中转：大陆访问不到交易所域名，/api/ticker 由边缘节点代问并缓存 10 秒
   try {
-    const res = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
+    const res = await fetch('/api/ticker?symbol=BTC', { signal: AbortSignal.timeout(6000) });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const d = await res.json();
+    if (typeof d.price === 'number') {
+      state.price = d.price;
+      if (typeof d.change24h === 'number') state.change24h = d.change24h;
+      render();
+      renderMinerModule();
+      return;
+    }
+  } catch (e) {
+    console.warn('/api/ticker realtime price error', e);
+  }
+
+  try {
+    const res = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT', { signal: AbortSignal.timeout(4000) });
     const d = await res.json();
     const p = parseFloat(d.lastPrice);
     const chg = parseFloat(d.priceChangePercent);
-    if (!Number.isNaN(p)) state.price = p;
-    if (!Number.isNaN(chg)) state.change24h = chg;
-    render();
-    renderMinerModule();
-    return;
+    if (!Number.isNaN(p)) {
+      state.price = p;
+      if (!Number.isNaN(chg)) state.change24h = chg;
+      render();
+      renderMinerModule();
+      return;
+    }
   } catch (e) {
     console.warn('Binance realtime price error', e);
   }
@@ -2388,10 +2408,17 @@ async function alertCheck() {
 
   const symbols = [...new Set(activeAlerts.map(a => a.symbol.toUpperCase()))];
 
-  // 拉价格（优先 Binance）
+  // 拉价格（优先同源中转，其次直连 Binance）
   await Promise.all(symbols.map(async sym => {
     try {
-      const r = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${sym}USDT`);
+      const r = await fetch(`/api/ticker?symbol=${encodeURIComponent(sym)}`, { signal: AbortSignal.timeout(6000) });
+      if (r.ok) {
+        const d = await r.json();
+        if (typeof d.price === 'number') { alertPriceCache[sym] = d.price; return; }
+      }
+    } catch (_) {}
+    try {
+      const r = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${encodeURIComponent(sym)}USDT`, { signal: AbortSignal.timeout(4000) });
       if (r.ok) {
         const d = await r.json();
         const p = parseFloat(d.price);
@@ -2423,7 +2450,7 @@ async function alertCheck() {
 
     // 微信推送（通过后端 Edge Function）
     const key = alertGetKey();
-    fetch('/api/price-alert', {
+    if (key) fetch('/api/price-alert', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -2480,14 +2507,35 @@ function showToast(msg) {
 loadManualFromStorage();
 initReserveModule();
 loadAll();
-// 价格轻量自动刷新：每15秒只刷新价格与24h涨跌，避免整页重拉
-setInterval(fetchRealtimePrice, 15*1000);
-// 价格提醒检查：每30秒检查一次
-setInterval(alertCheck, 30*1000);
 // 首次延迟5秒检查（等价格加载完）
 setTimeout(alertCheck, 5000);
-// 整体数据自动刷新：每5分钟
-setInterval(loadAll, 5*60*1000);
+
+// 定时刷新：价格每15秒、提醒每30秒、整体数据每5分钟。
+// 页面切到后台就全部暂停，回到前台立刻补刷一次，避免挂一整天的标签页一直打 API
+const pollers = [
+  [fetchRealtimePrice, 15*1000],
+  [alertCheck, 30*1000],
+  [loadAll, 5*60*1000],
+];
+let pollTimers = [];
+let lastFullLoad = Date.now();
+function startPolling() {
+  stopPolling();
+  pollTimers = pollers.map(([fn, ms]) => setInterval(() => {
+    if (fn === loadAll) lastFullLoad = Date.now();
+    fn();
+  }, ms));
+}
+function stopPolling() { pollTimers.forEach(clearInterval); pollTimers = []; }
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) { stopPolling(); return; }
+  if (Date.now() - lastFullLoad > 5*60*1000) { lastFullLoad = Date.now(); loadAll(); }
+  else fetchRealtimePrice();
+  alertCheck();
+  startPolling();
+});
+// 后台标签页里打开的，等它真正可见再开始轮询
+if (!document.hidden) startPolling();
 </script>
 </body>
 </html>
