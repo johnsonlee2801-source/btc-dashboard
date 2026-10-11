@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-11T13:39:58.274538+00:00",
-  "timestamp_cn": "2026-10-11 21:39 GMT+8",
-  "price_usd": 2502.06,
-  "price_change_24h": 0.22596,
-  "market_cap": 305579930173,
+  "timestamp": "2026-10-11T13:40:53.849332+00:00",
+  "timestamp_cn": "2026-10-11 21:40 GMT+8",
+  "price_usd": 2502.04,
+  "price_change_24h": 0.25037,
+  "market_cap": 305563945719,
   "circulating_supply": 122124805.030901,
   "holder_count": 209803224,
   "active_addr_7d": 742360,
@@ -17,7 +17,7 @@
   "as_of": {
     "holder_count": "2026-10-10",
     "active_addr_7d": "2026-10-10",
-    "whale_top100_pct": "2026-10-11",
-    "burn_rate_daily": "2026-10-11"
+    "burn_rate_daily": "2026-10-11",
+    "whale_top100_pct": "2026-10-11"
   }
 }
