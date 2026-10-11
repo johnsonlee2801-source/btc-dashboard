@@ -338,6 +338,17 @@
   .reserve-chart-insight { padding: 12px 14px; background: rgba(247,147,26,0.06); border-left: 3px solid rgba(247,147,26,0.9); border-radius: 8px; font-size: 12px; color: #e9d0ad; word-break: break-word; overflow-wrap: break-word; }
   .reserve-note-list { display: grid; gap: 10px; font-size: 12px; color: var(--muted); margin-top: 14px; word-break: break-word; overflow-wrap: break-word; }
   .reserve-note-list strong { color: var(--text); }
+  .reserve-link { color: var(--accent); text-decoration: none; }
+  .reserve-link:hover { text-decoration: underline; }
+  .reserve-chart-wrap { margin-bottom: 16px; }
+  .reserve-chart-wrap h3 { margin-bottom: 0; }
+  .reserve-chart-controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .reserve-chart-shell { position: relative; }
+  .reserve-chart-svg { height: 240px; touch-action: pan-y; }
+  .reserve-tip { position: absolute; top: 8px; pointer-events: none; background: #1a1a24; border: 1px solid rgba(247,147,26,0.35); border-radius: 8px; padding: 8px 10px; font-size: 12px; color: var(--text); white-space: nowrap; z-index: 2; box-shadow: 0 6px 20px rgba(0,0,0,0.35); }
+  .reserve-tip .reserve-tip-date { color: var(--muted); font-size: 11px; margin-bottom: 2px; }
+  .reserve-tip .reserve-tip-warn { color: #ffcc66; font-size: 11px; margin-top: 4px; white-space: normal; max-width: 260px; }
+  .reserve-stale { font-size: 10px; color: #ffcc66; margin-left: 6px; font-weight: 600; }
   .reserve-footnote { margin-top: 16px; font-size: 11px; color: var(--muted); border-top: 1px solid rgba(255,255,255,0.06); padding-top: 12px; word-break: break-word; overflow-wrap: break-word; }
   @media (max-width: 1100px) { .reserve-summary-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } .reserve-layout { grid-template-columns: 1fr; } }
   @media (max-width: 720px) { .reserve-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } .reserve-title { font-size: 18px; } .reserve-showcase { padding: 16px; } .reserve-panel { padding: 14px; overflow: hidden; } .reserve-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; width: 100%; } .reserve-table { font-size: 12px; width: 100%; table-layout: fixed; } .reserve-table th:nth-child(1), .reserve-table td:nth-child(1) { width: 24px; } .reserve-table th:nth-child(4), .reserve-table td:nth-child(4) { display: none; } .reserve-table th:nth-child(5), .reserve-table td:nth-child(5) { white-space: nowrap; } .reserve-table th:nth-child(6), .reserve-table td:nth-child(6) { display: none; } .reserve-table th:nth-child(7), .reserve-table td:nth-child(7) { display: none; } .reserve-table th:nth-child(8), .reserve-table td:nth-child(8) { display: none; } .reserve-head { align-items: stretch; } .reserve-meta { width: 100%; justify-content: flex-start; gap: 8px; } .reserve-tabs { margin-left: 0; } .reserve-chart-insight { word-break: break-all; overflow-wrap: break-word; } }
@@ -676,11 +687,11 @@
       </div>
       <div class="price-stat">
         <div class="price-stat-val" id="cexReserveTotal">--</div>
-        <div class="price-stat-label">CEX总储备（预览数据）</div>
+        <div class="price-stat-label">CEX BTC 存量</div>
       </div>
       <div class="price-stat">
         <div class="price-stat-val" id="cexReserveDelta7d">--</div>
-        <div class="price-stat-label">CEX 7D变化（预览数据）</div>
+        <div class="price-stat-label">CEX BTC 7D变化</div>
       </div>
       <div class="price-stat">
         <div class="price-stat-val loading" id="btcDominance">--.-%</div>
@@ -1136,59 +1147,63 @@
   <section class="reserve-showcase" id="exchangeReservesSection">
     <div class="reserve-head">
       <div>
-        <div class="reserve-kicker">ON-CHAIN FLOW</div>
-        <div class="reserve-title">交易所 BTC 储备变化</div>
-        <div class="reserve-subtitle">交易所储备的结构与趋势看板。本区块尚未接入实时数据源，下方数字均为预览数据，不代表真实链上余额，请勿据此判断资金流向。</div>
+        <div class="reserve-kicker">ON-CHAIN RESERVES</div>
+        <div class="reserve-title">交易所 BTC / ETH 存量变化</div>
+        <div class="reserve-subtitle">统计各交易所公开储备地址上的 BTC、ETH 存量，近两年按周取样。只覆盖公布了储备地址的交易所，Coinbase、Kraken 未公开地址，不在统计内。</div>
       </div>
       <div class="reserve-meta">
-        <div class="reserve-badge"><strong>状态</strong> UI 首发版</div>
-        <div class="reserve-badge"><strong>数据源</strong> 实验预览数据</div>
-        <div class="reserve-badge"><strong>更新</strong> <span id="reserveUpdatedAt">未接入实时数据</span></div>
-        <div class="reserve-tabs">
-          <button class="reserve-tab active" data-range="24h">24H</button>
+        <div class="reserve-badge"><strong>数据源</strong>&nbsp;<a href="https://defillama.com/cexs" target="_blank" rel="noopener" class="reserve-link">DefiLlama</a></div>
+        <div class="reserve-badge"><strong>数据截至</strong>&nbsp;<span id="reserveUpdatedAt">--</span></div>
+        <div class="reserve-tabs" id="reserveAssetTabs">
+          <button class="reserve-tab active" data-asset="BTC">BTC</button>
+          <button class="reserve-tab" data-asset="ETH">ETH</button>
+        </div>
+        <div class="reserve-tabs" id="reserveRangeTabs">
           <button class="reserve-tab" data-range="7d">7D</button>
-          <button class="reserve-tab" data-range="30d">30D</button>
+          <button class="reserve-tab active" data-range="30d">30D</button>
+          <button class="reserve-tab" data-range="90d">90D</button>
         </div>
       </div>
     </div>
     <div class="reserve-summary-grid">
-      <div class="reserve-stat"><div class="reserve-stat-label">CEX 总 BTC 储备</div><div class="reserve-stat-value" id="reserveTotalBtc">--</div><div class="reserve-stat-sub" id="reserveTotalUsd">--</div></div>
-      <div class="reserve-stat"><div class="reserve-stat-label">24h 净变化</div><div class="reserve-stat-value" id="reserve24h">--</div><div class="reserve-stat-sub">更快看短线回流或提币</div></div>
-      <div class="reserve-stat"><div class="reserve-stat-label">7d 净变化</div><div class="reserve-stat-value" id="reserve7d">--</div><div class="reserve-stat-sub">看中期是否持续出所</div></div>
-      <div class="reserve-stat"><div class="reserve-stat-label">30d 净变化</div><div class="reserve-stat-value" id="reserve30d">--</div><div class="reserve-stat-sub">看本月整体筹码迁移</div></div>
-      <div class="reserve-stat"><div class="reserve-stat-label">最大流入平台</div><div class="reserve-stat-value" id="reserveTopInflow">--</div><div class="reserve-stat-sub" id="reserveTopInflowSub">--</div></div>
-      <div class="reserve-stat"><div class="reserve-stat-label">最大流出平台</div><div class="reserve-stat-value" id="reserveTopOutflow">--</div><div class="reserve-stat-sub" id="reserveTopOutflowSub">--</div></div>
+      <div class="reserve-stat"><div class="reserve-stat-label" id="reserveTotalLabel">CEX 总存量</div><div class="reserve-stat-value" id="reserveTotal">--</div><div class="reserve-stat-sub" id="reserveTotalUsd">--</div></div>
+      <div class="reserve-stat"><div class="reserve-stat-label">7D 净变化</div><div class="reserve-stat-value" id="reserve7d">--</div><div class="reserve-stat-sub">短线回流还是提走</div></div>
+      <div class="reserve-stat"><div class="reserve-stat-label">30D 净变化</div><div class="reserve-stat-value" id="reserve30d">--</div><div class="reserve-stat-sub">本月整体筹码迁移</div></div>
+      <div class="reserve-stat"><div class="reserve-stat-label">90D 净变化</div><div class="reserve-stat-value" id="reserve90d">--</div><div class="reserve-stat-sub">一个季度的方向</div></div>
+      <div class="reserve-stat"><div class="reserve-stat-label">最大净流入</div><div class="reserve-stat-value" id="reserveTopInflow">--</div><div class="reserve-stat-sub" id="reserveTopInflowSub">--</div></div>
+      <div class="reserve-stat"><div class="reserve-stat-label">最大净流出</div><div class="reserve-stat-value" id="reserveTopOutflow">--</div><div class="reserve-stat-sub" id="reserveTopOutflowSub">--</div></div>
     </div>
-    <div class="reserve-layout">
-      <div class="reserve-panel">
-        <h3>主流 CEX BTC 储备排名</h3>
-        <div class="reserve-table-wrap"><table class="reserve-table">
-          <thead><tr><th>#</th><th>交易所</th><th>BTC 储备</th><th>估值</th><th>24h</th><th>7d</th><th>30d</th><th>趋势</th></tr></thead>
-          <tbody id="reserveTableBody"></tbody>
-        </table></div>
-      </div>
-      <div class="reserve-panel reserve-chart-wrap">
-        <div>
-          <h3 style="margin-bottom:10px;">交易所储备历史趋势</h3>
-          <div class="reserve-chart-top">
-            <select id="reserveExchangeSelect" class="reserve-select"></select>
-            <div class="reserve-mini-tabs">
-              <button class="reserve-mini-tab active" data-chart-range="7d">7D</button>
-              <button class="reserve-mini-tab" data-chart-range="30d">30D</button>
-              <button class="reserve-mini-tab" data-chart-range="90d">90D</button>
-            </div>
+    <div class="reserve-panel reserve-chart-wrap">
+      <div class="reserve-chart-top">
+        <h3 id="reserveChartTitle">每周存量曲线</h3>
+        <div class="reserve-chart-controls">
+          <select id="reserveExchangeSelect" class="reserve-select" aria-label="选择交易所"></select>
+          <div class="reserve-mini-tabs">
+            <button class="reserve-mini-tab" data-chart-weeks="13">3M</button>
+            <button class="reserve-mini-tab" data-chart-weeks="52">1Y</button>
+            <button class="reserve-mini-tab active" data-chart-weeks="104">2Y</button>
           </div>
         </div>
-        <div class="reserve-chart-shell"><svg class="reserve-chart-svg" id="reserveChart" viewBox="0 0 440 210" preserveAspectRatio="none"></svg></div>
-        <div class="reserve-chart-insight" id="reserveInsight">--</div>
-        <div class="reserve-note-list">
-          <div><strong>交易所储备上升</strong>：通常意味着更多 BTC 回流交易所，潜在卖压增加。</div>
-          <div><strong>交易所储备下降</strong>：通常意味着更多 BTC 被提走，偏向长期持有或转入冷钱包。</div>
-          <div><strong>注意</strong>：冷热钱包内部调拨也会制造假信号，所以这块更适合拿来观察趋势，不适合机械下结论。</div>
-        </div>
+      </div>
+      <div class="reserve-chart-shell">
+        <svg class="reserve-chart-svg" id="reserveChart" role="img" aria-label="交易所每周存量曲线"></svg>
+        <div class="reserve-tip" id="reserveTip" hidden></div>
+      </div>
+      <div class="reserve-chart-insight" id="reserveInsight">数据加载中…</div>
+    </div>
+    <div class="reserve-panel reserve-table-panel">
+      <h3 id="reserveTableTitle">各交易所存量</h3>
+      <div class="reserve-table-wrap"><table class="reserve-table">
+        <thead><tr><th>#</th><th>交易所</th><th id="reserveAmtHead">存量</th><th>估值</th><th>7D</th><th>30D</th><th>90D</th><th>趋势</th></tr></thead>
+        <tbody id="reserveTableBody"></tbody>
+      </table></div>
+      <div class="reserve-note-list">
+        <div><strong>存量上升</strong>：更多币转入交易所地址，常被解读为潜在卖压增加。</div>
+        <div><strong>存量下降</strong>：更多币被提走，常被解读为转入冷钱包或长期持有。</div>
+        <div><strong>注意</strong>：交易所内部冷热钱包调拨、新增或停用地址都会制造假信号，这块适合观察趋势，不适合单独下结论。</div>
       </div>
     </div>
-    <div class="reserve-footnote">注：这版先把前端 UI 和信息层级上线，便于确认视觉方向。下一步接真实数据源时，建议优先做 Binance / Coinbase / OKX / Kraken / Bitfinex / Bybit 六家，并补充来源、更新时间与统计口径。</div>
+    <div class="reserve-footnote">口径：数据来自 DefiLlama CEX Transparency，按交易所公开的储备地址统计，每日更新、按周取样。以太坊主网的原生 ETH 与主流 L2 上的 ETH 合并计算，BSC 等链上的锚定币不计入，避免重复。单日变动超过 20% 的标为「单日异常」（图中虚线）：多数是数据源补录或移除地址，也可能是重大事件（如 2025 年 2 月 Bybit 被盗）。曲线保留原始追踪值，7D/30D/90D 变化量已剔除这些异常。仅作研究参考，不构成投资建议。</div>
   </section>
 
 
@@ -1340,24 +1355,180 @@
 // STATE
 // ============================================================
 
-const reservePreview = { updatedAt: null, exchanges: [
-  { name: 'Binance', short: 'BI', reserve: 598320, usd: '$41.8B', change: { '24h': 8120, '7d': -12440, '30d': 18220 }, history: { '7d': [591400,592220,593180,594050,595400,596700,598320], '30d': [580400,581100,582900,584200,585700,586300,587900,589500,591400,592100,593200,593900,592700,591200,590800,589700,588600,589300,590100,591500,592600,593300,594100,594800,595400,595900,596300,596900,597500,598320], '90d': [548000,549200,550400,551100,552300,553500,554400,555600,556800,557700,558200,559100,560300,561600,562800,564000,565100,566300,567700,568900,570100,571400,572900,574100,575500,576200,577100,578400,579300,580100,581000,581900,582700,583600,584500,585300,586100,586900,587800,588600,589500,590300,591100,591900,592800,593500,594100,594800,595400,596200,597100,598320] } },
-  { name: 'Coinbase', short: 'CB', reserve: 432180, usd: '$30.2B', change: { '24h': -9460, '7d': -18120, '30d': -24780 }, history: { '7d': [441500,440400,439600,438900,437200,435100,432180], '30d': [456900,456000,455100,454500,453700,452900,452000,451500,450800,449900,449100,448300,447500,446600,445800,445200,444400,443700,442900,442100,441500,440800,440100,439500,438900,437800,436900,435900,434800,432180], '90d': [481000,480200,479600,478900,478100,477300,476500,475900,475100,474400,473700,472900,472200,471400,470700,469900,469100,468400,467700,467000,466200,465500,464800,464000,463300,462400,461800,460900,460100,459400,458700,458000,457200,456500,455800,455100,454400,453800,453100,452500,451800,451100,450300,449600,448900,448100,447400,446700,445800,444900,443800,432180] } },
-  { name: 'OKX', short: 'OK', reserve: 128440, usd: '$8.97B', change: { '24h': 3210, '7d': 6840, '30d': 10920 }, history: { '7d': [124500,124980,125400,126020,126780,127640,128440], '30d': [117520,117900,118240,118600,118920,119280,119740,120100,120420,120780,121040,121300,121620,121980,122320,122700,123120,123480,123860,124120,124500,124980,125400,125760,126020,126340,126780,127120,127760,128440], '90d': [108400,108700,109100,109500,109900,110200,110600,110900,111300,111700,112000,112400,112900,113300,113700,114100,114500,114900,115300,115700,116000,116400,116800,117100,117520,117900,118240,118600,118920,119280,119740,120100,120420,120780,121040,121300,121620,121980,122320,122700,123120,123480,123860,124120,124500,124980,125400,126020,126780,127640,128000,128440] } },
-  { name: 'Kraken', short: 'KR', reserve: 87210, usd: '$6.09B', change: { '24h': -1580, '7d': -4620, '30d': -5120 }, history: { '7d': [89220,88980,88710,88420,88090,87880,87210], '30d': [92330,92240,92110,91980,91860,91720,91590,91430,91300,91180,91040,90920,90780,90610,90450,90290,90110,89960,89790,89660,89540,89410,89290,89160,89010,88890,88680,88440,88090,87210], '90d': [96500,96320,96140,95960,95780,95610,95450,95290,95110,94950,94780,94610,94420,94250,94080,93900,93730,93550,93390,93220,93040,92880,92710,92540,92330,92240,92110,91980,91860,91720,91590,91430,91300,91180,91040,90920,90780,90610,90450,90290,90110,89960,89790,89660,89540,89410,89290,89160,89010,88890,88680,87210] } },
-  { name: 'Bitfinex', short: 'BF', reserve: 73620, usd: '$5.14B', change: { '24h': 940, '7d': -1120, '30d': 2280 }, history: { '7d': [72880,73040,73120,73210,73340,73480,73620], '30d': [71380,71420,71480,71530,71610,71670,71740,71810,71890,71980,72070,72160,72220,72290,72380,72440,72510,72580,72650,72720,72880,72960,73040,73120,73210,73300,73340,73410,73480,73620], '90d': [68100,68240,68320,68410,68500,68620,68740,68820,68910,69040,69180,69240,69320,69400,69520,69640,69760,69840,69920,70050,70140,70210,70300,70420,70540,70630,70720,70810,70900,71020,71110,71200,71280,71340,71410,71480,71560,71610,71690,71760,71840,71910,71980,72060,72140,72210,72300,72410,72520,72620,72800,73620] } },
-  { name: 'Bybit', short: 'BY', reserve: 61420, usd: '$4.29B', change: { '24h': 2760, '7d': 5520, '30d': 9810 }, history: { '7d': [56100,56840,57440,58110,59020,60180,61420], '30d': [51610,51980,52220,52510,52840,53100,53460,53820,54110,54480,54860,55210,55520,55840,56100,56420,56840,57210,57540,57920,58310,58680,59020,59440,59860,60120,60440,60710,61040,61420], '90d': [43200,43610,43920,44240,44510,44840,45100,45420,45740,46020,46300,46640,46910,47220,47510,47840,48120,48410,48740,49020,49300,49640,49920,50210,50500,50840,51120,51410,51610,51980,52220,52510,52840,53100,53460,53820,54110,54480,54860,55210,55520,55840,56100,56420,56840,57210,57540,57920,58310,58680,59020,61420] } }
-] };
-const reserveState = { range: '24h', chartRange: '30d', exchange: 'Binance' };
-function formatReserveDelta(num) { const sign = num > 0 ? '+' : ''; return `${sign}${Math.round(num).toLocaleString()} BTC`; }
-function formatReserveBtc(num) { if (num >= 1000000) return `${(num/1000000).toFixed(2)}M BTC`; return `${Math.round(num).toLocaleString()} BTC`; }
+// ============================================================
+// CEX 存量（DefiLlama 公开储备地址，近两年每周曲线；数据由 scripts/fetch_cex_reserves.py 每日生成）
+// ============================================================
+const reserveState = { data: null, asset: 'BTC', range: '30d', chartWeeks: 104, exchange: '__all__', chart: null };
+function escHtml(s) { return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function setReserveText(id, text, cls) { const el = document.getElementById(id); if (!el) return; el.textContent = text; if (cls !== undefined) el.className = cls; }
+function formatReserveAmt(num, asset) { return Math.abs(num) >= 1e6 ? `${(num / 1e6).toFixed(2)}M ${asset}` : `${Math.round(num).toLocaleString()} ${asset}`; }
+function formatReserveDelta(num, asset) { if (num == null) return '--'; return (num > 0 ? '+' : '') + formatReserveAmt(num, asset); }
+function formatReserveUsd(n) { if (!n) return '--'; return n >= 1e9 ? `$${(n / 1e9).toFixed(1)}B` : `$${Math.round(n / 1e6).toLocaleString()}M`; }
 function reserveClass(num) { return num > 0 ? 'reserve-pos' : num < 0 ? 'reserve-neg' : ''; }
-function reserveTrendLabel(ex) { const d7 = ex.change['7d']; if (d7 > 3000) return { text: '↑ 持续流入', cls: 'inflow' }; if (d7 < -3000) return { text: '↓ 持续流出', cls: 'outflow' }; return { text: '→ 震荡', cls: 'neutral' }; }
-function renderReserveSummary() { const all = reservePreview.exchanges; const total = all.reduce((s, ex) => s + ex.reserve, 0); const totalUsd = all.reduce((s, ex) => s + parseFloat(ex.usd.replace(/[$B]/g,'')), 0); const d24 = all.reduce((s, ex) => s + ex.change['24h'], 0); const d7 = all.reduce((s, ex) => s + ex.change['7d'], 0); const d30 = all.reduce((s, ex) => s + ex.change['30d'], 0); const inflow = [...all].sort((a,b)=>b.change[reserveState.range]-a.change[reserveState.range])[0]; const outflow = [...all].sort((a,b)=>a.change[reserveState.range]-b.change[reserveState.range])[0]; if (reservePreview.updatedAt) document.getElementById('reserveUpdatedAt').textContent = new Date(reservePreview.updatedAt).toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}); document.getElementById('reserveTotalBtc').textContent = formatReserveBtc(total); document.getElementById('reserveTotalUsd').textContent = `≈ $${totalUsd.toFixed(2)}B`; for (const [id,val] of [['reserve24h',d24],['reserve7d',d7],['reserve30d',d30]]) { const el=document.getElementById(id); el.textContent = formatReserveDelta(val); el.className='reserve-stat-value '+reserveClass(val); } document.getElementById('reserveTopInflow').textContent = inflow.name; document.getElementById('reserveTopInflowSub').textContent = `${reserveState.range.toUpperCase()} ${formatReserveDelta(inflow.change[reserveState.range])}`; document.getElementById('reserveTopOutflow').textContent = outflow.name; document.getElementById('reserveTopOutflowSub').textContent = `${reserveState.range.toUpperCase()} ${formatReserveDelta(outflow.change[reserveState.range])}`; }
-function renderTopReserveStat() { const all = reservePreview.exchanges || []; if (!all.length) return; const total = all.reduce((s, ex) => s + ex.reserve, 0); const d7 = all.reduce((s, ex) => s + ex.change['7d'], 0); const totalEl = document.getElementById('cexReserveTotal'); const deltaEl = document.getElementById('cexReserveDelta7d'); if (totalEl) { totalEl.textContent = formatReserveBtc(total); totalEl.className = 'price-stat-val'; } if (deltaEl) { deltaEl.textContent = formatReserveDelta(d7); deltaEl.className = 'price-stat-val ' + reserveClass(d7); } }
-function renderReserveTable() { const rows = [...reservePreview.exchanges].sort((a,b)=>b.reserve-a.reserve).map((ex, idx) => { const trend = reserveTrendLabel(ex); return `<tr><td>${idx+1}</td><td><div class="reserve-ex"><span class="reserve-logo">${ex.short}</span>${ex.name}</div></td><td>${Math.round(ex.reserve).toLocaleString()} BTC</td><td>${ex.usd}</td><td class="${reserveClass(ex.change['24h'])}">${formatReserveDelta(ex.change['24h'])}</td><td class="${reserveClass(ex.change['7d'])}">${formatReserveDelta(ex.change['7d'])}</td><td class="${reserveClass(ex.change['30d'])}">${formatReserveDelta(ex.change['30d'])}</td><td><span class="reserve-trend ${trend.cls}">${trend.text}</span></td></tr>`; }).join(''); document.getElementById('reserveTableBody').innerHTML = rows; }
-function renderReserveChart() { const ex = reservePreview.exchanges.find(x => x.name === reserveState.exchange) || reservePreview.exchanges[0]; const data = ex.history[reserveState.chartRange]; const svg = document.getElementById('reserveChart'); const w = 440, h = 210, padX = 12, padY = 16; const min = Math.min(...data), max = Math.max(...data), span = Math.max(1, max-min); const pts = data.map((v,i)=>{ const x = padX + (i/(data.length-1||1))*(w-padX*2); const y = h-padY - ((v-min)/span)*(h-padY*2); return `${x},${y}`; }); const points = pts.join(' '); const last = data[data.length-1], first = data[0], delta = last-first; const stroke = delta >= 0 ? '#f7931a' : '#00d4aa'; const area = `M ${padX} ${h-padY} L ${pts.map(p=>p.replace(',', ' ')).join(' L ')} L ${w-padX} ${h-padY} Z`; const end = pts[pts.length-1].split(','); svg.innerHTML = `<defs><linearGradient id="reserveArea" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="${stroke}" stop-opacity="0.28"></stop><stop offset="100%" stop-color="${stroke}" stop-opacity="0"></stop></linearGradient></defs><path d="${area}" fill="url(#reserveArea)"></path><polyline fill="none" stroke="${stroke}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${points}"></polyline><line x1="12" y1="16" x2="12" y2="194" stroke="rgba(255,255,255,0.08)"></line><line x1="12" y1="194" x2="428" y2="194" stroke="rgba(255,255,255,0.08)"></line><text x="16" y="26" fill="rgba(255,255,255,0.46)" font-size="11">${Math.round(max).toLocaleString()} BTC</text><text x="16" y="188" fill="rgba(255,255,255,0.32)" font-size="11">${Math.round(min).toLocaleString()} BTC</text><circle cx="${end[0]}" cy="${end[1]}" r="4" fill="${stroke}"></circle>`; const pct = ((delta/first)*100).toFixed(1); const direction = delta >= 0 ? '上升' : '下降'; document.getElementById('reserveInsight').textContent = `${ex.name} 在过去 ${reserveState.chartRange.toUpperCase()} 的 BTC 储备整体${direction} ${Math.abs(delta).toLocaleString()} BTC（${pct}%）。这类变化更适合配合价格、ETF 与链上估值一起看，不建议单点解读。`; }
-function initReserveModule() { const select = document.getElementById('reserveExchangeSelect'); if (!select) return; select.innerHTML = reservePreview.exchanges.map(ex=>`<option value="${ex.name}">${ex.name}</option>`).join(''); select.value = reserveState.exchange; select.addEventListener('change', e => { reserveState.exchange = e.target.value; renderReserveChart(); }); document.querySelectorAll('.reserve-tab').forEach(btn => btn.addEventListener('click', () => { reserveState.range = btn.dataset.range; document.querySelectorAll('.reserve-tab').forEach(x=>x.classList.remove('active')); btn.classList.add('active'); renderReserveSummary(); })); document.querySelectorAll('.reserve-mini-tab').forEach(btn => btn.addEventListener('click', () => { reserveState.chartRange = btn.dataset.chartRange; document.querySelectorAll('.reserve-mini-tab').forEach(x=>x.classList.remove('active')); btn.classList.add('active'); renderReserveChart(); })); renderReserveSummary(); renderReserveTable(); renderReserveChart(); renderTopReserveStat(); }
+const RESERVE_SHORT = { Binance: 'BN', Bitfinex: 'BF', Bitstamp: 'BS', Bitget: 'BG', Bybit: 'BY', OKX: 'OK', Robinhood: 'RH', Gemini: 'GE', Deribit: 'DR', 'Crypto.com': 'CR', Gate: 'GT', MEXC: 'MX', KuCoin: 'KC', HTX: 'HT' };
+function reserveExchanges(asset = reserveState.asset) { return reserveState.data?.assets?.[asset]?.exchanges || []; }
+function reserveSumChange(all, key) { const vals = all.map(ex => ex.change?.[key]).filter(v => v != null); return vals.length ? vals.reduce((s, v) => s + v, 0) : null; }
+function reserveTrendLabel(ex) {
+  const d = ex.change?.['30d'];
+  if (d == null || ex.latest - d <= 0) return { text: '—', cls: 'neutral' };
+  const pct = d / (ex.latest - d) * 100;
+  if (pct > 2) return { text: '↑ 30D 净流入', cls: 'inflow' };
+  if (pct < -2) return { text: '↓ 30D 净流出', cls: 'outflow' };
+  return { text: '→ 基本持平', cls: 'neutral' };
+}
+function renderReserveSummary() {
+  const all = reserveExchanges(), asset = reserveState.asset, range = reserveState.range;
+  if (!all.length) return;
+  const total = all.reduce((s, ex) => s + ex.latest, 0);
+  const totalUsd = all.reduce((s, ex) => s + (ex.latestUsd || 0), 0);
+  setReserveText('reserveTotalLabel', `CEX ${asset} 总存量（${all.length} 家）`);
+  setReserveText('reserveTotal', formatReserveAmt(total, asset));
+  setReserveText('reserveTotalUsd', `≈ ${formatReserveUsd(totalUsd)}`);
+  for (const [id, key] of [['reserve7d', '7d'], ['reserve30d', '30d'], ['reserve90d', '90d']]) {
+    const v = reserveSumChange(all, key);
+    setReserveText(id, formatReserveDelta(v, asset), 'reserve-stat-value ' + reserveClass(v));
+  }
+  const ranked = all.filter(ex => ex.change?.[range] != null).sort((a, b) => b.change[range] - a.change[range]);
+  const inflow = ranked[0], outflow = ranked[ranked.length - 1], label = range.toUpperCase();
+  if (inflow && inflow.change[range] > 0) { setReserveText('reserveTopInflow', inflow.name); setReserveText('reserveTopInflowSub', `${label} ${formatReserveDelta(inflow.change[range], asset)}`); }
+  else { setReserveText('reserveTopInflow', '无'); setReserveText('reserveTopInflowSub', `${label} 没有交易所净流入`); }
+  if (outflow && outflow.change[range] < 0) { setReserveText('reserveTopOutflow', outflow.name); setReserveText('reserveTopOutflowSub', `${label} ${formatReserveDelta(outflow.change[range], asset)}`); }
+  else { setReserveText('reserveTopOutflow', '无'); setReserveText('reserveTopOutflowSub', `${label} 没有交易所净流出`); }
+}
+function renderTopReserveStat() {
+  // 顶部价格栏固定展示 BTC
+  const all = reserveExchanges('BTC'); if (!all.length) return;
+  const total = all.reduce((s, ex) => s + ex.latest, 0), d7 = reserveSumChange(all, '7d');
+  setReserveText('cexReserveTotal', formatReserveAmt(total, 'BTC'), 'price-stat-val');
+  setReserveText('cexReserveDelta7d', formatReserveDelta(d7, 'BTC'), 'price-stat-val ' + reserveClass(d7));
+}
+function renderReserveTable() {
+  const asset = reserveState.asset;
+  setReserveText('reserveTableTitle', `各交易所 ${asset} 存量`);
+  setReserveText('reserveAmtHead', `${asset} 存量`);
+  const rows = reserveExchanges().map((ex, idx) => {
+    const trend = reserveTrendLabel(ex);
+    const stale = ex.stale ? `<span class="reserve-stale" title="本次抓取失败，沿用 ${escHtml(ex.asOf)} 的数据">数据延迟</span>` : '';
+    const cells = ['7d', '30d', '90d'].map(k => `<td class="${reserveClass(ex.change?.[k])}">${formatReserveDelta(ex.change?.[k], asset)}</td>`).join('');
+    return `<tr><td>${idx + 1}</td><td><div class="reserve-ex"><span class="reserve-logo">${escHtml(RESERVE_SHORT[ex.name] || ex.name.slice(0, 2).toUpperCase())}</span>${escHtml(ex.name)}${stale}</div></td><td>${formatReserveAmt(ex.latest, asset)}</td><td>${formatReserveUsd(ex.latestUsd)}</td>${cells}<td><span class="reserve-trend ${trend.cls}">${trend.text}</span></td></tr>`;
+  }).join('');
+  document.getElementById('reserveTableBody').innerHTML = rows;
+}
+function populateReserveSelect() {
+  const select = document.getElementById('reserveExchangeSelect'); if (!select) return;
+  const all = reserveExchanges();
+  if (reserveState.exchange !== '__all__' && !all.some(ex => ex.slug === reserveState.exchange)) reserveState.exchange = '__all__';
+  select.innerHTML = '';
+  select.add(new Option(`全部 ${all.length} 家合计`, '__all__'));
+  all.forEach(ex => select.add(new Option(ex.name, ex.slug)));
+  select.value = reserveState.exchange;
+}
+function reserveSeries() {
+  const all = reserveExchanges();
+  if (reserveState.exchange !== '__all__') {
+    const ex = all.find(x => x.slug === reserveState.exchange) || all[0];
+    return { label: ex.name, points: ex.weekly, steps: ex.steps.map(s => ({ ...s, name: ex.name })), joins: [], minShare: 0 };
+  }
+  // 周线日期在抓取时已对齐，直接按日期相加
+  const dates = [...new Set(all.flatMap(ex => ex.weekly.map(p => p[0])))].sort();
+  const sums = new Map(dates.map(d => [d, 0]));
+  all.forEach(ex => ex.weekly.forEach(([d, v]) => sums.set(d, sums.get(d) + v)));
+  // 中途才开始被统计的交易所会让合计曲线跳一下，单独标出来
+  const joins = all.filter(ex => ex.weekly.length && ex.weekly[0][0] > dates[0]).map(ex => ({ date: ex.weekly[0][0], name: ex.name, delta: ex.weekly[0][1] }));
+  // 合计视图只标对总量影响 >= 1% 的事件，小交易所的异常放进合计里看不出来，标了只会让图很乱
+  return { label: `全部 ${all.length} 家合计`, points: dates.map(d => [d, sums.get(d)]), steps: all.flatMap(ex => ex.steps.map(s => ({ ...s, name: ex.name }))), joins, minShare: 0.01 };
+}
+function renderReserveChart() {
+  const svg = document.getElementById('reserveChart');
+  if (!svg || !reserveExchanges().length) return;
+  const asset = reserveState.asset, s = reserveSeries();
+  const pts = s.points.slice(-(reserveState.chartWeeks + 1));
+  if (pts.length < 2) { svg.innerHTML = ''; return; }
+  const w = Math.max(300, Math.round(svg.clientWidth || 640)), h = 240, padL = 8, padR = 8, padT = 14, padB = 24;
+  svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+  const vals = pts.map(p => p[1]), min = Math.min(...vals), max = Math.max(...vals), span = Math.max(1, max - min);
+  const lo = min - span * 0.08, hi = max + span * 0.08;
+  const x = i => padL + i / (pts.length - 1) * (w - padL - padR);
+  const y = v => padT + (hi - v) / (hi - lo) * (h - padT - padB);
+  const coords = pts.map((p, i) => [x(i), y(p[1])]);
+  // 每个异常/纳入事件落在哪一周：上一周 < 日期 <= 本周
+  const marks = new Map();
+  const addMark = (i, text) => { if (i > 0) { if (!marks.has(i)) marks.set(i, []); marks.get(i).push(text); } };
+  const weekIdx = date => { for (let i = 1; i < pts.length; i++) if (date > pts[i - 1][0] && date <= pts[i][0]) return i; return -1; };
+  const material = (i, d) => i > 0 && Math.abs(d) >= s.minShare * pts[i][1];
+  // 区间内全部异常的合计（不论是否画线），用来给出「剔除异常后」的变化
+  let anomalySum = 0;
+  s.steps.forEach(st => { const i = weekIdx(st.date); if (i > 0) anomalySum += st.delta; if (material(i, st.delta)) addMark(i, `${st.name} ${st.date} 单日 ${formatReserveDelta(st.delta, asset)}`); });
+  s.joins.forEach(j => { const i = pts.findIndex(p => p[0] === j.date); if (i > 0) anomalySum += j.delta; if (material(i, j.delta)) addMark(i, `${j.name} 从这周开始纳入统计（${formatReserveDelta(j.delta, asset)}）`); });
+  reserveState.chart = { pts, coords, marks, w, asset };
+  const first = vals[0], last = vals[vals.length - 1], delta = last - first;
+  const stroke = delta >= 0 ? '#f7931a' : '#00d4aa';
+  const line = coords.map(c => c.join(',')).join(' ');
+  const area = `M ${coords[0][0]} ${h - padB} L ${coords.map(c => c.join(' ')).join(' L ')} L ${coords[coords.length - 1][0]} ${h - padB} Z`;
+  const markLines = [...marks.keys()].map(i => `<line x1="${coords[i][0]}" y1="${padT}" x2="${coords[i][0]}" y2="${h - padB}" stroke="rgba(255,204,102,0.55)" stroke-dasharray="3 4"></line>`).join('');
+  const grid = [0.25, 0.5, 0.75].map(f => { const gy = padT + f * (h - padT - padB); const gv = hi - f * (hi - lo); return `<line x1="${padL}" y1="${gy}" x2="${w - padR}" y2="${gy}" stroke="rgba(255,255,255,0.05)"></line><text x="${padL + 2}" y="${gy - 4}" fill="rgba(255,255,255,0.38)" font-size="10">${escHtml(formatReserveAmt(gv, asset))}</text>`; }).join('');
+  svg.innerHTML = `<defs><linearGradient id="reserveArea" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="${stroke}" stop-opacity="0.26"></stop><stop offset="100%" stop-color="${stroke}" stop-opacity="0"></stop></linearGradient></defs>${grid}${markLines}<path d="${area}" fill="url(#reserveArea)"></path><polyline fill="none" stroke="${stroke}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" points="${line}"></polyline><text x="${padL}" y="${h - 6}" fill="rgba(255,255,255,0.38)" font-size="10">${pts[0][0]}</text><text x="${w - padR}" y="${h - 6}" fill="rgba(255,255,255,0.38)" font-size="10" text-anchor="end">${pts[pts.length - 1][0]}</text><line id="reserveHoverLine" y1="${padT}" y2="${h - padB}" stroke="rgba(255,255,255,0.25)" visibility="hidden"></line><circle id="reserveHoverDot" r="4" fill="${stroke}" visibility="hidden"></circle>`;
+  const pct = first ? (delta / first * 100).toFixed(1) : '0.0';
+  const rangeText = { 13: '3 个月', 52: '1 年', 104: '2 年' }[reserveState.chartWeeks] || `${reserveState.chartWeeks} 周`;
+  let insight = `${s.label}：近 ${rangeText} ${asset} 存量${delta >= 0 ? '上升' : '下降'} ${formatReserveAmt(Math.abs(delta), asset)}（${delta >= 0 ? '+' : ''}${pct}%）。`;
+  if (anomalySum && Math.abs(anomalySum) >= 0.005 * Math.abs(first)) insight += ` 其中约 ${formatReserveDelta(anomalySum, asset)} 来自单日异常或统计范围变化，剔除后约为 ${formatReserveDelta(delta - anomalySum, asset)}。`;
+  if (marks.size) insight += ` 图中虚线标出了 ${marks.size} 周的${s.minShare ? '较大' : ''}异常（悬停可看明细），多为数据源补录或移除地址，不一定是真实资金流动；上方 7D/30D/90D 变化量已剔除异常。`;
+  insight += ' 建议结合价格、ETF 与链上估值一起看。';
+  setReserveText('reserveInsight', insight);
+  setReserveText('reserveChartTitle', `每周 ${asset} 存量曲线`);
+  hideReserveTip();
+}
+function hideReserveTip() {
+  const tip = document.getElementById('reserveTip'); if (tip) tip.hidden = true;
+  ['reserveHoverLine', 'reserveHoverDot'].forEach(id => document.getElementById(id)?.setAttribute('visibility', 'hidden'));
+}
+function onReserveHover(e) {
+  const c = reserveState.chart, svg = document.getElementById('reserveChart'), tip = document.getElementById('reserveTip');
+  if (!c || !svg || !tip) return;
+  const rect = svg.getBoundingClientRect();
+  const px = (e.clientX - rect.left) * (c.w / rect.width);
+  let i = 0; for (let k = 1; k < c.coords.length; k++) if (Math.abs(c.coords[k][0] - px) < Math.abs(c.coords[i][0] - px)) i = k;
+  const [cx, cy] = c.coords[i], [date, v] = c.pts[i];
+  const lineEl = document.getElementById('reserveHoverLine'), dot = document.getElementById('reserveHoverDot');
+  lineEl.setAttribute('x1', cx); lineEl.setAttribute('x2', cx); lineEl.setAttribute('visibility', 'visible');
+  dot.setAttribute('cx', cx); dot.setAttribute('cy', cy); dot.setAttribute('visibility', 'visible');
+  const wk = i > 0 ? v - c.pts[i - 1][1] : null;
+  const warn = (c.marks.get(i) || []).map(t => `<div class="reserve-tip-warn">⚠ ${escHtml(t)}</div>`).join('');
+  tip.innerHTML = `<div class="reserve-tip-date">${escHtml(date)} 当周</div><div><strong>${escHtml(formatReserveAmt(v, c.asset))}</strong></div>${wk == null ? '' : `<div class="${reserveClass(wk)}">较上周 ${escHtml(formatReserveDelta(wk, c.asset))}</div>`}${warn}`;
+  tip.hidden = false;
+  const shellW = tip.parentElement.clientWidth, left = cx / c.w * rect.width + (rect.left - tip.parentElement.getBoundingClientRect().left);
+  tip.style.left = `${Math.min(Math.max(8, left + 12), Math.max(8, shellW - tip.offsetWidth - 8))}px`;
+}
+function renderReserveAll() {
+  if (!reserveState.data) return;
+  setReserveText('reserveUpdatedAt', reserveState.data.anchor || '--');
+  populateReserveSelect(); renderReserveSummary(); renderReserveTable(); renderReserveChart(); renderTopReserveStat();
+}
+async function initReserveModule() {
+  if (!document.getElementById('exchangeReservesSection')) return;
+  const bindTabs = (selector, onPick) => document.querySelectorAll(selector).forEach(btn => btn.addEventListener('click', () => {
+    btn.parentElement.querySelectorAll('button').forEach(x => x.classList.remove('active'));
+    btn.classList.add('active'); onPick(btn);
+  }));
+  bindTabs('#reserveAssetTabs .reserve-tab', btn => { reserveState.asset = btn.dataset.asset; renderReserveAll(); });
+  bindTabs('#reserveRangeTabs .reserve-tab', btn => { reserveState.range = btn.dataset.range; renderReserveSummary(); });
+  bindTabs('.reserve-mini-tab', btn => { reserveState.chartWeeks = Number(btn.dataset.chartWeeks); renderReserveChart(); });
+  document.getElementById('reserveExchangeSelect')?.addEventListener('change', e => { reserveState.exchange = e.target.value; renderReserveChart(); });
+  const svg = document.getElementById('reserveChart');
+  svg?.addEventListener('pointermove', onReserveHover);
+  svg?.addEventListener('pointerleave', hideReserveTip);
+  let resizeTimer; window.addEventListener('resize', () => { clearTimeout(resizeTimer); resizeTimer = setTimeout(renderReserveChart, 150); });
+  try {
+    const res = await fetch('/data/cex-reserves.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    reserveState.data = await res.json();
+  } catch (e) {
+    console.error('CEX reserves load error', e);
+    setReserveText('reserveInsight', '交易所存量数据加载失败，请稍后刷新。');
+    return;
+  }
+  renderReserveAll();
+}
 
 
 const state = {
