@@ -26,7 +26,6 @@ class StockPage:
     ticker: str
     company: str
     category: str
-    risk_state: str
     risk_summary: str
     search_question: str
     evidence: tuple[Evidence, Evidence, Evidence]
@@ -37,7 +36,6 @@ PAGES = [
         ticker="NVDA",
         company="NVIDIA",
         category="AI 芯片 / 算力龙头",
-        risk_state="偏热观察",
         risk_summary="NVDA 的风险检查重点不是预测涨跌，而是确认涨幅、成交量和 AI 主题宽度是否仍然互相支持。",
         search_question="NVDA 现在风险是否过热？",
         evidence=(
@@ -77,7 +75,6 @@ PAGES = [
         ticker="TSLA",
         company="Tesla",
         category="AI / 自动驾驶 / 高波动龙头",
-        risk_state="偏热观察",
         risk_summary="TSLA 的风险检查重点是区分叙事推动、价格波动和真实承接，不把社区热度当作结论。",
         search_question="TSLA 现在风险是否升温？",
         evidence=(
@@ -117,7 +114,6 @@ PAGES = [
         ticker="PLTR",
         company="Palantir",
         category="AI 软件 / 高估值情绪票",
-        risk_state="偏热观察",
         risk_summary="PLTR 的风险检查重点是确认高估值叙事下，价格强势是否仍有成交量和主题宽度支撑。",
         search_question="PLTR 是否已经过热？",
         evidence=(
@@ -157,7 +153,6 @@ PAGES = [
         ticker="AMD",
         company="Advanced Micro Devices",
         category="AI 芯片 / GPU 竞争链",
-        risk_state="正常观察",
         risk_summary="AMD 的风险检查重点是比较它与 NVDA、AVGO、SMCI 等算力链股票是否出现分化。",
         search_question="AMD 现在风险热不热？",
         evidence=(
@@ -197,7 +192,6 @@ PAGES = [
         ticker="SMCI",
         company="Super Micro Computer",
         category="AI 服务器 / 高波动硬件链",
-        risk_state="偏热观察",
         risk_summary="SMCI 的风险检查重点是高波动后的承接质量，以及服务器硬件链是否同步支持。",
         search_question="SMCI 风险是否偏热？",
         evidence=(
@@ -306,10 +300,10 @@ def html(page: StockPage) -> str:
       <div>
         <div class="kicker">
           <div class="eyebrow">30 秒风险检查 · {escape(page.category)}</div>
-          <span class="badge">{escape(page.risk_state)}</span>
+          <span class="badge" id="liveBadge">实时状态加载中</span>
         </div>
       <h1>{escape(page.search_question)}</h1>
-      <p class="answer"><strong>当前风险温度：{escape(page.risk_state)}。</strong>{escape(page.risk_summary)}</p>
+      <p class="answer"><strong>当前风险温度：<span id="liveState">以股票雷达实时数据为准</span>。</strong>{escape(page.risk_summary)}</p>
       </div>
       <p class="hero-note">这不是买卖建议，也不是价格预测。它只回答：风险热在哪里、证据是否一致、下一步该查什么。</p>
     </article>
@@ -320,7 +314,7 @@ def html(page: StockPage) -> str:
         <div class="company">{escape(page.company)}</div>
       </div>
       <div class="mini-list">
-        <div class="mini-row"><span class="mini-label">当前判断</span><span class="mini-value">{escape(page.risk_state)}</span></div>
+        <div class="mini-row"><span class="mini-label">当前判断</span><span class="mini-value" id="liveJudge">加载中</span></div>
         <div class="mini-row"><span class="mini-label">页面类型</span><span class="mini-value">公开可索引风险检查</span></div>
         <div class="mini-row"><span class="mini-label">更多标的</span><span class="mini-value">主雷达页继续查看</span></div>
       </div>
@@ -362,6 +356,22 @@ if(evidence&&'IntersectionObserver' in window){{
 window.addEventListener('load',()=>{{
   if(location.hash==='#evidence') document.getElementById('evidence')?.scrollIntoView();
 }});
+// 风险状态不写死在页面里（以前写的是发布当天的判断，几个月后仍显示为「当前」），每次打开都向股票雷达要实时结论
+(function loadLiveState(){{
+  const set=(id,text)=>{{const el=document.getElementById(id); if(el) el.textContent=text;}};
+  fetch('/api/stock-radar?symbol='+encodeURIComponent(STOCK_SEO_TICKER)).then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{{
+    if(!d||!d.verdict) throw new Error('empty');
+    const day=String(d.updatedAt||d.generatedAt||'').slice(0,10);
+    const score=Number.isFinite(Number(d.score))?`${{d.score}} 分`:'';
+    set('liveBadge',d.verdict);
+    set('liveState',d.verdict+(score||day?`（${{[score,day&&'数据截至 '+day].filter(Boolean).join('，')}}）`:''));
+    set('liveJudge',d.verdict+(score?` · ${{score}}`:''));
+  }}).catch(()=>{{
+    set('liveBadge','实时数据暂不可用');
+    set('liveState','实时数据暂不可用，请打开股票雷达查看');
+    set('liveJudge','请到股票雷达查看');
+  }});
+}})();
 </script>
 </body>
 </html>

@@ -76,6 +76,16 @@ class StockSeoPageTests(unittest.TestCase):
                 for hook in expected_hooks:
                     self.assertIn(hook, html)
 
+    def test_risk_state_is_loaded_live_not_hardcoded(self):
+        # 以前每页写死发布当天的判断（「偏热观察」），几个月后仍以「当前风险温度」展示
+        for ticker in MVP_TICKERS:
+            with self.subTest(ticker=ticker):
+                html = read_text(ROOT / f"stock-{ticker}-risk.html")
+                self.assertIn("/api/stock-radar?symbol=", html)
+                self.assertIn('id="liveState"', html)
+                for stale in ("偏热观察", "正常观察"):
+                    self.assertNotIn(stale, html)
+
     def test_vercel_rewrites_include_all_mvp_clean_stock_routes(self):
         config = json.loads(read_text(ROOT / "vercel.json"))
         rewrites = {

@@ -36,10 +36,10 @@
       <div>
         <div class="kicker">
           <div class="eyebrow">30 秒风险检查 · AI 软件 / 高估值情绪票</div>
-          <span class="badge">偏热观察</span>
+          <span class="badge" id="liveBadge">实时状态加载中</span>
         </div>
       <h1>PLTR 是否已经过热？</h1>
-      <p class="answer"><strong>当前风险温度：偏热观察。</strong>PLTR 的风险检查重点是确认高估值叙事下，价格强势是否仍有成交量和主题宽度支撑。</p>
+      <p class="answer"><strong>当前风险温度：<span id="liveState">以股票雷达实时数据为准</span>。</strong>PLTR 的风险检查重点是确认高估值叙事下，价格强势是否仍有成交量和主题宽度支撑。</p>
       </div>
       <p class="hero-note">这不是买卖建议，也不是价格预测。它只回答：风险热在哪里、证据是否一致、下一步该查什么。</p>
     </article>
@@ -50,7 +50,7 @@
         <div class="company">Palantir</div>
       </div>
       <div class="mini-list">
-        <div class="mini-row"><span class="mini-label">当前判断</span><span class="mini-value">偏热观察</span></div>
+        <div class="mini-row"><span class="mini-label">当前判断</span><span class="mini-value" id="liveJudge">加载中</span></div>
         <div class="mini-row"><span class="mini-label">页面类型</span><span class="mini-value">公开可索引风险检查</span></div>
         <div class="mini-row"><span class="mini-label">更多标的</span><span class="mini-value">主雷达页继续查看</span></div>
       </div>
@@ -115,6 +115,22 @@ if(evidence&&'IntersectionObserver' in window){
 window.addEventListener('load',()=>{
   if(location.hash==='#evidence') document.getElementById('evidence')?.scrollIntoView();
 });
+// 风险状态不写死在页面里（以前写的是发布当天的判断，几个月后仍显示为「当前」），每次打开都向股票雷达要实时结论
+(function loadLiveState(){
+  const set=(id,text)=>{const el=document.getElementById(id); if(el) el.textContent=text;};
+  fetch('/api/stock-radar?symbol='+encodeURIComponent(STOCK_SEO_TICKER)).then(r=>r.ok?r.json():Promise.reject(r.status)).then(d=>{
+    if(!d||!d.verdict) throw new Error('empty');
+    const day=String(d.updatedAt||d.generatedAt||'').slice(0,10);
+    const score=Number.isFinite(Number(d.score))?`${d.score} 分`:'';
+    set('liveBadge',d.verdict);
+    set('liveState',d.verdict+(score||day?`（${[score,day&&'数据截至 '+day].filter(Boolean).join('，')}）`:''));
+    set('liveJudge',d.verdict+(score?` · ${score}`:''));
+  }).catch(()=>{
+    set('liveBadge','实时数据暂不可用');
+    set('liveState','实时数据暂不可用，请打开股票雷达查看');
+    set('liveJudge','请到股票雷达查看');
+  });
+})();
 </script>
 </body>
 </html>
