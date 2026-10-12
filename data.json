@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-11T21:55:58.612081+00:00",
-  "timestamp_cn": "2026-10-12 05:55",
+  "timestamp": "2026-10-12T05:53:20.087346+00:00",
+  "timestamp_cn": "2026-10-12 13:53",
   "price": {
-    "price": 83449,
-    "change24h": 0.56
+    "price": 83916,
+    "change24h": 1.12
   },
   "etf": {
     "sum5d": -678.9,
@@ -18,10 +18,10 @@
     "source": "farside_parsed"
   },
   "onchain": {
-    "mvrv_zscore": 0.9488,
-    "nupl": 0.3511,
-    "mvrv_zscore_as_of": "2026-10-10",
-    "nupl_as_of": "2026-10-10",
+    "mvrv_zscore": 0.9705,
+    "nupl": 0.3563,
+    "mvrv_zscore_as_of": "2026-10-11",
+    "nupl_as_of": "2026-10-11",
     "mvrv_zscore_source": "coinmetrics",
     "nupl_source": "coinmetrics",
     "mvrv_zscore_age_days": 1,
@@ -31,42 +31,42 @@
   },
   "fed": {
     "fed_direction": "cut1",
-    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 4.2%（Exactly 0 cuts 平均 95.8%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 4.4%（Exactly 0 cuts 平均 95.6%）；非 CME 期货源，作为 403 fallback",
     "confidence": "medium",
     "source": "oddpool_fed_rate_cut_count",
-    "cut_probability": 4.2,
-    "zero_cut_probability": 95.8,
+    "cut_probability": 4.4,
+    "zero_cut_probability": 95.6,
     "year": "2026",
-    "as_of": "2026-10-11",
+    "as_of": "2026-10-12",
     "age_days": 0,
     "stale": false
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0015,
-    "avg": 0.0015,
+    "okx": 0.0,
+    "avg": 0.0,
     "source": "exchange_public"
   },
   "margin_lending": {
     "btc_daily_rate": 1.18e-05,
     "btc_annual_rate": 0.4307,
     "btc_borrow_limit": 100.0,
-    "open_interest": 29253.0,
+    "open_interest": 29560.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 312.6,
+    "total_b": 313.2,
     "trend": "expand"
   },
   "tips": 2.87,
   "ma200w": {
-    "value": 66378,
-    "as_of": "2026-10-10",
+    "value": 66425,
+    "as_of": "2026-10-11",
     "source": "coinmetrics"
   },
   "tips_as_of": "2026-10-08",
-  "tips_age_days": 3,
+  "tips_age_days": 4,
   "tips_stale": false
 }
