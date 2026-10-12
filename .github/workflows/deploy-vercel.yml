@@ -1,7 +1,11 @@
 name: Deploy to Vercel
 
-# The Vercel project is owned by a GitHub account we no longer control, so its
-# Git integration cannot see this repository. Deploy with a token instead.
+# This workflow is the only production deploy path. The Vercel project is also
+# linked to this repo, but vercel.json sets git.deploymentEnabled=false: with
+# both on, every push deployed twice, the two raced (whichever finished last
+# became production, so an older commit could win), and on busy days Vercel's
+# GitHub fetches hit secondary rate limits. This path queues deploys
+# (concurrency below) and skips failed data runs.
 
 on:
   push:

@@ -168,5 +168,8 @@
       "path": "/api/price-alert",
       "schedule": "0 0 * * *"
     }
-  ]
+  ],
+  "git": {
+    "deploymentEnabled": false
+  }
 }
