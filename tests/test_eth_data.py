@@ -39,6 +39,19 @@ class StakingTests(unittest.TestCase):
         self.assertEqual(eth.parse_staking_records("<html>Just a moment...</html>"), [])
 
 
+class ScoringInputTests(unittest.TestCase):
+    def test_issuance_matches_known_scale(self):
+        # 43.7M ETH 质押时，共识层年发行约 110 万 ETH，即每天 3,000 上下
+        self.assertAlmostEqual(eth.daily_issuance(43_669_573), 3011, delta=15)
+
+    def test_stablecoin_change_uses_value_thirty_days_back(self):
+        pts = [(date(2026, 9, 10), 100.0), (date(2026, 9, 12), 102.0), (date(2026, 10, 12), 104.04)]
+        self.assertEqual(eth.stablecoin_change(pts), (104.04, 2.0, "2026-10-12"))
+
+    def test_stablecoin_change_without_history(self):
+        self.assertEqual(eth.stablecoin_change([(date(2026, 10, 12), 100.0)]), (100.0, None, "2026-10-12"))
+
+
 class CarryForwardTests(unittest.TestCase):
     def test_recent_value_is_reused_with_its_date(self):
         prev = {"burn_rate_daily": 15.0, "as_of": {"burn_rate_daily": "2026-10-10"}}

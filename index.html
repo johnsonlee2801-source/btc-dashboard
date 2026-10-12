@@ -1713,7 +1713,7 @@ function calcScores() {
   // 美联储方向 (10pts) — 流动性最核心驱动
   let fed_score = 5; // default: 暂停
   if (live.fed === 'cut2') fed_score = 10;       // 连续降息
-  else if (live.fed === 'cut1') fed_score = 7;   // 降息1次/暂停偏鸽
+  else if (live.fed === 'cut1') fed_score = 7;   // 年内约降息1次，偏鸽
   else if (live.fed === 'hold') fed_score = 5;   // 观望
   else if (live.fed === 'hike') { fed_score = 0; vetoTriggered = true; } // 加息=一票否决
 
@@ -2005,7 +2005,7 @@ function render() {
   // M1
   if(state.fg!==null){ setText('m1fg', state.fg+' ('+sc.fg_score+'/3)'); setBar('m1fg_bar', barWidth(sc.fg_score,3), barColor(sc.fg_score,3)); }
   // cut1 这一档同时涵盖「维持不变」和「降息一次」，有概率时直接说清楚是哪种
-  const fedLabel = state.fed === 'cut1' && state.fedCutProb !== null && state.fedCutProb < 50 ? '维持不变为主' : {cut2:'降息≥2次',cut1:'降息1次/暂停',hike:'加息'}[state.fed];
+  const fedLabel = {cut2:'降息≥2次',cut1:'降息1次',hold:'维持不变为主',hike:'加息'}[state.fed] || state.fed;
   const fedProb = state.fedCutProb !== null ? `，年内降息概率 ${state.fedCutProb}%` : '';
   setText('m1fed', state.fed? (fedLabel+' ('+sc.fed_score+'/10'+fedProb+')'+staleNote(state.fedStale, state.fedAgeDays)) : '--');
   setBar('m1fed_bar', barWidth(sc.fed_score,10), barColor(sc.fed_score,10));

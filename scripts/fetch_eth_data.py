@@ -20,7 +20,7 @@ ETH 链上观察 - 数据抓取脚本
 质押集中度、长期持有占比、持仓分层这几项目前没有可用的免费来源，固定为 null。
 """
 
-import json, urllib.request, urllib.error, time, os, re
+import json, math, urllib.request, urllib.error, time, os, re
 from datetime import datetime, timezone, timedelta, date
 
 REPO_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -211,21 +211,40 @@ def fetch_staking():
     return {"total_staked": round(staked), "staked_pct": pct, "as_of": as_of}
 
 
+def daily_issuance(total_staked):
+    """共识层每日新增发行（理想参与率）：年发行 ≈ 166.3 × √质押ETH。43.7M 质押时约 3,000 ETH/天。"""
+    return 166.3 * math.sqrt(total_staked) / 365
+
+
 # ============================================================
-# 6. 稳定币市值 - DefiLlama
+# 6. 稳定币市值与 30 日变化 - DefiLlama
 # ============================================================
-def fetch_stablecoin_mcap():
-    log("抓取 ETH 链上稳定币市值 (DefiLlama)...")
-    d = safe_json(http_get("https://stablecoins.llama.fi/stablecoins?includePrices=false"))
-    if not d:
-        return None
-    total = 0
-    for sc in d.get('peggedAssets', []):
-        eth_data = (sc.get('chainCirculating') or {}).get('Ethereum', {})
-        total += eth_data.get('current', {}).get('peggedUSD', 0)
-    total_b = total / 1e9
-    log(f"  ✅ ETH链稳定币: ${total_b:.1f}B")
-    return total_b
+def stablecoin_change(points, days=30):
+    """[(date, 十亿美元)] -> (最新值, 相对 days 天前的变化 %, 最新日期)。"""
+    points = sorted(points)
+    if not points:
+        return None, None, None
+    last_day, last = points[-1]
+    base = [v for d, v in points if d <= last_day - timedelta(days=days)]
+    change = round((last / base[-1] - 1) * 100, 2) if base and base[-1] > 0 else None
+    return round(last, 2), change, last_day.isoformat()
+
+
+def fetch_stablecoin():
+    log("抓取 ETH 链上稳定币市值与 30 日变化 (DefiLlama)...")
+    rows = safe_json(http_get("https://stablecoins.llama.fi/stablecoincharts/Ethereum", timeout=40)) or []
+    points = []
+    for r in rows:
+        try:
+            points.append((datetime.fromtimestamp(int(r["date"]), timezone.utc).date(),
+                           float(r["totalCirculatingUSD"]["peggedUSD"]) / 1e9))
+        except (KeyError, TypeError, ValueError):
+            pass
+    total_b, change, as_of = stablecoin_change(points)
+    if total_b is None:
+        return {}
+    log(f"  ✅ ETH链稳定币: ${total_b:.1f}B，30日 {change:+.2f}% (数据日期: {as_of})" if change is not None else f"  ✅ ETH链稳定币: ${total_b:.1f}B")
+    return {"stablecoin_mcap_b": total_b, "stablecoin_change_30d": change, "as_of": as_of}
 
 
 # ============================================================
@@ -293,7 +312,12 @@ def main():
     if result['burn_rate_daily'] is not None:
         as_of['burn_rate_daily'] = today.isoformat()
 
-    result['stablecoin_mcap_b'] = fetch_stablecoin_mcap()
+    sc = fetch_stablecoin()
+    result['stablecoin_mcap_b'] = sc.get('stablecoin_mcap_b')
+    result['stablecoin_change_30d'] = sc.get('stablecoin_change_30d')
+    for f in ('stablecoin_mcap_b', 'stablecoin_change_30d'):
+        if result[f] is not None:
+            as_of[f] = sc['as_of']
 
     staking = fetch_staking() or {}
     result['staked_pct'] = staking.get('staked_pct')
@@ -302,11 +326,17 @@ def main():
         if result[f] is not None:
             as_of[f] = staking['as_of']
 
-    for f in ('holder_count', 'active_addr_7d', 'whale_top100_pct', 'burn_rate_daily', 'staked_pct', 'total_staked'):
+    for f in ('holder_count', 'active_addr_7d', 'whale_top100_pct', 'burn_rate_daily', 'staked_pct', 'total_staked',
+              'stablecoin_mcap_b', 'stablecoin_change_30d'):
         if result[f] is None:
             result[f], as_of[f] = carry_forward(previous, f, today)
             if as_of[f] is None:
                 del as_of[f]
+
+    # 销毁/增发比：Dencun 之后主网一天只烧十几到几百 ETH，绝对量的老门槛（≥5000/天满分）已失去意义
+    result['issuance_daily'] = round(daily_issuance(result['total_staked'])) if result.get('total_staked') else None
+    result['burn_issuance_pct'] = (round(result['burn_rate_daily'] / result['issuance_daily'] * 100, 2)
+                                   if result['burn_rate_daily'] is not None and result['issuance_daily'] else None)
 
     # 目前没有免费且可靠的来源：明确置空，页面显示「暂无可靠数据源」，不参与评分
     result['stake_conc_top5'] = None

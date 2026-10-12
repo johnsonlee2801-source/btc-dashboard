@@ -437,7 +437,9 @@ def fetch_fed_direction_rateprob():
             direction = "hike"
             confidence = "high"
         else:
-            direction = "cut1"
+            # 下次会议降息概率不到一半：市场的基准情形是按兵不动，用页面已有的「观望」档（5/10），
+            # 不再归入 cut1（7/10，偏鸽）
+            direction = "hold"
             confidence = "medium" if prob >= 10 or abs(change_bps) >= 5 else "high"
 
         reasoning = f"{meeting} 定价：{'降息' if is_cut else '加息/不降息'}概率 {prob:.2f}%，变动 {change_bps:.1f}bps"
@@ -502,7 +504,8 @@ def fetch_fed_direction_oddpool_cut_count():
     prob = parsed["cut_probability"]
     zero_prob = parsed["zero_cut_probability"]
     year = parsed["year"]
-    direction = "cut2" if prob >= 60 else "cut1"
+    # 年内至少降息一次的概率不到一半，就是「维持不变为主」：给观望档，不算偏鸽
+    direction = "cut2" if prob >= 60 else "cut1" if prob >= 50 else "hold"
     confidence = "medium"
     reasoning = f"Oddpool {year} 年降息次数市场：至少一次降息概率 {prob:.1f}%（Exactly 0 cuts 平均 {zero_prob:.1f}%）；非 CME 期货源，作为 403 fallback"
     log(f"  ✅ 美联储方向(Oddpool cut-count fallback): {direction} ({reasoning})")
@@ -540,10 +543,11 @@ def fetch_fed_direction():
                 """从这个页面中找出当前美联储下次会议的加息/降息/维持不变的市场预期概率。
                 基于概率最高的选项判断方向：
                 - "cut2" = 市场主要预期降息（概率>50%，降息≥25bps）
-                - "cut1" = 市场主要预期维持不变或轻微降息
+                - "cut1" = 市场主要预期轻微降息（年内约一次）
+                - "hold" = 市场主要预期维持不变
                 - "hike" = 市场主要预期加息
                 只有在页面有明确概率数据时才判断，否则返回 {"error": "无数据"}
-                返回JSON：{"fed_direction": "cut2|cut1|hike", "reasoning": "百分比数据说明", "confidence": "high|low"}""",
+                返回JSON：{"fed_direction": "cut2|cut1|hold|hike", "reasoning": "百分比数据说明", "confidence": "high|low"}""",
                 html,
                 max_tokens=200
             )
@@ -556,7 +560,7 @@ def fetch_fed_direction():
     if html:
         result = ask_deepseek(
             """从这篇文章中判断当前美联储利率政策方向：是在降息、维持不变、还是加息？
-            返回JSON：{"fed_direction": "cut2|cut1|hike", "reasoning": "简短依据", "confidence": "high|low"}""",
+            返回JSON：{"fed_direction": "cut2|cut1|hold|hike", "reasoning": "简短依据", "confidence": "high|low"}""",
             html
         )
         if result and 'fed_direction' in result:

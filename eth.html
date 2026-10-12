@@ -384,8 +384,8 @@
     <div class="score-row">
       <div class="score-row-icon">📉</div>
       <div class="score-row-label">
-        ETH 销毁速率（EIP-1559）
-        <small>销毁越快 = 通缩压力越强 = 供给减少</small>
+        ETH 销毁 / 新增发行（EIP-1559）
+        <small>销毁量占共识层新增发行的比例；≥100% 即净通缩。Dencun 后主网活动大量转到 L2，销毁绝对量很低</small>
       </div>
       <div class="score-bar-wrap"><div class="score-bar" id="burn_bar" style="width:0%;background:var(--purple)"></div></div>
       <div class="score-row-val" id="burn_val">--</div>
@@ -394,8 +394,8 @@
     <div class="score-row">
       <div class="score-row-icon">🌊</div>
       <div class="score-row-label">
-        以太坊链上稳定币市值
-        <small>稳定币规模代表链上流动性基础，不等于必然流入 ETH</small>
+        以太坊链上稳定币 30 日变化
+        <small>链上稳定币在增加还是减少，反映流动性方向；不等于必然流入 ETH</small>
       </div>
       <div class="score-bar-wrap"><div class="score-bar" id="stbl_bar" style="width:0%;background:var(--blue)"></div></div>
       <div class="score-row-val" id="stbl_val">--</div>
@@ -495,6 +495,8 @@ const ethState = {
   totalSupply: null,
   stakedPct: null,
   totalStaked: null,
+  burnIssuancePct: null,
+  stblChange30d: null,
   // Scores (each 0-5)
   whale100Pct: null,    // top 100 addr hold pct
   exflow7d: null,        // exchange netflow (ETH, positive = outflow = bullish)
@@ -532,14 +534,18 @@ function calcScores() {
     sc.stake = s.stakeConc < 33 ? 5 : s.stakeConc < 50 ? 4 : s.stakeConc < 60 ? 3 : 2;
   } else { sc.stake = null; }
 
-  // 5. 销毁速率 (0-5): >5k/day=5, 3-5k=4, 1-3k=3, <1k=2
-  if (s.burnRate !== null) {
-    sc.burn = s.burnRate >= 5000 ? 5 : s.burnRate >= 3000 ? 4 : s.burnRate >= 1000 ? 3 : 2;
+  // 5. 销毁 / 新增发行 (1-5): ≥100%（净通缩）=5, 50-100%=4, 20-50%=3, 5-20%=2, <5%=1
+  //    旧门槛按绝对量（≥5000 ETH/天满分）是 Dencun 之前定的，现在一天只烧十几个，已失去区分度
+  if (s.burnIssuancePct !== null) {
+    const r = s.burnIssuancePct;
+    sc.burn = r >= 100 ? 5 : r >= 50 ? 4 : r >= 20 ? 3 : r >= 5 ? 2 : 1;
   } else { sc.burn = null; }
 
-  // 6. 以太坊链上稳定币市值 (0-5): >100B=5, 70-100B=4, 50-70B=3, <50B=2
-  if (s.stblMcap !== null) {
-    sc.stbl = s.stblMcap >= 100 ? 5 : s.stblMcap >= 70 ? 4 : s.stblMcap >= 50 ? 3 : 2;
+  // 6. 以太坊链上稳定币 30 日变化 (1-5): >+3%=5, +1~3%=4, ±1%=3, -1~-3%=2, <-3%=1
+  //    旧门槛按规模（≥$100B 满分）在 $147B 下永远满分，没有区分度
+  if (s.stblChange30d !== null) {
+    const c = s.stblChange30d;
+    sc.stbl = c > 3 ? 5 : c > 1 ? 4 : c >= -1 ? 3 : c >= -3 ? 2 : 1;
   } else { sc.stbl = null; }
 
   // 前100集中度只作参考：原门槛（≥40% 满分）是按写死的 38.5% 定的，剔除合约后的真实值在 13% 上下，硬套没有意义
@@ -622,13 +628,17 @@ function render() {
 
   setBar('burn_bar', barW(sc.burn, 5), 'var(--purple)');
   setText('burn_val', ethState.burnRate !== null
-    ? (ethState.burnRate < 100 ? ethState.burnRate.toFixed(1) : Math.round(ethState.burnRate).toLocaleString()) + ' ETH/天 (' + (sc.burn||'--') + '/5)'
+    ? (ethState.burnRate < 100 ? ethState.burnRate.toFixed(1) : Math.round(ethState.burnRate).toLocaleString()) + ' ETH/天'
+      + (ethState.burnIssuancePct !== null ? ' · 增发的 ' + ethState.burnIssuancePct.toFixed(ethState.burnIssuancePct < 10 ? 1 : 0) + '%' : '')
+      + ' (' + (sc.burn||'--') + '/5)'
     : '暂无数据');
 
   setBar('stbl_bar', barW(sc.stbl, 5), 'var(--blue)');
   setText('stbl_val', ethState.stblMcap !== null
-    ? '$' + ethState.stblMcap.toFixed(0) + 'B 稳定币 (' + (sc.stbl||'--') + '/5)'
-    : '数据获取中...');
+    ? '$' + ethState.stblMcap.toFixed(0) + 'B'
+      + (ethState.stblChange30d !== null ? ' · 30日 ' + (ethState.stblChange30d >= 0 ? '+' : '') + ethState.stblChange30d.toFixed(2) + '%' : '')
+      + ' (' + (sc.stbl||'--') + '/5)'
+    : '暂无数据');
 
   // Alerts
   renderAlerts(sc);
@@ -656,8 +666,8 @@ function renderAlerts(sc) {
     alerts.push({ cls:'neutral', icon:'🐳', title:'前100地址集中度偏高', desc:`前100地址持有 ${ethState.whale100Pct.toFixed(2)}% 的 ETH，其中可能包含交易所、合约、质押池或托管地址，不能直接视为单一主体行为。` });
   }
 
-  if (ethState.burnRate !== null && ethState.burnRate < 500) {
-    alerts.push({ cls:'bear', icon:'🔥', title:'销毁速率偏低', desc:`最近 24 小时基础费销毁约 ${ethState.burnRate < 100 ? ethState.burnRate.toFixed(1) : Math.round(ethState.burnRate)} ETH，低于新增发行，供应处于净增发状态；主网活动大量转到 L2 后这是常态，不单独代表需求疲弱。` });
+  if (ethState.burnIssuancePct !== null && ethState.burnIssuancePct < 20) {
+    alerts.push({ cls:'bear', icon:'🔥', title:'销毁远低于新增发行', desc:`最近 24 小时基础费销毁约 ${ethState.burnRate < 100 ? ethState.burnRate.toFixed(1) : Math.round(ethState.burnRate)} ETH，只相当于新增发行的 ${ethState.burnIssuancePct.toFixed(1)}%，供应处于净增发状态；主网活动大量转到 L2 后这是常态，不单独代表需求疲弱。` });
   }
 
   if (alerts.length === 0) {
@@ -800,6 +810,9 @@ async function fetchEthDataJson() {
     ethState.lthPct = num(d.lth_pct);
     ethState.stakeConc = num(d.stake_conc_top5);
     ethState.burnRate = num(d.burn_rate_daily);
+    ethState.burnIssuancePct = num(d.burn_issuance_pct);
+    ethState.stblChange30d = num(d.stablecoin_change_30d);
+    if (num(d.stablecoin_mcap_b) !== null && ethState.stblMcap === null) ethState.stblMcap = d.stablecoin_mcap_b;
 
     if (Array.isArray(d.distribution) && d.distribution.length) renderDistTable(d.distribution);
 
