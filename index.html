@@ -2166,12 +2166,33 @@ function loadManualFromStorage() {
 // ============================================================
 // LOAD data.json (auto-fetched backend data)
 // ============================================================
+// 服务端算好的市场兜底值（200 日均线、历史最高收盘、30 天前价格、BTC 市占率）
+let serverMarket = null;
+
+// CoinGecko 限流或连不上时，这几项会是空的（200 日均线还参与评分），用服务端值补上，并按当前实时价计算
+function applyServerMarketFallback() {
+  const m = serverMarket, p = state.price;
+  if (!m) return;
+  if (state.dominance == null && typeof m.btc_dominance === 'number') state.dominance = m.btc_dominance;
+  if (typeof p !== 'number' || !(p > 0)) return;
+  if (state.ma200val == null && m.ma200d > 0) {
+    state.ma200val = m.ma200d;
+    state.ma200dev = (p - m.ma200d) / m.ma200d * 100;
+  }
+  if (state.athPct == null && m.ath_close > 0) {
+    const ath = Math.max(p, m.ath_close);  // 今天若创新高，历史高点就是现价
+    state.athPct = (p - ath) / ath * 100;
+  }
+  if (state.p30d == null && m.price_30d_ago > 0) state.p30d = (p - m.price_30d_ago) / m.price_30d_ago * 100;
+}
+
 async function fetchDataJson() {
   try {
     // Add cache-buster to always get latest
     const res = await fetch('./data.json?t=' + Date.now());
     if (!res.ok) return;
     const d = await res.json();
+    if (d.market && typeof d.market === 'object') serverMarket = d.market;
 
     // 更新数据来源标签
     const autoTag = document.getElementById('autoDataTime');
@@ -2396,6 +2417,7 @@ async function loadAll(forceFresh = false) {
   await fetchDataJson();
   await fetchRealtimePrice();
   await Promise.all([fetchCoingecko(forceFresh), fetchFG(), fetchNetworkHashrate()]);
+  applyServerMarketFallback();
 
   render();
   renderMinerModule();

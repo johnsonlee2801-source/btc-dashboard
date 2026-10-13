@@ -437,10 +437,25 @@ function cachedMacroIndicatorMetric(snapshot, key, fallback) {
       cachedSnapshot: {
         generatedAt: snapshot?.generatedAt || null,
         sourceType: item.sourceType || null,
-        ...item,
+        ...omitSnapshotDetail(item),
       },
     },
   });
+}
+
+// Form 4 的逐笔交易（上千行）和 13F 的机构明细曾原样塞进每次响应，市场总览接口因此有 530KB+、3 秒多，
+// 而页面一个字段都不读。响应只保留汇总；完整明细在 /data/snapshots/market-breadth-latest.json。
+const SNAPSHOT_DETAIL_KEYS = ['transactions', 'managers'];
+
+function omitSnapshotDetail(item) {
+  const out = {};
+  const omitted = [];
+  for (const [k, v] of Object.entries(item || {})) {
+    if (SNAPSHOT_DETAIL_KEYS.includes(k)) omitted.push(k);
+    else out[k] = v;
+  }
+  if (omitted.length) out.detailOmitted = { fields: omitted, fullDataUrl: '/data/snapshots/market-breadth-latest.json' };
+  return out;
 }
 
 function statusFromScore(score) {

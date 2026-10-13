@@ -313,12 +313,34 @@ def fetch_coinmetrics_btc():
         except (KeyError, TypeError, ValueError):
             pass
     ma200w = round(sum(prices[-1400:]) / 1400) if len(prices) >= 1400 else None
+    # 首页原本只从浏览器直连 CoinGecko 拿 200 日均线 / 历史高点 / 30 日涨跌；CoinGecko 限流或在国内连不上时，
+    # 这几项（其中 200 日均线参与评分）就消失了，同一时刻不同访客看到不同分数。这里给出服务端兜底值。
+    market = None
+    if len(prices) >= 200:
+        market = {
+            "ma200d": round(sum(prices[-200:]) / 200, 2),
+            "ath_close": round(max(prices), 2),
+            "price_30d_ago": round(prices[-31], 2) if len(prices) >= 31 else None,
+        }
 
     if z is None:
         log("  ⚠️ Coin Metrics 没有可用的 MVRV 数据")
         return None
     log(f"  ✅ MVRV Z-Score {z:.4f} / NUPL {nupl:.4f} / 200WMA ${ma200w:,} (数据日期: {as_of})")
-    return {"mvrv_zscore": round(z, 4), "nupl": round(nupl, 4), "as_of": as_of, "ma200w": ma200w}
+    return {"mvrv_zscore": round(z, 4), "nupl": round(nupl, 4), "as_of": as_of, "ma200w": ma200w, "market": market}
+
+
+def fetch_btc_dominance():
+    raw = http_get("https://api.coingecko.com/api/v3/global", timeout=20)
+    try:
+        dom = json.loads(raw)["data"]["market_cap_percentage"]["btc"] if raw else None
+    except Exception:
+        dom = None
+    if isinstance(dom, (int, float)) and 0 < dom < 100:
+        log(f"  ✅ BTC 市占率: {dom:.2f}%")
+        return round(dom, 2)
+    log("  ⚠️ BTC 市占率获取失败")
+    return None
 
 
 def fetch_lookintobitcoin():
@@ -868,8 +890,13 @@ def main(push=False, dry_run=False):
         }
         if cm["ma200w"]:
             data["ma200w"] = {"value": cm["ma200w"], "as_of": cm["as_of"], "source": "coinmetrics"}
+        if cm.get("market"):
+            data["market"] = {**cm["market"], "as_of": cm["as_of"], "source": "coinmetrics"}
     else:
         onchain = fetch_lookintobitcoin()
+    dominance = fetch_btc_dominance()
+    if dominance is not None:
+        data.setdefault("market", {})["btc_dominance"] = dominance
     if "ma200w" not in data and isinstance(previous_data.get("ma200w"), dict):
         data["ma200w"] = previous_data["ma200w"]  # 沿用上次，as_of 会如实显示它有多旧
     onchain["mvrv_zscore"] = carry_forward(previous_data, onchain.get("mvrv_zscore"), ["onchain", "mvrv_zscore"], "MVRV Z-Score")

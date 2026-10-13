@@ -761,12 +761,23 @@ function renderExchangeGrid(data) {
 async function fetchCoinGecko() {
   try {
     const res = await fetch('https://api.coingecko.com/api/v3/coins/ethereum?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false');
-    if (!res.ok) return;
+    if (!res.ok) throw new Error('HTTP ' + res.status);
     const d = await res.json();
     ethState.price = d.market_data.current_price.usd;
     ethState.priceChange24h = d.market_data.price_change_percentage_24h;
     ethState.totalSupply = d.market_data.circulating_supply;
   } catch(e) { console.log('CoinGecko err:', e.message); }
+  // CoinGecko 限流（浏览器里表现为跨域报错）或在国内连不上时，价格走同源中转 /api/ticker
+  if (ethState.price === null) {
+    try {
+      const r = await fetch('/api/ticker?symbol=ETH', { signal: AbortSignal.timeout(6000) });
+      const t = r.ok ? await r.json() : null;
+      if (t && typeof t.price === 'number') {
+        ethState.price = t.price;
+        if (typeof t.change24h === 'number') ethState.priceChange24h = t.change24h;
+      }
+    } catch (e) { console.log('ticker fallback err:', e.message); }
+  }
 }
 
 // 2. DefiLlama - stablecoin mcap on Ethereum
@@ -802,6 +813,7 @@ async function fetchEthDataJson() {
 
     // 抓不到的字段是 null：保持 null，页面显示「暂无数据」并且不参与评分
     const num = v => (typeof v === 'number' && Number.isFinite(v)) ? v : null;
+    if (ethState.totalSupply === null && num(d.circulating_supply) !== null) ethState.totalSupply = d.circulating_supply;
     ethState.holderCount = num(d.holder_count);
     ethState.activeAddr = num(d.active_addr_7d);
     ethState.stakedPct = num(d.staked_pct);

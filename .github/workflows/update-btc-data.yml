@@ -3,8 +3,10 @@ name: Update BTC dashboard data
 on:
   workflow_dispatch:
   schedule:
-    # Refresh the committed BTC snapshot every 6 hours.
-    - cron: '15 */6 * * *'
+    # Every 3 hours. GitHub delays scheduled runs by 30 min to 4 h and sometimes
+    # drops them; on a 6-hour cadence that left data.json 13+ hours old. Each run
+    # takes ~1 min plus a ~1 min deploy, well inside the free Actions minutes.
+    - cron: '15 */3 * * *'
 
 permissions:
   contents: write
