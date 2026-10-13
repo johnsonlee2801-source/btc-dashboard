@@ -19,7 +19,9 @@ import re
 import shutil
 import subprocess
 import sys
+import threading
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
@@ -95,22 +97,56 @@ def utc_now() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
-def fetch_text(url: str, timeout: int = 30, headers: dict | None = None) -> str:
+# SEC fair-access: at most 10 requests/second per client, across all threads. Form 4 used to run
+# 4 threads with 0.05s pauses, got ~300 HTTP 429s per run, and summed only the filings that happened
+# to load — so the 90-day insider totals moved with the error count, not with the market.
+SEC_MIN_INTERVAL = 0.125  # 8 req/s, under the 10 req/s ceiling
+SEC_RETRIES = 4
+_sec_lock = threading.Lock()
+_sec_next_at = 0.0
+
+
+def _sec_throttle() -> None:
+    global _sec_next_at
+    with _sec_lock:
+        now = time.monotonic()
+        wait = _sec_next_at - now
+        _sec_next_at = max(now, _sec_next_at) + SEC_MIN_INTERVAL
+    if wait > 0:
+        time.sleep(wait)
+
+
+def _is_sec(url: str) -> bool:
+    host = urllib.parse.urlparse(url).hostname or ""
+    return host == "sec.gov" or host.endswith(".sec.gov")
+
+
+def _open(url: str, timeout: int, headers: dict | None) -> bytes:
     req_headers = {"User-Agent": UA, "Accept": "*/*"}
     if headers:
         req_headers.update(headers)
-    req = urllib.request.Request(url, headers=req_headers)
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return r.read().decode("utf-8", "ignore")
+    sec = _is_sec(url)
+    for attempt in range(SEC_RETRIES + 1 if sec else 1):
+        if sec:
+            _sec_throttle()
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=req_headers), timeout=timeout) as r:
+                return r.read()
+        except urllib.error.HTTPError as e:
+            if not sec or e.code not in (429, 503) or attempt == SEC_RETRIES:
+                raise
+            retry_after = e.headers.get("Retry-After") if e.headers else None
+            delay = float(retry_after) if retry_after and retry_after.isdigit() else 2 ** (attempt + 1)
+            time.sleep(min(delay, 30))
+    raise RuntimeError("unreachable")
+
+
+def fetch_text(url: str, timeout: int = 30, headers: dict | None = None) -> str:
+    return _open(url, timeout, headers).decode("utf-8", "ignore")
 
 
 def fetch_bytes(url: str, timeout: int = 45, headers: dict | None = None) -> bytes:
-    req_headers = {"User-Agent": UA, "Accept": "*/*"}
-    if headers:
-        req_headers.update(headers)
-    req = urllib.request.Request(url, headers=req_headers)
-    with urllib.request.urlopen(req, timeout=timeout) as r:
-        return r.read()
+    return _open(url, timeout, headers)
 
 
 def yahoo_symbol(symbol: str) -> str:
@@ -175,6 +211,7 @@ def build_sec_13f_targets() -> dict[str, dict]:
 
 
 SEC_FORM4_TICKERS = build_sec_form4_tickers()
+FORM4_MIN_COVERAGE = 0.9  # 申报抓取成功率低于这个比例，本期 Form 4 汇总不计分
 SEC_13F_TARGETS = build_sec_13f_targets()
 
 
@@ -725,15 +762,16 @@ def collect_form4_ticker_transactions(ticker: str, info: dict, since_date: str) 
     filings = sec_recent_form4_filings(info["cik10"], limit=8)
     transactions = []
     errors = []
+    attempted = 0
     for filing in filings:
         if filing.get("filingDate") and filing["filingDate"] < since_date:
             continue
+        attempted += 1
         try:
             transactions.extend(parse_sec_form4_transactions(ticker, info["cik"], filing))
         except Exception as e:
             errors.append({"source": "sec_form4_insider_activity", "ticker": ticker, "accession": filing.get("accessionNumber"), "error": str(e)[:180]})
-        time.sleep(0.05)
-    return {"ticker": ticker, "transactions": transactions, "errors": errors}
+    return {"ticker": ticker, "transactions": transactions, "errors": errors, "attempted": attempted}
 
 
 def collect_sec_form4_insider_activity(fetch_errors: list[dict]) -> dict | None:
@@ -742,6 +780,7 @@ def collect_sec_form4_insider_activity(fetch_errors: list[dict]) -> dict | None:
     transactions = []
     missing = []
     jobs = []
+    attempted = failed = 0
     for ticker in SEC_FORM4_TICKERS:
         info = cik_map.get(ticker)
         if not info:
@@ -756,9 +795,13 @@ def collect_sec_form4_insider_activity(fetch_errors: list[dict]) -> dict | None:
                 result = fut.result()
                 transactions.extend(result["transactions"])
                 fetch_errors.extend(result["errors"])
+                attempted += result["attempted"]
+                failed += len(result["errors"])
             except Exception as e:
+                # 连申报列表都没拿到：按一份失败计，覆盖率会如实下降
                 fetch_errors.append({"source": "sec_form4_insider_activity", "ticker": ticker, "error": str(e)[:180]})
-            time.sleep(0.05)
+                attempted += 1
+                failed += 1
     sales = [t for t in transactions if t["direction"] == "sale"]
     purchases = [t for t in transactions if t["direction"] == "purchase"]
     sell_value = sum(t["valueUsd"] for t in sales)
@@ -779,9 +822,15 @@ def collect_sec_form4_insider_activity(fetch_errors: list[dict]) -> dict | None:
             "purchaseCount": sum(1 for t in txs if t["direction"] == "purchase"),
         }
     status = sec_form4_status(sell_value, buy_value, len(sale_by_ticker), len(buy_by_ticker))
+    coverage = round((attempted - failed) / attempted, 3) if attempted else 0.0
+    if coverage < FORM4_MIN_COVERAGE:
+        # 只抓到一部分申报时，金额是「抓到多少算多少」，不能拿来评分
+        status = "pending"
     top_sales = sorted(sales, key=lambda x: x["valueUsd"], reverse=True)[:12]
     top_purchases = sorted(purchases, key=lambda x: x["valueUsd"], reverse=True)[:8]
     value = f"90日卖出 ${sell_value/1_000_000:.1f}M · 买入 ${buy_value/1_000_000:.1f}M · 卖出股票 {len(sale_by_ticker)}只 · 买入股票 {len(buy_by_ticker)}只"
+    if coverage < FORM4_MIN_COVERAGE:
+        value = f"数据不完整（申报抓取成功率 {coverage:.0%}），本期不计分 · " + value
     latest_date = max([t["filingDate"] for t in transactions if t.get("filingDate")] or [utc_now()[:10]])
     return {
         "name": "SEC Form 4 内部人交易快照",
@@ -805,6 +854,9 @@ def collect_sec_form4_insider_activity(fetch_errors: list[dict]) -> dict | None:
         "topSales": top_sales,
         "topPurchases": top_purchases,
         "transactionCount": len(transactions),
+        "filingsAttempted": attempted,
+        "filingsFailed": failed,
+        "coverage": coverage,
         "threshold": "90日内部人公开市场卖出≥$50M、净卖出≥$25M、且涉及≥3只样本股：内部人卖出证据偏强；公开市场买入≥$5M、买入额≥卖出额1.5倍、且涉及≥2只样本股：内部人买入/承接证据偏强；其他中性。",
         "limitations": "SEC Form 4 只覆盖公司内部人交易，不等于机构13F持仓或暗池/期权流；大型科技公司高管10b5-1计划性卖出很常见，必须结合价格、宽度、成交量和公告背景判断。",
     }
