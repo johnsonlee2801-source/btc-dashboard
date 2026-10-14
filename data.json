@@ -1,41 +1,41 @@
 {
-  "timestamp": "2026-10-14T00:17:12.629771+00:00",
-  "timestamp_cn": "2026-10-14 08:17",
+  "timestamp": "2026-10-14T08:41:20.373864+00:00",
+  "timestamp_cn": "2026-10-14 16:41",
   "price": {
-    "price": 83374,
-    "change24h": 2.33
+    "price": 83645,
+    "change24h": -0.1
   },
   "etf": {
-    "sum5d": -766.6,
+    "sum5d": -597.6,
     "days": [
       -484.9,
       -244.1,
       21.1,
       -65.4,
-      6.7
+      175.7
     ],
     "latest_date": "13 Oct 2026",
     "source": "farside_parsed"
   },
   "onchain": {
-    "mvrv_zscore": 0.9106,
-    "nupl": 0.3418,
-    "mvrv_zscore_as_of": "2026-10-12",
-    "nupl_as_of": "2026-10-12",
+    "mvrv_zscore": 0.9535,
+    "nupl": 0.3523,
+    "mvrv_zscore_as_of": "2026-10-13",
+    "nupl_as_of": "2026-10-13",
     "mvrv_zscore_source": "coinmetrics",
     "nupl_source": "coinmetrics",
-    "mvrv_zscore_age_days": 2,
+    "mvrv_zscore_age_days": 1,
     "mvrv_zscore_stale": false,
-    "nupl_age_days": 2,
+    "nupl_age_days": 1,
     "nupl_stale": false
   },
   "fed": {
     "fed_direction": "hold",
-    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 4.1%（Exactly 0 cuts 平均 95.9%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 4.0%（Exactly 0 cuts 平均 96.0%）；非 CME 期货源，作为 403 fallback",
     "confidence": "medium",
     "source": "oddpool_fed_rate_cut_count",
-    "cut_probability": 4.1,
-    "zero_cut_probability": 95.9,
+    "cut_probability": 4.0,
+    "zero_cut_probability": 96.0,
     "year": "2026",
     "as_of": "2026-10-14",
     "age_days": 0,
@@ -43,36 +43,36 @@
   },
   "funding_rate": {
     "bn": null,
-    "okx": -0.0026,
-    "avg": -0.0026,
+    "okx": 0.0067,
+    "avg": 0.0067,
     "source": "exchange_public"
   },
   "margin_lending": {
-    "btc_daily_rate": 1.161e-05,
-    "btc_annual_rate": 0.4238,
+    "btc_daily_rate": 1.174e-05,
+    "btc_annual_rate": 0.4285,
     "btc_borrow_limit": 100.0,
-    "open_interest": 28987.0,
+    "open_interest": 29465.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 313.1,
+    "total_b": 312.3,
     "trend": "expand"
   },
   "tips": 2.91,
   "ma200w": {
     "value": 66518,
-    "as_of": "2026-10-12",
+    "as_of": "2026-10-13",
     "source": "coinmetrics"
   },
   "market": {
     "ma200d": 72122.13,
     "ath_close": 124824.45,
     "price_30d_ago": 76759.26,
-    "as_of": "2026-10-12",
+    "as_of": "2026-10-13",
     "source": "coinmetrics",
-    "btc_dominance": 59.25
+    "btc_dominance": 59.85
   },
   "tips_as_of": "2026-10-09",
   "tips_age_days": 5,
