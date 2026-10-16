@@ -1254,9 +1254,11 @@ export default async function handler(req) {
     }));
   }
 
-  // 5) SKEW Index（Live via Yahoo ^SKEW）
+  // 5) SKEW Index（优先读每日快照里的 CBOE 官方 CSV；Yahoo ^SKEW 常年 data_unavailable）
   {
-    const rawSkew = skewBars.length ? skewBars[skewBars.length - 1].close : null;
+    const cached = breadthSnapshot?.macroIndicators?.cboe_skew || null;
+    const rawSkew = cached && Number.isFinite(Number(cached.skew)) ? Number(cached.skew)
+      : (skewBars.length ? skewBars[skewBars.length - 1].close : null);
     const skew = Number.isFinite(rawSkew) && rawSkew > 50 ? rawSkew : null;
     let status = 'neutral';
     if (skew == null) status = 'pending';
@@ -1269,12 +1271,12 @@ export default async function handler(req) {
       value: skew != null ? Number(skew.toFixed(2)) : null,
       status,
       threshold: '> 150 尾部保险溢价偏高（派发/对冲信号）；< 125 相对放松（风险偏好改善）；<=50 视为异常数据，不参与评分',
-      sourceName: 'CBOE SKEW (via Yahoo ^SKEW)',
-      sourceUrl: 'https://finance.yahoo.com/quote/%5ESKEW/',
+      sourceName: cached ? 'CBOE SKEW（官方 CSV）' : 'CBOE SKEW (via Yahoo ^SKEW)',
+      sourceUrl: cached?.source || 'https://www.cboe.com/us/indices/dashboard/SKEW/',
       frequency: '日更（交易日收盘后）',
-      updatedAt: skewMeta.regularMarketTime || nowISO(),
-      dataStatus: skew != null ? 'Live' : 'data_unavailable',
-      logic: 'SKEW 越高 → 市场为黑天鹅付出的尾部保险越贵，通常与派发/对冲需求同步；SKEW 偏低 → 尾部风险溢价较低。Yahoo 返回 0 这类异常值不参与评分。',
+      updatedAt: cached?.updatedAt || skewMeta.regularMarketTime || nowISO(),
+      dataStatus: skew != null ? (cached ? 'Cached' : 'Live') : 'data_unavailable',
+      logic: 'SKEW 越高 → 市场为黑天鹅付出的尾部保险越贵，通常与派发/对冲需求同步；SKEW 偏低 → 尾部风险溢价较低。',
       caseStudy: '2018/01, 2021/11 SKEW 持续 > 150 之后出现显著回调。',
       limitations: 'SKEW 对方向性预测能力弱，仅反映尾部溢价；仅作派发/承接环境拼图之一。',
     }));

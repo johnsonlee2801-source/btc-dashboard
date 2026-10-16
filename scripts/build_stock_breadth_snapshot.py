@@ -1262,9 +1262,41 @@ def collect_nyse_breadth_indicators(fetch_errors: list[dict]) -> dict:
     return out
 
 
+CBOE_SKEW_CSV = "https://cdn.cboe.com/api/global/us_indices/daily_prices/SKEW_History.csv"
+
+
+def parse_cboe_skew() -> dict | None:
+    """CBOE 官方 SKEW 历史 CSV 的最新一行。Yahoo ^SKEW 常年返回 data_unavailable，官方 CSV 稳定。"""
+    text = fetch_text(CBOE_SKEW_CSV, timeout=30, headers={"User-Agent": BROWSER_UA, "Accept": "text/csv,*/*"})
+    rows = [ln.split(",") for ln in text.strip().splitlines() if "," in ln]
+    data = [(d.strip(), float(v)) for d, v in rows[1:] if v.strip().replace(".", "", 1).isdigit()]
+    if not data:
+        return None
+    raw_date, skew = data[-1]
+    # CSV 日期是 MM/DD/YYYY
+    try:
+        iso = datetime.strptime(raw_date, "%m/%d/%Y").date().isoformat()
+    except ValueError:
+        iso = raw_date
+    if not (50 < skew < 250):
+        return None
+    status = "distribution" if skew >= 150 else "accumulation" if skew <= 125 else "neutral"
+    return {
+        "name": "CBOE SKEW Index",
+        "source": "https://www.cboe.com/us/indices/dashboard/SKEW/",
+        "sourceType": "official_cboe_csv",
+        "updatedAt": iso,
+        "value": round(skew, 2),
+        "skew": round(skew, 2),
+        "status": status,
+        "threshold": "≥150 尾部保险溢价偏高（派发/对冲）；≤125 相对放松；中间中性。",
+        "limitations": "SKEW 反映期权尾部溢价，对方向预测弱；仅作派发/承接环境拼图之一。",
+    }
+
+
 def collect_macro_indicators(fetch_errors: list[dict]) -> dict:
     indicators = {}
-    for key, parser in [("finra_margin_debt", parse_finra_margin), ("aaii_bull_bear", parse_aaii_sentiment)]:
+    for key, parser in [("finra_margin_debt", parse_finra_margin), ("aaii_bull_bear", parse_aaii_sentiment), ("cboe_skew", parse_cboe_skew)]:
         try:
             item = parser()
             if item:

@@ -7,20 +7,21 @@ ETH 链上观察 - 数据抓取脚本
 数据源（全免费）：
 - CoinGecko API: ETH 价格、供应量
 - Coin Metrics community API: 持币地址数（余额 > 0）、日活跃地址
-- Etherscan 公开页面: 前 100 地址持仓占比
+- Blockscout API: 前 100 地址持仓占比（Etherscan 会拦截 GitHub 服务器，Blockscout 不会）
 - 以太坊公共节点 (publicnode): 最近 24 小时基础费销毁量
 - DefiLlama: 以太坊链上稳定币市值
 - validatorqueue.com: 质押总量与质押占比（页面内嵌逐日数据，不需要 API key；beaconcha.in 现在要 key）
+- DefiLlama: 前 5 大流动质押服务商集中度（Lido / Binance / ether.fi 等占总质押的比例）
 - 交易所 ETH 存量与 7 日净流量不在这里抓：页面直接读 data/cex-reserves.json，
   和首页「交易所 BTC / ETH 存量」用同一份数据
 
 原则：抓不到就写 null，页面显示「暂无数据」，并把该项移出评分。
 以前抓取失败会回退到写死的「估计值」（地址数 17.8 亿、质押集中度 58%、长期持有 62%、
 整张持仓分层表、5 家交易所储备……），每天原样发布，看起来像实时数据，还参与了评分。
-质押集中度、长期持有占比、持仓分层这几项目前没有可用的免费来源，固定为 null。
+长期持有占比、持仓分层这两项目前没有可用的免费来源，固定为 null（不编造估计值）。
 """
 
-import json, math, urllib.request, urllib.error, time, os, re
+import json, math, urllib.request, urllib.error, urllib.parse, time, os, re
 from datetime import datetime, timezone, timedelta, date
 
 REPO_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -121,36 +122,51 @@ def fetch_coinmetrics_addresses():
 
 
 # ============================================================
-# 3. Top 100 地址持仓占比 - Etherscan 公开页面
+# 3. Top 100 地址持仓占比 - Blockscout API
 # ============================================================
-# 这些地址的余额不是「某个持有者的仓位」：质押存款合约记录的是历年累计存款（单独就占供应的
-# 七成以上），WETH 是代币合约，跨链桥里是 L2 用户的钱。算进去前 100 地址占比会高达 90%+，毫无意义
-NON_HOLDER_PATTERNS = re.compile(r"Beacon Deposit|Wrapped Ether|Bridge|Portal", re.I)
+# 质押存款合约（占供应 75%+）、WETH、跨链桥、Tornado、DAO 等合约不是「某个持有者的仓位」，
+# 要剔除；多签钱包（GnosisSafe / Safe / Wallet）算真实持有者。剔除后约 12%~13%。
+BLOCKSCOUT_ADDRESSES = "https://eth.blockscout.com/api/v2/addresses"
+WALLET_CONTRACT = re.compile(r"GnosisSafe|SafeProxy|\bSafe\b|Wallet|MultiSig", re.I)
 
 
-def parse_top_accounts(html):
-    """Etherscan 前 100 地址页 -> [(名称标签, 占比%)]。"""
-    out = []
-    for row in re.findall(r"<tr>(.*?)</tr>", html, re.S):
-        cells = [" ".join(re.sub(r"<[^>]+>", " ", c).split()) for c in re.findall(r"<td[^>]*>(.*?)</td>", row, re.S)]
-        pct = next((c for c in cells if re.fullmatch(r"\d+\.\d+%", c)), None)
-        if pct:
-            out.append((cells[2] if len(cells) > 2 else "", float(pct[:-1])))
-    return out
+def fetch_blockscout_top_accounts(pages=2):
+    """Blockscout 富豪榜前 N×50 个地址：[(名称, 是否合约, 余额ETH)]，附带总供应量。"""
+    accounts, params, supply = [], {}, None
+    for _ in range(pages):
+        url = BLOCKSCOUT_ADDRESSES + ("?" + urllib.parse.urlencode(params) if params else "")
+        d = safe_json(http_get(url, headers={"Accept": "application/json"}, timeout=25))
+        if not d or not d.get("items"):
+            break
+        if supply is None:
+            try:
+                supply = float(d["total_supply"])
+            except (KeyError, TypeError, ValueError):
+                supply = None
+        for x in d["items"]:
+            try:
+                bal = int(x["coin_balance"]) / 1e18
+            except (KeyError, TypeError, ValueError):
+                continue
+            accounts.append((x.get("name") or "", bool(x.get("is_contract")), bal))
+        params = d.get("next_page_params") or {}
+        if not params:
+            break
+        time.sleep(0.3)
+    return accounts, supply
 
 
 def fetch_whale_concentration():
-    """前 100 地址中，剔除非持有者合约后的持仓占比。"""
-    log("抓取鲸鱼地址集中度 (Etherscan)...")
-    html = http_get("https://etherscan.io/accounts/1?ps=100")
-    accounts = parse_top_accounts(html) if html else []
-    if len(accounts) < 100:
-        log(f"  ⚠️ 页面解析失败（只找到 {len(accounts)} 行），本项置空")
+    """前 100 地址中，剔除非持有者合约后的持仓占总供应比例。"""
+    log("抓取鲸鱼地址集中度 (Blockscout)...")
+    accounts, supply = fetch_blockscout_top_accounts()
+    if len(accounts) < 100 or not supply:
+        log(f"  ⚠️ 只取到 {len(accounts)} 个地址（需要 100），本项置空")
         return None
-    holders = [pct for name, pct in accounts[:100] if not NON_HOLDER_PATTERNS.search(name)]
-    total_pct = round(sum(holders), 2)
-    log(f"  ✅ 前100地址占比（剔除 {100 - len(holders)} 个非持有者合约）: {total_pct}%")
-    return total_pct
+    holders = [bal for name, is_contract, bal in accounts[:100] if not is_contract or WALLET_CONTRACT.search(name)]
+    pct = round(sum(holders) / supply * 100, 2)
+    log(f"  ✅ 前100地址占比（剔除 {100 - len(holders)} 个非持有者合约）: {pct}%")
+    return pct
 
 
 # ============================================================
@@ -209,6 +225,40 @@ def fetch_staking():
         return None
     log(f"  ✅ 质押 {staked:,.0f} ETH，占供应 {pct}% (数据日期: {as_of})")
     return {"total_staked": round(staked), "staked_pct": pct, "as_of": as_of}
+
+
+def fetch_staking_concentration(total_staked, eth_price):
+    """前 5 大流动质押服务商占总质押的比例（DefiLlama Liquid Staking 分类）。
+
+    只用 Liquid Staking 分类：Restaking（EigenLayer 等）会把已质押的 ETH 重复计算，
+    DVT/基础设施（SSV）不直接持有 ETH。DefiLlama 给的是美元 TVL，按现价折回 ETH 枚数。
+    这是「流动质押服务商」集中度，是全体验证者集中度的下界，不含 CEX 直接质押和独立验证者。
+    """
+    if not total_staked or not eth_price or eth_price <= 0:
+        return None
+    data = safe_json(http_get("https://api.llama.fi/protocols", timeout=60))
+    if not data:
+        return None
+    providers = []
+    for p in data:
+        if p.get("category") != "Liquid Staking" or "Ethereum" not in (p.get("chains") or []):
+            continue
+        usd = (p.get("chainTvls") or {}).get("Ethereum")
+        if isinstance(usd, (int, float)) and usd > 0:
+            providers.append((p.get("name", "?"), usd / eth_price))
+    if len(providers) < 5:
+        return None
+    providers.sort(key=lambda x: -x[1])
+    top5 = providers[:5]
+    pct = round(sum(e for _, e in top5) / total_staked * 100, 1)
+    if not (0 < pct <= 100):
+        return None
+    leader_name, leader_eth = top5[0]
+    log(f"  ✅ 前5质押服务商集中度: {pct}%（{leader_name} {leader_eth/total_staked*100:.1f}%）")
+    return {
+        "top5_pct": pct,
+        "leaders": [{"name": n, "pct": round(e / total_staked * 100, 1)} for n, e in top5],
+    }
 
 
 def daily_issuance(total_staked):
@@ -326,20 +376,31 @@ def main():
         if result[f] is not None:
             as_of[f] = staking['as_of']
 
+    conc = fetch_staking_concentration(result.get('total_staked'), result.get('price_usd'))
+    result['stake_conc_top5'] = conc['top5_pct'] if conc else None
+    result['stake_conc_leaders'] = conc['leaders'] if conc else None
+    if conc:
+        as_of['stake_conc_top5'] = today.isoformat()
+
     for f in ('holder_count', 'active_addr_7d', 'whale_top100_pct', 'burn_rate_daily', 'staked_pct', 'total_staked',
               'stablecoin_mcap_b', 'stablecoin_change_30d'):
         if result[f] is None:
             result[f], as_of[f] = carry_forward(previous, f, today)
             if as_of[f] is None:
                 del as_of[f]
+    if result.get('stake_conc_top5') is None:
+        result['stake_conc_top5'], as_of['stake_conc_top5'] = carry_forward(previous, 'stake_conc_top5', today)
+        if as_of.get('stake_conc_top5') is None:
+            as_of.pop('stake_conc_top5', None)
+        else:
+            result['stake_conc_leaders'] = previous.get('stake_conc_leaders')
 
     # 销毁/增发比：Dencun 之后主网一天只烧十几到几百 ETH，绝对量的老门槛（≥5000/天满分）已失去意义
     result['issuance_daily'] = round(daily_issuance(result['total_staked'])) if result.get('total_staked') else None
     result['burn_issuance_pct'] = (round(result['burn_rate_daily'] / result['issuance_daily'] * 100, 2)
                                    if result['burn_rate_daily'] is not None and result['issuance_daily'] else None)
 
-    # 目前没有免费且可靠的来源：明确置空，页面显示「暂无可靠数据源」，不参与评分
-    result['stake_conc_top5'] = None
+    # 长期持有占比、持仓分层：目前没有免费且可靠的来源，置空不编造
     result['lth_pct'] = None
     result['distribution'] = None
     result['as_of'] = as_of

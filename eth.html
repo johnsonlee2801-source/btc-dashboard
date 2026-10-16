@@ -374,8 +374,8 @@
     <div class="score-row">
       <div class="score-row-icon">⚡</div>
       <div class="score-row-label">
-        质押集中度（前5验证者组）
-        <small>暂无免费可靠数据源，不计分；原先显示的 58% 是写死的估计值，已停用</small>
+        质押集中度（前5大质押服务商）
+        <small>前5大流动质押服务商占全部质押 ETH 的比例（DefiLlama）；越集中，去中心化风险越高</small>
       </div>
       <div class="score-bar-wrap"><div class="score-bar" id="stake_bar" style="width:0%;background:var(--yellow)"></div></div>
       <div class="score-row-val" id="stake_val">--</div>
@@ -501,7 +501,8 @@ const ethState = {
   whale100Pct: null,    // top 100 addr hold pct
   exflow7d: null,        // exchange netflow (ETH, positive = outflow = bullish)
   lthPct: null,          // long term holder pct
-  stakeConc: null,       // staking concentration pct
+  stakeConc: null,       // top-5 liquid staking provider concentration pct
+  stakeLeaders: null,    // [{name, pct}]
   burnRate: null,        // ETH burned per day
   stblMcap: null,        // stablecoin mcap on ETH (billions)
 };
@@ -528,10 +529,11 @@ function calcScores() {
     sc.lth = s.lthPct >= 65 ? 5 : s.lthPct >= 60 ? 4 : s.lthPct >= 55 ? 3 : 2;
   } else { sc.lth = null; }
 
-  // 4. 质押集中度 (0-5): 适中=好, 越集中越低分（去中心化风险）
-  // <33%=5, 33-50%=4, 50-60%=3, >60%=2
+  // 4. 质押集中度 (1-5): 前5大流动质押服务商占总质押越低越分散越好
+  //    <30%=5, 30-40%=4, 40-50%=3, 50-60%=2, ≥60%=1。当前约 37%（Lido 一家 ~22%）
   if (s.stakeConc !== null) {
-    sc.stake = s.stakeConc < 33 ? 5 : s.stakeConc < 50 ? 4 : s.stakeConc < 60 ? 3 : 2;
+    const c = s.stakeConc;
+    sc.stake = c < 30 ? 5 : c < 40 ? 4 : c < 50 ? 3 : c < 60 ? 2 : 1;
   } else { sc.stake = null; }
 
   // 5. 销毁 / 新增发行 (1-5): ≥100%（净通缩）=5, 50-100%=4, 20-50%=3, 5-20%=2, <5%=1
@@ -623,7 +625,9 @@ function render() {
   const stakeColor = sc.stake >= 4 ? 'var(--green)' : sc.stake >= 3 ? 'var(--yellow)' : 'var(--red)';
   setBar('stake_bar', barW(sc.stake, 5), stakeColor);
   setText('stake_val', ethState.stakeConc !== null
-    ? '前5实体占 ' + ethState.stakeConc.toFixed(1) + '% (' + (sc.stake||'--') + '/5)'
+    ? '前5占 ' + ethState.stakeConc.toFixed(1) + '%'
+      + (ethState.stakeLeaders && ethState.stakeLeaders[0] ? '（' + ethState.stakeLeaders[0].name + ' ' + ethState.stakeLeaders[0].pct.toFixed(1) + '%）' : '')
+      + ' (' + (sc.stake||'--') + '/5)'
     : '暂无数据源');
 
   setBar('burn_bar', barW(sc.burn, 5), 'var(--purple)');
@@ -662,8 +666,11 @@ function renderAlerts(sc) {
     alerts.push({ cls:'bull', icon:'💎', title:'长期未移动供应占比较高', desc:`${ethState.lthPct.toFixed(1)}% 的 ETH 超过1年未移动，说明流动供应相对收缩；该项为估算口径。` });
   }
 
-  if (ethState.whale100Pct !== null && ethState.whale100Pct >= 38) {
-    alerts.push({ cls:'neutral', icon:'🐳', title:'前100地址集中度偏高', desc:`前100地址持有 ${ethState.whale100Pct.toFixed(2)}% 的 ETH，其中可能包含交易所、合约、质押池或托管地址，不能直接视为单一主体行为。` });
+  if (ethState.stakeConc !== null && ethState.stakeConc >= 50) {
+    alerts.push({ cls:'bear', icon:'⚡', title:'质押高度集中', desc:`前5大流动质押服务商占全部质押 ETH 的 ${ethState.stakeConc.toFixed(1)}%${ethState.stakeLeaders && ethState.stakeLeaders[0] ? `，其中 ${ethState.stakeLeaders[0].name} 一家占 ${ethState.stakeLeaders[0].pct.toFixed(1)}%` : ''}，去中心化风险上升。` });
+  }
+  if (ethState.whale100Pct !== null && ethState.whale100Pct >= 20) {
+    alerts.push({ cls:'neutral', icon:'🐳', title:'前100地址集中度偏高', desc:`前100地址（已剔除质押合约/WETH/跨链桥）持有 ${ethState.whale100Pct.toFixed(2)}% 的 ETH，其中仍可能包含交易所与托管地址，不能直接视为单一主体行为。` });
   }
 
   if (ethState.burnIssuancePct !== null && ethState.burnIssuancePct < 20) {
@@ -821,6 +828,7 @@ async function fetchEthDataJson() {
     ethState.whale100Pct = num(d.whale_top100_pct);
     ethState.lthPct = num(d.lth_pct);
     ethState.stakeConc = num(d.stake_conc_top5);
+    ethState.stakeLeaders = Array.isArray(d.stake_conc_leaders) ? d.stake_conc_leaders : null;
     ethState.burnRate = num(d.burn_rate_daily);
     ethState.burnIssuancePct = num(d.burn_issuance_pct);
     ethState.stblChange30d = num(d.stablecoin_change_30d);

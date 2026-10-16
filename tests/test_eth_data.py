@@ -10,22 +10,13 @@ eth = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(eth)
 
 
-def account_row(rank, name, pct):
-    return (f"<tr><td>{rank}</td><td><a>0xabc</a></td><td>{name}</td>"
-            f"<td>1 ETH</td><td>{pct}%</td><td>10</td></tr>")
-
-
 class WhaleConcentrationTests(unittest.TestCase):
-    def test_non_holder_contracts_are_excluded(self):
-        rows = [account_row(1, "Beacon Deposit Contract", "75.0"),
-                account_row(2, "Wrapped Ether", "1.8"),
-                account_row(3, "Binance 7", "1.6"),
-                account_row(4, "Arbitrum: Bridge", "0.6"),
-                account_row(5, "", "0.5")]
-        accounts = eth.parse_top_accounts("".join(rows))
-        self.assertEqual(len(accounts), 5)
-        kept = [pct for name, pct in accounts if not eth.NON_HOLDER_PATTERNS.search(name)]
-        self.assertAlmostEqual(sum(kept), 2.1)
+    def test_wallet_contracts_kept_infrastructure_contracts_excluded(self):
+        # Blockscout 口径：质押存款合约等基础设施合约剔除，多签钱包算真实持有者
+        self.assertTrue(eth.WALLET_CONTRACT.search("GnosisSafeProxy"))
+        self.assertTrue(eth.WALLET_CONTRACT.search("Wallet 123"))
+        self.assertIsNone(eth.WALLET_CONTRACT.search("DepositContract"))
+        self.assertIsNone(eth.WALLET_CONTRACT.search("WETH9"))
 
 
 class StakingTests(unittest.TestCase):
@@ -77,7 +68,7 @@ class NoInventedNumbersTests(unittest.TestCase):
 
     def test_unavailable_metrics_are_published_as_null(self):
         data = json.loads((ROOT / "eth-data.json").read_text(encoding="utf-8"))
-        for field in ("stake_conc_top5", "lth_pct", "distribution"):
+        for field in ("lth_pct", "distribution"):
             with self.subTest(field=field):
                 self.assertIsNone(data.get(field))
         self.assertNotIn("exchanges", data)
