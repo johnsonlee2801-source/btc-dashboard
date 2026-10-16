@@ -1,20 +1,20 @@
 {
-  "timestamp": "2026-10-16T11:21:45.931821+00:00",
-  "timestamp_cn": "2026-10-16 19:21",
+  "timestamp": "2026-10-16T16:37:44.717175+00:00",
+  "timestamp_cn": "2026-10-17 00:37",
   "price": {
-    "price": 82629,
-    "change24h": 2.05
+    "price": 81470,
+    "change24h": -0.7
   },
   "etf": {
-    "sum5d": -124.9,
+    "sum5d": -146.0,
     "days": [
-      21.1,
       -65.4,
       175.7,
       -261.4,
-      5.1
+      5.1,
+      0.0
     ],
-    "latest_date": "15 Oct 2026",
+    "latest_date": "16 Oct 2026",
     "source": "farside_parsed"
   },
   "onchain": {
@@ -43,21 +43,21 @@
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0066,
-    "avg": 0.0066,
+    "okx": 0.0072,
+    "avg": 0.0072,
     "source": "exchange_public"
   },
   "margin_lending": {
     "btc_daily_rate": 1.171e-05,
     "btc_annual_rate": 0.4274,
     "btc_borrow_limit": 100.0,
-    "open_interest": 30085.0,
+    "open_interest": 30564.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 306.0,
+    "total_b": 306.1,
     "trend": "expand"
   },
   "tips": 2.84,
@@ -72,7 +72,7 @@
     "price_30d_ago": 75650.43,
     "as_of": "2026-10-15",
     "source": "coinmetrics",
-    "btc_dominance": 59.22
+    "btc_dominance": 59.26
   },
   "tips_as_of": "2026-10-14",
   "tips_age_days": 2,
