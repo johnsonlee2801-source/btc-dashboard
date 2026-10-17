@@ -34,25 +34,21 @@ jobs:
       - name: Open or update issue on failure
         if: steps.checks.outputs.rc != '0'
         run: |
-          body=$(cat health-report.md)
-          body="$body
-
-运行记录：${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          printf '%s\n\n运行记录：%s/%s/actions/runs/%s\n' "$(cat health-report.md)" "$GITHUB_SERVER_URL" "$GITHUB_REPOSITORY" "$GITHUB_RUN_ID" > issue-body.md
           existing=$(gh issue list --label health-check --state open --json number --jq '.[0].number')
           if [ -n "$existing" ]; then
-            gh issue comment "$existing" --body "$body"
+            gh issue comment "$existing" --body-file issue-body.md
           else
             gh label create health-check --color D93F0B --description "自动健康检查" 2>/dev/null || true
-            gh issue create --title "🔴 网站健康检查失败（$(date -u +%Y-%m-%d)）" --label health-check --body "$body"
+            gh issue create --title "🔴 网站健康检查失败（$(date -u +%Y-%m-%d)）" --label health-check --body-file issue-body.md
           fi
       - name: Close issue when healthy again
         if: steps.checks.outputs.rc == '0'
         run: |
           existing=$(gh issue list --label health-check --state open --json number --jq '.[0].number')
           if [ -n "$existing" ]; then
-            gh issue close "$existing" --comment "$(cat health-report.md)
-
-已恢复正常，自动关闭。"
+            printf '%s\n\n已恢复正常，自动关闭。\n' "$(cat health-report.md)" > issue-body.md
+            gh issue close "$existing" --comment "$(cat issue-body.md)"
           fi
       - name: Fail the job if checks failed
         if: steps.checks.outputs.rc != '0'
