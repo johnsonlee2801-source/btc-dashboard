@@ -330,6 +330,55 @@ def fetch_coinmetrics_btc():
     return {"mvrv_zscore": round(z, 4), "nupl": round(nupl, 4), "as_of": as_of, "ma200w": ma200w, "market": market}
 
 
+# Puell / LTH-MVRV 是慢变量，bitcoin-data.com 免费版固定延迟 7 天：这就是能拿到的最新值，
+# 超过 14 天才算陈旧。以前这两项只能靠访客手填，没填就用默认分。
+SLOW_ONCHAIN_STALE_AFTER_DAYS = 14
+SLOW_ONCHAIN_METRICS = (
+    ("puell", "puell-multiple", "puellMultiple", "Puell Multiple"),
+    ("lth_mvrv", "lth-mvrv", "lthMvrv", "LTH MVRV"),
+)
+
+
+def fetch_slow_onchain(previous, onchain):
+    prev = (previous or {}).get("onchain") or {}
+    for metric, endpoint, key, label in SLOW_ONCHAIN_METRICS:
+        value, as_of = fetch_bitcoin_data_metric(endpoint, key, label)
+        if value is None:
+            value, as_of = prev.get(metric), prev.get(f"{metric}_as_of")
+            if value is not None:
+                log(f"  ↺ {label} 沿用 {as_of} 的值")
+        age = age_in_days(as_of)
+        onchain[metric] = value
+        onchain[f"{metric}_as_of"] = as_of
+        onchain[f"{metric}_age_days"] = age
+        onchain[f"{metric}_stale"] = value is not None and is_stale(age, SLOW_ONCHAIN_STALE_AFTER_DAYS)
+        onchain[f"{metric}_source"] = "bitcoin-data.com" if value is not None else None
+
+
+def fetch_dxy(previous):
+    """ICE 美元指数（Yahoo DX-Y.NYB）。评分门槛 100/103/106 按 ICE DXY 定，不能用 FRED 的贸易加权指数（量级 120+）。"""
+    log("抓取 DXY 美元指数 (Yahoo DX-Y.NYB)...")
+    raw = http_get("https://query1.finance.yahoo.com/v8/finance/chart/DX-Y.NYB?range=5d&interval=1d",
+                   headers={"User-Agent": "Mozilla/5.0"}, timeout=20)
+    try:
+        r = json.loads(raw)["chart"]["result"][0]
+        closes = [c for c in r["indicators"]["quote"][0]["close"] if isinstance(c, (int, float))]
+        ts = r["meta"].get("regularMarketTime")
+        value = round(float(r["meta"].get("regularMarketPrice") or closes[-1]), 2)
+        as_of = datetime.fromtimestamp(ts, timezone.utc).strftime("%Y-%m-%d") if ts else None
+        if 70 < value < 140:
+            log(f"  ✅ DXY: {value} ({as_of})")
+            return {"value": value, "as_of": as_of, "source": "yahoo:DX-Y.NYB"}
+        log(f"  ⚠️ DXY 数值异常 {value}，置空")
+    except Exception as e:
+        log(f"  ⚠️ DXY 获取失败: {e}")
+    prev = (previous or {}).get("dxy")
+    if isinstance(prev, dict) and prev.get("value") is not None and not is_stale(age_in_days(prev.get("as_of")), 3):
+        log(f"  ↺ DXY 沿用 {prev.get('as_of')} 的值")
+        return prev
+    return None
+
+
 def fetch_btc_dominance():
     raw = http_get("https://api.coingecko.com/api/v3/global", timeout=20)
     try:
@@ -902,7 +951,9 @@ def main(push=False, dry_run=False):
     onchain["mvrv_zscore"] = carry_forward(previous_data, onchain.get("mvrv_zscore"), ["onchain", "mvrv_zscore"], "MVRV Z-Score")
     onchain["nupl"] = carry_forward(previous_data, onchain.get("nupl"), ["onchain", "nupl"], "NUPL")
     mark_onchain_freshness(previous_data, onchain)
+    fetch_slow_onchain(previous_data, onchain)
     data["onchain"] = onchain
+    data["dxy"] = fetch_dxy(previous_data)
     time.sleep(2)
 
     fed = fetch_fed_direction()
