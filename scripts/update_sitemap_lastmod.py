@@ -9,7 +9,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 ROOT = Path(__file__).resolve().parents[1]
-SITEMAPS = ("sitemap.xml", "sitemap-stock.xml")
+SITEMAPS = ("sitemap.xml",)
 
 
 def page_file(path, rewrites):

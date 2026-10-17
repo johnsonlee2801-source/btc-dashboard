@@ -5,7 +5,6 @@ def _load(name, rel):
     spec = importlib.util.spec_from_file_location(name, ROOT / rel)
     m = importlib.util.module_from_spec(spec); sys.modules[name] = m; spec.loader.exec_module(m); return m
 eth = _load("eth_src", "scripts/fetch_eth_data.py")
-snap = _load("snap_src", "scripts/build_stock_breadth_snapshot.py")
 
 
 class BlockscoutWhaleTests(unittest.TestCase):
@@ -16,22 +15,6 @@ class BlockscoutWhaleTests(unittest.TestCase):
         self.assertTrue(callable(BS))
         self.assertTrue(eth.WALLET_CONTRACT.search("GnosisSafeProxy"))
         self.assertIsNone(eth.WALLET_CONTRACT.search("DepositContract"))
-
-
-class CboeSkewTests(unittest.TestCase):
-    def test_latest_row_parsed_and_classified(self):
-        csv = "DATE,SKEW\n10/14/2026,157.300000\n10/15/2026,160.450000\n"
-        import unittest.mock as mock
-        with mock.patch.object(snap, "fetch_text", return_value=csv):
-            r = snap.parse_cboe_skew()
-        self.assertEqual(r["value"], 160.45)
-        self.assertEqual(r["updatedAt"], "2026-10-15")
-        self.assertEqual(r["status"], "distribution")
-
-    def test_rejects_garbage(self):
-        import unittest.mock as mock
-        with mock.patch.object(snap, "fetch_text", return_value="<html>blocked</html>"):
-            self.assertIsNone(snap.parse_cboe_skew())
 
 
 class EthDataShapeTests(unittest.TestCase):

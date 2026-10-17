@@ -11,7 +11,6 @@ import json, sys, urllib.request, urllib.error
 from datetime import datetime, timezone, date
 
 BTC = "https://btc.flowhunt.net"
-STOCK = "https://stock.flowhunt.net"
 UA = {"User-Agent": "flowhunt-health-check/1.0 (+https://btc.flowhunt.net)"}
 
 # 数据允许的最大年龄（小时）。定时任务会被 GitHub 延迟 0.5~4 小时，阈值留了余量。
@@ -19,7 +18,6 @@ MAX_AGE_HOURS = {
     "data.json（BTC，每 3 小时）": 12,
     "eth-data.json（每日）": 36,
     "cex-reserves.json（每日）": 60,
-    "market-breadth（工作日）": 100,  # 周末不更新，最长周五→周二
 }
 
 results = []  # (ok, name, detail)
@@ -69,7 +67,7 @@ def check_age(name, iso, limit_hours):
 def main():
     print("页面")
     for url in (f"{BTC}/", f"{BTC}/eth", f"{BTC}/halving", f"{BTC}/distribution-radar",
-                f"{STOCK}/stock", f"{STOCK}/stock-en", f"{STOCK}/stock/nvda-risk", f"{BTC}/og-image.jpg"):
+                f"{BTC}/og-image.jpg"):
         try:
             status, body = get(url)
             check(url, status == 200 and len(body) > 500, f"HTTP {status}, {len(body)} B")
@@ -89,12 +87,6 @@ def main():
               f"score {d.get('score')}, 失败源 {failed}")
     except Exception as e:
         check("/api/distribution-radar", False, str(e)[:120])
-    try:
-        _, s = get_json(f"{STOCK}/api/stock-radar?symbol=NVDA")
-        check("/api/stock-radar?symbol=NVDA", bool(s.get("verdict")) and isinstance(s.get("score"), (int, float)),
-              f"{s.get('verdict')} {s.get('score')}")
-    except Exception as e:
-        check("/api/stock-radar?symbol=NVDA", False, str(e)[:120])
 
     print("数据新鲜度与关键字段")
     try:
@@ -133,18 +125,6 @@ def main():
         check("cex-reserves.json: 交易所数量与新鲜度", n_btc >= 10 and len(stale) <= 2, f"BTC {n_btc} 家，延迟 {stale}")
     except Exception as ex:
         check("cex-reserves.json", False, str(ex)[:120])
-
-    try:
-        _, s = get_json(f"{STOCK}/data/snapshots/market-breadth-latest.json")
-        check_age("market-breadth（工作日）", s.get("generatedAt"), MAX_AGE_HOURS["market-breadth（工作日）"])
-        mi = s.get("macroIndicators") or {}
-        f4 = mi.get("sec_form4_insider_activity") or {}
-        check("market-breadth: Form 4 覆盖率 ≥ 90%", (f4.get("coverage") or 0) >= 0.9, f"coverage {f4.get('coverage')}")
-        check("market-breadth: SKEW 存在", isinstance((mi.get("cboe_skew") or {}).get("value"), (int, float)),
-              f"{(mi.get('cboe_skew') or {}).get('value')}")
-        check("market-breadth: 抓取错误 ≤ 20", len(s.get("fetchErrors") or []) <= 20, f"{len(s.get('fetchErrors') or [])} 条")
-    except Exception as ex:
-        check("market-breadth", False, str(ex)[:120])
 
     failed = [r for r in results if not r[0]]
     print(f"\n{len(results) - len(failed)}/{len(results)} 通过")

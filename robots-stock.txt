@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://stock.flowhunt.net/sitemap.xml
