@@ -2121,6 +2121,20 @@ function resolveManualOverrides() {
 
 const MANUAL_MAX_AGE_MS = 7 * 86400000;
 
+// 数据陈旧横幅：后端定时任务会被 GitHub 延迟甚至漏跑，超过阈值就在页面顶部明说，而不是让旧数字看起来像实时的
+function showStaleBanner(isoTimestamp, maxHours, label) {
+  const t = Date.parse(isoTimestamp || '');
+  if (!Number.isFinite(t)) return;
+  const hours = (Date.now() - t) / 3600000;
+  const old = document.getElementById('staleDataBanner');
+  if (hours <= maxHours) { if (old) old.remove(); return; }
+  const el = old || document.createElement('div');
+  el.id = 'staleDataBanner';
+  el.style.cssText = 'background:rgba(255,204,0,0.12);border-bottom:1px solid rgba(255,204,0,0.45);color:#ffcc00;padding:10px 16px;font-size:13px;text-align:center;';
+  el.textContent = `⚠️ ${label}已 ${Math.round(hours)} 小时未更新（最近一次：${new Date(t).toLocaleString('zh-CN')}）。后台任务可能延迟，下方相关数值以此为准，实时价格不受影响。`;
+  if (!old) document.body.insertBefore(el, document.body.firstChild);
+}
+
 // 从 localStorage 恢复手动输入
 function loadManualFromStorage() {
   try {
@@ -2191,6 +2205,7 @@ async function fetchDataJson() {
       autoTag.textContent = '链上数据更新于: ' + d.timestamp_cn;
       autoTag.style.display = 'block';
     }
+    showStaleBanner(d.timestamp, 12, '链上与宏观数据');
 
     // 链上指标
     if (d.onchain) {

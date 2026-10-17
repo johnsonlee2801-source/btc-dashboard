@@ -1,0 +1,59 @@
+name: Site health check
+
+# Daily end-to-end check of the live site: pages, APIs, data freshness and
+# key fields. A failure opens (or updates) a GitHub issue labelled
+# health-check; the next passing run closes it. Before this there was no
+# monitoring at all — a dead data source only showed up as 暂无 on the page.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '35 3 * * *'   # 03:35 UTC = 11:35 北京时间，所有数据任务都该跑完了
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  health:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Run checks
+        id: checks
+        run: |
+          set +e
+          python scripts/health_check.py
+          echo "rc=$?" >> "$GITHUB_OUTPUT"
+      - name: Open or update issue on failure
+        if: steps.checks.outputs.rc != '0'
+        run: |
+          body=$(cat health-report.md)
+          body="$body
+
+运行记录：${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          existing=$(gh issue list --label health-check --state open --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+          else
+            gh label create health-check --color D93F0B --description "自动健康检查" 2>/dev/null || true
+            gh issue create --title "🔴 网站健康检查失败（$(date -u +%Y-%m-%d)）" --label health-check --body "$body"
+          fi
+      - name: Close issue when healthy again
+        if: steps.checks.outputs.rc == '0'
+        run: |
+          existing=$(gh issue list --label health-check --state open --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue close "$existing" --comment "$(cat health-report.md)
+
+已恢复正常，自动关闭。"
+          fi
+      - name: Fail the job if checks failed
+        if: steps.checks.outputs.rc != '0'
+        run: exit 1

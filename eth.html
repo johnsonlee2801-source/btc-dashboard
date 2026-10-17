@@ -737,6 +737,20 @@ async function fetchStablecoin() {
   } catch(e) { console.log('DefiLlama stbl err:', e.message); }
 }
 
+// 数据陈旧横幅：后端定时任务会被 GitHub 延迟甚至漏跑，超过阈值就在页面顶部明说，而不是让旧数字看起来像实时的
+function showStaleBanner(isoTimestamp, maxHours, label) {
+  const t = Date.parse(isoTimestamp || '');
+  if (!Number.isFinite(t)) return;
+  const hours = (Date.now() - t) / 3600000;
+  const old = document.getElementById('staleDataBanner');
+  if (hours <= maxHours) { if (old) old.remove(); return; }
+  const el = old || document.createElement('div');
+  el.id = 'staleDataBanner';
+  el.style.cssText = 'background:rgba(255,204,0,0.12);border-bottom:1px solid rgba(255,204,0,0.45);color:#ffcc00;padding:10px 16px;font-size:13px;text-align:center;';
+  el.textContent = `⚠️ ${label}已 ${Math.round(hours)} 小时未更新（最近一次：${new Date(t).toLocaleString('zh-CN')}）。后台任务可能延迟，下方相关数值以此为准，实时价格不受影响。`;
+  if (!old) document.body.insertBefore(el, document.body.firstChild);
+}
+
 // 4. Load from eth-data.json (server-side fetched)
 async function fetchEthDataJson() {
   try {
@@ -749,6 +763,7 @@ async function fetchEthDataJson() {
       el.textContent = '链上数据: ' + d.timestamp_cn;
       el.style.display = 'block';
     }
+    showStaleBanner(d.timestamp, 36, 'ETH 链上数据');
 
     // 抓不到的字段是 null：保持 null，页面显示「暂无数据」并且不参与评分
     const num = v => (typeof v === 'number' && Number.isFinite(v)) ? v : null;

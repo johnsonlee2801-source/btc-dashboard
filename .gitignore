@@ -6,3 +6,4 @@ __pycache__/
 .pytest_cache/
 .cc-suite.md
 *.docx
+health-report.md
