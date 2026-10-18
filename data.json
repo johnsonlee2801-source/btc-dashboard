@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-17T23:07:14.723548+00:00",
-  "timestamp_cn": "2026-10-18 07:07",
+  "timestamp": "2026-10-18T04:30:13.751710+00:00",
+  "timestamp_cn": "2026-10-18 12:30",
   "price": {
-    "price": 81277,
-    "change24h": -0.51
+    "price": 81841,
+    "change24h": 0.49
   },
   "etf": {
     "sum5d": -228.4,
@@ -18,23 +18,23 @@
     "source": "farside_parsed"
   },
   "onchain": {
-    "mvrv_zscore": 0.9004,
-    "nupl": 0.3394,
-    "mvrv_zscore_as_of": "2026-10-16",
-    "nupl_as_of": "2026-10-16",
+    "mvrv_zscore": 0.8913,
+    "nupl": 0.3372,
+    "mvrv_zscore_as_of": "2026-10-17",
+    "nupl_as_of": "2026-10-17",
     "mvrv_zscore_source": "coinmetrics",
     "nupl_source": "coinmetrics",
     "mvrv_zscore_age_days": 1,
     "mvrv_zscore_stale": false,
     "nupl_age_days": 1,
     "nupl_stale": false,
-    "puell": 1.135,
-    "puell_as_of": "2026-10-10",
+    "puell": 1.149,
+    "puell_as_of": "2026-10-11",
     "puell_age_days": 7,
     "puell_stale": false,
     "puell_source": "bitcoin-data.com",
-    "lth_mvrv": 1.703,
-    "lth_mvrv_as_of": "2026-10-10",
+    "lth_mvrv": 1.7177,
+    "lth_mvrv_as_of": "2026-10-11",
     "lth_mvrv_age_days": 7,
     "lth_mvrv_stale": false,
     "lth_mvrv_source": "bitcoin-data.com"
@@ -47,21 +47,21 @@
     "cut_probability": 3.8,
     "zero_cut_probability": 96.2,
     "year": "2026",
-    "as_of": "2026-10-17",
+    "as_of": "2026-10-18",
     "age_days": 0,
     "stale": false
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0054,
-    "avg": 0.0054,
+    "okx": 0.0032,
+    "avg": 0.0032,
     "source": "exchange_public"
   },
   "margin_lending": {
     "btc_daily_rate": 1.174e-05,
     "btc_annual_rate": 0.4285,
     "btc_borrow_limit": 100.0,
-    "open_interest": 30543.0,
+    "open_interest": 30073.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
@@ -72,17 +72,17 @@
   },
   "tips": 2.78,
   "ma200w": {
-    "value": 66656,
-    "as_of": "2026-10-16",
+    "value": 66702,
+    "as_of": "2026-10-17",
     "source": "coinmetrics"
   },
   "market": {
-    "ma200d": 72353.05,
+    "ma200d": 72418.32,
     "ath_close": 124824.45,
-    "price_30d_ago": 76082.38,
-    "as_of": "2026-10-16",
+    "price_30d_ago": 76386.9,
+    "as_of": "2026-10-17",
     "source": "coinmetrics",
-    "btc_dominance": 59.49
+    "btc_dominance": 59.47
   },
   "dxy": {
     "value": 101.78,
@@ -90,6 +90,6 @@
     "source": "yahoo:DX-Y.NYB"
   },
   "tips_as_of": "2026-10-15",
-  "tips_age_days": 2,
+  "tips_age_days": 3,
   "tips_stale": false
 }
