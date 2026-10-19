@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-10-18T04:39:40.016355+00:00",
-  "timestamp_cn": "2026-10-18 12:39 GMT+8",
-  "price_usd": 2416.65,
-  "price_change_24h": -0.41594,
-  "market_cap": 295184099332,
-  "circulating_supply": 122145416.41490711,
-  "holder_count": 210474299,
-  "active_addr_7d": 800458,
+  "timestamp": "2026-10-19T04:47:00.005933+00:00",
+  "timestamp_cn": "2026-10-19 12:47 GMT+8",
+  "price_usd": 2426.23,
+  "price_change_24h": 0.40181,
+  "market_cap": 296389412732,
+  "circulating_supply": 122148377.86004484,
+  "holder_count": 210516059,
+  "active_addr_7d": 810937,
   "whale_top100_pct": 12.52,
-  "burn_rate_daily": 12.3,
-  "stablecoin_mcap_b": 144.83,
-  "stablecoin_change_30d": -0.76,
-  "staked_pct": 35.76,
-  "total_staked": 43671917,
+  "burn_rate_daily": 12.0,
+  "stablecoin_mcap_b": 145.0,
+  "stablecoin_change_30d": -0.66,
+  "staked_pct": 35.78,
+  "total_staked": 43691145,
   "stake_conc_top5": 36.6,
   "stake_conc_leaders": [
     {
@@ -36,19 +36,19 @@
       "pct": 0.9
     }
   ],
-  "issuance_daily": 3011,
-  "burn_issuance_pct": 0.41,
+  "issuance_daily": 3012,
+  "burn_issuance_pct": 0.4,
   "lth_pct": null,
   "distribution": null,
   "as_of": {
-    "holder_count": "2026-10-17",
-    "active_addr_7d": "2026-10-17",
-    "whale_top100_pct": "2026-10-18",
-    "burn_rate_daily": "2026-10-18",
-    "stablecoin_mcap_b": "2026-10-18",
-    "stablecoin_change_30d": "2026-10-18",
-    "staked_pct": "2026-10-18",
-    "total_staked": "2026-10-18",
-    "stake_conc_top5": "2026-10-18"
+    "holder_count": "2026-10-18",
+    "active_addr_7d": "2026-10-18",
+    "whale_top100_pct": "2026-10-19",
+    "burn_rate_daily": "2026-10-19",
+    "stablecoin_mcap_b": "2026-10-19",
+    "stablecoin_change_30d": "2026-10-19",
+    "staked_pct": "2026-10-19",
+    "total_staked": "2026-10-19",
+    "stake_conc_top5": "2026-10-19"
   }
 }
