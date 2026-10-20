@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-10-19T20:34:57.859586+00:00",
-  "timestamp_cn": "2026-10-20 04:34",
+  "timestamp": "2026-10-20T00:19:13.888444+00:00",
+  "timestamp_cn": "2026-10-20 08:19",
   "price": {
-    "price": 81923,
-    "change24h": 1.34
+    "price": 81630,
+    "change24h": -0.41
   },
   "etf": {
-    "sum5d": -163.0,
+    "sum5d": -217.9,
     "days": [
       175.7,
       -261.4,
       5.1,
       -82.4,
-      0.0
+      -54.9
     ],
     "latest_date": "19 Oct 2026",
     "source": "farside_parsed"
@@ -24,44 +24,44 @@
     "nupl_as_of": "2026-10-18",
     "mvrv_zscore_source": "coinmetrics",
     "nupl_source": "coinmetrics",
-    "mvrv_zscore_age_days": 1,
+    "mvrv_zscore_age_days": 2,
     "mvrv_zscore_stale": false,
-    "nupl_age_days": 1,
+    "nupl_age_days": 2,
     "nupl_stale": false,
-    "puell": 1.1202,
-    "puell_as_of": "2026-10-12",
+    "puell": 1.2024,
+    "puell_as_of": "2026-10-13",
     "puell_age_days": 7,
     "puell_stale": false,
     "puell_source": "bitcoin-data.com",
-    "lth_mvrv": 1.6797,
-    "lth_mvrv_as_of": "2026-10-12",
+    "lth_mvrv": 1.7064,
+    "lth_mvrv_as_of": "2026-10-13",
     "lth_mvrv_age_days": 7,
     "lth_mvrv_stale": false,
     "lth_mvrv_source": "bitcoin-data.com"
   },
   "fed": {
     "fed_direction": "hold",
-    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 3.9%（Exactly 0 cuts 平均 96.1%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "Oddpool 2026 年降息次数市场：至少一次降息概率 3.7%（Exactly 0 cuts 平均 96.3%）；非 CME 期货源，作为 403 fallback",
     "confidence": "medium",
     "source": "oddpool_fed_rate_cut_count",
-    "cut_probability": 3.9,
-    "zero_cut_probability": 96.1,
+    "cut_probability": 3.7,
+    "zero_cut_probability": 96.3,
     "year": "2026",
-    "as_of": "2026-10-19",
+    "as_of": "2026-10-20",
     "age_days": 0,
     "stale": false
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.01,
-    "avg": 0.01,
+    "okx": 0.009,
+    "avg": 0.009,
     "source": "exchange_public"
   },
   "margin_lending": {
     "btc_daily_rate": 1.174e-05,
     "btc_annual_rate": 0.4285,
     "btc_borrow_limit": 100.0,
-    "open_interest": 29837.0,
+    "open_interest": 29848.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
@@ -72,24 +72,24 @@
   },
   "tips": 2.74,
   "ma200w": {
-    "value": 66749,
+    "value": 66796,
     "as_of": "2026-10-18",
     "source": "coinmetrics"
   },
   "market": {
-    "ma200d": 72487.41,
+    "ma200d": 72562.46,
     "ath_close": 124824.45,
-    "price_30d_ago": 80944.16,
+    "price_30d_ago": 81262.35,
     "as_of": "2026-10-18",
     "source": "coinmetrics",
-    "btc_dominance": 59.63
+    "btc_dominance": 59.55
   },
   "dxy": {
-    "value": 101.99,
-    "as_of": "2026-10-19",
+    "value": 101.94,
+    "as_of": "2026-10-20",
     "source": "yahoo:DX-Y.NYB"
   },
   "tips_as_of": "2026-10-16",
-  "tips_age_days": 3,
+  "tips_age_days": 4,
   "tips_stale": false
 }
