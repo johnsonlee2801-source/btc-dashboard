@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-10-20T19:15:15.958705+00:00",
-  "timestamp_cn": "2026-10-21 03:15",
+  "timestamp": "2026-10-20T23:52:01.407225+00:00",
+  "timestamp_cn": "2026-10-21 07:52",
   "price": {
-    "price": 82458,
-    "change24h": 0.77
+    "price": 82938,
+    "change24h": 1.24
   },
   "etf": {
-    "sum5d": 188.0,
+    "sum5d": 177.7,
     "days": [
       -261.4,
       5.1,
       -82.4,
       526.7,
-      0.0
+      -10.3
     ],
     "latest_date": "20 Oct 2026",
     "source": "farside_parsed"
@@ -41,7 +41,7 @@
   },
   "fed": {
     "fed_direction": "hold",
-    "reasoning": "沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：Oddpool 2026 年降息次数市场：至少一次降息概率 3.7%（Exactly 0 cuts 平均 96.3%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：Oddpool 2026 年降息次数市场：至少一次降息概率 3.7%（Exactly 0 cuts 平均 96.3%）；非 CME 期货源，作为 403 fallback",
     "confidence": "carried_forward",
     "source": "oddpool_fed_rate_cut_count",
     "cut_probability": 3.7,
@@ -53,24 +53,24 @@
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0058,
-    "avg": 0.0058,
+    "okx": 0.0057,
+    "avg": 0.0057,
     "source": "exchange_public"
   },
   "margin_lending": {
     "btc_daily_rate": 1.174e-05,
     "btc_annual_rate": 0.4285,
     "btc_borrow_limit": 100.0,
-    "open_interest": 28905.0,
+    "open_interest": 29313.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 304.6,
+    "total_b": 304.5,
     "trend": "expand"
   },
-  "tips": 2.74,
+  "tips": 2.8,
   "ma200w": {
     "value": 66796,
     "as_of": "2026-10-19",
@@ -82,14 +82,14 @@
     "price_30d_ago": 81262.35,
     "as_of": "2026-10-19",
     "source": "coinmetrics",
-    "btc_dominance": 59.52
+    "btc_dominance": 59.54
   },
   "dxy": {
-    "value": 101.7,
+    "value": 101.78,
     "as_of": "2026-10-20",
     "source": "yahoo:DX-Y.NYB"
   },
-  "tips_as_of": "2026-10-16",
-  "tips_age_days": 4,
+  "tips_as_of": "2026-10-19",
+  "tips_age_days": 1,
   "tips_stale": false
 }
