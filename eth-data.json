@@ -1,23 +1,23 @@
 {
-  "timestamp": "2026-10-20T04:56:06.324126+00:00",
-  "timestamp_cn": "2026-10-20 12:56 GMT+8",
-  "price_usd": 2409.17,
-  "price_change_24h": -0.76167,
-  "market_cap": 294283231845,
-  "circulating_supply": 122151332.39495258,
-  "holder_count": 210630523,
-  "active_addr_7d": 809955,
-  "whale_top100_pct": 12.56,
-  "burn_rate_daily": 24.6,
-  "stablecoin_mcap_b": 144.31,
-  "stablecoin_change_30d": -0.9,
-  "staked_pct": 35.78,
-  "total_staked": 43691145,
-  "stake_conc_top5": 36.6,
+  "timestamp": "2026-10-21T04:55:17.999040+00:00",
+  "timestamp_cn": "2026-10-21 12:55 GMT+8",
+  "price_usd": 2441.32,
+  "price_change_24h": 1.3355,
+  "market_cap": 298228156103,
+  "circulating_supply": 122154253.0938179,
+  "holder_count": 210710075,
+  "active_addr_7d": 808329,
+  "whale_top100_pct": 12.57,
+  "burn_rate_daily": 45.3,
+  "stablecoin_mcap_b": 144.12,
+  "stablecoin_change_30d": -1.08,
+  "staked_pct": 36.07,
+  "total_staked": 44060508,
+  "stake_conc_top5": 36.4,
   "stake_conc_leaders": [
     {
       "name": "Lido",
-      "pct": 22.2
+      "pct": 22.0
     },
     {
       "name": "Binance staked ETH",
@@ -25,7 +25,7 @@
     },
     {
       "name": "ether.fi Stake",
-      "pct": 4.4
+      "pct": 4.3
     },
     {
       "name": "Rocket Pool",
@@ -36,19 +36,19 @@
       "pct": 0.9
     }
   ],
-  "issuance_daily": 3012,
-  "burn_issuance_pct": 0.82,
+  "issuance_daily": 3024,
+  "burn_issuance_pct": 1.5,
   "lth_pct": null,
   "distribution": null,
   "as_of": {
-    "holder_count": "2026-10-19",
-    "active_addr_7d": "2026-10-19",
-    "whale_top100_pct": "2026-10-20",
-    "burn_rate_daily": "2026-10-20",
-    "stablecoin_mcap_b": "2026-10-20",
-    "stablecoin_change_30d": "2026-10-20",
-    "staked_pct": "2026-10-19",
-    "total_staked": "2026-10-19",
-    "stake_conc_top5": "2026-10-19"
+    "holder_count": "2026-10-20",
+    "active_addr_7d": "2026-10-20",
+    "whale_top100_pct": "2026-10-21",
+    "burn_rate_daily": "2026-10-21",
+    "stablecoin_mcap_b": "2026-10-21",
+    "stablecoin_change_30d": "2026-10-21",
+    "staked_pct": "2026-10-20",
+    "total_staked": "2026-10-20",
+    "stake_conc_top5": "2026-10-21"
   }
 }
