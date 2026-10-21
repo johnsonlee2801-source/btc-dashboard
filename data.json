@@ -1,11 +1,22 @@
 {
-  "timestamp": "2026-10-21T11:46:29.509873+00:00",
-  "timestamp_cn": "2026-10-21 19:46",
+  "timestamp": "2026-10-21T17:10:44.583191+00:00",
+  "timestamp_cn": "2026-10-22 01:10",
   "price": {
-    "price": 83384,
-    "change24h": 2.36
+    "price": 84388,
+    "change24h": 1.93
   },
-  "etf": null,
+  "etf": {
+    "sum5d": 472.6,
+    "days": [
+      5.1,
+      -82.4,
+      526.7,
+      23.2,
+      0.0
+    ],
+    "latest_date": "21 Oct 2026",
+    "source": "farside_parsed"
+  },
   "onchain": {
     "mvrv_zscore": 0.9422,
     "nupl": 0.3496,
@@ -30,7 +41,7 @@
   },
   "fed": {
     "fed_direction": "hold",
-    "reasoning": "沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：Oddpool 2026 年降息次数市场：至少一次降息概率 3.7%（Exactly 0 cuts 平均 96.3%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：Oddpool 2026 年降息次数市场：至少一次降息概率 3.7%（Exactly 0 cuts 平均 96.3%）；非 CME 期货源，作为 403 fallback",
     "confidence": "carried_forward",
     "source": "oddpool_fed_rate_cut_count",
     "cut_probability": 3.7,
@@ -42,24 +53,24 @@
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0061,
-    "avg": 0.0061,
+    "okx": 0.004,
+    "avg": 0.004,
     "source": "exchange_public"
   },
   "margin_lending": {
-    "btc_daily_rate": 1.174e-05,
-    "btc_annual_rate": 0.4285,
+    "btc_daily_rate": 1.157e-05,
+    "btc_annual_rate": 0.4223,
     "btc_borrow_limit": 100.0,
-    "open_interest": 31033.0,
+    "open_interest": 31846.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 304.2,
+    "total_b": 304.8,
     "trend": "expand"
   },
-  "tips": 2.8,
+  "tips": 2.77,
   "ma200w": {
     "value": 66843,
     "as_of": "2026-10-20",
@@ -71,14 +82,14 @@
     "price_30d_ago": 81194.74,
     "as_of": "2026-10-20",
     "source": "coinmetrics",
-    "btc_dominance": 59.56
+    "btc_dominance": 59.62
   },
   "dxy": {
-    "value": 101.68,
+    "value": 101.69,
     "as_of": "2026-10-21",
     "source": "yahoo:DX-Y.NYB"
   },
-  "tips_as_of": "2026-10-19",
-  "tips_age_days": 2,
+  "tips_as_of": "2026-10-20",
+  "tips_age_days": 1,
   "tips_stale": false
 }
