@@ -1,95 +1,95 @@
 {
-  "timestamp": "2026-10-21T21:41:39.684274+00:00",
-  "timestamp_cn": "2026-10-22 05:41",
+  "timestamp": "2026-10-22T04:41:44.834553+00:00",
+  "timestamp_cn": "2026-10-22 12:41",
   "price": {
-    "price": 84766,
-    "change24h": 2.41
+    "price": 82708,
+    "change24h": 0.04
   },
   "etf": {
-    "sum5d": 472.6,
+    "sum5d": 997.4,
     "days": [
       5.1,
       -82.4,
       526.7,
       23.2,
-      0.0
+      524.8
     ],
     "latest_date": "21 Oct 2026",
     "source": "farside_parsed"
   },
   "onchain": {
-    "mvrv_zscore": 0.9422,
-    "nupl": 0.3496,
-    "mvrv_zscore_as_of": "2026-10-20",
-    "nupl_as_of": "2026-10-20",
+    "mvrv_zscore": 0.9825,
+    "nupl": 0.3592,
+    "mvrv_zscore_as_of": "2026-10-21",
+    "nupl_as_of": "2026-10-21",
     "mvrv_zscore_source": "coinmetrics",
     "nupl_source": "coinmetrics",
     "mvrv_zscore_age_days": 1,
     "mvrv_zscore_stale": false,
     "nupl_age_days": 1,
     "nupl_stale": false,
-    "puell": 1.1813,
-    "puell_as_of": "2026-10-14",
+    "puell": 1.1145,
+    "puell_as_of": "2026-10-15",
     "puell_age_days": 7,
     "puell_stale": false,
     "puell_source": "bitcoin-data.com",
-    "lth_mvrv": 1.6749,
-    "lth_mvrv_as_of": "2026-10-14",
+    "lth_mvrv": 1.6898,
+    "lth_mvrv_as_of": "2026-10-15",
     "lth_mvrv_age_days": 7,
     "lth_mvrv_stale": false,
     "lth_mvrv_source": "bitcoin-data.com"
   },
   "fed": {
     "fed_direction": "hold",
-    "reasoning": "沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：Oddpool 2026 年降息次数市场：至少一次降息概率 3.7%（Exactly 0 cuts 平均 96.3%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：Oddpool 2026 年降息次数市场：至少一次降息概率 3.7%（Exactly 0 cuts 平均 96.3%）；非 CME 期货源，作为 403 fallback",
     "confidence": "carried_forward",
     "source": "oddpool_fed_rate_cut_count",
     "cut_probability": 3.7,
     "zero_cut_probability": 96.3,
     "year": "2026",
     "as_of": "2026-10-20",
-    "age_days": 1,
+    "age_days": 2,
     "stale": false
   },
   "funding_rate": {
     "bn": null,
-    "okx": -0.0033,
-    "avg": -0.0033,
+    "okx": 0.0064,
+    "avg": 0.0064,
     "source": "exchange_public"
   },
   "margin_lending": {
-    "btc_daily_rate": 1.157e-05,
-    "btc_annual_rate": 0.4223,
+    "btc_daily_rate": 1.177e-05,
+    "btc_annual_rate": 0.4296,
     "btc_borrow_limit": 100.0,
-    "open_interest": 31424.0,
+    "open_interest": 29838.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 305.0,
+    "total_b": 305.7,
     "trend": "expand"
   },
   "tips": 2.76,
   "ma200w": {
-    "value": 66843,
-    "as_of": "2026-10-20",
+    "value": 66891,
+    "as_of": "2026-10-21",
     "source": "coinmetrics"
   },
   "market": {
-    "ma200d": 72642.5,
+    "ma200d": 72726.9,
     "ath_close": 124824.45,
-    "price_30d_ago": 81194.74,
-    "as_of": "2026-10-20",
+    "price_30d_ago": 86505.3,
+    "as_of": "2026-10-21",
     "source": "coinmetrics",
-    "btc_dominance": 59.67
+    "btc_dominance": 59.53
   },
   "dxy": {
-    "value": 101.7,
-    "as_of": "2026-10-21",
+    "value": 101.58,
+    "as_of": "2026-10-22",
     "source": "yahoo:DX-Y.NYB"
   },
   "tips_as_of": "2026-10-21",
-  "tips_age_days": 0,
+  "tips_age_days": 1,
   "tips_stale": false
 }
