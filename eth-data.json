@@ -1,23 +1,23 @@
 {
-  "timestamp": "2026-10-21T04:55:17.999040+00:00",
-  "timestamp_cn": "2026-10-21 12:55 GMT+8",
-  "price_usd": 2441.32,
-  "price_change_24h": 1.3355,
-  "market_cap": 298228156103,
-  "circulating_supply": 122154253.0938179,
-  "holder_count": 210710075,
-  "active_addr_7d": 808329,
-  "whale_top100_pct": 12.57,
-  "burn_rate_daily": 45.3,
-  "stablecoin_mcap_b": 144.12,
-  "stablecoin_change_30d": -1.08,
+  "timestamp": "2026-10-22T04:55:19.635729+00:00",
+  "timestamp_cn": "2026-10-22 12:55 GMT+8",
+  "price_usd": 2442.1,
+  "price_change_24h": 0.01629,
+  "market_cap": 298308311994,
+  "circulating_supply": 122152451.8891417,
+  "holder_count": 210825663,
+  "active_addr_7d": 813844,
+  "whale_top100_pct": 12.58,
+  "burn_rate_daily": 32.5,
+  "stablecoin_mcap_b": 144.25,
+  "stablecoin_change_30d": -0.85,
   "staked_pct": 36.07,
-  "total_staked": 44060508,
-  "stake_conc_top5": 36.4,
+  "total_staked": 44064218,
+  "stake_conc_top5": 36.2,
   "stake_conc_leaders": [
     {
       "name": "Lido",
-      "pct": 22.0
+      "pct": 21.9
     },
     {
       "name": "Binance staked ETH",
@@ -37,18 +37,18 @@
     }
   ],
   "issuance_daily": 3024,
-  "burn_issuance_pct": 1.5,
+  "burn_issuance_pct": 1.07,
   "lth_pct": null,
   "distribution": null,
   "as_of": {
-    "holder_count": "2026-10-20",
-    "active_addr_7d": "2026-10-20",
-    "whale_top100_pct": "2026-10-21",
-    "burn_rate_daily": "2026-10-21",
-    "stablecoin_mcap_b": "2026-10-21",
-    "stablecoin_change_30d": "2026-10-21",
-    "staked_pct": "2026-10-20",
-    "total_staked": "2026-10-20",
-    "stake_conc_top5": "2026-10-21"
+    "holder_count": "2026-10-21",
+    "active_addr_7d": "2026-10-21",
+    "whale_top100_pct": "2026-10-22",
+    "burn_rate_daily": "2026-10-22",
+    "stablecoin_mcap_b": "2026-10-22",
+    "stablecoin_change_30d": "2026-10-22",
+    "staked_pct": "2026-10-21",
+    "total_staked": "2026-10-21",
+    "stake_conc_top5": "2026-10-22"
   }
 }
