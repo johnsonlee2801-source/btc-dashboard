@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-24T23:12:29.812535+00:00",
-  "timestamp_cn": "2026-10-25 07:12",
+  "timestamp": "2026-10-25T04:38:49.001018+00:00",
+  "timestamp_cn": "2026-10-25 12:38",
   "price": {
-    "price": 80556,
-    "change24h": 0.12
+    "price": 80824,
+    "change24h": 0.04
   },
   "etf": {
     "sum5d": 301.2,
@@ -18,70 +18,71 @@
     "source": "farside_parsed"
   },
   "onchain": {
-    "mvrv_zscore": 0.8725,
-    "nupl": 0.3319,
-    "mvrv_zscore_as_of": "2026-10-23",
-    "nupl_as_of": "2026-10-23",
+    "mvrv_zscore": 0.865,
+    "nupl": 0.33,
+    "mvrv_zscore_as_of": "2026-10-24",
+    "nupl_as_of": "2026-10-24",
     "mvrv_zscore_source": "coinmetrics",
     "nupl_source": "coinmetrics",
     "mvrv_zscore_age_days": 1,
     "mvrv_zscore_stale": false,
     "nupl_age_days": 1,
     "nupl_stale": false,
-    "puell": 0.9942,
-    "puell_as_of": "2026-10-17",
+    "puell": 1.1485,
+    "puell_as_of": "2026-10-18",
     "puell_age_days": 7,
     "puell_stale": false,
     "puell_source": "bitcoin-data.com",
-    "lth_mvrv": 1.6723,
-    "lth_mvrv_as_of": "2026-10-17",
+    "lth_mvrv": 1.6833,
+    "lth_mvrv_as_of": "2026-10-18",
     "lth_mvrv_age_days": 7,
     "lth_mvrv_stale": false,
     "lth_mvrv_source": "bitcoin-data.com"
   },
   "fed": {
     "fed_direction": "hold",
-    "reasoning": "沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：Oddpool 2026 年降息次数市场：至少一次降息概率 3.7%（Exactly 0 cuts 平均 96.3%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：Oddpool 2026 年降息次数市场：至少一次降息概率 3.7%（Exactly 0 cuts 平均 96.3%）；非 CME 期货源，作为 403 fallback",
     "confidence": "carried_forward",
     "source": "oddpool_fed_rate_cut_count",
     "cut_probability": 3.7,
     "zero_cut_probability": 96.3,
     "year": "2026",
     "as_of": "2026-10-20",
-    "age_days": 4,
+    "age_days": 5,
     "stale": true
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0016,
-    "avg": 0.0016,
+    "okx": 0.0078,
+    "avg": 0.0078,
     "source": "exchange_public"
   },
   "margin_lending": {
-    "btc_daily_rate": 1.172e-05,
-    "btc_annual_rate": 0.4278,
+    "btc_daily_rate": 1.16e-05,
+    "btc_annual_rate": 0.4234,
     "btc_borrow_limit": 100.0,
-    "open_interest": 30344.0,
+    "open_interest": 30021.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 304.1,
+    "total_b": 303.4,
     "trend": "expand"
   },
   "tips": 2.64,
   "ma200w": {
-    "value": 66983,
-    "as_of": "2026-10-23",
+    "value": 67028,
+    "as_of": "2026-10-24",
     "source": "coinmetrics"
   },
   "market": {
-    "ma200d": 72849.49,
+    "ma200d": 72892.7,
     "ath_close": 124824.45,
-    "price_30d_ago": 84434.32,
-    "as_of": "2026-10-23",
-    "source": "coinmetrics"
+    "price_30d_ago": 84386.58,
+    "as_of": "2026-10-24",
+    "source": "coinmetrics",
+    "btc_dominance": 59.45
   },
   "dxy": {
     "value": 101.75,
@@ -89,6 +90,6 @@
     "source": "yahoo:DX-Y.NYB"
   },
   "tips_as_of": "2026-10-22",
-  "tips_age_days": 2,
+  "tips_age_days": 3,
   "tips_stale": false
 }
