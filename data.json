@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-10-25T23:15:24.066850+00:00",
-  "timestamp_cn": "2026-10-26 07:15",
+  "timestamp": "2026-10-26T04:44:24.461123+00:00",
+  "timestamp_cn": "2026-10-26 12:44",
   "price": {
-    "price": 80326,
-    "change24h": -0.26
+    "price": 79902,
+    "change24h": -1.18
   },
   "etf": {
     "sum5d": 301.2,
@@ -18,78 +18,78 @@
     "source": "farside_parsed"
   },
   "onchain": {
-    "mvrv_zscore": 0.865,
-    "nupl": 0.33,
-    "mvrv_zscore_as_of": "2026-10-24",
-    "nupl_as_of": "2026-10-24",
+    "mvrv_zscore": 0.8433,
+    "nupl": 0.3245,
+    "mvrv_zscore_as_of": "2026-10-25",
+    "nupl_as_of": "2026-10-25",
     "mvrv_zscore_source": "coinmetrics",
     "nupl_source": "coinmetrics",
     "mvrv_zscore_age_days": 1,
     "mvrv_zscore_stale": false,
     "nupl_age_days": 1,
     "nupl_stale": false,
-    "puell": 1.1485,
-    "puell_as_of": "2026-10-18",
+    "puell": 1.1231,
+    "puell_as_of": "2026-10-19",
     "puell_age_days": 7,
     "puell_stale": false,
     "puell_source": "bitcoin-data.com",
-    "lth_mvrv": 1.6833,
-    "lth_mvrv_as_of": "2026-10-18",
+    "lth_mvrv": 1.6824,
+    "lth_mvrv_as_of": "2026-10-19",
     "lth_mvrv_age_days": 7,
     "lth_mvrv_stale": false,
     "lth_mvrv_source": "bitcoin-data.com"
   },
   "fed": {
     "fed_direction": "hold",
-    "reasoning": "沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：Oddpool 2026 年降息次数市场：至少一次降息概率 3.7%（Exactly 0 cuts 平均 96.3%）；非 CME 期货源，作为 403 fallback",
+    "reasoning": "沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：沿用上一版有效值；本轮抓取失败。上一版依据：Oddpool 2026 年降息次数市场：至少一次降息概率 3.7%（Exactly 0 cuts 平均 96.3%）；非 CME 期货源，作为 403 fallback",
     "confidence": "carried_forward",
     "source": "oddpool_fed_rate_cut_count",
     "cut_probability": 3.7,
     "zero_cut_probability": 96.3,
     "year": "2026",
     "as_of": "2026-10-20",
-    "age_days": 5,
+    "age_days": 6,
     "stale": true
   },
   "funding_rate": {
     "bn": null,
-    "okx": 0.0081,
-    "avg": 0.0081,
+    "okx": 0.0056,
+    "avg": 0.0056,
     "source": "exchange_public"
   },
   "margin_lending": {
     "btc_daily_rate": 1.179e-05,
     "btc_annual_rate": 0.4303,
     "btc_borrow_limit": 100.0,
-    "open_interest": 29838.0,
+    "open_interest": 31115.0,
     "open_interest_usd": null,
     "open_interest_source": "okx_public",
     "source": "binance_public"
   },
   "stablecoin": {
-    "total_b": 303.4,
+    "total_b": 303.2,
     "trend": "expand"
   },
   "tips": 2.64,
   "ma200w": {
-    "value": 67028,
-    "as_of": "2026-10-24",
+    "value": 67074,
+    "as_of": "2026-10-25",
     "source": "coinmetrics"
   },
   "market": {
-    "ma200d": 72892.7,
+    "ma200d": 72937.47,
     "ath_close": 124824.45,
-    "price_30d_ago": 84386.58,
-    "as_of": "2026-10-24",
+    "price_30d_ago": 84062.16,
+    "as_of": "2026-10-25",
     "source": "coinmetrics",
-    "btc_dominance": 60.03
+    "btc_dominance": 60.04
   },
   "dxy": {
-    "value": 101.75,
-    "as_of": "2026-10-23",
+    "value": 101.65,
+    "as_of": "2026-10-26",
     "source": "yahoo:DX-Y.NYB"
   },
   "tips_as_of": "2026-10-22",
-  "tips_age_days": 3,
+  "tips_age_days": 4,
   "tips_stale": false
 }
