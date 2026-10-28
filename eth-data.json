@@ -1,19 +1,19 @@
 {
-  "timestamp": "2026-10-27T05:11:26.168370+00:00",
-  "timestamp_cn": "2026-10-27 13:11 GMT+8",
-  "price_usd": 2311.97,
-  "price_change_24h": -0.33164,
-  "market_cap": 282458026025,
-  "circulating_supply": 122167205.14473177,
-  "holder_count": 211415209,
-  "active_addr_7d": 824231,
+  "timestamp": "2026-10-28T05:48:09.069461+00:00",
+  "timestamp_cn": "2026-10-28 13:48 GMT+8",
+  "price_usd": 2350.15,
+  "price_change_24h": 1.75044,
+  "market_cap": 287106029797,
+  "circulating_supply": 122170165.65463883,
+  "holder_count": 211452795,
+  "active_addr_7d": 831318,
   "whale_top100_pct": 12.46,
-  "burn_rate_daily": 23.9,
-  "stablecoin_mcap_b": 143.06,
-  "stablecoin_change_30d": -2.0,
+  "burn_rate_daily": 26.0,
+  "stablecoin_mcap_b": 143.07,
+  "stablecoin_change_30d": -2.07,
   "staked_pct": 36.11,
-  "total_staked": 44116175,
-  "stake_conc_top5": 36.2,
+  "total_staked": 44115731,
+  "stake_conc_top5": 36.7,
   "stake_conc_leaders": [
     {
       "name": "Lido",
@@ -21,11 +21,11 @@
     },
     {
       "name": "Binance staked ETH",
-      "pct": 8.0
+      "pct": 8.3
     },
     {
       "name": "ether.fi Stake",
-      "pct": 4.3
+      "pct": 4.4
     },
     {
       "name": "Rocket Pool",
@@ -37,18 +37,18 @@
     }
   ],
   "issuance_daily": 3026,
-  "burn_issuance_pct": 0.79,
+  "burn_issuance_pct": 0.86,
   "lth_pct": null,
   "distribution": null,
   "as_of": {
-    "holder_count": "2026-10-26",
-    "active_addr_7d": "2026-10-26",
-    "whale_top100_pct": "2026-10-27",
-    "burn_rate_daily": "2026-10-27",
-    "stablecoin_mcap_b": "2026-10-27",
-    "stablecoin_change_30d": "2026-10-27",
-    "staked_pct": "2026-10-26",
-    "total_staked": "2026-10-26",
-    "stake_conc_top5": "2026-10-27"
+    "holder_count": "2026-10-27",
+    "active_addr_7d": "2026-10-27",
+    "whale_top100_pct": "2026-10-28",
+    "burn_rate_daily": "2026-10-28",
+    "stablecoin_mcap_b": "2026-10-28",
+    "stablecoin_change_30d": "2026-10-28",
+    "staked_pct": "2026-10-27",
+    "total_staked": "2026-10-27",
+    "stake_conc_top5": "2026-10-28"
   }
 }
