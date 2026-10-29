@@ -89,10 +89,12 @@ class WeeklyTests(unittest.TestCase):
 class PageWiringTests(unittest.TestCase):
     def test_dashboard_reads_real_reserve_data_instead_of_preview(self):
         html = (ROOT / "index.html").read_text(encoding="utf-8")
-        self.assertIn("/data/cex-reserves.json", html)
+        app = (ROOT / "assets" / "observatory.js").read_text(encoding="utf-8")
+        self.assertIn("/data/cex-reserves.json", app)
+        self.assertIn('id="reserveList"', html)
         self.assertNotIn("reservePreview", html)
         self.assertNotIn("预览数据", html)
-        self.assertIn('data-asset="ETH"', html)
+        self.assertIn('href="/eth"', html)
 
     def test_committed_snapshot_has_two_years_of_weekly_points(self):
         data = json.loads((ROOT / "data" / "cex-reserves.json").read_text(encoding="utf-8"))

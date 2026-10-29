@@ -90,6 +90,20 @@ def main():
 
     print("数据新鲜度与关键字段")
     try:
+        _, snapshot = get_json(f"{BTC}/data/observatory.json")
+        check_age("BTC/ETH 研究快照（每日）", snapshot.get("generatedAt"), 48)
+        for symbol in ("BTC", "ETH"):
+            m = ((snapshot.get("assets") or {}).get(symbol) or {}).get("metrics") or {}
+            p = m.get("price") or {}
+            age = hours_since(p.get("asOf"))
+            value = p.get("value")
+            check(f"研究快照: {symbol} 日收盘有效", isinstance(value, (int, float))
+                  and not isinstance(value, bool) and value > 0 and age is not None and 0 <= age <= 72,
+                  f"as_of {p.get('asOf')}")
+    except Exception as ex:
+        check("BTC/ETH 研究快照", False, str(ex)[:120])
+
+    try:
         _, d = get_json(f"{BTC}/data.json")
         check_age("data.json（BTC，每 3 小时）", d.get("timestamp"), MAX_AGE_HOURS["data.json（BTC，每 3 小时）"])
         oc = d.get("onchain") or {}

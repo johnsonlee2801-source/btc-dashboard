@@ -1,0 +1,45 @@
+name: Update BTC and ETH observatory
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Daily observations plus fresher derivatives. The collector caches the
+    # optional chain source for 24h to keep its daily free request allowance.
+    - cron: '20 2,8,14,20 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: observatory-snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Verify public-data calculations
+        run: python -B -m unittest discover -s tests -p test_observatory.py -q
+      - name: Collect public BTC and ETH observations
+        run: python -B scripts/build_observatory.py
+      - name: Commit snapshot if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/observatory.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "chore: update BTC and ETH observatory"
+          for attempt in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            git pull --rebase origin master
+          done
+          exit 1

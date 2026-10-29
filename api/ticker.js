@@ -57,7 +57,7 @@ export default async function handler(req) {
   try {
     const q = await Promise.any(SOURCES.map(fn => fn(sym)));
     const change24h = Number.isFinite(q.change24h) ? q.change24h : null;
-    return new Response(JSON.stringify({ symbol: sym, price: q.price, change24h, source: q.source }), {
+    return new Response(JSON.stringify({ symbol: sym, price: q.price, change24h, source: q.source, asOf: new Date().toISOString() }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
