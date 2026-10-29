@@ -261,12 +261,18 @@ def load_file(path):
 
 
 def fetch_candles(symbol, errors, now):
-    base=f'https://api.binance.com/api/v3/klines?symbol={symbol}USDT&interval=1d&limit=1000'
-    newest=safe_get(base,errors)
-    if not isinstance(newest,list) or not newest:
-        return []
-    older=safe_get(base+f'&endTime={int(newest[0][0])-1}',errors)
-    return closed_candles((older if isinstance(older,list) else [])+newest, now)
+    # Official market-data-only host does not require an account or API key.
+    # Keep the original venue host as fallback; regions have different reachability.
+    for host in ('data-api.binance.vision','api.binance.com'):
+        base=f'https://{host}/api/v3/klines?symbol={symbol}USDT&interval=1d&limit=1000'
+        newest=safe_get(base,errors)
+        if not isinstance(newest,list) or not newest:
+            continue
+        older=safe_get(base+f'&endTime={int(newest[0][0])-1}',errors)
+        points=closed_candles((older if isinstance(older,list) else [])+newest, now)
+        if points:
+            return points
+    return []
 
 
 def fetch_derivatives(symbol, errors):

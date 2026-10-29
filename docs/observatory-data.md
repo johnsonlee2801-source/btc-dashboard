@@ -53,3 +53,5 @@ ETH 使用自身技术条件与协议事实，不套用BTC分数、矿工信号�
 ## 发布授权
 
 2026-10-29，用户在完成预览后明确要求立即推送上线。发布沿用 GitHub Actions `deploy-vercel.yml`；提交改版并同步远端仅涉及数据的更新，随后从干净的临时发布工作区完成验证和推送。初始本地验收阶段的“不提交、不推送、不部署”记录仅适用于当时阶段。生产验收以本次发布工作流和线上 BTC/ETH 页面为准。
+
+发布前增加了 Binance 官方行情专用域名 `data-api.binance.vision`，保留原域名回退，用于提高不同运行地区的日线采集可用性。官方说明：https://developers.binance.com/docs/binance-spot-api-docs/faqs/market_data_only 。对应网络失败回退有离线回归测试。

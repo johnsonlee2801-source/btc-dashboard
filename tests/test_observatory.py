@@ -115,6 +115,22 @@ class ObservatoryTests(unittest.TestCase):
         raw={'result':{'data':[[end-7200000,1,2,1,38.2],[end,1,2,1,40],[end-3600000,1,2,1,'NaN']]}}
         self.assertEqual(obs.dvol_observation(raw,now),{'value':38.2,'date':'2026-10-29T11:00:00+00:00'})
 
+    def test_history_has_an_official_market_only_domain_and_fallback(self):
+        from unittest.mock import patch
+        now=datetime(2026,10,29,tzinfo=timezone.utc)
+        end=int(now.timestamp()*1000)
+        candle=[end-86400000,'1','2','1','100','3',end-1]
+        calls=[]
+        def public_source(url,errors):
+            calls.append(url)
+            if 'data-api.binance.vision' in url:return None
+            return [] if 'endTime=' in url else [candle]
+        with patch.object(obs,'safe_get',public_source):
+            points=obs.fetch_candles('BTC',[],now)
+        self.assertIn('data-api.binance.vision',calls[0])
+        self.assertTrue(any('api.binance.com' in url for url in calls))
+        self.assertEqual(points,[{'date':'2026-10-28','close':100.0}])
+
 
 if __name__ == '__main__':
     unittest.main()
