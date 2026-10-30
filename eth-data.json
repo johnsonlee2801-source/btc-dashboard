@@ -1,27 +1,27 @@
 {
-  "timestamp": "2026-10-29T11:06:22.324671+00:00",
-  "timestamp_cn": "2026-10-29 19:06 GMT+8",
-  "price_usd": 2323.15,
-  "price_change_24h": -1.69202,
-  "market_cap": 283835548995,
-  "circulating_supply": 122173130.04742783,
-  "holder_count": 211373237,
-  "active_addr_7d": 848525,
+  "timestamp": "2026-10-30T05:54:49.948504+00:00",
+  "timestamp_cn": "2026-10-30 13:54 GMT+8",
+  "price_usd": 2244.11,
+  "price_change_24h": -3.42525,
+  "market_cap": 274182058820,
+  "circulating_supply": 122174497.95194182,
+  "holder_count": 211477221,
+  "active_addr_7d": 847470,
   "whale_top100_pct": 12.49,
-  "burn_rate_daily": 23.4,
-  "stablecoin_mcap_b": 142.5,
-  "stablecoin_change_30d": -2.17,
-  "staked_pct": 36.13,
-  "total_staked": 44138177,
-  "stake_conc_top5": 36.5,
+  "burn_rate_daily": 1809.0,
+  "stablecoin_mcap_b": 141.83,
+  "stablecoin_change_30d": -2.62,
+  "staked_pct": 36.16,
+  "total_staked": 44177484,
+  "stake_conc_top5": 36.3,
   "stake_conc_leaders": [
     {
       "name": "Lido",
-      "pct": 22.0
+      "pct": 21.9
     },
     {
       "name": "Binance staked ETH",
-      "pct": 8.2
+      "pct": 8.1
     },
     {
       "name": "ether.fi Stake",
@@ -36,19 +36,19 @@
       "pct": 0.9
     }
   ],
-  "issuance_daily": 3027,
-  "burn_issuance_pct": 0.77,
+  "issuance_daily": 3028,
+  "burn_issuance_pct": 59.74,
   "lth_pct": null,
   "distribution": null,
   "as_of": {
-    "holder_count": "2026-10-28",
-    "active_addr_7d": "2026-10-28",
-    "whale_top100_pct": "2026-10-29",
-    "burn_rate_daily": "2026-10-29",
-    "stablecoin_mcap_b": "2026-10-29",
-    "stablecoin_change_30d": "2026-10-29",
-    "staked_pct": "2026-10-28",
-    "total_staked": "2026-10-28",
-    "stake_conc_top5": "2026-10-29"
+    "holder_count": "2026-10-29",
+    "active_addr_7d": "2026-10-29",
+    "burn_rate_daily": "2026-10-30",
+    "stablecoin_mcap_b": "2026-10-30",
+    "stablecoin_change_30d": "2026-10-30",
+    "staked_pct": "2026-10-29",
+    "total_staked": "2026-10-29",
+    "stake_conc_top5": "2026-10-30",
+    "whale_top100_pct": "2026-10-29"
   }
 }
