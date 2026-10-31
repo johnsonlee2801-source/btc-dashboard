@@ -61,7 +61,7 @@ def check_age(name, iso, limit_hours):
     h = hours_since(iso)
     if h is None:
         return check(name, False, f"无法解析时间 {iso!r}")
-    return check(name, h <= limit_hours, f"{h:.1f} 小时前（上限 {limit_hours}）")
+    return check(name, 0 <= h <= limit_hours, f"{h:.1f} 小时前（上限 {limit_hours}）")
 
 
 def main():

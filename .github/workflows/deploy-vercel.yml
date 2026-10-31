@@ -19,6 +19,7 @@ on:
       - Update ETH on-chain data
       - Update CEX reserves
       - Update BTC and ETH observatory
+      - Update positioning radar
     types:
       - completed
   workflow_dispatch:

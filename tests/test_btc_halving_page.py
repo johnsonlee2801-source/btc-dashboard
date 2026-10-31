@@ -57,7 +57,12 @@ def serve_with_rewrites():
         def log_message(self, *args):
             pass
 
-    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    class LocalServer(http.server.ThreadingHTTPServer):
+        # A browser opens parallel connections for HTML/preloads/scripts/styles.
+        # The default backlog of five sporadically resets a script connection.
+        request_queue_size = 128
+
+    server = LocalServer(("127.0.0.1", 0), Handler)
     threading.Thread(target=server.serve_forever, daemon=True).start()
     try:
         yield f"http://127.0.0.1:{server.server_address[1]}"

@@ -12,6 +12,7 @@ import statistics
 import urllib.request
 from html.parser import HTMLParser
 from datetime import datetime, timedelta, timezone
+from decimal import Decimal
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -49,13 +50,19 @@ def parsed_date(value):
         return None
 
 
-def metric(value, as_of, source, now=None, max_hours=72, note=''):
+def metric(value, as_of, source, now=None, max_hours=72, note='', dependencies=None):
     now = now or datetime.now(timezone.utc)
     value, stamp = number(value), parsed_date(as_of)
     hours = (now - stamp).total_seconds() / 3600 if stamp else None
     status = 'missing' if value is None else 'fresh' if hours is not None and 0 <= hours <= max_hours else 'stale'
-    return {'value': value, 'asOf': as_of, 'source': source,
+    result={'value': value, 'asOf': as_of, 'source': source,
             'sourceUrl': SOURCES.get(source), 'status': status, 'maxAgeHours': max_hours, 'note': note}
+    if dependencies:
+        result['dependencies']=dependencies
+        if status=='fresh' and any(metric(1,d.get('asOf'),'',now,d.get('maxAgeHours',72))['status']!='fresh'
+                                   for d in dependencies.values()):
+            result['status']='stale'
+    return result
 
 
 def trigger(m, op, target):
@@ -117,15 +124,34 @@ def rsi(values, period=14):
     return 50 if gain == loss == 0 else 100 if loss == 0 else round(100 - 100/(1+gain/loss), 2)
 
 
+def contiguous_tail(points, step_days=1):
+    """A missing calendar period breaks the window instead of shortening time."""
+    if not points:
+        return []
+    tail=[points[-1]]
+    for point in reversed(points[:-1]):
+        gap=(datetime.fromisoformat(tail[-1]['date']).date()-datetime.fromisoformat(point['date']).date()).days
+        if gap!=step_days:
+            break
+        tail.append(point)
+    return list(reversed(tail))
+
+
 def weekly_closes(points, now):
-    # Only completed UTC weeks; Binance weeks start Monday.
+    # Require all seven UTC days; don't bridge a missing complete week.
     start = now.date() - timedelta(days=now.weekday())
     weeks = {}
     for p in points:
         day = datetime.fromisoformat(p['date']).date()
         if day < start:
-            weeks[day.isocalendar()[:2]] = p
-    return list(weeks.values())
+            monday=day-timedelta(days=day.weekday())
+            weeks.setdefault(monday,{})[day]=p
+    complete=[]
+    for monday,days in sorted(weeks.items()):
+        expected=[monday+timedelta(days=i) for i in range(7)]
+        if all(d in days for d in expected):
+            complete.append(days[expected[-1]])
+    return contiguous_tail(complete,7)
 
 
 BTC_RULES = [
@@ -162,7 +188,7 @@ def build_asset(symbol, points, chain, extras, legacy, now=None):
     now = now or datetime.now(timezone.utc)
     metrics = {}
     day = points[-1]['date'] if points else None
-    prices = [p['close'] for p in points]
+    prices = [p['close'] for p in contiguous_tail(points)]
     price = prices[-1] if prices else None
     weeks = weekly_closes(points, now)
     ma200 = statistics.mean(prices[-200:]) if len(prices) >= 200 else None
@@ -172,10 +198,14 @@ def build_asset(symbol, points, chain, extras, legacy, now=None):
               'mayer': price/ma200 if price and ma200 else None,
               'price_ma200w': price/ma200w if price and ma200w else None,
               'weekly_rsi': rsi([p['close'] for p in weeks]),
-              'drawdown90': max(0,(1-price/high90)*100) if price and high90 else None}
+              'drawdown90': max(0,float((Decimal(str(high90))-Decimal(str(price)))*100/Decimal(str(high90)))) if price and high90 else None}
     for key,value in values.items():
+        dependencies={'price':{'asOf':day,'maxAgeHours':72},
+                      'ma200w':{'asOf':weeks[-1]['date'] if weeks else None,'maxAgeHours':216}} if key=='price_ma200w' else None
         metrics[key] = metric(value, weeks[-1]['date'] if key in ('weekly_rsi','ma200w') and weeks else day,
-                              'Binance', now, max_hours=216 if key in ('weekly_rsi','ma200w') else 72)
+                              'Binance', now, max_hours=216 if key in ('weekly_rsi','ma200w') else 72,
+                              dependencies=dependencies)
+    metrics['price_ma200w']['note']=f"由日收盘（{day or '日期未知'}）与200周均线（{weeks[-1]['date'] if weeks else '日期未知'}）计算；任一组成数据过期时不参与确认。"
     if symbol == 'BTC':
         mapping = {'mvrv': 'mvrv', 'mvrv_z':'mvrvZscore','sopr':'sopr','puell':'puellMultiple', 'realized_price':'realizedPrice'}
         for key,field in mapping.items():
@@ -214,6 +244,8 @@ def build_asset(symbol, points, chain, extras, legacy, now=None):
                               note='DVOL 30日期权隐含波动率指数，采用最近完整小时观测值。' if key=='dvol' else
                                    'Binance 最近5分钟的账户数多空比，不等于资金或持仓金额比。' if key=='long_short' else
                                    '该交易所返回的最新资金费率；未假设固定8小时结算，也未换算年化。')
+        if entry.get('carriedForward'):
+            metrics[key]['note']+=' 本轮接口未提供有效新值，沿用原观测时间；是否过期仍按原日期计算。'
     for key in ('funding','long_short'):
         metrics.setdefault(key, metric(None,None,'Binance Futures',now,max_hours=12))
     metrics.setdefault('dvol',metric(None,None,'Deribit',now,max_hours=12))
@@ -230,7 +262,7 @@ def build_asset(symbol, points, chain, extras, legacy, now=None):
     for idx,p in enumerate(points):
         if idx < len(points)-365:
             continue
-        window = points[max(0,idx-199):idx+1]
+        window = contiguous_tail(points[max(0,idx-199):idx+1])
         history.append({**p,'ma200':round(statistics.mean(q['close'] for q in window),2) if len(window)==200 else None})
     return {'symbol':symbol,'metrics':metrics,'groups':groups,'history':history,
             'score':score_bounds(groups) if symbol=='BTC' else None,
@@ -384,6 +416,23 @@ def updated_chain_cache(previous, snapshot, fetched_at):
     return {'fetchedAt':fetched_at,'snapshot':snapshot,'extras':dict(previous.get('extras') or {})}
 
 
+def retain_derivatives(current, previous_metrics, now):
+    """Failed fields retain their own source/time, including valid zero rates."""
+    out=dict(current)
+    for key in ('funding','long_short','dvol'):
+        new=out.get(key) or {}
+        new_date=parsed_date(new.get('date'))
+        if number(new.get('value')) is not None and new_date and new_date<=now:
+            continue
+        old=previous_metrics.get(key) or {}
+        if number(old.get('value')) is not None and parsed_date(old.get('asOf')):
+            out[key]={'value':old['value'],'date':old['asOf'],'source':old.get('source','Binance Futures'),
+                      'carriedForward':True}
+        else:
+            out.pop(key,None)
+    return out
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output',type=Path,default=ROOT/'data/observatory.json')
@@ -436,14 +485,16 @@ def main():
                 if old:
                     for key,m in old['metrics'].items():
                         m.update(metric(m.get('value'),m.get('asOf'),m.get('source'),now,
-                                        m.get('maxAgeHours',72),m.get('note','')))
+                                        m.get('maxAgeHours',72),m.get('note',''),m.get('dependencies')))
                     for group in old['groups']:
                         for item in group['items']:
                             item['triggered']=trigger(old['metrics'][item['key']],item['op'],item['threshold']) if item['op'] else None
                     old['score']=score_bounds(old['groups']) if symbol=='BTC' else None
                     assets[symbol]=old
                     continue
-            extras={**(chain_cache.get('extras') or {}),'fear':fear,'derivatives':fetch_derivatives(symbol,errors)}
+            previous_metrics=(((previous.get('assets') or {}).get(symbol) or {}).get('metrics') or {})
+            derivatives=retain_derivatives(fetch_derivatives(symbol,errors),previous_metrics,datetime.now(timezone.utc))
+            extras={**(chain_cache.get('extras') or {}),'fear':fear,'derivatives':derivatives}
             legacy=load_file(ROOT/('data.json' if symbol=='BTC' else 'eth-data.json'))
             assets[symbol]=build_asset(symbol,points,chain_cache.get('snapshot') or {},extras,legacy,datetime.now(timezone.utc))
             assets[symbol]['etf']=fetch_etf(symbol,errors) or ((previous.get('assets') or {}).get(symbol) or {}).get('etf')

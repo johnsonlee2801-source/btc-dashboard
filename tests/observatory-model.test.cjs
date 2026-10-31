@@ -50,3 +50,12 @@ test('BTC below-line position is known without 28 days of cost history',()=>{
  metrics.price=m(80000);assert.equal(model.positionBand(metrics,now),null);
  metrics.sth_cost=m(null);assert.equal(model.positionBand(metrics,now),null);
 });
+test('derived ratio expires if a required denominator expires',()=>{
+ const ratio={...m(.6),dependencies:{price:{asOf:'2026-10-28',maxAgeHours:72},ma200w:{asOf:'2026-09-27',maxAgeHours:216}}};
+ assert.equal(model.fresh(ratio,now),false);
+ assert.equal(model.signal({key:'ratio',op:'<',threshold:1},{ratio},now),null);
+});
+test('a weekly denominator older than 72h can remain valid within its 216h window',()=>{
+ const ratio={...m(.6),dependencies:{price:{asOf:'2026-10-28',maxAgeHours:72},ma200w:{asOf:'2026-10-25',maxAgeHours:216}}};
+ assert.equal(model.fresh(ratio,now),true);
+});

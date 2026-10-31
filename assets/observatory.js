@@ -7,7 +7,7 @@
   const money=(v,compact=false)=>typeof v==='number'&&Number.isFinite(v)?'$'+(compact&&v>=10000?(v/1000).toFixed(1)+'k':fmt(v,v>=1000?0:2)):'—';
   const date=(s,time=false)=>{const n=Date.parse(s);return Number.isFinite(n)?new Intl.DateTimeFormat('zh-CN',{timeZone:'Asia/Shanghai',month:'2-digit',day:'2-digit',...(time?{hour:'2-digit',minute:'2-digit',hour12:false}:{})}).format(n):'日期未知';};
   const short=(v)=>v==null?'—':Math.abs(v)>=1e9?fmt(v/1e9,2)+'B':Math.abs(v)>=1e6?fmt(v/1e6,2)+'M':Math.abs(v)>=10000?fmt(v/1000,1)+'k':fmt(v,2);
-  let data=null,asset=null,range=365,filter='all',lastQuote=null,reserves=null,reserveWindow='7d';
+  let data=null,asset=null,range=365,filter='all',lastQuote=null,reserves=null,reserveWindow='7d',legacyData=null;
   const methodHTML=`<h3>这套面板怎样阅读</h3><p>本网站采用参考图中的指标与阈值，组成 FlowHunt 自己的公开数据观察框架。未复制原作者的完整模型，也没有可复核的历史回测，因此不显示命中率或误报率。</p>
     <h3>BTC 分数：缺失项保留为未知</h3><p>必要信号 5 项各 8 分（共 40）；确认信号 8 项各 5 分（共 40）；相对信号 8 项各 2.5 分（共 20）。第八项相对信号采用参考图中的「距 90 天高点回撤至少 20%」。同一指标可能出现在不同观察层，不代表独立证据。</p><p>区间下界只计有效且已触发的分数；上界再加所有缺失或过期项的可能分数。缺失项不会当成「未触发」或零分。绿色仅表示该阈值已满足，不代表交易指令。</p>
     <h3>组合条件与位置带</h3><p>组合信号需要同时满足：价格低于有效的 STH 成本、相对近 90 个完整日收盘高点回撤至少 20%。完整数据下，位置带参考线 = max(200 周均线, STH 成本)。缺任一条件则不推断完整位置带；200 周均线使用完整 UTC 周收盘均值。</p><p>四个研究区间为200周线以下、200周线至参考线、线上不足28个完整日、线上至少28个完整日。参考线下的位置可以用有效当日数据确认；当前公开源缺少完整 STH 成本历史，后两个持续性状态不推断。这不是定投执行指令。</p>
@@ -18,18 +18,26 @@
   function showDialog(title,html){$('dialogTitle').textContent=title;$('dialogContent').innerHTML=html;$('infoDialog').showModal();}
   function notice(html){$('dataNotice').innerHTML=html;$('dataNotice').hidden=!html;}
   function metricStatus(m){return !m||m.value==null?'暂无数据':M.fresh(m)?'有效':Date.parse(m.asOf)>Date.now()?'日期异常':'已过期';}
-  function valueText(key,m,unit=''){
+  function thresholdNumber(value,digits,rule){
+    if(!rule?.op)return fmt(value,digits);
+    const t=rule.threshold,compare=v=>rule.op==='<'?v<t:rule.op==='<='?v<=t:rule.op==='>'?v>t:v>=t;
+    for(let precision=digits;precision<=15;precision++){
+      if(compare(Number(value.toFixed(precision)))===compare(value))return fmt(value,precision);
+    }
+    return String(value);
+  }
+  function valueText(key,m,unit='',rule=null){
     if(!m||m.value==null)return '—';
     if(['holder_count','active_addr_7d','total_staked','lth_net30','whale_net30'].includes(key))return short(m.value);
     if(key==='hash_ribbon')return m.value>0?'是':'否';
     if(key==='funding')return fmt(m.value,4);
-    if(['supply_profit','sth_profit','staked_pct','stake_conc_top5','whale_top100_pct','burn_issuance_pct','drawdown90'].includes(key))return fmt(m.value,1);
-    return fmt(m.value,['weekly_rsi','fear'].includes(key)?0:key==='sopr'?4:2);
+    if(['supply_profit','sth_profit','staked_pct','stake_conc_top5','whale_top100_pct','burn_issuance_pct','drawdown90'].includes(key))return thresholdNumber(m.value,1,rule);
+    return thresholdNumber(m.value,['weekly_rsi','fear'].includes(key)?0:key==='sopr'?4:2,rule);
   }
   function metricDetail(item){
     const m=asset.metrics[item.key],status=metricStatus(m),state=M.signal(item,asset.metrics);
     const threshold=item.op?`${item.op.replace('<=','≤').replace('>=','≥')} ${item.threshold}${item.unit||''}`:'结构数据，不设交易阈值';
-    showDialog(item.label,`<div class="detail-value">${esc(valueText(item.key,m))}<small> ${esc(item.unit)}</small></div>
+    showDialog(item.label,`<div class="detail-value">${esc(valueText(item.key,m,item.unit,item))}<small> ${esc(item.unit)}</small></div>
       <div class="detail-row"><span>当前状态</span><strong>${esc(status)}${item.op&&state!==null?' · '+(state?'已触发':'未触发'):''}</strong></div>
       <div class="detail-row"><span>观察条件</span><strong>${esc(threshold)}</strong></div>
       <div class="detail-row"><span>数据时间</span><strong>${esc(m?.asOf||'暂无有效日期')} · 原始时区</strong></div>
@@ -90,19 +98,24 @@
         const m=asset.metrics[item.key],state=M.signal(item,asset.metrics),ok=M.fresh(m),status=metricStatus(m);
         const threshold=item.op?`目标 ${item.op.replace('<=','≤').replace('>=','≥')} ${item.threshold}${item.unit}`:'供给 / 网络事实';
         const note=state===true?'✓ 已触发':!ok?(m?.value!=null?'过期 · 不参与确认':'暂无可核验数据'):threshold;
-        return `<button type="button" class="metric-card ${state===true?'is-triggered':!ok?'is-unavailable':''}" data-metric="${esc(item.key)}" data-group="${index}" aria-label="${esc(item.label)}，${esc(status)}，查看详情"><span class="metric-label"><span class="state-dot"></span>${esc(item.label)}</span><span class="metric-value">${esc(valueText(item.key,m))}${item.unit&&m?.value!=null?`<small>${esc(item.unit)}</small>`:''}</span><span class="metric-threshold">${esc(note)}</span><span class="metric-caption">${esc(m?.source||'来源待补全')}${m?.asOf?' · '+esc(date(m.asOf)):''}</span></button>`;
+        return `<button type="button" class="metric-card ${state===true?'is-triggered':!ok?'is-unavailable':''}" data-metric="${esc(item.key)}" data-group="${index}" aria-label="${esc(item.label)}，${esc(status)}，查看详情"><span class="metric-label"><span class="state-dot"></span>${esc(item.label)}</span><span class="metric-value">${esc(valueText(item.key,m,item.unit,item))}${item.unit&&m?.value!=null?`<small>${esc(item.unit)}</small>`:''}</span><span class="metric-threshold">${esc(note)}</span><span class="metric-caption">${esc(m?.source||'来源待补全')}${m?.asOf?' · '+esc(date(m.asOf)):''}</span></button>`;
       }).join(''):'<p class="empty-filter">该组没有符合当前筛选条件的指标。</p>'}</div></section>`;
     }).join('');
     $('signalGroups').querySelectorAll('[data-metric]').forEach(b=>b.addEventListener('click',()=>metricDetail(asset.groups[+b.dataset.group].items.find(i=>i.key===b.dataset.metric))));
   }
+  function quoteFresh(q){
+    return q?.symbol===symbol&&typeof q.price==='number'&&q.price>0&&
+      M.fresh({value:q.price,asOf:q.asOf,maxAgeHours:.05});
+  }
   function renderQuote(){
     const m=asset.metrics.price;
-    $('price').textContent=money(lastQuote?.price??m.value);
-    $('priceType').textContent=lastQuote?'实时参考价':'最近完整日收盘';
-    $('quoteSource').textContent=lastQuote?.source||m.source||'暂无来源';
-    $('quoteTime').textContent=date(lastQuote?.asOf||m.asOf,!!lastQuote);
-    $('priceChange').innerHTML=lastQuote&&typeof lastQuote.change24h==='number'?`<span class="${lastQuote.change24h>=0?'positive':'negative'}">${lastQuote.change24h>0?'+':''}${fmt(lastQuote.change24h,2)}%</span><small>24h</small>`:`<small>${M.fresh(m)?'日线已更新':'日线待更新'}</small>`;
-    $('quotePair').textContent=lastQuote?.source==='Coinbase'?symbol+'/USD':symbol+'/USDT';
+    const q=quoteFresh(lastQuote)?lastQuote:null;
+    $('price').textContent=money(q?.price??m.value);
+    $('priceType').textContent=q?'实时参考价':'最近完整日收盘';
+    $('quoteSource').textContent=q?.source||m.source||'暂无来源';
+    $('quoteTime').textContent=date(q?.asOf||m.asOf,!!q);
+    $('priceChange').innerHTML=q&&typeof q.change24h==='number'?`<span class="${q.change24h>=0?'positive':'negative'}">${q.change24h>0?'+':''}${fmt(q.change24h,2)}%</span><small>24h</small>`:`<small>${M.fresh(m)?'日线已更新':'日线待更新'}</small>`;
+    $('quotePair').textContent=q?.source==='Coinbase'?symbol+'/USD':symbol+'/USDT';
   }
   function renderPosition(){
     const m=asset.metrics,line=isBTC?M.bullLine(m):M.fresh(m.ma200d)?m.ma200d.value:null;
@@ -125,22 +138,26 @@
     if(points.length<2){box.innerHTML='<div class="chart-empty">暂无可核验的价格历史，未绘制示意走势。</div>';return;}
     const W=Math.max(290,Math.min(860,box.clientWidth)),H=250,L=W<500?48:59,R=20,T=20,B=35,values=points.flatMap(p=>[p.close,p.ma200].filter(v=>typeof v==='number'&&v>0));
     const low=Math.min(...values)*.96,high=Math.max(...values)*1.04;
-    const x=i=>L+i/(points.length-1)*(W-L-R),y=v=>T+(high-v)/(high-low)*(H-T-B);
-    const line=key=>points.map((p,i)=>p[key]!=null?`${i===0||points[i-1][key]==null?'M':'L'}${x(i).toFixed(2)} ${y(p[key]).toFixed(2)}`:'').join(' ');
+    const times=points.map(p=>Date.parse(p.date)),span=Math.max(86400000,times.at(-1)-times[0]);
+    const gap=i=>i>0&&times[i]-times[i-1]!==86400000,hasGaps=times.some((_,i)=>gap(i));
+    const x=i=>L+(times[i]-times[0])/span*(W-L-R),y=v=>T+(high-v)/(high-low)*(H-T-B);
+    const line=key=>points.map((p,i)=>p[key]!=null?`${i===0||points[i-1][key]==null||gap(i)?'M':'L'}${x(i).toFixed(2)} ${y(p[key]).toFixed(2)}`:'').join(' ');
     let grid='';for(let i=0;i<4;i++){const val=low+(high-low)*i/3,yy=y(val);grid+=`<line x1="${L}" y1="${yy}" x2="${W-R}" y2="${yy}" stroke="#2b3542" stroke-dasharray="3 5"/><text x="${L-12}" y="${yy+4}" text-anchor="end" fill="#8c9aaf" font-size="11">${esc(money(val,true))}</text>`;}
-    for(let i=0;i<5;i++){const idx=Math.round((points.length-1)*i/4);grid+=`<text x="${x(idx)}" y="${H-9}" text-anchor="middle" fill="#8c9aaf" font-size="11">${esc(date(points[idx].date))}</text>`;}
+    for(let i=0;i<5;i++){const day=new Date(times[0]+span*i/4).toISOString().slice(0,10);grid+=`<text x="${L+(W-L-R)*i/4}" y="${H-9}" text-anchor="middle" fill="#8c9aaf" font-size="11">${esc(date(day))}</text>`;}
     const last=points.at(-1),path=line('close');
-    box.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(symbol)} 近 ${range} 天日收盘与200日均线，${esc(points[0].date)} 至 ${esc(last.date)}"><defs><linearGradient id="price-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffb547" stop-opacity=".16"/><stop offset="100%" stop-color="#ffb547" stop-opacity="0"/></linearGradient></defs>${grid}<path d="${path} L${x(points.length-1)} ${H-B} L${L} ${H-B} Z" fill="url(#price-fill)"/><path d="${line('ma200')}" fill="none" stroke="#70aaff" stroke-width="1.7" stroke-dasharray="5 4"/><path d="${path}" fill="none" stroke="#ffb547" stroke-width="2.3" stroke-linejoin="round"/><circle cx="${x(points.length-1)}" cy="${y(last.close)}" r="4" fill="#ffb547" stroke="#151c26" stroke-width="2"/><line id="chartCrosshair" x1="${L}" x2="${L}" y1="${T}" y2="${H-B}" stroke="#a6b5c8" stroke-dasharray="3 3" visibility="hidden"/><rect id="chartHit" x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}" fill="transparent"/></svg><div class="chart-tip" id="chartTip" hidden></div>`;
+    const area=hasGaps?'':`<path d="${path} L${x(points.length-1)} ${H-B} L${L} ${H-B} Z" fill="url(#price-fill)"/>`;
+    box.innerHTML=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(symbol)} 近 ${range} 天日收盘与200日均线，${esc(points[0].date)} 至 ${esc(last.date)}"><defs><linearGradient id="price-fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffb547" stop-opacity=".16"/><stop offset="100%" stop-color="#ffb547" stop-opacity="0"/></linearGradient></defs>${grid}${area}<path d="${line('ma200')}" fill="none" stroke="#70aaff" stroke-width="1.7" stroke-dasharray="5 4"/><path d="${path}" fill="none" stroke="#ffb547" stroke-width="2.3" stroke-linejoin="round"/><circle cx="${x(points.length-1)}" cy="${y(last.close)}" r="4" fill="#ffb547" stroke="#151c26" stroke-width="2"/><line id="chartCrosshair" x1="${L}" x2="${L}" y1="${T}" y2="${H-B}" stroke="#a6b5c8" stroke-dasharray="3 3" visibility="hidden"/><rect id="chartHit" x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}" fill="transparent"/></svg><div class="chart-tip" id="chartTip" hidden></div>`;
     const hit=$('chartHit'),tip=$('chartTip');
     hit.addEventListener('pointermove',e=>{
       const svg=box.querySelector('svg'),b=svg.getBoundingClientRect(),vx=(e.clientX-b.left)/b.width*W;
-      const idx=Math.max(0,Math.min(points.length-1,Math.round((vx-L)/(W-L-R)*(points.length-1))));
+      const target=times[0]+(vx-L)/(W-L-R)*span;
+      const idx=times.reduce((best,time,i)=>Math.abs(time-target)<Math.abs(times[best]-target)?i:best,0);
       const p=points[idx];tip.textContent=p.date+'　'+money(p.close);tip.hidden=false;
       tip.style.left=Math.min(box.clientWidth-180,Math.max(12,e.clientX-box.getBoundingClientRect().left-80))+'px';
       $('chartCrosshair').setAttribute('x1',x(idx));$('chartCrosshair').setAttribute('x2',x(idx));$('chartCrosshair').setAttribute('visibility','visible');
     });
     hit.addEventListener('pointerleave',()=>{tip.hidden=true;$('chartCrosshair').setAttribute('visibility','hidden');});
-    $('chartSource').textContent=`Binance · 完整 UTC 日线 · ${points.length} 个观测值`;
+    $('chartSource').textContent=`Binance · 完整 UTC 日线 · ${points.length} 个观测值${hasGaps?' · 存在缺日，未插值':''}`;
     $('chartDate').textContent='截至 '+last.date;
   }
   function renderMiniStats(){
@@ -200,12 +217,13 @@
   }
   function render(){
     renderHero();renderQuote();renderPosition();renderGroups();renderChart();renderMiniStats();renderLadder();renderSentiment();
+    renderFlow(legacyData);renderReserves();
   }
   async function loadQuote(){
     try{
       const r=await fetch(`/api/ticker?symbol=${symbol}`,{signal:AbortSignal.timeout(8000)});
       if(!r.ok)throw Error('quote');const q=await r.json();
-      if(typeof q.price!=='number'||!Number.isFinite(q.price)||q.price<=0||!q.asOf||!M.fresh({value:q.price,asOf:q.asOf,maxAgeHours:.05}))throw Error('invalid quote');
+      if(!quoteFresh(q))throw Error('invalid quote');
       lastQuote=q;
     }catch{lastQuote=null;}
     if(asset)renderQuote();
@@ -217,8 +235,8 @@
       if(!r.ok)throw Error('snapshot');const next=await r.json();
       if(!next.assets?.[symbol]?.metrics||!Array.isArray(next.assets[symbol].groups))throw Error('schema');
       data=next;asset=data.assets[symbol];render();
-      renderFlow(null);
-      try{const res=await fetch(isBTC?'/data.json':'/eth-data.json',{signal:AbortSignal.timeout(5000)});if(res.ok)renderFlow(await res.json());else renderFlow(null);}catch{renderFlow(null);}
+      try{const res=await fetch(isBTC?'/data.json':'/eth-data.json',{signal:AbortSignal.timeout(5000)});if(res.ok)legacyData=await res.json();}catch{}
+      renderFlow(legacyData);
       try{const res=await fetch('/data/cex-reserves.json',{signal:AbortSignal.timeout(6000)});if(res.ok)reserves=await res.json();}catch{}
       renderReserves();
       await loadQuote();
@@ -236,5 +254,6 @@
   $('closeDialog').addEventListener('click',()=>$('infoDialog').close());
   $('infoDialog').addEventListener('click',e=>{if(e.target===$('infoDialog')){const r=$('infoDialog').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)$('infoDialog').close();}});
   setInterval(()=>{if(!document.hidden&&asset){render();loadQuote();}},30000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&asset){render();loadQuote();}});
   load();
 })();

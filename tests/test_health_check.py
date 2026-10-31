@@ -7,6 +7,14 @@ hc = importlib.util.module_from_spec(spec); sys.modules["health_check"] = hc; sp
 
 
 class HoursSinceTests(unittest.TestCase):
+    def test_future_timestamp_is_not_healthy(self):
+        import io
+        from contextlib import redirect_stdout
+        from unittest.mock import patch
+        future=(datetime.now(timezone.utc)+timedelta(hours=5)).isoformat()
+        with patch.object(hc,'results',[]),redirect_stdout(io.StringIO()):
+            self.assertFalse(hc.check_age('future source',future,48))
+
     def test_iso_timestamp_with_offset(self):
         ts = (datetime.now(timezone.utc) - timedelta(hours=5)).isoformat()
         self.assertAlmostEqual(hc.hours_since(ts), 5, delta=0.05)

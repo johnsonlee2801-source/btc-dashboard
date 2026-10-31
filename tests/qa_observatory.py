@@ -3,6 +3,7 @@ import copy
 import json
 import pathlib
 import sys
+import tempfile
 from datetime import datetime,timezone
 from playwright.sync_api import sync_playwright
 
@@ -10,7 +11,7 @@ sys.path.insert(0,str(pathlib.Path(__file__).parent))
 from test_btc_halving_page import serve_with_rewrites
 
 ROOT=pathlib.Path(__file__).resolve().parents[1]
-OUT=pathlib.Path('/private/tmp/btc-eth-observatory-20261029')
+OUT=pathlib.Path(tempfile.mkdtemp(prefix='btc-eth-observatory-qa-'))
 OUT.mkdir(parents=True,exist_ok=True)
 snapshot=json.loads((ROOT/'data/observatory.json').read_text())
 checks=[]

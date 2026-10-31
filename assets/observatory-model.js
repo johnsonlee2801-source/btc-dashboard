@@ -7,7 +7,8 @@
   function fresh(m,now=Date.now()){
     if(!m||typeof m.value!=='number'||!Number.isFinite(m.value)||!m.asOf)return false;
     const age=(now-Date.parse(m.asOf))/3600000;
-    return Number.isFinite(age)&&age>=0&&age<=(m.maxAgeHours??72)&&m.status!=='missing';
+    return Number.isFinite(age)&&age>=0&&age<=(m.maxAgeHours??72)&&m.status!=='missing'&&
+      (!m.dependencies||Object.values(m.dependencies).every(d=>fresh({...d,value:1},now)));
   }
   function signal(item,metrics,now=Date.now()){
     const m=metrics[item.key];

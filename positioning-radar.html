@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>资金与持仓雷达｜多币种分歧与拥挤观察｜FlowHunt</title>
+<meta name="description" content="交叉观察币安USDT永续合约的大户持仓、全体账户多空、未平仓金额、集中度与解锁风险。公开数据、逐项日期、缺失明确标注。">
+<link rel="canonical" href="https://btc.flowhunt.net/positioning-radar"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#0c1016"><meta property="og:title" content="资金与持仓雷达｜FlowHunt"><meta property="og:type" content="website"><meta property="og:url" content="https://btc.flowhunt.net/positioning-radar"><meta property="og:image" content="https://btc.flowhunt.net/og-image.jpg">
+<link rel="stylesheet" href="/assets/observatory.css"><link rel="stylesheet" href="/assets/positioning-radar.css">
+<script src="/assets/positioning-radar-model.js" defer></script><script src="/assets/positioning-radar.js" defer></script>
+</head>
+<body data-radar-page>
+<a class="skip-link" href="#main">跳到主要内容</a>
+<header class="topbar"><div class="topbar-inner radar-topbar"><a class="brand" href="/"><span class="brand-mark">ƒ</span><div><strong>FlowHunt</strong><div class="brand-sub">流程猎人 · 市场观察</div></div></a><nav aria-label="市场导航"><a href="/">BTC</a><a href="/eth">ETH</a><a href="/positioning-radar" aria-current="page">资金雷达</a></nav></div></header>
+<main id="main" class="workspace radar-workspace">
+<div class="radar-heading"><div><div class="radar-eyebrow">MARKET POSITIONING / 多币种观察</div><h1>资金与持仓雷达<span class="radar-live-label">BINANCE · USDT 永续</span></h1><p>看清谁在持仓、哪边拥挤，以及数据还没有告诉我们的事。</p></div><button class="radar-refresh" type="button" aria-label="刷新雷达">↻ 刷新快照</button></div>
+<section class="radar-stats" aria-label="雷达概览">
+<div><span>大户 / 全体账户方向分歧</span><strong data-radar-stat="divergence">待核验</strong><small>OI ≥ $10M · 按分歧幅度排序</small></div>
+<div><span>高集中度 ≥95%</span><strong data-radar-stat="high">待核验</strong><small>地址集中不等于机构控盘</small></div>
+<div><span>集中度 90–95% 观察</span><strong data-radar-stat="watch">待核验</strong><small>仅统计已核验的调整后口径</small></div>
+<div><span>持仓有效覆盖 / 合约总数</span><strong data-radar-stat="coverage">—</strong><small id="radarTime">等待源观测时间</small></div>
+</section>
+<div id="radarNotice" class="radar-notice" role="status" aria-live="polite">正在核对公开数据与时间…</div>
+<section class="radar-reading" aria-label="阅读顺序"><span>先看分歧</span><i>→</i><span>再看拥挤与 OI</span><i>→</i><span>最后核验集中度和解锁</span><p>大户指币安保证金前20%用户；全体账户含大户。合约多头可能是对冲的一部分，不能据此确认机构现货买入。</p></section>
+<div class="radar-toolbar"><label>搜索币种<input id="radarSearch" type="search" placeholder="BTC、ETH 或合约代码" autocomplete="off"></label><label>观察条件<select id="radarFilter"><option value="all">全部观察</option><option value="divergence">方向分歧</option><option value="long">多头拥挤</option><option value="short">空头拥挤</option><option value="high">高集中度</option><option value="risk">风险待核验 / 已知风险</option></select></label><div class="radar-quick"><button type="button" data-radar-search="BTC">BTC</button><button type="button" data-radar-search="ETH">ETH</button><button type="button" data-radar-search="">全市场</button></div></div>
+<nav class="radar-jumps" aria-label="榜单导航"><a href="#radar-divergence">持仓分歧</a><a href="#radar-crowdedLong">多空拥挤</a><a href="#radar-high">高集中度</a><a href="#radar-changes">今日变化</a><a href="#radar-market">全部合约</a><a href="#radar-method">数据口径</a></nav>
+<div id="radarSections"></div>
+<section class="panel radar-method" id="radar-method"><div class="radar-section-head"><div><span class="radar-kicker">READ THE EVIDENCE</span><h2>数据与计算口径</h2></div></div><div class="radar-method-grid">
+<div><h3>01 / 持仓不是资金流</h3><p>大户持仓占比与全体账户占比是不同统计口径。OI为未平仓名义金额，变化也受价格影响；成交额不等于OI或净流入。</p><p>分歧榜要求双方在50%的两侧、OI至少1000万美元。拥挤榜及高集中度交叉表要求OI至少300万美元。</p></div>
+<div><h3>02 / 日期决定是否入榜</h3><p>合约排名要求相同1小时窗口且不超过3小时；24h变化须有恰好24小时前的同口径观测。资金费率展示最近已结算值及实际间隔，不统一假设8小时。</p><p>集中度/供应有效期48小时。过期、未来和缺失值不参加当前排名，源失败不会制造“新增”或“退出”。</p></div>
+<div><h3>03 / 集中度需独立证据</h3><p>调整后前10地址集中度需要完整地址账本，核验托管、桥、销毁、DEX和锁定部分。原始大地址占比不能冒充该值；地址也不等于实体。</p><p>低流通阈值&lt;35%；大额解锁为未来30天解锁&gt;流通量5%；未知地址或锁定余额占原始前10余额&gt;50%时单独提示。无标签不等于无风险。</p></div>
+<div><h3>04 / 不填补未知</h3><p>做市关联须有日期及公开证据。当前未找到完整免费管线的集中度、供应、解锁与做市关联明确保留待核验，不用截图数字或估计值替代。</p><p><a href="https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data" target="_blank" rel="noopener noreferrer">Binance 官方数据定义 ↗</a> · <a href="https://docs.gopluslabs.io/reference/response-details" target="_blank" rel="noopener noreferrer">地址数据的覆盖边界 ↗</a></p></div>
+</div></section>
+<footer class="footer"><div><strong>FlowHunt｜流程猎人</strong><br>公开数据 · 仅作研究参考，不构成投资建议。</div><div class="footer-links"><a href="/">BTC 观察台</a><a href="/eth">ETH 观察台</a><a href="/distribution-radar">派发雷达</a></div></footer>
+<noscript><p>请启用 JavaScript 以查看数据日期、覆盖范围和可核验的排名。</p></noscript>
+</main>
+<dialog id="radarDialog" aria-labelledby="radarDetailTitle"><div class="dialog-header"><h2 id="radarDetailTitle">币种证据</h2><button type="button" id="radarClose" class="close-dialog" aria-label="关闭币种证据">×</button></div><div class="dialog-content" id="radarDetail"></div></dialog>
+</body></html>

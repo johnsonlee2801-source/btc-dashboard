@@ -15,7 +15,7 @@ from pathlib import Path
 from build_observatory import get_json,number
 
 ROOT=Path(__file__).resolve().parents[1]
-REWRITES={'/':'/index.html','/eth':'/eth.html','/halving':'/halving.html','/distribution-radar':'/distribution-radar.html'}
+REWRITES={'/positioning-radar':'/positioning-radar.html','/':'/index.html','/eth':'/eth.html','/halving':'/halving.html','/distribution-radar':'/distribution-radar.html'}
 CACHE={}
 LOCK=threading.Lock()
 
@@ -59,11 +59,15 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         super().do_GET()
 
 
+class PreviewServer(http.server.ThreadingHTTPServer):
+    request_queue_size=128
+
+
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--port',type=int,default=8765)
     args=parser.parse_args()
-    server=http.server.ThreadingHTTPServer(('127.0.0.1',args.port),Handler)
+    server=PreviewServer(('127.0.0.1',args.port),Handler)
     print(f'Local preview: http://127.0.0.1:{server.server_address[1]}/',flush=True)
     try:server.serve_forever()
     except KeyboardInterrupt:pass

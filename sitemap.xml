@@ -4,4 +4,5 @@
   <url><loc>https://btc.flowhunt.net/distribution-radar</loc><lastmod>2026-10-11</lastmod><changefreq>daily</changefreq><priority>0.9</priority></url>
   <url><loc>https://btc.flowhunt.net/halving</loc><lastmod>2026-10-11</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://btc.flowhunt.net/eth</loc><lastmod>2026-10-29</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+  <url><loc>https://btc.flowhunt.net/positioning-radar</loc><lastmod>2026-10-31</lastmod><changefreq>hourly</changefreq><priority>0.9</priority></url>
 </urlset>

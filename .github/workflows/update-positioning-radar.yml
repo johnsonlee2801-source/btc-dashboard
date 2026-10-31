@@ -1,0 +1,48 @@
+name: Update positioning radar
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '35 * * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: positioning-radar-snapshot
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify positioning contracts
+        run: |
+          python -B -m unittest discover -s tests -p 'test_positioning_radar.py' -q
+          node --test tests/positioning-radar.test.cjs
+      - name: Collect public observations without authentication
+        run: python -B scripts/build_positioning_radar.py
+      - name: Commit only the radar snapshot
+        run: |
+          git --no-optional-locks config user.name "github-actions[bot]"
+          git --no-optional-locks config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git --no-optional-locks add data/positioning-radar.json
+          if git --no-optional-locks diff --cached --quiet; then
+            exit 0
+          fi
+          git --no-optional-locks commit -m "chore: update public positioning radar"
+          for attempt in 1 2 3; do
+            if git --no-optional-locks push; then
+              exit 0
+            fi
+            git --no-optional-locks pull --rebase origin master
+          done
+          exit 1

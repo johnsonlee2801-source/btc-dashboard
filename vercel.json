@@ -41,6 +41,10 @@
   ],
   "rewrites": [
     {
+      "source": "/positioning-radar",
+      "destination": "/positioning-radar.html"
+    },
+    {
       "source": "/eth",
       "destination": "/eth.html"
     },

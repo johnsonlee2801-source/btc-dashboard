@@ -9,6 +9,8 @@
 <meta property="og:title" content="BTC 低位观察台｜FlowHunt"><meta property="og:description" content="用信号交叉观察市场，用来源验证每个数值。仅作研究参考，不构成投资建议。"><meta property="og:type" content="website"><meta property="og:url" content="https://btc.flowhunt.net/"><meta property="og:image" content="https://btc.flowhunt.net/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="BTC 低位观察台｜FlowHunt"><meta name="twitter:image" content="https://btc.flowhunt.net/og-image.jpg">
 <link rel="stylesheet" href="/assets/observatory.css">
+<link rel="stylesheet" href="/assets/positioning-radar.css">
+<script src="/assets/positioning-radar-model.js" defer></script><script src="/assets/positioning-radar.js" defer></script>
 <link rel="preload" href="/data/observatory.json" as="fetch" crossorigin>
 <link rel="preload" href="/data/cex-reserves.json" as="fetch" crossorigin>
 <script src="/assets/observatory-model.js" defer></script><script src="/assets/observatory.js" defer></script>
@@ -19,11 +21,12 @@
 <header class="topbar"><div class="topbar-inner">
 <a class="brand" href="/" aria-label="FlowHunt 首页"><span class="brand-mark" aria-hidden="true">ƒ</span><div><strong>FlowHunt</strong><div class="brand-sub">流程猎人 · 市场观察</div></div></a>
 <nav class="mainnav" aria-label="资产导航"><a href="/" aria-current="page"><span class="coin-mini" aria-hidden="true">₿</span>BTC</a><a href="/eth" ><span class="coin-mini" aria-hidden="true">Ξ</span>ETH</a></nav>
-<nav class="toolnav" aria-label="研究工具"><a href="/distribution-radar">派发雷达</a><a href="/halving">⏳ 减半周期</a><button type="button" class="text-button" id="sourcesButton">数据来源 ↗</button></nav>
+<nav class="toolnav" aria-label="研究工具"><a href="/positioning-radar">资金雷达</a><a href="/distribution-radar">派发雷达</a><a href="/halving">⏳ 减半周期</a><button type="button" class="text-button" id="sourcesButton">数据来源 ↗</button></nav>
 </div></header>
 <main id="main" class="workspace">
 <div class="page-heading"><div><h1>BTC 低位观察台</h1><p>BTC 低位观察 · 链上估值 / 持有者成本 / 周期信号</p></div><div class="heading-actions"><div class="updated-note"><span id="snapshotTime">正在读取研究快照</span><br>日度研究 · 实时行情独立更新</div><button type="button" id="refresh" class="refresh-button" aria-label="刷新行情与研究快照" title="刷新数据"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6 7a7 7 0 0 1 11-2l3 7M4 12l3 7a7 7 0 0 0 11-2"/></svg></button></div></div>
 <div class="notice" id="dataNotice" role="status" aria-live="polite" hidden></div>
+<section class="radar-summary" data-radar-summary aria-label="资金与持仓雷达摘要"><h2>资金与持仓雷达</h2><p>正在读取公开市场观察…</p><a href="/positioning-radar">查看完整多币种榜单 →</a></section>
 <div class="overview-grid">
 <section class="panel hero-panel" aria-labelledby="heroTitle"><div class="hero-header"><h2>综合观察指数</h2><span class="soft-pill">公开数据研究</span></div><div class="hero-body"><div class="gauge-wrap"><div id="gaugeGraphic"></div><div class="gauge-value tabular" id="gaugeValue">—</div><div class="gauge-caption" id="gaugeCaption">等待有效数据</div></div><div class="hero-copy"><div class="hero-kicker">BTC · 多维条件交叉观察</div><h2 id="heroTitle">正在读取观察信号</h2><p class="hero-explainer" id="heroExplainer">数据加载后显示观察状态；缺失数据不作为未触发。</p><div class="hero-badges" id="heroBadges"></div></div></div><div class="hero-footer"><span id="heroFooter">仅作研究参考，不构成投资建议。</span><button type="button" class="text-button amber" data-method>计算方法 ↗</button></div></section>
 <section class="panel quote-panel" aria-label="BTC 市场行情"><div class="quote-top"><span class="quote-asset" id="quotePair">BTC / USDT</span><span><span class="live-dot" aria-hidden="true"></span><span id="priceType">读取中</span></span></div><div class="price" id="price">—</div><div class="price-change tabular" id="priceChange"><small>等待有效行情</small></div><div class="quote-divider"></div><div class="quote-row"><span>行情来源</span><span id="quoteSource">—</span></div><div class="quote-row"><span>行情时间</span><span id="quoteTime">—</span></div></section>
