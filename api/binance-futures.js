@@ -26,7 +26,8 @@ const PATHS = new Set([
   '/futures/data/takerlongshortRatio',
 ]);
 const PARAMS = new Set(['symbol', 'period', 'limit', 'startTime', 'endTime']);
-const VALUE_RE = /^[A-Za-z0-9]{1,24}$/;
+// Letters of any script: Binance lists contracts such as 币安人生USDT.
+const VALUE_RE = /^[\p{L}\p{N}]{1,24}$/u;
 const MAX_REQUESTS = 120;
 const CONCURRENCY = 8;
 

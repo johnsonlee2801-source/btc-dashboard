@@ -209,7 +209,7 @@ class PublicClient:
     BLOCKING=(401,403,418,429,451)
 
     def __init__(self):
-        self.blocked=None
+        self.blocked=None;self.last_batch=None
 
     def get(self,path,params=None):
         if self.blocked:raise RuntimeError(self.blocked)
@@ -221,6 +221,11 @@ class PublicClient:
     def get_many(self,requests,pause=32):
         # ~100 weighted requests per 32s keeps a full scan under Binance's 1000/5min data limit.
         if self.blocked:raise RuntimeError(self.blocked)
+        # Pace between calls: each call is one upstream batch, so pausing inside fetch_many alone never fires.
+        if self.last_batch is not None:
+            wait=pause-(time.monotonic()-self.last_batch)
+            if wait>0:time.sleep(wait)
+        self.last_batch=time.monotonic()
         results=binance_futures.fetch_many(requests,pause=pause)
         blocked=[r for r in results if r.get('status') in self.BLOCKING]
         if results and len(blocked)==len(results):self.blocked='公开源访问受限 HTTP '+str(blocked[0]['status'])
