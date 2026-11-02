@@ -75,8 +75,12 @@ class NoInventedNumbersTests(unittest.TestCase):
 
     def test_eth_page_reads_exchange_data_from_shared_reserves_file(self):
         html = (ROOT / "eth.html").read_text(encoding="utf-8")
-        self.assertIn("/data/cex-reserves.json", html)
-        self.assertNotIn("YourApiKeyToken", html)
+        app = (ROOT / "assets" / "observatory.js").read_text(encoding="utf-8")
+        # The shared observatory script loads reserves for whichever asset the page declares.
+        self.assertIn('data-asset="ETH"', html)
+        self.assertIn('id="reserves"', html)
+        self.assertIn("/data/cex-reserves.json", app)
+        self.assertNotIn("YourApiKeyToken", html + app)
 
 
 class HalvingPageTests(unittest.TestCase):

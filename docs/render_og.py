@@ -7,7 +7,7 @@ from PIL import Image
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 # HTML source in docs/ -> image at the site root
-IMAGES = {"og-image.html": "og-image.jpg", "og-halving.html": "og-halving.jpg"}
+IMAGES = {"og-image.html": "og-image.jpg", "og-eth.html": "og-eth.jpg", "og-halving.html": "og-halving.jpg"}
 
 async def main():
     async with async_playwright() as p:

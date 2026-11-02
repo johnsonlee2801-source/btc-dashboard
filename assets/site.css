@@ -1,0 +1,57 @@
+/* FlowHunt 市场观察 · shared shell: tokens, top bar, footer, dialog. Used by every page. */
+:root{color-scheme:dark;--bg:#0c1016;--panel:#151c26;--panel-deep:#111720;--tile:#1c2532;--line:#293442;--text:#edf1f7;--muted:#9aa8bb;--dim:#67768b;--amber:#ffb547;--green:#41d69c;--red:#ff737b;--blue:#70aaff;--violet:#b49cff;--radius:14px;--shell:1344px}
+*{box-sizing:border-box}[hidden]{display:none!important}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.6}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}button:disabled{cursor:wait;opacity:.6}
+a{color:inherit;text-decoration:none}
+button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+h1,h2,h3,p{margin:0}svg{display:block}svg text{font-family:inherit}
+.tabular{font-variant-numeric:tabular-nums lining-nums}
+.muted{color:var(--muted)}.positive{color:var(--green)}.negative{color:var(--red)}.amber{color:var(--amber)}
+.skip-link{position:absolute;top:-80px;left:20px;padding:10px;background:var(--amber);color:#111;z-index:20}.skip-link:focus{top:10px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+
+/* top bar */
+.site-header{position:sticky;top:0;z-index:10;border-bottom:1px solid var(--line);background:#0f141cf2;backdrop-filter:blur(8px)}
+.site-header-inner{max-width:var(--shell);margin:auto;height:64px;display:flex;align-items:center;gap:28px;padding:0 28px}
+.brand{display:flex;gap:10px;align-items:center;white-space:nowrap;flex:none}
+.brand-mark{background:var(--amber);height:30px;width:30px;border-radius:8px;display:grid;place-items:center;color:#181a20;font-size:22px;font-weight:800;line-height:1}
+.brand strong{font-size:18px;letter-spacing:-.5px;display:block;line-height:1.1}
+.brand small{color:var(--muted);font-size:11px;display:block}
+.site-nav{display:flex;align-items:stretch;align-self:stretch;gap:2px;flex:1;min-width:0;overflow-x:auto;scrollbar-width:none}
+.site-nav::-webkit-scrollbar{display:none}
+.site-nav a{display:flex;align-items:center;gap:6px;padding:0 14px;color:var(--muted);font-weight:600;font-size:13px;white-space:nowrap;border-bottom:2px solid transparent}
+.site-nav a:hover{color:var(--text)}
+.site-nav a[aria-current=page]{color:var(--amber);border-color:var(--amber)}
+.site-nav .nav-sep{width:1px;background:var(--line);margin:18px 6px}
+.header-action{flex:none;color:var(--muted);font-size:12px;border:1px solid var(--line);border-radius:7px;padding:5px 10px}
+.header-action:hover{color:var(--text);border-color:#3c4a5c}
+
+/* footer */
+.site-footer{max-width:var(--shell);margin:30px auto 0;padding:20px 28px 34px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:12px;flex-wrap:wrap}
+.site-footer strong{color:#c4cfdd}
+.site-footer nav{display:flex;gap:18px;flex-wrap:wrap}
+.site-footer nav a:hover{color:var(--text)}
+
+/* dialog */
+dialog{color:var(--text);background:var(--panel);border:1px solid #445268;border-radius:16px;padding:0;max-width:680px;width:calc(100% - 32px);max-height:86vh}
+dialog::backdrop{background:#000a;backdrop-filter:blur(3px)}
+.dialog-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:1}
+.dialog-header h2{font-size:18px}
+.close-dialog{background:#253043;width:30px;height:30px;border-radius:6px;font-size:20px;line-height:1}
+.dialog-content{padding:20px 22px;font-size:13px;color:#b8c5d6;line-height:1.9;overflow-wrap:anywhere}
+.dialog-content h3{color:var(--text);font-size:14px;margin:16px 0 6px}.dialog-content h3:first-child{margin-top:0}
+.dialog-content a{color:var(--amber);text-decoration:underline;text-underline-offset:3px}
+.dialog-content table{width:100%;border-collapse:collapse;font-size:12px;margin:6px 0}
+.dialog-content td,.dialog-content th{border-bottom:1px solid var(--line);padding:6px 4px;text-align:left;font-weight:400}
+.dialog-content th{color:var(--muted)}
+
+@media(max-width:700px){
+  .site-header-inner{padding:0 12px;gap:10px;height:56px}
+  .brand small{display:none}.brand strong{font-size:16px}.brand-mark{width:26px;height:26px;font-size:19px}
+  .site-nav a{padding:0 9px;font-size:12px}.site-nav .nav-sep{margin:16px 2px}
+  .header-action{display:none}
+  .site-footer{padding:18px 14px 28px;font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}

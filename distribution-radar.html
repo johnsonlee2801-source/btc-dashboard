@@ -14,15 +14,18 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"BTC 派发雷达","url":"https://btc.flowhunt.net/distribution-radar","applicationCategory":"FinanceApplication","operatingSystem":"Web","inLanguage":"zh-CN","description":"用公开市场结构数据观察 BTC 上涨质量、承接强弱与合约推动风险。仅供研究参考，不构成投资建议。","author":{"@type":"Organization","name":"FlowHunt｜流程猎人"},"publisher":{"@type":"Organization","name":"FlowHunt｜流程猎人"}}
 </script>
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <style>
+  .page-bar{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin:4px 0 18px;flex-wrap:wrap}.page-title{font-size:28px;letter-spacing:-.6px;color:var(--text)}.page-bar p{color:var(--muted);font-size:12px}.page-actions{display:flex;gap:10px;align-items:center}.source-line{max-width:1120px;margin:0 auto;padding:0 16px;color:var(--muted);font-size:11px}
   :root {
-    --bg:#0a0a0f; --bg2:#111118; --bg3:#1a1a24; --border:#2a2a3a;
-    --text:#e8e8f0; --muted:#888899; --accent:#f7931a;
-    --green:#00d4aa; --red:#ff4466; --yellow:#ffcc00; --blue:#4488ff; --purple:#aa66ff;
+    --bg:#0c1016; --bg2:#151c26; --bg3:#1c2532; --border:#293442;
+    --text:#edf1f7; --muted:#9aa8bb; --accent:#ffb547;
+    --green:#41d69c; --red:#ff737b; --yellow:#ffcc00; --blue:#70aaff; --purple:#b49cff;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{background:radial-gradient(circle at top right,rgba(247,147,26,.08),transparent 32%),var(--bg);color:var(--text);font-family:-apple-system,'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;line-height:1.6}
-  a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,'PingFang SC','Helvetica Neue',Arial,sans-serif;font-size:14px;line-height:1.6}
+  .container a{color:var(--accent);text-decoration:none} .container a:hover{text-decoration:underline}
   .header{background:rgba(17,17,24,.92);border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;backdrop-filter:blur(14px);position:sticky;top:0;z-index:20}
   .header-left{display:flex;align-items:center;gap:12px;min-width:0}.logo{width:44px;height:44px;border-radius:13px;background:radial-gradient(circle at 30% 25%,rgba(247,147,26,.28),rgba(247,147,26,.06));border:1px solid rgba(247,147,26,.26);display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 0 24px rgba(247,147,26,.10)}
   .title-block h1{font-size:18px;color:var(--accent)}.title-block p{font-size:12px;color:var(--muted)}
@@ -42,23 +45,13 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 </head>
 <body>
-<div class="header">
-  <div class="header-left">
-    <div class="logo" style="background:none;border:0;box-shadow:none;padding:0;overflow:hidden"><img src="/favicon.svg" alt="FlowHunt logo" width="44" height="44" style="display:block;width:100%;height:100%"></div>
-    <div class="title-block">
-      <h1>FlowHunt｜流程猎人</h1>
-      <p>BTC 派发雷达 · 上涨质量 / 承接强弱 / 合约推动风险</p>
-    </div>
-  </div>
-  <div class="header-right">
-    <a href="/" class="nav-link">← BTC 风险温度</a>
-    <a href="/eth" class="nav-link">ETH 观察</a>
-    <div class="last-updated" id="lastUpdated">加载中...</div>
-    <button class="refresh-btn" id="refreshBtn" onclick="loadRadar(true)">🔄 刷新</button>
-  </div>
-</div>
+<header class="site-header"><div class="site-header-inner">
+<a class="brand" href="/" aria-label="FlowHunt 首页"><span class="brand-mark" aria-hidden="true">ƒ</span><span><strong>FlowHunt</strong><small>流程猎人 · 市场观察</small></span></a>
+<nav class="site-nav" aria-label="站点导航"><a href="/">₿ BTC 观察台</a><a href="/eth">Ξ ETH 观察台</a><span class="nav-sep" aria-hidden="true"></span><a href="/positioning-radar">资金雷达</a><a href="/distribution-radar" aria-current="page">派发雷达</a><a href="/halving">减半周期</a></nav>
+</div></header>
 
 <div class="container">
+  <div class="page-bar"><div><h1 class="page-title">BTC 派发雷达</h1><p>上涨质量 / 承接强弱 / 合约推动风险 · 实时计算，不判断方向</p></div><div class="page-actions"><span class="last-updated" id="lastUpdated">加载中...</span><button class="refresh-btn" id="refreshBtn" onclick="loadRadar(true)">↻ 刷新</button></div></div>
   <div id="errorBox" class="panel error" style="display:none;margin-bottom:16px;"></div>
 
   <div class="hero">
@@ -97,10 +90,8 @@
   </div>
 </div>
 
-<div class="footer">
-  <p>📡 BTC 派发雷达 · <a href="/">BTC 风险温度仪表盘</a> · <a href="/eth">ETH 链上观察</a> · <a href="https://flowhunt.net" target="_blank">FlowHunt｜流程猎人</a></p>
-  <p style="margin-top:6px">数据来自 Binance / OKX / Bybit / Deribit / Coinbase / Kraken / Bitstamp / Gemini 公开只读接口；全市场合约/现货成交比按 venue 聚合展示。市场风险高，投资需自行判断。</p>
-</div>
+<p class="source-line">数据来自 Binance / OKX / Bybit / Deribit / Coinbase / Kraken / Bitstamp / Gemini 公开只读接口；全市场合约/现货成交比按交易所聚合。</p>
+<footer class="site-footer"><div><strong>FlowHunt｜流程猎人</strong> · 公开数据 · 独立研究 · 不构成投资建议</div><nav aria-label="页脚导航"><a href="/">BTC 观察台</a><a href="/eth">ETH 观察台</a><a href="/positioning-radar">资金雷达</a><a href="/distribution-radar">派发雷达</a><a href="/halving">减半周期</a></nav></footer>
 
 <script>
 function fmtUsd(v, digits = 0) {
@@ -149,7 +140,7 @@ async function loadRadar(manual = false) {
     document.getElementById('score').textContent = data.score ?? '--';
     document.getElementById('level').textContent = level.label || '未知';
     document.getElementById('level').className = 'level ' + (level.tone || 'warn');
-    document.getElementById('headline').textContent = `当前判断：${level.label || '未知'}`;
+    document.getElementById('headline').textContent = `当前观察：${level.label || '未知'}`;
     document.getElementById('summary').textContent = data.summary || '暂无摘要';
     setGauge(Number(data.score || 0), level.tone);
 

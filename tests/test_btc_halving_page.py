@@ -100,12 +100,19 @@ class BtcHalvingPageTests(unittest.TestCase):
         priority = sitemap_priority(ROOT / "sitemap.xml", f"{BTC_HOST}/halving")
         self.assertEqual(priority, "0.8")
 
-    def test_dashboard_halving_pill_keeps_its_label(self):
+    def test_dashboard_nav_links_to_halving(self):
         html = read_text(ROOT / "index.html")
-        pill_start = html.find('href="/halving"')
-        self.assertNotEqual(pill_start, -1, 'no href="/halving" in index.html')
-        anchor_end = html.find("</a>", pill_start)
-        self.assertIn("⏳ 减半周期", html[pill_start:anchor_end])
+        start = html.find('href="/halving"')
+        self.assertNotEqual(start, -1, 'no href="/halving" in index.html')
+        self.assertIn("减半周期", html[start:html.find("</a>", start)])
+
+    def test_halving_page_reads_generated_cycle_data(self):
+        html = read_text(ROOT / "halving.html")
+        self.assertIn("/data/halving-cycles.json", html)
+        self.assertNotIn("$200,000", html, "no forward price ranges for the next cycle")
+        data = json.loads(read_text(ROOT / "data" / "halving-cycles.json"))
+        self.assertEqual(len(data["cycles"]), 4)
+        self.assertEqual([c["halving"] for c in data["cycles"]], ["2012-11-28", "2016-07-09", "2020-05-11", "2024-04-20"])
 
     def test_halving_route_returns_200_locally(self):
         with serve_with_rewrites() as base_url:

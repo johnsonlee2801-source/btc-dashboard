@@ -91,7 +91,7 @@ class PageWiringTests(unittest.TestCase):
         html = (ROOT / "index.html").read_text(encoding="utf-8")
         app = (ROOT / "assets" / "observatory.js").read_text(encoding="utf-8")
         self.assertIn("/data/cex-reserves.json", app)
-        self.assertIn('id="reserveList"', html)
+        self.assertIn('id="reserves"', html)
         self.assertNotIn("reservePreview", html)
         self.assertNotIn("预览数据", html)
         self.assertIn('href="/eth"', html)

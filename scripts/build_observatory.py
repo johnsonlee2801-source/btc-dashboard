@@ -1,515 +1,530 @@
 #!/usr/bin/env python3
-"""Build a public-data BTC/ETH snapshot. No keys, paid parser or git side effects.
+"""Build the BTC/ETH observatory snapshot (schema v2). No keys, no git side effects.
 
-Daily observations and realtime quotes have separate timestamps. Failed sources
-retain their original dates; missing/expired values never light a signal.
+Every number carries its own observation date and source. Each signal comes
+with its distance to trigger, a trigger price where the metric moves with
+price, and a backtest computed from the same public history. Missing or
+expired inputs never light a signal and are never filled with substitutes.
 """
 import argparse
-import concurrent.futures
 import json
 import math
-import statistics
+import sys
 import urllib.request
-from html.parser import HTMLParser
 from datetime import datetime, timedelta, timezone
-from decimal import Decimal
+from html.parser import HTMLParser
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'scripts'))
+import binance_futures  # noqa: E402
+import onchain_store  # noqa: E402
+import options_rr  # noqa: E402
+import signals as S  # noqa: E402
+
 SOURCES = {
     'Binance': 'https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints',
-    'BGeometrics': 'https://api.bitcoin-data.com/swagger-ui/index.html',
-    'Alternative.me': 'https://alternative.me/crypto/fear-and-greed-index/',
     'Binance Futures': 'https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api',
+    'BGeometrics': onchain_store.DOC,
+    'Alternative.me': 'https://alternative.me/crypto/fear-and-greed-index/',
+    'CoinMarketCap': 'https://coinmarketcap.com/charts/fear-and-greed-index/',
+    'Deribit': 'https://docs.deribit.com/',
+    'Farside': 'https://farside.co.uk/',
     'Coin Metrics': 'https://docs.coinmetrics.io/',
     'DefiLlama': 'https://defillama.com/',
     'validatorqueue': 'https://www.validatorqueue.com/',
     'Blockscout': 'https://eth.blockscout.com/',
     'Ethereum RPC': 'https://ethereum.org/en/developers/docs/apis/json-rpc/',
-    'Farside': 'https://farside.co.uk/bitcoin-etf/',
-    'Deribit': 'https://docs.deribit.com/api-reference/market-data/public-get_volatility_index_data',
-    'CoinMarketCap': 'https://coinmarketcap.com/charts/fear-and-greed-index/',
+    'FlowHunt 计算': 'https://btc.flowhunt.net/#method',
+}
+METHOD_VERSION = 'flowhunt-observation-v2'
+UA = 'FlowHunt-observatory/2.0 (+https://btc.flowhunt.net)'
+
+# Which source and freshness window each signal key reports.
+KEY_SOURCE = {
+    'price': 'Binance', 'ma200d': 'Binance', 'ma200w': 'Binance', 'high90': 'Binance', 'mayer': 'Binance',
+    'price_ma200w': 'Binance', 'weekly_rsi': 'Binance', 'drawdown90': 'Binance', 'pi_bottom': 'Binance',
+    'supply_profit': 'BGeometrics', 'sopr': 'BGeometrics', 'mvrv_z': 'BGeometrics', 'mvrv': 'BGeometrics',
+    'puell': 'BGeometrics', 'sth_cost': 'BGeometrics', 'sth_profit': 'BGeometrics', 'lth_cost': 'BGeometrics',
+    'realized_price': 'BGeometrics', 'true_mean': 'BGeometrics', 'lth_net30': 'BGeometrics',
+    'hash_ribbon': 'BGeometrics', 'whale_net30': 'BGeometrics', 'sth_mvrv': 'FlowHunt 计算',
+    'lth_ratio': 'FlowHunt 计算', 'fear': 'Alternative.me',
+}
+NOTES = {
+    'hash_ribbon': '哈希率 30 日均线跌破 60 日均线视为矿工投降（1=投降中）。由 BGeometrics 全网哈希率计算。',
+    'pi_bottom': 'Pi Cycle 底部：150 日 EMA ÷ (0.745 × 471 日均线)，低于 1 为历史底部区。由 Binance 日收盘计算。',
+    'sth_mvrv': '价格 ÷ 短期持有者实现价格（STH 成本）。与 BGeometrics 发布值误差 <0.3%，自算可避免其接口约 5 天的发布延迟。',
+    'lth_ratio': '价格 ÷ 长期持有者实现价格（LTH 成本）。',
+    'whale_net30': '持有 1,000–10,000 BTC 的地址余额合计 30 天变化。地址口径，含部分交易所/托管地址，不等于实体买卖。',
+    'lth_net30': '长期持有者（持币 >155 天）供给 30 天净变化。正值通常意味着筹码在沉淀。',
+    'mvrv_z': 'BGeometrics 口径的 MVRV Z-Score。不同数据商的 Z 值标准差口径不同，数值不可跨站比较；本站阈值按本口径设定并回测。',
+    'weekly_rsi': '完整 UTC 周收盘，Wilder 14 周平滑。',
+    'mayer': '日收盘 ÷ 200 日均线。',
+    'price_ma200w': '日收盘 ÷ 200 周均线（完整 UTC 周收盘均值）。',
+    'fear': 'Alternative.me 恐慌与贪婪指数（BTC 市场情绪）。',
+    'drawdown90': '距近 90 个完整日收盘高点的回撤，未使用日内最高价。',
+    'eth_mvrv': 'ETH 市值 ÷ 实现市值（BGeometrics）。该序列发布约晚 5–7 天，有效期按 8 天计。',
 }
 
 
 def number(value):
-    if isinstance(value, bool) or value is None:
+    if value is None or isinstance(value, bool):
         return None
     try:
         n = float(value)
-        return n if math.isfinite(n) else None
-    except (ValueError, TypeError):
+    except (TypeError, ValueError):
         return None
+    return n if math.isfinite(n) else None
 
 
-def parsed_date(value):
-    try:
-        d = datetime.fromisoformat(str(value).replace('Z', '+00:00'))
-        return d.replace(tzinfo=timezone.utc) if d.tzinfo is None else d
-    except (ValueError, TypeError):
-        return None
-
-
-def metric(value, as_of, source, now=None, max_hours=72, note='', dependencies=None):
-    now = now or datetime.now(timezone.utc)
-    value, stamp = number(value), parsed_date(as_of)
-    hours = (now - stamp).total_seconds() / 3600 if stamp else None
-    status = 'missing' if value is None else 'fresh' if hours is not None and 0 <= hours <= max_hours else 'stale'
-    result={'value': value, 'asOf': as_of, 'source': source,
-            'sourceUrl': SOURCES.get(source), 'status': status, 'maxAgeHours': max_hours, 'note': note}
-    if dependencies:
-        result['dependencies']=dependencies
-        if status=='fresh' and any(metric(1,d.get('asOf'),'',now,d.get('maxAgeHours',72))['status']!='fresh'
-                                   for d in dependencies.values()):
-            result['status']='stale'
-    return result
-
-
-def trigger(m, op, target):
-    if m.get('status') != 'fresh' or m.get('value') is None:
-        return None
-    x = m['value']
-    return {'<': lambda: x < target, '<=': lambda: x <= target,
-            '>': lambda: x > target, '>=': lambda: x >= target}[op]()
-
-
-def combine(values):
-    return False if False in values else None if None in values else True
-
-
-def bull_line(ma200w, sth_cost):
-    return max(ma200w, sth_cost) if ma200w and sth_cost else None
-
-
-def score_bounds(groups):
-    low = high = available = total = 0
-    for group in groups:
-        items = group['items']
-        weight = group['weight'] / len(items)
-        for item in items:
-            state = item['triggered']
-            total += 1
-            available += state is not None
-            low += weight if state is True else 0
-            high += weight if state is not False else 0
-    return {'lower': round(low, 1), 'upper': round(high, 1), 'available': available, 'total': total}
-
-
-def closed_candles(rows, now=None):
-    now = now or datetime.now(timezone.utc)
-    cutoff = now.timestamp() * 1000
-    points = {}
-    for row in rows:
-        try:
-            close = number(row[4])
-            opened,ended=number(row[0]),number(row[6])
-            if close is None or close <= 0 or opened is None or ended is None or not 0 <= opened <= ended < cutoff:
-                continue
-            day = datetime.fromtimestamp(opened/1000, timezone.utc).date().isoformat()
-            points[day] = {'date': day, 'close': close}
-        except (ValueError, TypeError, IndexError, OverflowError):
-            continue
-    return sorted(points.values(), key=lambda p:p['date'])
-
-
-def rsi(values, period=14):
-    if len(values) <= period:
-        return None
-    changes = [b-a for a,b in zip(values, values[1:])]
-    gain = sum(max(x, 0) for x in changes[:period]) / period
-    loss = sum(max(-x, 0) for x in changes[:period]) / period
-    for x in changes[period:]:
-        gain = (gain*(period-1) + max(x, 0)) / period
-        loss = (loss*(period-1) + max(-x, 0)) / period
-    return 50 if gain == loss == 0 else 100 if loss == 0 else round(100 - 100/(1+gain/loss), 2)
-
-
-def contiguous_tail(points, step_days=1):
-    """A missing calendar period breaks the window instead of shortening time."""
-    if not points:
-        return []
-    tail=[points[-1]]
-    for point in reversed(points[:-1]):
-        gap=(datetime.fromisoformat(tail[-1]['date']).date()-datetime.fromisoformat(point['date']).date()).days
-        if gap!=step_days:
-            break
-        tail.append(point)
-    return list(reversed(tail))
-
-
-def weekly_closes(points, now):
-    # Require all seven UTC days; don't bridge a missing complete week.
-    start = now.date() - timedelta(days=now.weekday())
-    weeks = {}
-    for p in points:
-        day = datetime.fromisoformat(p['date']).date()
-        if day < start:
-            monday=day-timedelta(days=day.weekday())
-            weeks.setdefault(monday,{})[day]=p
-    complete=[]
-    for monday,days in sorted(weeks.items()):
-        expected=[monday+timedelta(days=i) for i in range(7)]
-        if all(d in days for d in expected):
-            complete.append(days[expected[-1]])
-    return contiguous_tail(complete,7)
-
-
-BTC_RULES = [
-    ('大底必要信号', '五项条件，亮起至少四项才进入深度观察', 40, [
-        ('supply_profit','全网盈利占比','<',60,'%'), ('weekly_rsi','周线 RSI','<',35,''),
-        ('miner_cost','矿工收入 / 成本','<',1,''), ('sopr','SOPR','<',1,''), ('mayer','Mayer 倍数','<',.8,'')]),
-    ('大底确认信号', '链上估值与长期均线的交叉确认', 40, [
-        ('mvrv_z','MVRV Z-Score','<',-1,''), ('supply_profit','全网盈利占比','<',50,'%'),
-        ('price_ma200w','价格 / 200周均线','<',1,''), ('mvrv','MVRV','<',1,''),
-        ('nupl','NUPL','<',0,''), ('puell','Puell Multiple','<',.5,''),
-        ('weekly_rsi','周线 RSI','<',30,''), ('pi_cycle','Pi Cycle 底部','<',1,'')]),
-    ('相对底部信号', '短期持有者、情绪与回撤的共同观察', 20, [
-        ('sth_mvrv','STH-MVRV','<',1,''), ('sth_profit','STH 盈利占比','<',30,'%'),
-        ('fear','恐慌指数','<=',20,''), ('hash_ribbon','哈希带投降','>',0,''),
-        ('lth_net30','LTH 30天净变化','>',0,' BTC'), ('whale_net30','巨鲸 30天净变化','>',0,' BTC'),
-        ('puell','Puell Multiple','<',.7,''), ('drawdown90','90天高点回撤','>=',20,'%')]),
-]
-ETH_RULES = [
-    ('价格与周期', 'ETH 独立技术观察，不套用 BTC 链上模型', 0, [
-        ('weekly_rsi','周线 RSI','<',35,''), ('mayer','Mayer 倍数','<',.8,''),
-        ('price_ma200w','价格 / 200周均线','<',1,''), ('drawdown90','90天高点回撤','>=',20,'%')]),
-    ('供给与质押', '原生 ETH 供给结构；展示事实，不计入 BTC 分数', 0, [
-        ('staked_pct','质押占比',None,None,'%'), ('total_staked','总质押量',None,None,' ETH'),
-        ('burn_rate_daily','每日销毁',None,None,' ETH'), ('burn_issuance_pct','销毁 / 估算增发',None,None,'%'),
-        ('stake_conc_top5','质押前五集中度',None,None,'%'), ('whale_top100_pct','前百地址持仓',None,None,'%')]),
-    ('网络与流动性', '地址口径不等于实体口径，缺少 cohort 数据时不推断', 0, [
-        ('holder_count','非零持币地址',None,None,''), ('active_addr_7d','7日均活跃地址',None,None,''),
-        ('stablecoin_mcap_b','链上稳定币规模',None,None,' B USD'),
-        ('stablecoin_change_30d','稳定币 30天变化',None,None,'%')]),
-]
-
-
-def build_asset(symbol, points, chain, extras, legacy, now=None):
-    now = now or datetime.now(timezone.utc)
-    metrics = {}
-    day = points[-1]['date'] if points else None
-    prices = [p['close'] for p in contiguous_tail(points)]
-    price = prices[-1] if prices else None
-    weeks = weekly_closes(points, now)
-    ma200 = statistics.mean(prices[-200:]) if len(prices) >= 200 else None
-    ma200w = statistics.mean([p['close'] for p in weeks[-200:]]) if len(weeks) >= 200 else None
-    high90 = max(prices[-90:]) if len(prices) >= 90 else None
-    values = {'price': price, 'ma200d': ma200, 'ma200w': ma200w, 'high90': high90,
-              'mayer': price/ma200 if price and ma200 else None,
-              'price_ma200w': price/ma200w if price and ma200w else None,
-              'weekly_rsi': rsi([p['close'] for p in weeks]),
-              'drawdown90': max(0,float((Decimal(str(high90))-Decimal(str(price)))*100/Decimal(str(high90)))) if price and high90 else None}
-    for key,value in values.items():
-        dependencies={'price':{'asOf':day,'maxAgeHours':72},
-                      'ma200w':{'asOf':weeks[-1]['date'] if weeks else None,'maxAgeHours':216}} if key=='price_ma200w' else None
-        metrics[key] = metric(value, weeks[-1]['date'] if key in ('weekly_rsi','ma200w') and weeks else day,
-                              'Binance', now, max_hours=216 if key in ('weekly_rsi','ma200w') else 72,
-                              dependencies=dependencies)
-    metrics['price_ma200w']['note']=f"由日收盘（{day or '日期未知'}）与200周均线（{weeks[-1]['date'] if weeks else '日期未知'}）计算；任一组成数据过期时不参与确认。"
-    if symbol == 'BTC':
-        mapping = {'mvrv': 'mvrv', 'mvrv_z':'mvrvZscore','sopr':'sopr','puell':'puellMultiple', 'realized_price':'realizedPrice'}
-        for key,field in mapping.items():
-            metrics[key] = metric(chain.get(field), chain.get('date'), 'BGeometrics', now)
-        mvrv = metrics['mvrv']
-        metrics['nupl'] = metric(1-1/mvrv['value'] if mvrv['value'] and mvrv['value']>0 else None,
-                                 mvrv['asOf'], 'BGeometrics', now, note='由同日 MVRV 计算：1 − 1/MVRV')
-        for key in ('sth_cost','sth_mvrv','sth_profit','supply_profit','true_mean','lth_cost'):
-            row = extras.get(key) or {}
-            metrics[key] = metric(row.get('value'), row.get('date'), 'BGeometrics', now,
-                                   note='公共接口可能延迟；严格按数据实际日期判断新鲜度')
-        fear = extras.get('fear') or {}
-        metrics['fear'] = metric(fear.get('value'), fear.get('date'), 'Alternative.me', now, max_hours=48,
-                                 note='Bitcoin 情绪指数，非 ETH 专属情绪')
-        metrics['cmc_fear'] = metric(None,None,'CoinMarketCap',now,note='CMC 独立口径暂未接通；不使用 Alternative.me 数值替代。')
-        for key in ('miner_cost','pi_cycle','hash_ribbon','lth_net30','whale_net30'):
-            metrics[key] = metric(None,None,'',now,note='暂无已核验、口径一致的公开数据；不参与确认')
-    else:
-        source_fields = {
-            'staked_pct':'validatorqueue','total_staked':'validatorqueue','burn_rate_daily':'Ethereum RPC',
-            'burn_issuance_pct':'Ethereum RPC','stake_conc_top5':'DefiLlama','whale_top100_pct':'Blockscout',
-            'holder_count':'Coin Metrics','active_addr_7d':'Coin Metrics',
-            'stablecoin_mcap_b':'DefiLlama','stablecoin_change_30d':'DefiLlama'}
-        dates = legacy.get('as_of') or {}
-        for key,source in source_fields.items():
-            # Do not label missing field dates with the new collector timestamp.
-            observed = dates.get(key)
-            if key == 'burn_issuance_pct':
-                dependencies = [dates.get('burn_rate_daily'), dates.get('total_staked')]
-                observed = min(dependencies) if all(parsed_date(d) for d in dependencies) else None
-            metrics[key] = metric(legacy.get(key), observed, source, now)
-        metrics['burn_rate_daily']['note'] = '近7200区块基础费销毁估算，不含 blob 费用；区块 gasLimit 采用最新值。'
-        metrics['burn_issuance_pct']['note'] = '销毁量除以由质押量估算的共识增发；依赖源日期取最早值，非实际完整增发统计。'
-    for key,entry in extras.get('derivatives',{}).items():
-        metrics[key] = metric(entry.get('value'), entry.get('date'), entry.get('source','Binance Futures'), now, max_hours=12,
-                              note='DVOL 30日期权隐含波动率指数，采用最近完整小时观测值。' if key=='dvol' else
-                                   'Binance 最近5分钟的账户数多空比，不等于资金或持仓金额比。' if key=='long_short' else
-                                   '该交易所返回的最新资金费率；未假设固定8小时结算，也未换算年化。')
-        if entry.get('carriedForward'):
-            metrics[key]['note']+=' 本轮接口未提供有效新值，沿用原观测时间；是否过期仍按原日期计算。'
-    for key in ('funding','long_short'):
-        metrics.setdefault(key, metric(None,None,'Binance Futures',now,max_hours=12))
-    metrics.setdefault('dvol',metric(None,None,'Deribit',now,max_hours=12))
-    metrics['risk_reversal25']=metric(None,None,'Deribit',now,note='25Δ 风险逆转需要明确到期期限与看涨/看跌符号口径；参考图未提供完整定义，暂不推断。')
-    rules = BTC_RULES if symbol == 'BTC' else ETH_RULES
-    groups = []
-    for title,description,weight,items in rules:
-        group = {'title':title,'description':description,'weight':weight,'items':[]}
-        for key,label,op,threshold,unit in items:
-            group['items'].append({'key':key,'label':label,'op':op,'threshold':threshold,'unit':unit,
-                                   'triggered':trigger(metrics[key],op,threshold) if op else None})
-        groups.append(group)
-    history = []
-    for idx,p in enumerate(points):
-        if idx < len(points)-365:
-            continue
-        window = contiguous_tail(points[max(0,idx-199):idx+1])
-        history.append({**p,'ma200':round(statistics.mean(q['close'] for q in window),2) if len(window)==200 else None})
-    return {'symbol':symbol,'metrics':metrics,'groups':groups,'history':history,
-            'score':score_bounds(groups) if symbol=='BTC' else None,
-            'historySource':'Binance','historyAsOf':day,
-            'methodVersion':'flowhunt-observation-v1',
-            'definition':'公开数据观察框架，非参考作者模型复刻；未回测历史命中率'}
-
-
-def get_json(url):
-    req=urllib.request.Request(url,headers={'User-Agent':'FlowHunt-observatory/1.0 (+https://btc.flowhunt.net)'})
-    with urllib.request.urlopen(req,timeout=25) as response:
+def get_json(url, timeout=30):
+    req = urllib.request.Request(url, headers={'User-Agent': UA})
+    with urllib.request.urlopen(req, timeout=timeout) as response:
         return json.load(response)
 
 
-def safe_get(url, errors):
+def safe_get(url, errors, timeout=30):
     try:
-        return get_json(url)
+        return get_json(url, timeout)
     except Exception as exc:
-        errors.append({'url':url,'error':type(exc).__name__})
+        errors.append({'url': url, 'error': type(exc).__name__})
         return None
 
 
 def load_file(path):
     try:
         return json.loads(path.read_text(encoding='utf-8'))
-    except (OSError,ValueError):
+    except (OSError, ValueError):
         return {}
 
 
-def fetch_candles(symbol, errors, now):
-    # Official market-data-only host does not require an account or API key.
-    # Keep the original venue host as fallback; regions have different reachability.
-    for host in ('data-api.binance.vision','api.binance.com'):
-        base=f'https://{host}/api/v3/klines?symbol={symbol}USDT&interval=1d&limit=1000'
-        newest=safe_get(base,errors)
-        if not isinstance(newest,list) or not newest:
-            continue
-        older=safe_get(base+f'&endTime={int(newest[0][0])-1}',errors)
-        points=closed_candles((older if isinstance(older,list) else [])+newest, now)
-        if points:
-            return points
+def metric(value, as_of, source, max_hours=72, note=''):
+    return {'value': number(value), 'asOf': as_of, 'source': source, 'sourceUrl': SOURCES.get(source),
+            'maxAgeHours': max_hours, 'note': note}
+
+
+# ---------------------------------------------------------------- sources
+
+def fetch_candles(symbol, errors, now, pages=4):
+    """Closed UTC daily candles, oldest first, up to pages*1000 days."""
+    for host in ('data-api.binance.vision', 'api.binance.com'):
+        rows, end = [], None
+        for _ in range(pages):
+            url = f'https://{host}/api/v3/klines?symbol={symbol}USDT&interval=1d&limit=1000' + (f'&endTime={end}' if end else '')
+            page = safe_get(url, errors)
+            if not isinstance(page, list) or not page:
+                break
+            rows = page + rows
+            end = int(page[0][0]) - 1
+            if len(page) < 1000:
+                break
+        cutoff = now.timestamp() * 1000
+        closes = {}
+        for row in rows:
+            try:
+                opened, ended, close = float(row[0]), float(row[6]), float(row[4])
+            except (TypeError, ValueError, IndexError):
+                continue
+            if close > 0 and 0 <= opened <= ended < cutoff:
+                closes[datetime.fromtimestamp(opened / 1000, timezone.utc).date().isoformat()] = close
+        if closes:
+            return sorted(closes.items())
     return []
 
 
-def fetch_derivatives(symbol, errors):
-    out={}
-    funding=safe_get(f'https://fapi.binance.com/fapi/v1/premiumIndex?symbol={symbol}USDT',errors)
-    if isinstance(funding,dict) and number(funding.get('time')):
-        n=number(funding.get('lastFundingRate'))
-        out['funding']={'value':n*100 if n is not None else None,
-                        'date':datetime.fromtimestamp(float(funding['time'])/1000,timezone.utc).isoformat()}
-    ls=safe_get(f'https://fapi.binance.com/futures/data/globalLongShortAccountRatio?symbol={symbol}USDT&period=5m&limit=1',errors)
-    if isinstance(ls,list) and ls and number(ls[-1].get('timestamp')):
-        row=ls[-1]
-        out['long_short']={'value':number(row.get('longShortRatio')),
-                           'date':datetime.fromtimestamp(float(row['timestamp'])/1000,timezone.utc).isoformat()}
-    end=int(datetime.now(timezone.utc).timestamp()*1000)
-    raw=safe_get(f'https://www.deribit.com/api/v2/public/get_volatility_index_data?currency={symbol}&start_timestamp={end-86400000}&end_timestamp={end}&resolution=3600',errors)
-    dvol=dvol_observation(raw)
-    if dvol:
-        out['dvol']={**dvol,'source':'Deribit'}
+def fetch_fear_alt(errors):
+    raw = safe_get('https://api.alternative.me/fng/?limit=0&format=json', errors)
+    out = {}
+    for row in (raw or {}).get('data') or []:
+        stamp, value = number(row.get('timestamp')), number(row.get('value'))
+        if stamp is not None and value is not None:
+            out[datetime.fromtimestamp(stamp, timezone.utc).date().isoformat()] = value
     return out
 
 
-def dvol_observation(raw,now=None):
-    now=now or datetime.now(timezone.utc)
-    rows=((raw or {}).get('result') or {}).get('data') or []
-    valid=[]
-    for row in rows:
-        if not isinstance(row,list) or len(row)<5:
-            continue
-        stamp,value=number(row[0]),number(row[4])
-        if stamp is not None and stamp>=0 and value is not None and value>0 and stamp+3600000<=now.timestamp()*1000:
-            valid.append((stamp,value))
-    if not valid:
-        return {}
-    stamp,value=max(valid)
-    return {'value':value,'date':datetime.fromtimestamp((stamp+3600000)/1000,timezone.utc).isoformat()}
+def fetch_fear_cmc(errors, now):
+    start = int((now - timedelta(days=400)).timestamp())
+    raw = safe_get(f'https://api.coinmarketcap.com/data-api/v3/fear-greed/chart?start={start}&end={int(now.timestamp())}', errors)
+    out = {}
+    for row in ((raw or {}).get('data') or {}).get('dataList') or []:
+        stamp, value = number(row.get('timestamp')), number(row.get('score'))
+        if stamp is not None and value is not None:
+            out[datetime.fromtimestamp(stamp, timezone.utc).date().isoformat()] = value
+    return out
 
 
-def latest_endpoint(raw, fields):
-    row=raw[-1] if isinstance(raw,list) and raw else raw
-    if not isinstance(row,dict):
-        return {}
-    value=next((number(row[f]) for f in fields if number(row.get(f)) is not None),None)
-    return {'value':value,'date':row.get('d') or row.get('date') or row.get('day')}
+def ratio_rows(body, field='longShortRatio'):
+    out = []
+    for row in body if isinstance(body, list) else []:
+        stamp, value = number(row.get('timestamp')), number(row.get(field))
+        long_part = number(row.get('longAccount'))
+        if stamp is not None and value is not None:
+            out.append({'t': int(stamp), 'ratio': value, 'long': long_part})
+    return sorted(out, key=lambda r: r['t'])
+
+
+def fetch_derivatives(symbol, errors, now):
+    """Funding, positioning ratios (via Singapore proxy when configured), DVOL and RR25."""
+    pair = symbol + 'USDT'
+    requests = [('/fapi/v1/premiumIndex', {'symbol': pair}),
+                ('/futures/data/globalLongShortAccountRatio', {'symbol': pair, 'period': '1d', 'limit': 31}),
+                ('/futures/data/topLongShortPositionRatio', {'symbol': pair, 'period': '1d', 'limit': 31}),
+                ('/futures/data/globalLongShortAccountRatio', {'symbol': pair, 'period': '1h', 'limit': 1}),
+                ('/futures/data/topLongShortPositionRatio', {'symbol': pair, 'period': '1h', 'limit': 1})]
+    try:
+        results = binance_futures.fetch_many(requests)
+    except Exception as exc:
+        results = [{'status': 0, 'error': type(exc).__name__}] * len(requests)
+    for (path, _), result in zip(requests, results):
+        if result.get('status') != 200:
+            errors.append({'url': binance_futures.HOST + path + '?symbol=' + pair, 'error': str(result.get('error'))})
+    body = [r.get('body') if r.get('status') == 200 else None for r in results]
+    out = {}
+    prem = body[0] if isinstance(body[0], dict) else {}
+    rate, stamp = number(prem.get('lastFundingRate')), number(prem.get('time'))
+    if rate is not None and stamp:
+        out['funding'] = metric(rate * 100, datetime.fromtimestamp(stamp / 1000, timezone.utc).isoformat(),
+                                'Binance Futures', 12, '最新资金费率（每期，%）。年化按每 8 小时结算估算。')
+    for key, idx, label in (('long_short', 1, '全体账户多空人数比'), ('top_position', 2, '大户持仓多空比')):
+        rows = ratio_rows(body[idx])
+        # Daily rows are stamped at the period start; the newest reading comes from the hourly series.
+        hourly = ratio_rows(body[3 if key == 'long_short' else 4])
+        if hourly:
+            rows = rows + hourly
+        if rows:
+            last = rows[-1]
+            month = next((r for r in rows if abs(last['t'] - r['t'] - 30 * 86400000) <= 43200000), None)
+            out[key] = {**metric(last['ratio'], datetime.fromtimestamp(last['t'] / 1000, timezone.utc).isoformat(),
+                                 'Binance Futures', 12,
+                                 f'{label}。全体账户按人数计；大户为保证金前 20% 账户，按持仓计。'),
+                        'longPct': round(last['long'] * 100, 1) if last['long'] is not None else None,
+                        'ago30': month['ratio'] if month else None}
+    end = int(now.timestamp() * 1000)
+    raw = safe_get(f'https://www.deribit.com/api/v2/public/get_volatility_index_data?currency={symbol}'
+                   f'&start_timestamp={end - 33 * 86400000}&end_timestamp={end}&resolution=3600', errors)
+    rows = [(number(r[0]), number(r[4])) for r in ((raw or {}).get('result') or {}).get('data') or []
+            if isinstance(r, list) and len(r) >= 5]
+    rows = sorted((t, v) for t, v in rows if t is not None and v and t + 3600000 <= end)
+    if rows:
+        t, v = rows[-1]
+        month = next((x for x in rows if abs(t - x[0] - 30 * 86400000) <= 3600000), None)
+        out['dvol'] = {**metric(v, datetime.fromtimestamp((t + 3600000) / 1000, timezone.utc).isoformat(), 'Deribit', 12,
+                                'DVOL：Deribit 30 日期权隐含波动率指数，最近完整小时。'),
+                       'ago30': month[1] if month else None}
+    book = safe_get(f'https://www.deribit.com/api/v2/public/get_book_summary_by_currency?currency={symbol}&kind=option', errors)
+    rr = options_rr.rr25_30d((book or {}).get('result'), now)
+    if rr:
+        out['rr25'] = metric(rr['value'], now.replace(minute=0, second=0, microsecond=0).isoformat(), 'Deribit', 12,
+                             f"25Δ 风险逆转 = 25Δ 看涨 IV − 25Δ 看跌 IV（{rr['tenor']}），负值表示看跌期权更贵。"
+                             '由 Deribit 期权标记 IV 按 Black-Scholes 远期 delta 计算。')
+    return out
 
 
 class ETFTableParser(HTMLParser):
     def __init__(self):
         super().__init__()
-        self.rows=[]
-        self.row=[]
-        self.cell=None
+        self.rows, self.row, self.cell = [], [], None
 
-    def handle_starttag(self,tag,attrs):
-        if tag=='tr': self.row=[]
-        if tag in ('td','th'): self.cell=''
+    def handle_starttag(self, tag, attrs):
+        if tag == 'tr':
+            self.row = []
+        if tag in ('td', 'th'):
+            self.cell = ''
 
-    def handle_data(self,text):
-        if self.cell is not None: self.cell+=text
+    def handle_data(self, text):
+        if self.cell is not None:
+            self.cell += text
 
-    def handle_endtag(self,tag):
-        if tag in ('td','th') and self.cell is not None:
+    def handle_endtag(self, tag):
+        if tag in ('td', 'th') and self.cell is not None:
             self.row.append(self.cell.strip())
-            self.cell=None
-        if tag=='tr' and self.row:
+            self.cell = None
+        if tag == 'tr' and self.row:
             self.rows.append(self.row)
 
 
-def parse_etf(html,now=None):
-    now=now or datetime.now(timezone.utc)
-    parser=ETFTableParser()
+def parse_etf(html, now=None):
+    now = now or datetime.now(timezone.utc)
+    parser = ETFTableParser()
     parser.feed(html)
-    out={}
-    total_idx=None
+    out, total_idx = {}, None
     for row in parser.rows:
-        if 'Total' in row and ('Date' in row or row[0]==''):
-            total_idx=row.index('Total')
+        if 'Total' in row and ('Date' in row or row[0] == ''):
+            total_idx = row.index('Total')
             continue
-        if total_idx is None or len(row)<=total_idx:
+        if total_idx is None or len(row) <= total_idx:
             continue
         try:
-            day=datetime.strptime(row[0],'%d %b %Y').date()
+            day = datetime.strptime(row[0], '%d %b %Y').date()
         except ValueError:
             continue
-        if day>now.date():
+        # US-listed ETFs report after the US close; a row for the current UTC day is still partial.
+        if day > now.date() or (day == now.date() and now.hour < 23):
             continue
-        text=row[total_idx].replace(',','').replace('\u2212','-')
-        value=number('-'+text[1:-1] if text.startswith('(') and text.endswith(')') else text)
+        text = row[total_idx].replace(',', '').replace('−', '-')
+        value = number('-' + text[1:-1] if text.startswith('(') and text.endswith(')') else text)
         if value is not None:
-            out[day.isoformat()]={'date':day.isoformat(),'value':value}
-    return sorted(out.values(),key=lambda r:r['date'])[-10:]
+            out[day.isoformat()] = {'date': day.isoformat(), 'value': value}
+    return sorted(out.values(), key=lambda r: r['date'])[-10:]
 
 
-def fetch_etf(symbol,errors):
-    url='https://farside.co.uk/'+('bitcoin-etf/' if symbol=='BTC' else 'eth/')
+def fetch_etf(symbol, errors):
+    url = 'https://farside.co.uk/' + ('bitcoin-etf/' if symbol == 'BTC' else 'eth/')
     try:
-        req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (FlowHunt public-data research)'})
-        with urllib.request.urlopen(req,timeout=25) as response:
-            rows=parse_etf(response.read().decode('utf-8'))
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (FlowHunt public-data research)'})
+        with urllib.request.urlopen(req, timeout=25) as response:
+            rows = parse_etf(response.read().decode('utf-8'))
         if not rows:
             raise ValueError('no dated rows')
-        return {'rows':rows,'source':'Farside','sourceUrl':url,'asOf':rows[-1]['date'],'unit':'USD million'}
+        return {'rows': rows, 'source': 'Farside', 'sourceUrl': url, 'asOf': rows[-1]['date'], 'unit': 'USD million'}
     except Exception as exc:
-        errors.append({'url':url,'error':type(exc).__name__})
+        errors.append({'url': url, 'error': type(exc).__name__})
         return None
 
 
-def updated_chain_cache(previous, snapshot, fetched_at):
-    return {'fetchedAt':fetched_at,'snapshot':snapshot,'extras':dict(previous.get('extras') or {})}
+# ---------------------------------------------------------------- assembly
+
+def build_table(symbol, closes, store, fear_alt):
+    feats = S.price_features(closes)
+    table = dict(feats)
+    series = store.get('series', {})
+    price = feats['price']
+    if symbol == 'BTC':
+        for key in ('supply_profit', 'sopr', 'mvrv_z', 'mvrv', 'puell', 'sth_cost', 'sth_profit', 'lth_cost',
+                    'realized_price', 'true_mean', 'lth_net30'):
+            table[key] = dict(series.get(key, {}))
+        table['hash_ribbon'] = S.hash_ribbon(series.get('hashrate', {}))
+        table['whale_net30'] = S.change_over(series.get('whale_1k_10k', {}), 30)
+        table['fear'] = fear_alt
+        for key, base in (('sth_mvrv', 'sth_cost'), ('lth_ratio', 'lth_cost')):
+            table[key] = {day: p / table[base][day] for day, p in price.items() if table[base].get(day)}
+    else:
+        table['mvrv'] = dict(series.get('eth_mvrv', {}))
+        # ETH realized price follows from MVRV on the same day.
+        table['realized_price'] = {day: price[day] / v for day, v in table['mvrv'].items() if price.get(day) and v}
+    return table
 
 
-def retain_derivatives(current, previous_metrics, now):
-    """Failed fields retain their own source/time, including valid zero rates."""
-    out=dict(current)
-    for key in ('funding','long_short','dvol'):
-        new=out.get(key) or {}
-        new_date=parsed_date(new.get('date'))
-        if number(new.get('value')) is not None and new_date and new_date<=now:
-            continue
-        old=previous_metrics.get(key) or {}
-        if number(old.get('value')) is not None and parsed_date(old.get('asOf')):
-            out[key]={'value':old['value'],'date':old['asOf'],'source':old.get('source','Binance Futures'),
-                      'carriedForward':True}
-        else:
-            out.pop(key,None)
+def item_payload(item, table, today, price_series, backtest_end):
+    key, label, op, threshold, unit, linked, max_age = item
+    series = table.get(key, {})
+    found = S.asof(series, today, max_age)
+    payload = {'key': key, 'label': label, 'op': op, 'threshold': threshold, 'unit': unit, 'linked': linked,
+               'maxAgeDays': max_age, 'source': KEY_SOURCE.get(key, ''), 'sourceUrl': SOURCES.get(KEY_SOURCE.get(key, '')),
+               'note': NOTES.get('eth_mvrv' if label == 'ETH MVRV' else key, ''), 'value': None, 'asOf': None, 'triggered': None, 'gap': None}
+    latest = max(series) if series else None
+    if found:
+        day, value = found
+        payload.update(value=value, asOf=day, triggered=S.evaluate(op, threshold, value),
+                       gap=S.gap(item, value, price_series.get(day)))
+    elif latest:
+        payload.update(value=series[latest], asOf=latest, stale=True)
+    if series:
+        start = max(min(series), min(price_series))
+        payload['backtest'] = S.backtest(S.lit_set(series, op, threshold), price_series, start, backtest_end)
+    if key in ('lth_net30', 'whale_net30'):
+        payload['spark'] = [[k, round(series[k], 1)] for k in sorted(series)[-90:]]
+    return payload
+
+
+def build_asset(symbol, closes, store, fear_alt, now):
+    groups_def = S.BTC_GROUPS if symbol == 'BTC' else S.ETH_GROUPS
+    table = build_table(symbol, closes, store, fear_alt)
+    price = table['price']
+    today = closes[-1][0]
+    # Signals are judged as of the current UTC day; the last closed candle is normally yesterday.
+    eval_day = now.date().isoformat()
+    days = [day for day, _ in closes]
+    backtest_end = today
+    groups = []
+    for group in groups_def:
+        groups.append({'id': group['id'], 'title': group['title'], 'weight': group['weight'],
+                       'description': group['description'],
+                       'items': [item_payload(i, table, eval_day, price, backtest_end) for i in group['items']]})
+    raw = {}
+    for key in ('price', 'ma200d', 'ma200w', 'high90', 'drawdown90', 'sth_cost', 'lth_cost', 'realized_price', 'true_mean'):
+        found = S.asof(table.get(key, {}), today, 9 if key == 'ma200w' else 4)
+        if found:
+            raw[key] = metric(found[1], found[0], KEY_SOURCE.get(key, 'Binance'), 216 if key == 'ma200w' else 72 if key in ('price', 'ma200d', 'high90', 'drawdown90') else 120,
+                              NOTES.get(key, ''))
+    # Score / count history, evaluated on every day the inputs allow.
+    history_days = days[-365:]
+    out = {'symbol': symbol, 'asOf': today, 'groups': groups, 'metrics': raw, 'methodVersion': METHOD_VERSION}
+    if symbol == 'BTC':
+        onchain_start = min(table['sth_cost']) if table['sth_cost'] else today
+        score_days = [d for d in days if d >= onchain_start]
+        scores = {d: S.score_on(groups_def, table, d) for d in score_days}
+        out['score'] = S.score_on(groups_def, table, eval_day)
+        out['verdict'] = dict(zip(('code', 'label'), S.verdict(out['score']['lower'])))
+        out['scoreHistory'] = [[d, scores[d]['lower'], price[d]] for d in score_days]
+        combo_days = {d for d in days if S.combo_on(table, d)}
+        sth = S.asof(table['sth_cost'], today, 4)
+        high90 = table['high90'].get(today)
+        out['combo'] = {
+            'met': S.combo_on(table, today),
+            'conditions': [
+                {'id': 'sth', 'label': '跌破短期持有者成本', 'triggerPrice': sth[1] if sth else None,
+                 'asOf': sth[0] if sth else None, 'source': 'BGeometrics', 'note': 'STH 实现价格（持币 <155 天筹码的平均成本）'},
+                {'id': 'drawdown', 'label': '距 90 天收盘高点跌 ≥20%', 'triggerPrice': high90 * 0.8 if high90 else None,
+                 'asOf': today, 'source': 'Binance', 'high90': high90, 'note': '90 天收盘高点 × 0.8'},
+            ],
+            'backtest': S.backtest(combo_days, price, max(onchain_start, days[0]), backtest_end),
+        }
+        bands = {}
+        for floor in (20, 50):
+            lit = {d for d, s in scores.items() if s['lower'] >= floor}
+            bands[str(floor)] = S.backtest(lit, price, onchain_start, backtest_end)
+        out['scoreBacktest'] = bands
+        # Position band: reference line = max(200-week MA, STH cost), with days spent above it.
+        above, streak = {}, 0
+        for d in days:
+            ma, sc = table['ma200w'].get(d), S.asof(table['sth_cost'], d, 4)
+            if ma is None or sc is None:
+                streak = 0
+                continue
+            line = max(ma, sc[1])
+            streak = streak + 1 if price[d] >= line else 0
+            above[d] = (line, streak)
+        ma200w, ref = table['ma200w'].get(today), above.get(today)
+        if ma200w and ref:
+            line, streak = ref
+            zone = 0 if price[today] < ma200w else 1 if price[today] < line else 2 if streak < 28 else 3
+            out['band'] = {'ma200w': ma200w, 'line': line, 'sthCost': sth[1] if sth else None, 'zone': zone,
+                           'daysAbove': streak, 'asOf': today}
+        cohorts = {}
+        for key, label, note in (('whale_1k_10k', '巨鲸 1k–10k BTC', '地址余额口径'),
+                                 ('whale_10k_plus', '超大户 ≥10k BTC', '含交易所冷钱包'),
+                                 ('retail_lt1', '散户 <1 BTC', '地址余额口径'),
+                                 ('lth_net30', 'LTH 30天净变化', '长期持有者供给')):
+            ser = store.get('series', {}).get(key, {})
+            if not ser:
+                continue
+            last = max(ser)
+            entry = {'label': label, 'note': note, 'asOf': last, 'value': ser[last]}
+            if key != 'lth_net30':
+                for n in (7, 30):
+                    old = ser.get((datetime.fromisoformat(last) - timedelta(days=n)).date().isoformat())
+                    entry[f'd{n}'] = ser[last] - old if old is not None else None
+            entry['spark'] = [[k, round(ser[k], 1)] for k in sorted(ser)[-90:]]
+            cohorts[key] = entry
+        out['cohorts'] = cohorts
+        combo_line = {d: min(S.asof(table['sth_cost'], d, 4)[1], table['high90'][d] * 0.8)
+                      for d in history_days if S.asof(table['sth_cost'], d, 4) and d in table['high90']}
+    else:
+        lit_counts = {}
+        for d in days:
+            n = 0
+            for item in groups_def[0]['items']:
+                found = S.asof(table.get(item[0], {}), d, item[6])
+                n += bool(found and S.evaluate(item[2], item[3], found[1]))
+            lit_counts[d] = n
+        out['scoreHistory'] = [[d, lit_counts[d], price[d]] for d in days[-1460:]]
+        out['score'] = {'lit': sum(1 for i in groups[0]['items'] if i['triggered']), 'total': len(groups_def[0]['items']),
+                        'known': sum(1 for i in groups[0]['items'] if i['triggered'] is not None)}
+        combo_line = {}
+    ladder = []
+    p_today = price[today]
+
+    def rung(label, value, as_of, meaning, source):
+        if value:
+            ladder.append({'label': label, 'value': value, 'asOf': as_of, 'meaning': meaning, 'source': source,
+                           'pct': (value / p_today - 1) * 100})
+    rung('最近日收盘', p_today, today, '', 'Binance')
+    if table['ma200d'].get(today):
+        rung('Mayer 0.8 价', table['ma200d'][today] * 0.8, today, 'Mayer 倍数 <0.8', 'Binance')
+        rung('200 日均线', table['ma200d'][today], today, '日线趋势分界', 'Binance')
+    if table['ma200w'].get(today):
+        rung('200 周均线', table['ma200w'][today], today, '价格/200周均线 <1', 'Binance')
+    if table['high90'].get(today):
+        rung('90天高点 × 0.8', table['high90'][today] * 0.8, today, '回撤 ≥20%' + ('（组合②）' if symbol == 'BTC' else ''), 'Binance')
+    for key, label, meaning in (('true_mean', 'True Mean 成本', '活跃投资者平均成本'),
+                                ('sth_cost', 'STH 成本', '跌破即组合①；STH-MVRV <1'),
+                                ('realized_price', '实现价格', 'MVRV <1'),
+                                ('lth_cost', 'LTH 成本', '价格/LTH 成本 <1')):
+        found = S.asof(table.get(key, {}), today, 9)
+        if found:
+            rung(label, found[1], found[0], meaning, 'BGeometrics' if symbol == 'BTC' else 'BGeometrics（由 ETH MVRV 换算）')
+    ladder.sort(key=lambda r: -r['value'])
+    out['ladder'] = ladder
+    out['history'] = [{'date': d, 'close': price[d], 'ma200': round(table['ma200d'][d], 2) if d in table['ma200d'] else None,
+                       'trigger': round(combo_line[d], 2) if d in combo_line else None} for d in history_days]
     return out
 
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--output',type=Path,default=ROOT/'data/observatory.json')
-    args=parser.parse_args()
-    now=datetime.now(timezone.utc)
-    previous=load_file(args.output)
-    errors=[]
-    chain_cache=previous.get('chainCache') or {}
-    stamp=parsed_date(chain_cache.get('fetchedAt'))
-    if not stamp or not 0 <= (now-stamp).total_seconds() < 86400:
-        snapshot=safe_get('https://api.bitcoin-data.com/v1/snapshot',errors)
-        if isinstance(snapshot,dict) and snapshot.get('date'):
-            chain_cache=updated_chain_cache(chain_cache,snapshot,now.isoformat())
-            endpoints={
-                'sth_cost':('realized-price-sth',('realizedPriceSth','realizedPriceSTH','realizedPrice','sthRealizedPrice')),
-                'sth_mvrv':('sth-mvrv',('sthMvrv','sthMVRV','mvrv')),
-                'sth_profit':('percent-sth-in-profit',('percentSthInProfit',)),
-                'supply_profit':('supply-in-profit-pct',('supplyInProfitPct',)),
-            }
-            for key,(endpoint,fields) in endpoints.items():
-                raw=safe_get(f'https://api.bitcoin-data.com/v1/{endpoint}/last',errors)
-                parsed=latest_endpoint(raw,fields)
-                if parsed.get('value') is not None and parsed_date(parsed.get('date')):
-                    chain_cache['extras'][key]=parsed
-    cost_attempt=parsed_date(chain_cache.get('costAttemptAt'))
-    if not cost_attempt or not 0 <= (now-cost_attempt).total_seconds()<86400:
-        for key,endpoint,fields in (
-            ('true_mean','true-market-mean',('trueMarketMean','trueMarketMeanPrice')),
-            ('lth_cost','realized-price-lth',('realizedPriceLth','realizedPriceLTH','lthRealizedPrice'))):
-            raw=safe_get(f'https://api.bitcoin-data.com/v1/{endpoint}/last',errors)
-            row=latest_endpoint(raw,fields)
-            if row.get('value') is not None and parsed_date(row.get('date')):
-                chain_cache.setdefault('extras',{})[key]=row
-        chain_cache['costAttemptAt']=now.isoformat()
-    fng=safe_get('https://api.alternative.me/fng/?limit=2',errors)
-    fear=(previous.get('fear') or {})
-    if isinstance(fng,dict) and fng.get('data'):
-        row=fng['data'][0]
-        stamp=number(row.get('timestamp'))
-        if stamp:
-            fear={'value':number(row.get('value')),'date':datetime.fromtimestamp(stamp,timezone.utc).isoformat()}
-    assets={}
-    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
-        futures={symbol:pool.submit(fetch_candles,symbol,errors,now) for symbol in ('BTC','ETH')}
-        for symbol,future in futures.items():
-            points=future.result()
-            if not points:
-                # Price calculations need the full history; retain old computed values unchanged instead.
-                old=(previous.get('assets') or {}).get(symbol)
-                if old:
-                    for key,m in old['metrics'].items():
-                        m.update(metric(m.get('value'),m.get('asOf'),m.get('source'),now,
-                                        m.get('maxAgeHours',72),m.get('note',''),m.get('dependencies')))
-                    for group in old['groups']:
-                        for item in group['items']:
-                            item['triggered']=trigger(old['metrics'][item['key']],item['op'],item['threshold']) if item['op'] else None
-                    old['score']=score_bounds(old['groups']) if symbol=='BTC' else None
-                    assets[symbol]=old
-                    continue
-            previous_metrics=(((previous.get('assets') or {}).get(symbol) or {}).get('metrics') or {})
-            derivatives=retain_derivatives(fetch_derivatives(symbol,errors),previous_metrics,datetime.now(timezone.utc))
-            extras={**(chain_cache.get('extras') or {}),'fear':fear,'derivatives':derivatives}
-            legacy=load_file(ROOT/('data.json' if symbol=='BTC' else 'eth-data.json'))
-            assets[symbol]=build_asset(symbol,points,chain_cache.get('snapshot') or {},extras,legacy,datetime.now(timezone.utc))
-            assets[symbol]['etf']=fetch_etf(symbol,errors) or ((previous.get('assets') or {}).get(symbol) or {}).get('etf')
-    payload={'schemaVersion':1,'generatedAt':datetime.now(timezone.utc).isoformat(),'assets':assets,'fear':fear,
-             'chainCache':chain_cache,'errors':errors,
-             'sources':[{'name':k,'url':v} for k,v in SOURCES.items()]}
-    args.output.parent.mkdir(parents=True,exist_ok=True)
-    args.output.write_text(json.dumps(payload,ensure_ascii=False,allow_nan=False,separators=(',',':'))+'\n',encoding='utf-8')
-    for symbol,asset in assets.items():
-        fresh=sum(m['status']=='fresh' for m in asset['metrics'].values())
-        print(f'{symbol}: {fresh}/{len(asset["metrics"])} fresh metrics, {len(asset["history"])} closed daily candles')
-    print(f'Public source failures: {len(errors)}; retained dates are never refreshed on failure.')
-    # Broken price acquisition must fail CI rather than publish a fully empty dashboard.
-    return 0 if all(a['metrics']['price']['status']=='fresh' for a in assets.values()) else 1
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output', type=Path, default=ROOT / 'data/observatory.json')
+    parser.add_argument('--store', type=Path, default=ROOT / 'data/onchain-history.json')
+    parser.add_argument('--offline-onchain', action='store_true', help='Use the stored on-chain history without calling BGeometrics')
+    args = parser.parse_args()
+    now = datetime.now(timezone.utc)
+    previous = load_file(args.output)
+    errors = []
+    store = onchain_store.load(args.store)
+    if not args.offline_onchain:
+        store, chain_errors = onchain_store.refresh(store, now)
+        errors.extend(chain_errors)
+        onchain_store.save(store, args.store)
+    fear_alt = fetch_fear_alt(errors)
+    fear_cmc = fetch_fear_cmc(errors, now)
+    assets = {}
+    for symbol in ('BTC', 'ETH'):
+        closes = fetch_candles(symbol, errors, now)
+        old = (previous.get('assets') or {}).get(symbol)
+        if not closes:
+            if old:
+                assets[symbol] = old
+            continue
+        asset = build_asset(symbol, closes, store, fear_alt, now)
+        asset['derivatives'] = fetch_derivatives(symbol, errors, now)
+        for key, entry in ((old or {}).get('derivatives') or {}).items():
+            # A failed source keeps its last observation and original time; the page judges expiry.
+            asset['derivatives'].setdefault(key, {**entry, 'carriedForward': True})
+        asset['etf'] = fetch_etf(symbol, errors) or (old or {}).get('etf')
+        sentiment = {}
+        for key, ser, src in (('fear', fear_alt, 'Alternative.me'), ('cmc_fear', fear_cmc, 'CoinMarketCap')):
+            if ser:
+                last = max(ser)
+                prev = ser.get((datetime.fromisoformat(last) - timedelta(days=1)).date().isoformat())
+                sentiment[key] = {**metric(ser[last], last + 'T00:00:00+00:00', src, 48,
+                                           'BTC 市场情绪，0=极度恐慌，100=极度贪婪。'),
+                                  'prev': prev}
+        asset['sentiment'] = sentiment
+        if symbol == 'ETH':
+            legacy = load_file(ROOT / 'eth-data.json')
+            dates = legacy.get('as_of') or {}
+            facts = []
+            for key, label, unit, src in (
+                    ('staked_pct', '质押占比', '%', 'validatorqueue'), ('total_staked', '总质押量', ' ETH', 'validatorqueue'),
+                    ('burn_rate_daily', '每日销毁', ' ETH', 'Ethereum RPC'), ('burn_issuance_pct', '销毁 / 估算增发', '%', 'Ethereum RPC'),
+                    ('stake_conc_top5', '质押前五集中度', '%', 'DefiLlama'), ('whale_top100_pct', '前百地址持仓', '%', 'Blockscout'),
+                    ('holder_count', '非零余额地址', '', 'Coin Metrics'), ('active_addr_7d', '7日均活跃地址', '', 'Coin Metrics'),
+                    ('stablecoin_mcap_b', '链上稳定币规模', ' B USD', 'DefiLlama'), ('stablecoin_change_30d', '稳定币 30天变化', '%', 'DefiLlama')):
+                observed = dates.get(key)
+                if key == 'burn_issuance_pct':
+                    deps = [dates.get('burn_rate_daily'), dates.get('total_staked')]
+                    observed = min(deps) if all(deps) else None
+                facts.append({'key': key, 'label': label, 'unit': unit,
+                              **metric(legacy.get(key), observed, src, 72,
+                                       '近 7200 个区块基础费销毁估算，不含 blob 费用。' if key == 'burn_rate_daily' else
+                                       '销毁量 ÷ 由质押量估算的共识层增发，非完整增发统计。' if key == 'burn_issuance_pct' else
+                                       '前 100 个地址含质押合约、交易所与跨链桥，不等于巨鲸实体。' if key == 'whale_top100_pct' else '')})
+            asset['facts'] = facts
+        assets[symbol] = asset
+    payload = {'schemaVersion': 2, 'generatedAt': datetime.now(timezone.utc).isoformat(), 'assets': assets,
+               'onchainFetched': store.get('fetched', {}), 'errors': errors,
+               'sources': [{'name': k, 'url': v} for k, v in SOURCES.items() if k != 'FlowHunt 计算']}
+    args.output.parent.mkdir(parents=True, exist_ok=True)
+    args.output.write_text(json.dumps(payload, ensure_ascii=False, allow_nan=False, separators=(',', ':')) + '\n', encoding='utf-8')
+    for symbol, asset in assets.items():
+        items = [i for g in asset['groups'] for i in g['items']]
+        known = sum(i['triggered'] is not None for i in items)
+        print(f'{symbol}: {known}/{len(items)} signals with fresh inputs; as of {asset.get("asOf")}')
+    print(f'Source failures: {len(errors)}')
+    for e in errors[:12]:
+        print('  ', e['error'], e['url'][:110])
+    return 0 if all(a.get('asOf') for a in assets.values()) and len(assets) == 2 else 1
 
 
-if __name__=='__main__':
+if __name__ == '__main__':
     raise SystemExit(main())

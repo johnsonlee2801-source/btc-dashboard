@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
 """Public Binance positioning snapshot. No keys, orders or paid endpoints."""
 import argparse
-import concurrent.futures
 import copy
 import json
 import math
-import threading
+import sys
 import time
-import urllib.error
-import urllib.parse
-import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT/'scripts'))
+import binance_futures  # noqa: E402
 HOST = 'https://fapi.binance.com'
 DOC = 'https://developers.binance.com/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data'
 FIELDS = ('topLong','accountLong','topDelta','accountDelta','oiUsd','oiUnits','oiDelta',
@@ -183,24 +181,50 @@ def snapshot_healthy(snapshot, now):
     return False
 
 
+def summary(payload, now):
+    """Small digest for the BTC/ETH pages: top long/short divergences and the two majors."""
+    def val(row, key):
+        m = row['metrics'].get(key) or {}
+        v, t = number(m.get('value')), number(m.get('asOf'))
+        return (v, t) if v is not None and t is not None and 0 <= now - t <= 10800000 else (None, None)
+    divergence, majors = [], {}
+    for row in payload.get('rows', []):
+        (top, t1), (acc, t2), (oi, t3) = val(row, 'topLong'), val(row, 'accountLong'), val(row, 'oiUsd')
+        if None in (top, acc, oi) or not (t1 == t2 == t3):
+            continue
+        entry = {'symbol': row['symbol'], 'baseAsset': row.get('baseAsset'), 'topLong': top, 'accountLong': acc,
+                 'oiUsd': oi, 'asOf': t1}
+        if row['symbol'] in ('BTCUSDT', 'ETHUSDT'):
+            majors[row['symbol']] = entry
+        if oi >= 10_000_000 and (top - .5) * (acc - .5) < 0:
+            divergence.append({**entry, 'gap': abs(top - acc) * 100})
+    divergence.sort(key=lambda r: -r['gap'])
+    return {'generatedAt': payload.get('generatedAt'), 'dataStatus': payload.get('dataStatus'),
+            'universeTotal': payload.get('universeTotal'), 'sampled': payload.get('sampled'),
+            'divergence': divergence[:8], 'majors': majors}
+
+
 class PublicClient:
+    """Public market data through scripts/binance_futures (direct or Singapore proxy)."""
+    BLOCKING=(401,403,418,429,451)
+
     def __init__(self):
-        self.lock=threading.Lock();self.next_request=0;self.blocked=None
+        self.blocked=None
 
     def get(self,path,params=None):
-        with self.lock:
-            if self.blocked:raise RuntimeError(self.blocked)
-            delay=max(0,self.next_request-time.monotonic())
-            self.next_request=max(time.monotonic(),self.next_request)+.4 # <=750 requests/5min
-        if delay:time.sleep(delay)
         if self.blocked:raise RuntimeError(self.blocked)
-        url=HOST+path+('?' + urllib.parse.urlencode(params) if params else '')
-        try:
-            with urllib.request.urlopen(urllib.request.Request(url,headers={'User-Agent':'FlowHunt-public-research/1.0'}),timeout=12) as response:
-                return json.load(response)
-        except urllib.error.HTTPError as exc:
-            if exc.code in (401,403,418,429,451):self.blocked='公开源访问受限 HTTP '+str(exc.code)
-            raise RuntimeError('HTTP '+str(exc.code)) from None
+        result=binance_futures.fetch_many([(path,params)])[0]
+        if result.get('status')==200:return result['body']
+        if result.get('status') in self.BLOCKING:self.blocked='公开源访问受限 HTTP '+str(result['status'])
+        raise RuntimeError(result.get('error') or 'HTTP error')
+
+    def get_many(self,requests,pause=32):
+        # ~100 weighted requests per 32s keeps a full scan under Binance's 1000/5min data limit.
+        if self.blocked:raise RuntimeError(self.blocked)
+        results=binance_futures.fetch_many(requests,pause=pause)
+        blocked=[r for r in results if r.get('status') in self.BLOCKING]
+        if results and len(blocked)==len(results):self.blocked='公开源访问受限 HTTP '+str(blocked[0]['status'])
+        return results
 
 
 def main():
@@ -227,23 +251,30 @@ def main():
     evidence_file=ROOT/'data/positioning-evidence.json'
     evidence=json.loads(evidence_file.read_text()).get('assets',{}) if evidence_file.exists() else {}
     rows=[];errors=[]
-    def collect(info):
-        symbol=info['symbol'];data={'ticker':tickers.get(symbol)};failures=[]
-        for key,path in [('oi','/futures/data/openInterestHist'),('top','/futures/data/topLongShortPositionRatio'),('accounts','/futures/data/globalLongShortAccountRatio'),('funding','/fapi/v1/fundingRate')]:
-            params={'symbol':symbol,'limit':2 if key=='funding' else 26}
-            if key!='funding':params['period']='1h'
-            try:data[key]=client.get(path,params)
-            except Exception as exc:
-                data[key]=None;failures.append({'symbol':symbol,'source':key,'error':str(exc)[:100]})
-        now=int(time.time()*1000)
-        row=build_row(info,data,previous.get(symbol),now)
-        apply_evidence(row,evidence.get(symbol),now)
-        return row,failures
-    print('Public universe:',len(infos),'selected:',len(selected),flush=True)
-    with concurrent.futures.ThreadPoolExecutor(max_workers=4) as pool:
-        for row,failures in pool.map(collect,selected):
-            rows.append(row);errors.extend(failures)
-            if len(rows)%25==0:print('Collected',len(rows),'/',len(selected),'source errors',len(errors),flush=True)
+    endpoints=[('oi','/futures/data/openInterestHist'),('top','/futures/data/topLongShortPositionRatio'),('accounts','/futures/data/globalLongShortAccountRatio'),('funding','/fapi/v1/fundingRate')]
+    print('Public universe:',len(infos),'selected:',len(selected),'proxy:',bool(binance_futures.PROXY),flush=True)
+    per_batch=binance_futures.BATCH//len(endpoints)
+    for start in range(0,len(selected),per_batch):
+        chunk=selected[start:start+per_batch];requests=[]
+        for info in chunk:
+            for key,path in endpoints:
+                params={'symbol':info['symbol'],'limit':2 if key=='funding' else 26}
+                if key!='funding':params['period']='1h'
+                requests.append((path,params))
+        try:results=client.get_many(requests)
+        except RuntimeError as exc:results=[{'status':0,'error':str(exc)}]*len(requests)
+        for index,info in enumerate(chunk):
+            symbol=info['symbol'];data={'ticker':tickers.get(symbol)}
+            for offset,(key,_) in enumerate(endpoints):
+                result=results[index*len(endpoints)+offset]
+                if result.get('status')==200:data[key]=result.get('body')
+                else:
+                    data[key]=None;errors.append({'symbol':symbol,'source':key,'error':str(result.get('error'))[:100]})
+            now=int(time.time()*1000)
+            row=build_row(info,data,previous.get(symbol),now)
+            apply_evidence(row,evidence.get(symbol),now)
+            rows.append(row)
+        print('Collected',len(rows),'/',len(selected),'source errors',len(errors),flush=True)
     now=int(time.time()*1000)
     compact={'asOf':now,'rows':[{'symbol':r['symbol'],'metrics':{k:r['metrics'][k] for k in ('concentration','topLong','accountLong','oiUsd')}} for r in rows]}
     history=history_append(old.get('history',[]),compact,now)
@@ -254,6 +285,7 @@ def main():
                             '大户为币安保证金前20%用户；全体账户含大户。持仓与OI变化不等于机构现货净买入。']}
     payload['dataStatus']='unavailable' if not snapshot_healthy(payload,now) else 'partial' if errors else 'available'
     output.write_text(json.dumps(payload,ensure_ascii=False,separators=(',',':'),allow_nan=False)+'\n')
+    (ROOT/'data/positioning-summary.json').write_text(json.dumps(summary(payload,now),ensure_ascii=False,separators=(',',':'),allow_nan=False)+'\n')
     print(json.dumps({'rows':len(rows),'errors':len(errors),'output':str(output)},ensure_ascii=False),flush=True)
     if payload['dataStatus']!='available':print('::warning::Published valid degraded source state; data health='+payload['dataStatus'],flush=True)
 

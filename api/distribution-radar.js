@@ -4,7 +4,7 @@
  * 仅作市场结构观察，不构成投资建议。
  */
 
-export const config = { runtime: 'edge' };
+export const config = { runtime: 'edge', regions: ['sin1'] };
 
 const JSON_HEADERS = {
   'Content-Type': 'application/json; charset=utf-8',
@@ -30,6 +30,7 @@ const ENDPOINTS = {
   krakenTicker: 'https://api.kraken.com/0/public/Ticker?pair=XBTUSD',
   bitstampTicker: 'https://www.bitstamp.net/api/v2/ticker/btcusd/',
   geminiTicker: 'https://api.gemini.com/v1/pubticker/btcusd',
+  krakenUsdtUsd: 'https://api.kraken.com/0/public/Ticker?pair=USDTUSD',
 };
 
 function num(v, fallback = null) {
@@ -286,7 +287,12 @@ export default async function handler(req) {
   const fiatSpot = parseFiatSpotTicker(data);
   const fiatSpotPrice = fiatSpot.price;
   const fiatSpotSource = fiatSpot.source;
-  const fiatSpotPremiumPct = fiatSpotPrice && spotPrice ? (fiatSpotPrice / spotPrice - 1) * 100 : null;
+  // Binance quotes in USDT, which itself drifts around $1 by ±0.1%. Convert before comparing with USD venues,
+  // otherwise the "premium" mostly measures the USDT/USD basis.
+  const usdtUsdRow = Object.values(data.krakenUsdtUsd?.result || {})[0];
+  const usdtUsd = num(usdtUsdRow?.c?.[0]);
+  const spotPriceUsd = spotPrice && usdtUsd && usdtUsd > 0.97 && usdtUsd < 1.03 ? spotPrice * usdtUsd : null;
+  const fiatSpotPremiumPct = fiatSpotPrice && spotPriceUsd ? (fiatSpotPrice / spotPriceUsd - 1) * 100 : null;
   // Backward-compatible aliases for older frontends/consumers.
   const coinbasePrice = fiatSpotPrice;
   const coinbasePremiumPct = fiatSpotPremiumPct;
@@ -319,7 +325,8 @@ export default async function handler(req) {
   // 2) 全市场合约/现货成交比（权重 16）
   let ratioScore = 7;
   if (Number.isFinite(ratioForMetric)) {
-    ratioScore = ratioForMetric > 5 ? 16 : ratioForMetric > 3 ? 12 : ratioForMetric > 2 ? 8 : 4;
+    // BTC derivatives volume normally runs 4-10x spot; only clearly elevated levels score high.
+    ratioScore = ratioForMetric > 14 ? 16 : ratioForMetric > 10 ? 12 : ratioForMetric > 6 ? 8 : 4;
     const futuresVenueNames = futuresVenues.filter(v => v.ok).map(v => v.venue).join('、') || '无';
     const spotVenueNames = spotVenues.filter(v => v.ok).map(v => v.venue).join('、') || '无';
     addMetric(metrics, {
@@ -384,13 +391,13 @@ export default async function handler(req) {
   // 6) 美元现货溢价（权重 12）
   let cbScore = 5;
   if (Number.isFinite(fiatSpotPremiumPct)) {
-    cbScore = fiatSpotPremiumPct < -0.08 ? 12 : fiatSpotPremiumPct < 0 ? 9 : fiatSpotPremiumPct < 0.04 ? 6 : 2;
+    cbScore = fiatSpotPremiumPct < -0.15 ? 12 : fiatSpotPremiumPct < -0.05 ? 9 : fiatSpotPremiumPct < 0.05 ? 6 : 2;
     if ((price24hPct ?? price48hPct ?? 0) > 1 && fiatSpotPremiumPct < 0.02) cbScore = Math.min(12, cbScore + 2);
     addMetric(metrics, {
       id: 'coinbase_premium', name: '美元现货溢价', maxScore: 12, score: cbScore,
       status: cbScore >= 9 ? 'risk' : cbScore <= 3 ? 'healthy' : 'neutral',
       value: `${fiatSpotPremiumPct >= 0 ? '+' : ''}${fiatSpotPremiumPct.toFixed(3)}% (${fiatSpotSource})`,
-      detail: `${fiatSpotSource} BTC/USD ${usd(fiatSpotPrice, 2)} vs Binance BTCUSDT ${usd(spotPrice, 2)}。使用 Coinbase/Kraken/Bitstamp/Gemini fallback；溢价弱代表美元现货买盘不积极。`,
+      detail: `${fiatSpotSource} BTC/USD ${usd(fiatSpotPrice, 2)} vs Binance BTCUSDT ${usd(spotPrice, 2)} × USDT/USD ${usdtUsd?.toFixed(4)}（Kraken）。先扣除 USDT 自身的溢价/折价，再比较美元现货买盘强弱。`,
     });
   } else {
     notes.push('fiat spot premium unavailable; all Coinbase/Kraken/Bitstamp/Gemini fallback sources failed; metric set neutral');
@@ -452,7 +459,7 @@ export default async function handler(req) {
     notes: [
       '仅作为市场结构观察，不构成投资建议。',
       '全市场合约成交量聚合 Binance / OKX / Bybit / Deribit；现货成交量聚合 Binance / OKX / Bybit。Deribit 只作为合约侧参考、不是现货。',
-      'Coinbase/Kraken/Bitstamp/Gemini 法币现货价格用于溢价，成交量聚合暂以 Binance/OKX/Bybit 为主。',
+      'Coinbase/Kraken/Bitstamp/Gemini 法币现货价格用于溢价，Binance USDT 价格先按 Kraken USDT/USD 折算成美元；成交量聚合暂以 Binance/OKX/Bybit 为主。',
       '单一数据源失败不会中断整体评分，失败项按中性或待接入处理。',
       ...notes,
     ],

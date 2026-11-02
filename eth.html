@@ -2,51 +2,50 @@
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ETH 低位观察台｜链上信号与周期研究｜FlowHunt</title>
-<meta name="description" content="FlowHunt ETH 观察台：用真实公开数据交叉观察价格周期、链上估值、流动性与市场情绪。缺失和过期数据明确标注。仅作研究参考，不构成投资建议。">
+<title>ETH 低位观察台｜周期信号、触发价与历史回测｜FlowHunt</title>
+<meta name="description" content="FlowHunt ETH 低位观察台：6 项价格周期与链上估值信号，每项给出当前值、触发线、距触发的距离与对应价格，并附公开数据回测。缺失和过期数据明确标注。仅作研究参考，不构成投资建议。">
 <link rel="canonical" href="https://btc.flowhunt.net/eth">
-<meta name="theme-color" content="#0c1016"><link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<meta property="og:title" content="ETH 低位观察台｜FlowHunt"><meta property="og:description" content="用信号交叉观察市场，用来源验证每个数值。仅作研究参考，不构成投资建议。"><meta property="og:type" content="website"><meta property="og:url" content="https://btc.flowhunt.net/eth"><meta property="og:image" content="https://btc.flowhunt.net/og-image.jpg">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="ETH 低位观察台｜FlowHunt"><meta name="twitter:image" content="https://btc.flowhunt.net/og-image.jpg">
+<meta name="theme-color" content="#0c1016"><link rel="icon" href="/favicon-eth.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:title" content="ETH 低位观察台｜FlowHunt"><meta property="og:description" content="每个信号都有触发价和历史回测。仅作研究参考，不构成投资建议。"><meta property="og:type" content="website"><meta property="og:url" content="https://btc.flowhunt.net/eth"><meta property="og:image" content="https://btc.flowhunt.net/og-eth.jpg">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="ETH 低位观察台｜FlowHunt"><meta name="twitter:image" content="https://btc.flowhunt.net/og-eth.jpg">
+<link rel="stylesheet" href="/assets/site.css">
 <link rel="stylesheet" href="/assets/observatory.css">
-<link rel="stylesheet" href="/assets/positioning-radar.css">
-<script src="/assets/positioning-radar-model.js" defer></script><script src="/assets/positioning-radar.js" defer></script>
 <link rel="preload" href="/data/observatory.json" as="fetch" crossorigin>
-<link rel="preload" href="/data/cex-reserves.json" as="fetch" crossorigin>
 <script src="/assets/observatory-model.js" defer></script><script src="/assets/observatory.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"FlowHunt ETH 观察台","url":"https://btc.flowhunt.net/eth","applicationCategory":"FinanceApplication","operatingSystem":"Web","description":"公开数据市场观察，仅作研究参考，不构成投资建议。"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"FlowHunt ETH 低位观察台","url":"https://btc.flowhunt.net/eth","applicationCategory":"FinanceApplication","operatingSystem":"Web","description":"公开数据市场观察，仅作研究参考，不构成投资建议。"}</script>
 </head>
 <body data-asset="ETH">
 <a class="skip-link" href="#main">跳到主要内容</a>
-<header class="topbar"><div class="topbar-inner">
-<a class="brand" href="/" aria-label="FlowHunt 首页"><span class="brand-mark" aria-hidden="true">ƒ</span><div><strong>FlowHunt</strong><div class="brand-sub">流程猎人 · 市场观察</div></div></a>
-<nav class="mainnav" aria-label="资产导航"><a href="/" ><span class="coin-mini" aria-hidden="true">₿</span>BTC</a><a href="/eth" aria-current="page"><span class="coin-mini" aria-hidden="true">Ξ</span>ETH</a></nav>
-<nav class="toolnav" aria-label="研究工具"><a href="/positioning-radar">资金雷达</a><a href="/distribution-radar">派发雷达</a><a href="/halving">⏳ 减半周期</a><button type="button" class="text-button" id="sourcesButton">数据来源 ↗</button></nav>
+<header class="site-header"><div class="site-header-inner">
+<a class="brand" href="/" aria-label="FlowHunt 首页"><span class="brand-mark" aria-hidden="true">ƒ</span><span><strong>FlowHunt</strong><small>流程猎人 · 市场观察</small></span></a>
+<nav class="site-nav" aria-label="站点导航"><a href="/">₿ BTC 观察台</a><a href="/eth" aria-current="page">Ξ ETH 观察台</a><span class="nav-sep" aria-hidden="true"></span><a href="/positioning-radar">资金雷达</a><a href="/distribution-radar">派发雷达</a><a href="/halving">减半周期</a></nav>
+<button type="button" class="header-action" id="sourcesButton">数据来源</button>
 </div></header>
-<main id="main" class="workspace">
-<div class="page-heading"><div><h1>ETH 低位观察台</h1><p>ETH 链上观察 · 供给集中度 / 交易所净流量 / 质押结构</p></div><div class="heading-actions"><div class="updated-note"><span id="snapshotTime">正在读取研究快照</span><br>日度研究 · 实时行情独立更新</div><button type="button" id="refresh" class="refresh-button" aria-label="刷新行情与研究快照" title="刷新数据"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5"/><path d="M6 7a7 7 0 0 1 11-2l3 7M4 12l3 7a7 7 0 0 0 11-2"/></svg></button></div></div>
-<div class="notice" id="dataNotice" role="status" aria-live="polite" hidden></div>
-<section class="radar-summary" data-radar-summary aria-label="资金与持仓雷达摘要"><h2>资金与持仓雷达</h2><p>正在读取公开市场观察…</p><a href="/positioning-radar">查看完整多币种榜单 →</a></section>
-<div class="overview-grid">
-<section class="panel hero-panel" aria-labelledby="heroTitle"><div class="hero-header"><h2>ETH 独立技术观察</h2><span class="soft-pill">公开数据研究</span></div><div class="hero-body"><div class="gauge-wrap"><div id="gaugeGraphic"></div><div class="gauge-value tabular" id="gaugeValue">—</div><div class="gauge-caption" id="gaugeCaption">等待有效数据</div></div><div class="hero-copy"><div class="hero-kicker">ETH · 多维条件交叉观察</div><h2 id="heroTitle">正在读取观察信号</h2><p class="hero-explainer" id="heroExplainer">数据加载后显示观察状态；缺失数据不作为未触发。</p><div class="hero-badges" id="heroBadges"></div></div></div><div class="hero-footer"><span id="heroFooter">仅作研究参考，不构成投资建议。</span><button type="button" class="text-button amber" data-method>计算方法 ↗</button></div></section>
-<section class="panel quote-panel" aria-label="ETH 市场行情"><div class="quote-top"><span class="quote-asset" id="quotePair">ETH / USDT</span><span><span class="live-dot" aria-hidden="true"></span><span id="priceType">读取中</span></span></div><div class="price" id="price">—</div><div class="price-change tabular" id="priceChange"><small>等待有效行情</small></div><div class="quote-divider"></div><div class="quote-row"><span>行情来源</span><span id="quoteSource">—</span></div><div class="quote-row"><span>行情时间</span><span id="quoteTime">—</span></div></section>
+<main id="main" class="obs">
+<div class="obs-head">
+  <div><h1>ETH 低位观察台</h1><p class="obs-sub"><span id="snapshotTime">正在读取研究快照</span> · 日度链上研究 + 实时行情</p></div>
+  <div class="obs-quote"><div class="obs-price tabular" id="price">—</div><div class="obs-quote-meta"><span id="priceChange"></span><span id="quoteMeta">读取行情中</span><button type="button" id="refresh" class="refresh-button" aria-label="刷新行情与研究快照" title="刷新">↻</button></div></div>
 </div>
-<div class="dashboard-grid"><div class="main-column">
-<section class="panel position-panel" aria-labelledby="positionTitle"><div class="panel-title"><h2 id="positionTitle">价格位置参考</h2><span>观察框架</span></div><p class="position-title-note" id="positionNote">根据有效数据展示，缺失时保持待确认</p><div class="position-track" id="positionTrack"></div><div class="position-foot"><span id="bandLine">参考线待确认</span><span id="bandPrice">价格读取中</span></div><p class="band-unknown" id="bandUnknown"></p></section>
-<section class="panel" aria-labelledby="chartTitle"><div class="panel-title"><h2 id="chartTitle">价格与周期 <span id="chartPeriod">近 365 天</span></h2><div class="range-buttons" role="group" aria-label="图表时间范围"><button type="button" data-range="90" aria-pressed="false">90 天</button><button type="button" data-range="180" aria-pressed="false">180 天</button><button type="button" data-range="365" aria-pressed="true">1 年</button></div></div><div class="chart-legend"><span><i class="legend-line"></i>ETH 日收盘</span><span><i class="legend-line blue"></i>200 日均线</span></div><div class="chart-container" id="priceChart"><div class="chart-empty">正在读取可核验的历史数据…</div></div><div class="chart-caption"><span id="chartSource">数据来源加载中</span><span id="chartDate">完整日线</span></div></section>
-<div class="mini-stats" id="miniStats"></div>
-<div class="section-bar" id="indicators"><div><h2>信号观察矩阵</h2><p id="metricCaption">点击每项查看日期、来源与阈值</p></div><div class="filters" role="group" aria-label="指标筛选"><button type="button" data-filter="all" aria-pressed="true">全部</button><button type="button" data-filter="triggered" aria-pressed="false">已触发</button><button type="button" data-filter="missing" aria-pressed="false">待补全</button></div></div>
-<div id="signalGroups"><section class="panel"><p class="chart-empty">正在核对指标与数据日期…</p></section></div>
-</div><aside class="side-column" aria-label="价格与资金背景">
-<section class="panel small-panel"><div class="panel-title"><h2>价格阶梯</h2><span>日度口径</span></div><div class="ladder" id="priceLadder"><p class="side-note">等待有效价格数据</p></div></section>
-<section class="panel small-panel"><div class="panel-title"><h2>机构资金流</h2><span>现货 ETF</span></div><div class="flow-number muted" id="flowValue">—</div><p class="flow-subtitle" id="flowSubtitle">等待可核验的资金流数据</p><div class="flow-chart" id="flowChart" hidden></div><div class="flow-dates" id="flowDates" hidden></div><p class="side-note" id="flowNote" style="padding-top:13px">不使用估计流量。</p></section>
-<section class="panel small-panel"><div class="panel-title"><h2>巨鲸与散户</h2><span>实体口径</span></div><div class="cohort-empty"><div class="cohort-label"><span>大额持有者 · 30 天净变化</span><span>暂无数据</span></div><div class="cohort-track">等待可核验的实体数据</div></div><p class="cohort-explainer">地址数量与交易所储备并不等于实体买卖。缺少一致口径时，不推断巨鲸吸筹或散户抛售。</p></section>
-<section class="panel small-panel"><div class="panel-title"><h2>交易所公开储备</h2><span id="reserveDate">等待数据</span></div><div class="reserve-toolbar"><span class="small-note">储备量 / 净变化</span><div class="range-buttons" role="group" aria-label="储备变化窗口"><button type="button" data-reserve-window="7d" aria-pressed="true">7 天</button><button type="button" data-reserve-window="30d" aria-pressed="false">30 天</button><button type="button" data-reserve-window="90d" aria-pressed="false">90 天</button></div></div><div id="reserveList"><p class="side-note">正在读取公开储备…</p></div><p class="side-note" id="reserveNote">DefiLlama 公开地址口径，储备变化不等同于巨鲸净买入。</p></section>
-</aside></div>
-<section class="panel sentiment-panel" aria-labelledby="sentimentTitle"><div class="panel-title"><h2 id="sentimentTitle">ETH 衍生品与技术背景</h2><span>来源、日期与数值一同阅读</span></div><div class="sentiment-grid" id="sentimentGrid"><p class="side-note">正在读取公开情绪及合约数据…</p></div></section>
-<div class="research-note"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7h.01"/></svg><div><strong>先看数据是否完整，再看信号是否亮起。</strong>指标变绿仅表示对应观察条件满足。过期数据保留原始日期，缺失项不计为未触发。历史价格用于理解周期，不代表未来表现。<button type="button" data-method>查看完整口径与计算方法</button></div></div>
-<footer class="footer"><div><strong>FlowHunt｜流程猎人</strong><br>公开数据 · 独立研究 · 仅作研究参考，不构成投资建议。</div><div class="footer-links"><a href="/halving">⏳ 减半周期</a><a href="/distribution-radar">派发雷达</a><button type="button" class="text-button" data-method>指标说明</button></div><div>有效指标 <strong id="coverage">—</strong><br>日度研究 / 实时行情</div></footer>
-<noscript><p class="no-script">请启用 JavaScript 以读取研究快照。本站仅作市场观察，不构成投资建议。</p></noscript>
+<div class="notice" id="dataNotice" role="status" aria-live="polite" hidden></div>
+<section class="panel verdict" id="verdict" aria-label="综合观察结论"><p class="loading">正在核对信号与数据日期…</p></section>
+<div class="obs-grid">
+  <div class="obs-main">
+    <section class="panel" id="combo" aria-labelledby="comboTitle"></section>
+        <section class="panel" id="trend" aria-labelledby="trendTitle"></section>
+    <div id="groups"></div>
+    <section class="panel" id="facts" aria-labelledby="factsTitle"></section>
+  </div>
+  <aside class="obs-side" aria-label="价格、资金与持仓背景">
+    <section class="panel" id="ladder" aria-labelledby="ladderTitle"></section>
+    <section class="panel" id="flows" aria-labelledby="flowsTitle"></section>
+    <section class="panel" id="positioning" aria-labelledby="positioningTitle"></section>
+    <section class="panel" id="reserves" aria-labelledby="reservesTitle"></section>
+  </aside>
+</div>
+<section class="panel" id="sentiment" aria-labelledby="sentimentTitle"></section>
+<div class="method-note" id="method"><strong>怎么读这个页面</strong><p>每个信号都列出当前值、触发线、离触发还差多少；指标与价格同比例变动时，直接换算成"需跌到多少"。回测用同一套公开数据计算：信号亮起后 90 天的价格表现，以及它覆盖了多少个 3 个月低点。缺失或过期的数据不会点亮信号，也不会用其他数据替代。<button type="button" data-method>完整口径与回测方法</button></p><p class="disclaimer">仅作研究参考，不构成投资建议。历史表现不代表未来。</p></div>
+<noscript><p class="loading">请启用 JavaScript 以读取研究快照。本站仅作市场观察，不构成投资建议。</p></noscript>
 </main>
-<dialog id="infoDialog" aria-labelledby="dialogTitle"><div class="dialog-header"><h2 id="dialogTitle">指标说明</h2><button type="button" id="closeDialog" class="close-dialog" aria-label="关闭说明">×</button></div><div class="dialog-content" id="dialogContent"></div></dialog>
+<footer class="site-footer"><div><strong>FlowHunt｜流程猎人</strong> · 公开数据 · 独立研究 · 不构成投资建议</div><nav aria-label="页脚导航"><a href="/">BTC 观察台</a><a href="/eth">ETH 观察台</a><a href="/positioning-radar">资金雷达</a><a href="/distribution-radar">派发雷达</a><a href="/halving">减半周期</a></nav></footer>
+<dialog id="infoDialog" aria-labelledby="dialogTitle"><div class="dialog-header"><h2 id="dialogTitle">说明</h2><button type="button" id="closeDialog" class="close-dialog" aria-label="关闭">×</button></div><div class="dialog-content" id="dialogContent"></div></dialog>
 </body></html>

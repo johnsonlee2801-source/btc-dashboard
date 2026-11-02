@@ -66,7 +66,7 @@ def check_age(name, iso, limit_hours):
 
 def main():
     print("页面")
-    for url in (f"{BTC}/", f"{BTC}/eth", f"{BTC}/halving", f"{BTC}/distribution-radar",
+    for url in (f"{BTC}/", f"{BTC}/eth", f"{BTC}/halving", f"{BTC}/distribution-radar", f"{BTC}/positioning-radar",
                 f"{BTC}/og-image.jpg"):
         try:
             status, body = get(url)
@@ -91,17 +91,50 @@ def main():
     print("数据新鲜度与关键字段")
     try:
         _, snapshot = get_json(f"{BTC}/data/observatory.json")
-        check_age("BTC/ETH 研究快照（每日）", snapshot.get("generatedAt"), 48)
-        for symbol in ("BTC", "ETH"):
-            m = ((snapshot.get("assets") or {}).get(symbol) or {}).get("metrics") or {}
-            p = m.get("price") or {}
+        check_age("BTC/ETH 研究快照（每 6 小时）", snapshot.get("generatedAt"), 18)
+        check("研究快照: schema v2", snapshot.get("schemaVersion") == 2, f"schemaVersion {snapshot.get('schemaVersion')}")
+        for symbol, minimum in (("BTC", 12), ("ETH", 4)):
+            a = (snapshot.get("assets") or {}).get(symbol) or {}
+            p = (a.get("metrics") or {}).get("price") or {}
             age = hours_since(p.get("asOf"))
             value = p.get("value")
             check(f"研究快照: {symbol} 日收盘有效", isinstance(value, (int, float))
                   and not isinstance(value, bool) and value > 0 and age is not None and 0 <= age <= 72,
                   f"as_of {p.get('asOf')}")
+            # Empty-but-green outputs were the old failure mode: count signals that actually have fresh inputs.
+            items = [i for g in a.get("groups") or [] for i in g.get("items") or []]
+            known = sum(1 for i in items if i.get("triggered") is not None)
+            check(f"研究快照: {symbol} 有效信号 ≥{minimum}", known >= minimum, f"{known}/{len(items)} 项有新鲜数据")
+            deriv = a.get("derivatives") or {}
+            fresh = [k for k in ("funding", "long_short", "top_position", "dvol", "rr25")
+                     if k in deriv and not deriv[k].get("carriedForward") and (hours_since(deriv[k].get("asOf")) or 99) <= 12]
+            check(f"研究快照: {symbol} 合约/期权数据（经新加坡中转）", len(fresh) >= 4, f"新鲜: {fresh}")
     except Exception as ex:
         check("BTC/ETH 研究快照", False, str(ex)[:120])
+
+    try:
+        _, store = get_json(f"{BTC}/data/onchain-history.json")
+        series = store.get("series") or {}
+        stale = [k for k in ("sth_cost", "supply_profit", "sth_profit", "lth_net30", "whale_1k_10k")
+                 if not series.get(k) or (hours_since(max(series[k])) or 999) > 24 * 6]
+        check("链上历史库: 核心序列 6 天内有更新", not stale, f"滞后或缺失: {stale}" if stale else "全部正常")
+    except Exception as ex:
+        check("链上历史库", False, str(ex)[:120])
+
+    try:
+        _, radar = get_json(f"{BTC}/data/positioning-summary.json")
+        age = (datetime.now(timezone.utc).timestamp() * 1000 - (radar.get("generatedAt") or 0)) / 3600000
+        check("资金雷达摘要: 3 小时内更新", 0 <= age <= 3, f"{age:.1f} 小时前，状态 {radar.get('dataStatus')}")
+        check("资金雷达: 有效覆盖", radar.get("dataStatus") in ("available", "partial") and (radar.get("sampled") or 0) >= 300,
+              f"{radar.get('sampled')}/{radar.get('universeTotal')}，状态 {radar.get('dataStatus')}")
+    except Exception as ex:
+        check("资金雷达摘要", False, str(ex)[:120])
+
+    try:
+        _, halving = get_json(f"{BTC}/data/halving-cycles.json")
+        check_age("减半周期数据（每日）", halving.get("generatedAt"), 48)
+    except Exception as ex:
+        check("减半周期数据", False, str(ex)[:120])
 
     try:
         _, d = get_json(f"{BTC}/data.json")

@@ -26,12 +26,19 @@ jobs:
       - name: Verify public-data calculations
         run: python -B -m unittest discover -s tests -p 'test_observatory*.py' -q
       - name: Collect public BTC and ETH observations
+        env:
+          # fapi.binance.com returns HTTP 451 to US runners; the site's Singapore function relays it.
+          BINANCE_PROXY_URL: https://btc.flowhunt.net/api/binance-futures
         run: python -B scripts/build_observatory.py
+      - name: Rebuild halving-cycle history
+        # Optional input for /halving; a Coin Metrics outage must not block the observatory snapshot.
+        continue-on-error: true
+        run: python -B scripts/build_halving.py
       - name: Commit snapshot if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/observatory.json
+          git add data/observatory.json data/onchain-history.json data/halving-cycles.json
           if git diff --cached --quiet; then
             exit 0
           fi

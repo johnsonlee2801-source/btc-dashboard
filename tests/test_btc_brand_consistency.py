@@ -9,6 +9,7 @@ PAGES = (
     "eth.html",
     "distribution-radar.html",
     "halving.html",
+    "positioning-radar.html",
 )
 
 
@@ -20,16 +21,29 @@ class BtcBrandConsistencyTests(unittest.TestCase):
                 self.assertIn(BRAND, html)
 
     def test_core_btc_pages_keep_page_specific_professional_subtitle(self):
+        # Each page names itself in its own <h1>; the shared header carries the brand.
         expected = {
-            "index.html": "BTC 低位观察 · 链上估值 / 持有者成本 / 周期信号",
-            "eth.html": "ETH 链上观察 · 供给集中度 / 交易所净流量 / 质押结构",
-            "distribution-radar.html": "BTC 派发雷达 · 上涨质量 / 承接强弱 / 合约推动风险",
-            "halving.html": "BTC 减半周期观察 · 历史节奏 / 周期位置 / 风险温度",
+            "index.html": "<h1>BTC 低位观察台</h1>",
+            "eth.html": "<h1>ETH 低位观察台</h1>",
+            "distribution-radar.html": "BTC 派发雷达</h1>",
+            "halving.html": "BTC 减半周期观察器</h1>",
         }
         for page, subtitle in expected.items():
             with self.subTest(page=page):
                 html = (ROOT / page).read_text(encoding="utf-8")
                 self.assertIn(subtitle, html)
+
+
+class SharedShellTests(unittest.TestCase):
+    def test_every_page_uses_the_shared_header_and_links_all_sections(self):
+        for page in PAGES:
+            with self.subTest(page=page):
+                html = (ROOT / page).read_text(encoding="utf-8")
+                self.assertIn('/assets/site.css', html)
+                self.assertIn('class="site-header"', html)
+                for href in ('href="/"', 'href="/eth"', 'href="/positioning-radar"', 'href="/distribution-radar"', 'href="/halving"'):
+                    self.assertIn(href, html)
+                self.assertEqual(html.count('aria-current="page"'), 1)
 
 
 if __name__ == "__main__":

@@ -1,152 +1,145 @@
-"""Plan-level oracles and source-failure regressions; no live requests/writes."""
-import copy
-import importlib.util
-import io
+"""Snapshot contract: what build_observatory produces is what assets/observatory.js reads. No network."""
 import json
+import math
 import pathlib
+import sys
 import unittest
-from contextlib import redirect_stdout
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from unittest.mock import patch
 
-ROOT=pathlib.Path(__file__).resolve().parents[1]
-spec=importlib.util.spec_from_file_location('observatory_contract_subject',ROOT/'scripts/build_observatory.py')
-obs=importlib.util.module_from_spec(spec)
-spec.loader.exec_module(obs)
+ROOT = pathlib.Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'scripts'))
+import binance_futures  # noqa: E402
+import build_observatory as B  # noqa: E402
+import signals as S  # noqa: E402
+
+NOW = datetime(2026, 11, 2, 12, tzinfo=timezone.utc)
 
 
-class PlanContractTests(unittest.TestCase):
-    def test_btc_all_21_thresholds_match_the_written_observation_model(self):
-        expected=[
-            [('supply_profit','<',60),('weekly_rsi','<',35),('miner_cost','<',1),('sopr','<',1),('mayer','<',.8)],
-            [('mvrv_z','<',-1),('supply_profit','<',50),('price_ma200w','<',1),('mvrv','<',1),('nupl','<',0),('puell','<',.5),('weekly_rsi','<',30),('pi_cycle','<',1)],
-            [('sth_mvrv','<',1),('sth_profit','<',30),('fear','<=',20),('hash_ribbon','>',0),('lth_net30','>',0),('whale_net30','>',0),('puell','<',.7),('drawdown90','>=',20)],
-        ]
-        self.assertEqual([g[2] for g in obs.BTC_RULES],[40,40,20])
-        self.assertEqual([[(r[0],r[2],r[3]) for r in g[3]] for g in obs.BTC_RULES],expected)
-
-    def test_every_threshold_keeps_its_strict_or_inclusive_boundary(self):
-        now=datetime(2026,10,30,12,tzinfo=timezone.utc)
-        for group in obs.BTC_RULES:
-            for key,label,op,threshold,unit in group[3]:
-                with self.subTest(group=group[0],key=key):
-                    m=obs.metric(threshold,'2026-10-30', 'test',now)
-                    self.assertEqual(obs.trigger(m,op,threshold),op in ('<=','>='))
-                    m['value']=threshold-.001
-                    self.assertEqual(obs.trigger(m,op,threshold),op in ('<','<='))
-                    m['value']=threshold+.001
-                    self.assertEqual(obs.trigger(m,op,threshold),op in ('>','>='))
-
-    def test_all_unknowns_produce_a_range_not_a_zero_score(self):
-        groups=[{'weight':w,'items':[{'triggered':None} for _ in range(n)]} for w,n in [(40,5),(40,8),(20,8)]]
-        self.assertEqual(obs.score_bounds(groups),{'lower':0,'upper':100,'available':0,'total':21})
-
-    def test_partial_utc_week_is_not_a_completed_week(self):
-        now=datetime(2026,10,30,12,tzinfo=timezone.utc)
-        points=[{'date':(datetime(2026,10,20)+timedelta(days=i)).date().isoformat(),'close':100+i} for i in range(6)]
-        self.assertEqual(obs.weekly_closes(points,now),[],'Tuesday–Sunday is not a complete seven-day week')
-
-    def test_current_week_is_excluded_and_previous_full_week_is_used(self):
-        points=[{'date':(datetime(2026,10,19)+timedelta(days=i)).date().isoformat(),'close':100+i} for i in range(12)]
-        self.assertEqual(obs.weekly_closes(points,datetime(2026,10,31,tzinfo=timezone.utc)),[{'date':'2026-10-25','close':106}])
-
-    def test_gapped_daily_data_does_not_become_a_200_day_or_90_day_window(self):
-        start=datetime(2026,3,1)
-        points=[{'date':(start+timedelta(days=i)).date().isoformat(),'close':100+i} for i in range(202) if i!=150]
-        a=obs.build_asset('BTC',points,{}, {},{},datetime(2026,10,30,tzinfo=timezone.utc))
-        for key in ('ma200d','high90','mayer','drawdown90'):
-            self.assertIsNone(a['metrics'][key]['value'],key+' requires consecutive calendar days')
-        self.assertIsNone(a['history'][-1]['ma200'])
-
-    def test_contiguous_daily_average_matches_independent_arithmetic(self):
-        start=datetime(2026,1,1)
-        points=[{'date':(start+timedelta(days=i)).date().isoformat(),'close':i+1} for i in range(300)]
-        a=obs.build_asset('ETH',points,{}, {},{},datetime(2026,10,30,tzinfo=timezone.utc))
-        self.assertAlmostEqual(a['metrics']['ma200d']['value'],200.5)
-
-    def test_wilder_rsi_uses_mixed_gains_losses_and_recursive_smoothing(self):
-        prices=[1]
-        for delta in [2,-1]*7:prices.append(prices[-1]+delta)
-        self.assertEqual(obs.rsi(prices),66.67)  # gain 1, loss .5
-        self.assertEqual(obs.rsi(prices+[prices[-1]+4]),72.34)  # next gain 17/14, loss 6.5/14
-
-    def test_exact_twenty_percent_drawdown_satisfies_the_inclusive_condition(self):
-        now=datetime(2026,10,30,12,tzinfo=timezone.utc)
-        for high,last in [(100,80),(100.5,80.4)]:
-            with self.subTest(high=high,last=last):
-                points=[{'date':(datetime(2026,8,1)+timedelta(days=i)).date().isoformat(),'close':high} for i in range(90)]
-                points[-1]['close']=last
-                a=obs.build_asset('BTC',points,{}, {},{},now)
-                m=a['metrics']['drawdown90']
-                self.assertEqual(m['value'],20.0)
-                self.assertTrue(obs.trigger(m,'>=',20))
-
-    def test_current_price_cannot_freshen_an_expired_weekly_denominator(self):
-        end=datetime(2026,9,27)
-        points=[{'date':(end-timedelta(days=1399-i)).date().isoformat(),'close':100000} for i in range(1400)]
-        points.append({'date':'2026-10-29','close':60000})
-        a=obs.build_asset('BTC',points,{}, {},{},datetime(2026,10,30,12,tzinfo=timezone.utc))
-        self.assertEqual(a['metrics']['ma200w']['status'],'stale')
-        ratio=a['metrics']['price_ma200w']
-        self.assertEqual(ratio['status'],'stale')
-        self.assertIsNone(obs.trigger(ratio,'<',1))
-        self.assertIn('2026-09-27',ratio['note'],'Explain which underlying observation expired')
-
-    def test_eth_protocol_metrics_are_facts_not_btc_score_inputs(self):
-        a=obs.build_asset('ETH',[],{}, {},{},datetime(2026,10,30,tzinfo=timezone.utc))
-        self.assertIsNone(a['score'])
-        self.assertEqual([g['weight'] for g in a['groups']],[0,0,0])
-        for group in a['groups'][1:]:
-            self.assertTrue(all(item['op'] is None for item in group['items']))
+def synthetic_closes(n=1600, end=date(2026, 11, 1)):
+    start = end - timedelta(days=n - 1)
+    return [((start + timedelta(days=i)).isoformat(), 50000 + 20000 * math.sin(i / 120)) for i in range(n)]
 
 
-class SourceFailureTests(unittest.TestCase):
-    def collect(self,new_derivatives):
-        now=datetime.now(timezone.utc)
-        old_time=(now-timedelta(hours=1)).isoformat()
-        expired_time=(now-timedelta(hours=30)).isoformat()
-        previous={'chainCache':{'fetchedAt':now.isoformat(),'costAttemptAt':now.isoformat(),'snapshot':{},'extras':{}},'assets':{}}
-        for symbol in ('BTC','ETH'):
-            previous['assets'][symbol]={'metrics':{
-                'funding':obs.metric(0,old_time,'Binance Futures',now,max_hours=12),
-                'long_short':obs.metric(1.8,expired_time,'Binance Futures',now,max_hours=12),
-                'dvol':obs.metric(40,old_time,'Deribit',now,max_hours=12)}}
-        target=pathlib.Path('/private/tmp/observatory-tdd-no-write.json')
-        points=[{'date':(now-timedelta(days=1)).date().isoformat(),'close':80000}]
-        written=[]
-        def write(path,text,**kwargs):written.append(json.loads(text));return len(text)
-        with patch('sys.argv',['test','--output',str(target)]),\
-             patch.object(obs,'load_file',side_effect=lambda p:copy.deepcopy(previous) if p==target else {}),\
-             patch.object(obs,'safe_get',return_value=None),\
-             patch.object(obs,'fetch_candles',return_value=points),\
-             patch.object(obs,'fetch_derivatives',return_value=new_derivatives),\
-             patch.object(obs,'fetch_etf',return_value=None),\
-             patch.object(pathlib.Path,'mkdir'),\
-             patch.object(pathlib.Path,'write_text',new=write),redirect_stdout(io.StringIO()):
-            self.assertEqual(obs.main(),0)
-        return written[-1],old_time,expired_time
-
-    def test_failed_derivatives_keep_zero_value_and_original_time(self):
-        payload,stamp,expired=self.collect({})
-        for a in payload['assets'].values():
-            self.assertEqual(a['metrics']['funding']['value'],0)
-            self.assertEqual(a['metrics']['funding']['asOf'],stamp)
-            self.assertEqual(a['metrics']['long_short']['value'],1.8)
-            self.assertEqual(a['metrics']['long_short']['asOf'],expired)
-            self.assertEqual(a['metrics']['long_short']['status'],'stale')
-            self.assertEqual(a['metrics']['dvol']['source'],'Deribit')
-
-    def test_invalid_new_value_does_not_erase_previous_derivative(self):
-        payload,stamp,_=self.collect({'funding':{'value':None,'date':datetime.now(timezone.utc).isoformat()}})
-        self.assertEqual(payload['assets']['BTC']['metrics']['funding']['value'],0)
-        self.assertEqual(payload['assets']['BTC']['metrics']['funding']['asOf'],stamp)
-
-    def test_successful_field_replaces_old_value_while_other_fields_are_retained(self):
-        stamp=datetime.now(timezone.utc).isoformat()
-        payload,_,expired=self.collect({'funding':{'value':.0123,'date':stamp}})
-        self.assertEqual(payload['assets']['BTC']['metrics']['funding']['value'],.0123)
-        self.assertEqual(payload['assets']['BTC']['metrics']['funding']['asOf'],stamp)
-        self.assertEqual(payload['assets']['BTC']['metrics']['long_short']['asOf'],expired)
+def synthetic_store(closes):
+    series = {}
+    for day, close in closes[-1460:]:
+        series.setdefault('sth_cost', {})[day] = close * 0.95
+        series.setdefault('lth_cost', {})[day] = 30000.0
+        series.setdefault('realized_price', {})[day] = 40000.0
+        series.setdefault('mvrv', {})[day] = close / 40000.0
+        series.setdefault('supply_profit', {})[day] = 70.0
+        series.setdefault('sth_profit', {})[day] = 50.0
+        series.setdefault('sopr', {})[day] = 1.01
+        series.setdefault('mvrv_z', {})[day] = 1.0
+        series.setdefault('puell', {})[day] = 1.0
+        series.setdefault('hashrate', {})[day] = 5e8
+        series.setdefault('lth_net30', {})[day] = -1000.0
+        series.setdefault('whale_1k_10k', {})[day] = 4.2e6
+    return {'series': series, 'fetched': {}}
 
 
-if __name__=='__main__':unittest.main()
+class BuildContractTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        closes = synthetic_closes()
+        store = synthetic_store(closes)
+        fear = {d: 40.0 for d, _ in closes}
+        cls.btc = B.build_asset('BTC', closes, store, fear, NOW)
+        cls.eth = B.build_asset('ETH', closes, {'series': {'eth_mvrv': store['series']['mvrv']}}, fear, NOW)
+
+    def test_btc_payload_has_every_section_the_page_reads(self):
+        for key in ('groups', 'metrics', 'score', 'verdict', 'scoreHistory', 'combo', 'scoreBacktest', 'band',
+                    'cohorts', 'ladder', 'history'):
+            self.assertIn(key, self.btc)
+        self.assertEqual(len(self.btc['combo']['conditions']), 2)
+        self.assertEqual(len(self.btc['scoreHistory'][0]), 3, '[date, score, close]')
+        self.assertIn(self.btc['band']['zone'], (0, 1, 2, 3))
+
+    def test_items_carry_dates_sources_and_backtests(self):
+        items = [i for g in self.btc['groups'] for i in g['items']]
+        self.assertEqual(len(items), 16)
+        for i in items:
+            with self.subTest(key=i['key']):
+                for field in ('key', 'label', 'op', 'threshold', 'unit', 'linked', 'maxAgeDays', 'source', 'value', 'asOf', 'triggered'):
+                    self.assertIn(field, i)
+                if i['value'] is not None and i['key'] in ('mayer', 'price_ma200w', 'mvrv'):
+                    self.assertIsNotNone(i['backtest'])
+
+    def test_price_linked_gap_has_a_trigger_price_below_price(self):
+        mayer = next(i for g in self.btc['groups'] for i in g['items'] if i['key'] == 'mayer')
+        if not mayer['triggered']:
+            self.assertLess(mayer['gap']['triggerPrice'], self.btc['metrics']['price']['value'])
+
+    def test_combo_trigger_is_the_lower_of_the_two_lines(self):
+        sth, dd = (c['triggerPrice'] for c in self.btc['combo']['conditions'])
+        self.assertAlmostEqual(dd, self.btc['combo']['conditions'][1]['high90'] * 0.8)
+        self.assertTrue(sth > 0 and dd > 0)
+
+    def test_ladder_is_sorted_from_high_to_low(self):
+        values = [r['value'] for r in self.btc['ladder']]
+        self.assertEqual(values, sorted(values, reverse=True))
+
+    def test_eth_never_gets_a_btc_score(self):
+        self.assertNotIn('verdict', self.eth)
+        self.assertEqual(set(self.eth['score']), {'lit', 'total', 'known'})
+        self.assertEqual(self.eth['score']['total'], 6)
+
+    def test_snapshot_is_json_serialisable_without_nan(self):
+        json.dumps(self.btc, allow_nan=False)
+        json.dumps(self.eth, allow_nan=False)
+
+
+class SourceEdgeTests(unittest.TestCase):
+    def test_etf_row_for_the_current_us_session_is_dropped(self):
+        html = ('<table><tr><th>Date</th><th>IBIT</th><th>Total</th></tr>'
+                '<tr><td>30 Oct 2026</td><td>1</td><td>(643.2)</td></tr>'
+                '<tr><td>02 Nov 2026</td><td>0</td><td>0.0</td></tr></table>')
+        rows = B.parse_etf(html, datetime(2026, 11, 2, 15, tzinfo=timezone.utc))
+        self.assertEqual(rows, [{'date': '2026-10-30', 'value': -643.2}])
+        rows = B.parse_etf(html, datetime(2026, 11, 2, 23, 30, tzinfo=timezone.utc))
+        self.assertEqual(rows[-1]['date'], '2026-11-02')
+
+    def test_binance_451_is_reported_not_invented(self):
+        blocked = [{'status': 451, 'error': 'HTTP 451'}] * 5
+        errors = []
+        with patch.object(binance_futures, 'fetch_many', return_value=blocked), \
+             patch.object(B, 'safe_get', return_value=None):
+            out = B.fetch_derivatives('BTC', errors, NOW)
+        self.assertEqual(out, {})
+        self.assertTrue(any('premiumIndex' in e['url'] and '451' in e['error'] for e in errors))
+
+    def test_positioning_ratio_uses_the_hourly_reading(self):
+        day0 = int(datetime(2026, 11, 2, tzinfo=timezone.utc).timestamp() * 1000)
+        daily = [{'timestamp': day0 - 30 * 86400000, 'longShortRatio': '1.2', 'longAccount': '0.55'},
+                 {'timestamp': day0, 'longShortRatio': '1.5', 'longAccount': '0.6'}]
+        hourly = [{'timestamp': day0 + 11 * 3600000, 'longShortRatio': '2.0', 'longAccount': '0.667'}]
+        results = [{'status': 200, 'body': {'lastFundingRate': '0.0001', 'time': day0}},
+                   {'status': 200, 'body': daily}, {'status': 200, 'body': daily},
+                   {'status': 200, 'body': hourly}, {'status': 200, 'body': hourly}]
+        with patch.object(binance_futures, 'fetch_many', return_value=results), \
+             patch.object(B, 'safe_get', return_value=None):
+            out = B.fetch_derivatives('BTC', [], NOW)
+        self.assertEqual(out['top_position']['value'], 2.0)
+        self.assertEqual(out['long_short']['ago30'], 1.2)
+        self.assertAlmostEqual(out['funding']['value'], 0.01)
+
+
+class PageContractTests(unittest.TestCase):
+    def test_pages_load_the_v2_assets_and_share_the_shell(self):
+        for page in ('index.html', 'eth.html'):
+            html = (ROOT / page).read_text(encoding='utf-8')
+            for needle in ('/assets/site.css', '/assets/observatory.css', '/assets/observatory-model.js', 'class="site-header"',
+                           'id="verdict"', 'id="combo"', 'id="trend"', 'id="groups"', 'id="ladder"', 'id="sentiment"'):
+                with self.subTest(page=page, needle=needle):
+                    self.assertIn(needle, html)
+            self.assertNotIn('positioning-radar.json', html, 'the home pages must not download the 2.7 MB radar file')
+
+    def test_eth_page_has_its_own_icon_and_no_btc_band(self):
+        html = (ROOT / 'eth.html').read_text(encoding='utf-8')
+        self.assertIn('favicon-eth.svg', html)
+        self.assertNotIn('id="band"', html)
+
+
+if __name__ == '__main__':
+    unittest.main()

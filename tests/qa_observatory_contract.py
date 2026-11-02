@@ -1,116 +1,92 @@
-"""Browser regression contracts; fixtures are confined to local test contexts."""
+"""Browser contracts for the v2 observatory pages. Run manually: python3 tests/qa_observatory_contract.py
+
+Uses the committed snapshot with a frozen clock; fixtures stay inside the test browser context.
+"""
 import copy
 import json
 import pathlib
-import re
 import sys
 import unittest
-from datetime import datetime,timedelta,timezone
+from datetime import datetime, timedelta, timezone
 from playwright.sync_api import sync_playwright
 
-sys.path.insert(0,str(pathlib.Path(__file__).parent))
-from test_btc_halving_page import serve_with_rewrites
+sys.path.insert(0, str(pathlib.Path(__file__).parent))
+from test_btc_halving_page import serve_with_rewrites  # noqa: E402
 
-ROOT=pathlib.Path(__file__).resolve().parents[1]
-NOW=datetime(2026,10,30,12,tzinfo=timezone.utc)
+ROOT = pathlib.Path(__file__).resolve().parents[1]
 
 
-class BrowserPlanContracts(unittest.TestCase):
+class BrowserContracts(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.server=serve_with_rewrites();cls.base=cls.server.__enter__()
-        cls.p=sync_playwright().start();cls.browser=cls.p.chromium.launch(headless=True,channel='chrome')
+        cls.server = serve_with_rewrites()
+        cls.base = cls.server.__enter__()
+        cls.p = sync_playwright().start()
+        cls.browser = cls.p.chromium.launch(headless=True, channel='chrome', args=['--disable-gpu'])
+        cls.snapshot = json.loads((ROOT / 'data/observatory.json').read_text())
+        cls.now = datetime.fromisoformat(cls.snapshot['generatedAt'])
 
     @classmethod
     def tearDownClass(cls):
-        cls.browser.close();cls.p.stop();cls.server.__exit__(None,None,None)
+        cls.browser.close()
+        cls.p.stop()
+        cls.server.__exit__(None, None, None)
 
-    def setUp(self):
-        self.context=self.browser.new_context(viewport={'width':1440,'height':1000})
-        self.fixture=json.loads((ROOT/'data/observatory.json').read_text())
-        self.fixture['generatedAt']=NOW.isoformat()
-        for asset in self.fixture['assets'].values():
-            for m in asset['metrics'].values():
-                if m['value'] is not None:m['asOf']=NOW.isoformat();m['status']='fresh'
-        self.quote={'symbol':'BTC','price':80000,'source':'Binance','change24h':1,'asOf':NOW.isoformat()}
-        self.context.route('**/api/ticker?*',lambda r:r.fulfill(json=self.quote))
-
-    def tearDown(self):self.context.close()
-
-    def start(self,fixture=None):
-        data=copy.deepcopy(fixture or self.fixture)
-        self.context.route('**/data/observatory.json',lambda r:r.fulfill(json=data))
-        page=self.context.new_page();page.clock.install(time=NOW)
-        page.goto(self.base+'/',wait_until='networkidle')
-        page.locator('.metric-card').first.wait_for()
+    def open(self, path='/', snapshot=None, quote=None, now=None):
+        ctx = self.browser.new_context(viewport={'width': 1440, 'height': 1000})
+        data = copy.deepcopy(snapshot or self.snapshot)
+        ctx.route('**/data/observatory.json', lambda r: r.fulfill(json=data))
+        q = quote or {'symbol': 'BTC' if path == '/' else 'ETH', 'price': 70000 if path == '/' else 2000,
+                      'source': 'Binance', 'change24h': -1.2, 'asOf': (now or self.now).isoformat()}
+        ctx.route('**/api/ticker?*', lambda r: r.fulfill(json=q))
+        page = ctx.new_page()
+        page.clock.install(time=now or self.now)
+        page.goto(self.base + path, wait_until='load')
+        page.locator('.card').first.wait_for()
+        self.addCleanup(ctx.close)
         return page
 
-    def resume(self,page,hours=2):
-        page.evaluate("Object.defineProperty(document,'hidden',{configurable:true,get:()=>true})")
-        page.clock.fast_forward(hours*3600000)
-        page.evaluate("Object.defineProperty(document,'hidden',{configurable:true,get:()=>false});document.dispatchEvent(new Event('visibilitychange'))")
+    def test_btc_page_renders_every_section(self):
+        page = self.open('/')
+        for sel in ('#verdict .verdict-title', '#combo .bar-row', '#band .zone', '#trend svg', '.group', '#ladder .rung', '#sentiment .senti'):
+            self.assertGreater(page.locator(sel).count(), 0, sel)
+        self.assertEqual(page.locator('.group .card').count(), 16)
 
-    def test_returning_to_a_background_tab_does_not_label_an_expired_quote_realtime(self):
-        page=self.start();self.assertEqual(page.locator('#priceType').inner_text(),'实时参考价')
-        self.resume(page)
-        self.assertNotEqual(page.locator('#priceType').inner_text(),'实时参考价')
+    def test_trigger_distance_uses_the_live_quote(self):
+        page = self.open('/')
+        page.wait_for_function("document.getElementById('price').textContent.includes('70,000')")
+        line = page.locator('.verdict-line').inner_text()
+        self.assertIn('还需跌', line)
 
-    def test_quote_for_another_asset_is_rejected(self):
-        self.quote={**self.quote,'symbol':'ETH','price':2345}
-        page=self.start()
-        self.assertEqual(page.locator('#priceType').inner_text(),'最近完整日收盘')
+    def test_a_quote_for_another_asset_is_ignored(self):
+        page = self.open('/', quote={'symbol': 'ETH', 'price': 2000, 'source': 'Binance', 'change24h': 0, 'asOf': self.now.isoformat()})
+        page.wait_for_timeout(800)
+        self.assertNotIn('2,000', page.locator('#price').inner_text())
 
-    def test_etf_and_exchange_freshness_is_rechecked_after_a_background_interval(self):
-        data=copy.deepcopy(self.fixture)
-        stamp=(NOW-timedelta(days=6,hours=23)).isoformat()
-        data['assets']['BTC']['etf']={'asOf':stamp,'source':'Farside','sourceUrl':'https://farside.co.uk/bitcoin-etf/',
-                                    'rows':[{'date':'2026-10-23','value':1.0}]}
-        cex=json.loads((ROOT/'data/cex-reserves.json').read_text())
-        cex['anchor']=(NOW-timedelta(hours=59)).isoformat()
-        for a in cex['assets'].values():
-            for row in a['exchanges']:row['asOf']=cex['anchor'];row['stale']=False
-        self.context.route('**/data/cex-reserves.json',lambda r:r.fulfill(json=cex))
-        page=self.start(data)
-        self.assertIn('有效',page.locator('#flowSubtitle').inner_text())
-        self.assertEqual(page.locator('.reserve-row').first.locator('small').inner_text(),'储备变化')
-        self.resume(page)
-        self.assertIn('已过期',page.locator('#flowSubtitle').inner_text())
-        self.assertEqual(page.locator('.reserve-row').first.locator('small').inner_text(),'历史记录')
+    def test_an_old_snapshot_is_flagged_and_its_signals_expire(self):
+        later = self.now + timedelta(days=12)
+        page = self.open('/', now=later, quote={'symbol': 'BTC', 'price': 70000, 'source': 'Binance', 'change24h': 0, 'asOf': later.isoformat()})
+        notice = page.locator('#dataNotice').inner_text()
+        self.assertIn('未更新', notice)
+        self.assertEqual(page.locator('.group .card.lit').count(), 0, 'expired inputs must not stay lit')
 
-    def test_display_rounding_cannot_contradict_an_active_threshold(self):
-        for key,value,threshold in [('supply_profit',59.96,60),('sopr',.99996,1),('mayer',.7999,.8),('weekly_rsi',34.6,35)]:
-            with self.subTest(metric=key):
-                data=copy.deepcopy(self.fixture);data['assets']['BTC']['metrics'][key]['value']=value
-                page=self.start(data)
-                card=page.locator(f'[data-group="0"][data-metric="{key}"]')
-                self.assertIn('is-triggered',card.get_attribute('class'))
-                text=card.locator('.metric-value').inner_text().replace('%','').replace(',','').strip()
-                self.assertLess(float(text),threshold,'Rounded visible value must remain on the triggered side')
-                card.click()
-                detail=page.locator('.detail-value').inner_text().replace('%','').replace(',','').strip()
-                self.assertLess(float(detail),threshold)
-                page.close()
+    def test_eth_page_has_no_btc_score(self):
+        page = self.open('/eth')
+        self.assertEqual(page.locator('.ring').count(), 1)
+        self.assertEqual(page.locator('#band').count(), 0)
+        self.assertEqual(page.locator('.group .card').count(), 6)
 
-    def test_expired_dependency_keeps_the_derived_tile_unknown(self):
-        data=copy.deepcopy(self.fixture)
-        m=data['assets']['BTC']['metrics']['price_ma200w']
-        m.update(value=.6,dependencies={'price':{'asOf':NOW.isoformat(),'maxAgeHours':72},
-                                      'ma200w':{'asOf':'2026-09-27','maxAgeHours':216}})
-        page=self.start(data)
-        card=page.locator('[data-metric="price_ma200w"]')
-        self.assertIn('is-unavailable',card.get_attribute('class'))
-        self.assertNotIn('is-triggered',card.get_attribute('class'))
-
-    def test_chart_does_not_compress_or_interpolate_missing_calendar_days(self):
-        data=copy.deepcopy(self.fixture)
-        data['assets']['BTC']['history']=[{'date':day,'close':price,'ma200':None} for day,price in
-                                        [('2026-01-01',100),('2026-01-02',110),('2026-04-01',120)]]
-        page=self.start(data)
-        path=page.locator('#priceChart svg path[stroke="#ffb547"]').get_attribute('d')
-        coordinates=re.findall(r'[ML]([\d.]+)\s+([\d.]+)',path)
-        xs=[float(x) for x,y in coordinates]
-        self.assertLess((xs[1]-xs[0])/(xs[2]-xs[0]),.05,'Jan 2 should be near Jan 1, not halfway to Apr 1')
-        self.assertEqual(path.count('M'),2,'No synthetic price segment across the missing dates')
+    def test_no_page_errors(self):
+        for path in ('/', '/eth', '/halving'):
+            errors = []
+            ctx = self.browser.new_context()
+            page = ctx.new_page()
+            page.on('pageerror', lambda e: errors.append(str(e)))
+            page.goto(self.base + path, wait_until='load')
+            page.wait_for_timeout(1500)
+            ctx.close()
+            self.assertEqual(errors, [], path)
 
 
-if __name__=='__main__':unittest.main(verbosity=2)
+if __name__ == '__main__':
+    unittest.main()
