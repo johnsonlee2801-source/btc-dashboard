@@ -7,3 +7,9 @@ __pycache__/
 .cc-suite.md
 *.docx
 health-report.md
+
+# tdd-guardian generated artifacts
+.claude/tdd-guardian/state.json
+.claude/tdd-guardian/receipts.json
+coverage/
+.coverage
