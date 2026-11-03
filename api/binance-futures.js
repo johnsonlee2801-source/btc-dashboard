@@ -25,6 +25,8 @@ const PATHS = new Set([
   '/futures/data/globalLongShortAccountRatio',
   '/futures/data/takerlongshortRatio',
 ]);
+// Binance's published proof-of-reserves wallet list, used to label exchange holders in the radar.
+const OTHER_HOSTS = { '/bapi/apex/v1/public/apex/market/por/address': 'https://www.binance.com' };
 const PARAMS = new Set(['symbol', 'period', 'limit', 'startTime', 'endTime']);
 // Letters of any script: Binance lists contracts such as 币安人生USDT.
 const VALUE_RE = /^[\p{L}\p{N}]{1,24}$/u;
@@ -39,14 +41,16 @@ function json(body, status = 200) {
 }
 
 function buildUrl(request) {
-  if (!request || typeof request !== 'object' || !PATHS.has(request.path)) return null;
+  if (!request || typeof request !== 'object') return null;
+  const host = PATHS.has(request.path) ? HOST : OTHER_HOSTS[request.path];
+  if (!host) return null;
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(request.params || {})) {
     if (!PARAMS.has(key) || !VALUE_RE.test(String(value))) return null;
     params.set(key, String(value));
   }
   const query = params.toString();
-  return HOST + request.path + (query ? '?' + query : '');
+  return host + request.path + (query ? '?' + query : '');
 }
 
 async function forward(url) {

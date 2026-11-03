@@ -32,8 +32,11 @@ def _post(url, payload, timeout=60):
         return json.load(response)
 
 
+OTHER_HOSTS = {'/bapi/apex/v1/public/apex/market/por/address': 'https://www.binance.com'}
+
+
 def _direct(path, params, timeout=12):
-    url = HOST + path + ('?' + urllib.parse.urlencode(params) if params else '')
+    url = OTHER_HOSTS.get(path, HOST) + path + ('?' + urllib.parse.urlencode(params) if params else '')
     try:
         with urllib.request.urlopen(urllib.request.Request(url, headers={'User-Agent': USER_AGENT}),
                                     timeout=timeout) as response:

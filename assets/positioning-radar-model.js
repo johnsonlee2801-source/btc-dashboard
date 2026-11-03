@@ -6,7 +6,7 @@
   function safeUrl(value){try{const u=new URL(value);return u.protocol==='https:'&&!u.username&&!u.password?u.href:null;}catch{return null;}}
   function fresh(m,key,now){
     if(!m||!finite(m.value)||!finite(m.asOf)||m.asOf<=0||m.asOf>now)return false;
-    let hours=chain.has(key)?48:3;
+    let hours=chain.has(key)?(finite(m.maxAgeHours)?Math.min(72,m.maxAgeHours):48):3;
     if(['fundingRate','fundingHours'].includes(key)&&finite(m.maxAgeHours))hours=Math.min(27,Math.max(3,m.maxAgeHours));
     if(now-m.asOf>hours*3600000)return false;
     if(ratio.has(key)&&(m.value<0||m.value>1))return false;

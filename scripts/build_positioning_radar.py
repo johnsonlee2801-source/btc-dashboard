@@ -130,6 +130,9 @@ def apply_evidence(row, evidence, now):
         unlock=number(evidence.get('unlock30d'))
         if unlock is not None and unlock>=0 and evidence.get('unlockComplete') is True:
             put('unlockPct',unlock/circ*100,'未来30天已核验解锁 / 当前流通供应')
+    if evidence.get('method')=='goplus-top10':
+        apply_top10(row,evidence,stamp,url,source)
+        return
     ledger=evidence.get('holders')
     if total and isinstance(ledger,list) and evidence.get('ledgerComplete') is True:
         balances=[];excluded=0;seen=set();valid=True;audited=[]
@@ -155,6 +158,58 @@ def apply_evidence(row, evidence, now):
                 put('lockedShare',sum(b[3] for b in top)/den*100,'原始前10地址中已验证锁定部分')
     row['makers']=[{'name':x['name'],'url':x['url'],'asOf':x['asOf']} for x in evidence.get('makers',[])
                    if isinstance(x,dict) and isinstance(x.get('name'),str) and x.get('url','').startswith('https://') and number(x.get('asOf')) is not None and 0<x['asOf']<=now]
+
+
+EXCLUDED_KINDS=('exchange','burn','dex','bridge')
+
+
+def top10_concentration(holders,total):
+    """Adjusted top-10 share from a top-10 holder list (GoPlus).
+
+    Exchange, burn, DEX-pool and bridge balances leave both numerator and denominator,
+    as do locked balances. Only the raw top 10 are known, so after removals the
+    remaining addresses are fewer than ten: the result is a lower bound.
+    """
+    total=number(total)
+    if not total or total<=0 or not isinstance(holders,list) or not holders:return None
+    excluded=remaining=raw=unknown=locked=0.0;removed=[];kept=[]
+    for h in holders:
+        balance=number(h.get('balance'))
+        if balance is None or balance<0:return None
+        raw+=balance;kind=h.get('kind') or 'unknown'
+        if kind in EXCLUDED_KINDS:
+            excluded+=balance;removed.append(h);continue
+        if h.get('locked'):
+            excluded+=balance;locked+=balance;removed.append({**h,'kind':'locked'});continue
+        remaining+=balance;kept.append(h)
+        if kind in ('unknown','contract'):unknown+=balance
+    if raw>total*(1+1e-6) or total-excluded<=0:return None
+    return {'value':remaining/(total-excluded)*100,'raw':raw/total*100,'excluded':excluded,'remaining':remaining,
+            'unknownShare':unknown/raw*100 if raw else None,'lockedShare':locked/raw*100 if raw else None,
+            'removed':removed,'kept':kept,'known':len(kept)}
+
+
+def apply_top10(row,evidence,stamp,url,source):
+    m=row['metrics']
+    def put(key,value,note):
+        # GoPlus rate limits spread a full refresh over about two days.
+        m[key]=metric(value,stamp,note,url,source);m[key]['maxAgeHours']=72
+    circ,total=number(evidence.get('circulating')),number(evidence.get('supplyTotal'))
+    if circ is not None and total and 0<circ<=total:
+        put('circulation',circ/total*100,'CoinGecko 流通供应 / 总供应')
+    result=top10_concentration(evidence.get('holders'),evidence.get('total'))
+    if not result:return
+    put('concentration',result['value'],f"前10地址扣除交易所/销毁/DEX/跨链桥/锁仓后的占比；剩余 {result['known']} 个地址，为下界")
+    put('unknownShare',result['unknownShare'],'原始前10地址中未识别归属的余额比例')
+    put('lockedShare',result['lockedShare'],'原始前10地址中锁仓余额比例')
+    row['concentrationAudit']={'asOf':stamp,'url':url,'method':'goplus-top10','totalSupply':number(evidence.get('total')),
+                               'rawTop10Pct':result['raw'],'excludedSupply':result['excluded'],
+                               'remainingSupply':number(evidence.get('total'))-result['excluded'],'adjustedTop10Balance':result['remaining'],
+                               'excluded':[{'address':h['address'],'balance':h['balance'],'amount':h['balance'],'kind':h['kind'],
+                                            'label':h.get('label',''),'url':h.get('evidenceUrl','')} for h in result['removed']],
+                               'omittedExcluded':0,
+                               'adjustedTop10':[{'address':h['address'],'balance':h['balance'],'eligibleBalance':h['balance'],
+                                                 'kind':h.get('kind'),'label':h.get('label',''),'url':h.get('evidenceUrl','')} for h in result['kept']]}
 
 
 def universe(raw):

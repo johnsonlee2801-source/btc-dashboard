@@ -15,11 +15,11 @@ on:
   # not trigger workflows. Watch the runs themselves instead.
   workflow_run:
     workflows:
-      - Update BTC dashboard data
       - Update ETH on-chain data
       - Update CEX reserves
       - Update BTC and ETH observatory
       - Update positioning radar
+      - Update positioning evidence
     types:
       - completed
   workflow_dispatch:

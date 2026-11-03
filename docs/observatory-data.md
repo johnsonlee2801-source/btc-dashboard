@@ -16,6 +16,12 @@
 | `data/onchain-history.json` | 同上，经 `scripts/onchain_store.py` | 每次最多 8 次 BGeometrics 调用，按优先级增量刷新 |
 | `data/halving-cycles.json` | `scripts/build_halving.py` | 同上工作流，失败不阻塞 |
 | `data/positioning-radar.json`、`data/positioning-summary.json` | `scripts/build_positioning_radar.py` | 每小时 |
+| `data/spot-flow.json` | `scripts/build_spot_flow.py`（Binance 现货 aggTrades 公开日数据，SHA-256 校验） | 随观察台工作流，只补新的 UTC 日，保留 30 天 |
+| `data/positioning-evidence.json`、`data/exchange-addresses.json` | `scripts/build_positioning_evidence.py`、`scripts/build_exchange_labels.py` | 每天（Update positioning evidence），见 `positioning-radar-data.md` |
+
+**已停用**：旧的 `data.json` 管线（`Update BTC dashboard data`，含 DeepSeek/FRED 调用）于 2026-11-03 停掉定时任务，只保留手动触发；页面不再读取，`data.json` 也不再部署。
+
+现货资金流按单笔聚合成交金额分档（<1万、1–10万、10–100万、>100万 USDT），净额 = 主动买入 − 主动卖出。一个吃掉多个价位的大单会被拆成多条聚合成交，所以大单金额是保守值，>100万档通常接近 0。
 
 ### Binance 合约数据为什么要中转
 

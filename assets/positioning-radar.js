@@ -134,11 +134,13 @@
     const audit=r.concentrationAudit;
     if(audit){
       const part=E('div',undefined,'radar-detail-metric');part.append(E('h3','集中度计算证据'));
+      const kinds={exchange:'交易所',burn:'销毁',dex:'DEX 池',bridge:'跨链桥',locked:'锁仓',contract:'未识别合约',unknown:'未识别地址'};
+      if(audit.method==='goplus-top10')part.append(E('p','口径：GoPlus 前10持仓（原始前10合计 '+num(audit.rawTop10Pct,2)+'%），扣除交易所/销毁/DEX/桥/锁仓后计算，结果为下界。'));
       for(const [key,label]of [['totalSupply','原始总供应'],['excludedSupply','剔除余额'],['remainingSupply','剩余供应'],['adjustedTop10Balance','调整后前10余额']])part.append(E('p',label+'：'+num(audit[key],4)));
-      part.append(sourceLink(audit.url,'完整原始账本 / 供应证据 ↗'));
-      for(const x of audit.excluded||[]){const line=E('p','剔除 '+num(x.amount,4)+' · '+x.kind+' · ');line.append(sourceLink(x.url,x.address));part.append(line);}
+      part.append(sourceLink(audit.url,'链上持有人页面 / 供应证据 ↗'));
+      for(const x of audit.excluded||[]){const line=E('p','剔除 '+num(x.amount,4)+' · '+(kinds[x.kind]||x.kind)+(x.label&&x.label!=='DEX pool'?'（'+x.label+'）':'')+' · ');line.append(sourceLink(x.url,x.address));part.append(line);}
       if(audit.omittedExcluded)part.append(E('p','另有 '+audit.omittedExcluded+' 条剔除记录，请查看完整账本。'));
-      for(const x of audit.adjustedTop10||[]){const line=E('p','前10合格余额 '+num(x.eligibleBalance,4)+' · ');line.append(sourceLink(x.url,x.address));part.append(line);}
+      for(const x of audit.adjustedTop10||[]){const line=E('p','计入 '+num(x.eligibleBalance,4)+(x.kind?' · '+(kinds[x.kind]||x.kind):'')+' · ');line.append(sourceLink(x.url,x.address));part.append(line);}
       content.append(part);
     }
     for(const [key,label]of Object.entries(labels)){

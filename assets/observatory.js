@@ -13,7 +13,7 @@
   const bj=(s,time=false)=>{const n=Date.parse(s);return Number.isFinite(n)?new Intl.DateTimeFormat('zh-CN',{timeZone:'Asia/Shanghai',month:'2-digit',day:'2-digit',...(time?{hour:'2-digit',minute:'2-digit',hour12:false}:{})}).format(n):'日期未知';};
   const md=s=>typeof s==='string'&&s.length>=10?s.slice(5,10).replace('-','/'):'—';
   const opText=op=>({'<':'<','<=':'≤','>':'>','>=':'≥'}[op]||op);
-  let data=null,asset=null,quote=null,reserves=null,radar=null,trendRange='365',filter='all',reserveWindow='7d';
+  let data=null,asset=null,quote=null,reserves=null,radar=null,spotFlow=null,trendRange='365',filter='all',reserveWindow='7d';
 
   const now=()=>Date.now();
   const livePrice=()=>quote?.price??asset?.metrics?.price?.value;
@@ -211,6 +211,23 @@
       return `<div class="rung ${self?'self':''}"><span><i class="${self?'blue':below?'green':''}"></i>${esc(r.label)}<small>${esc(r.meaning)}${r.meaning?' · ':''}${esc(md(r.asOf))}</small></span><b class="tabular">${esc(kmoney(r.value))}</b><em class="${below&&!self?'positive':''}">${self?'日收盘':esc(pct(mv,1))}</em></div>`;
     }).join('')}</div><p class="panel-note">百分比相对实时价格。绿色 = 价格已在该线下方。</p>`;
   }
+  function renderSpotFlow(){
+    const el=$('spotflow');if(!el)return;
+    const days=spotFlow?.assets?.[symbol]?.days||[],last=days.at(-1);
+    const head=`<div class="panel-title"><h2 id="spotflowTitle">现货资金流</h2><span>Binance ${esc(symbol)}/USDT · 按单笔成交金额</span></div>`;
+    if(!last){el.innerHTML=head+'<p class="panel-note">暂无可核验数据。</p>';return;}
+    const age=(now()-Date.parse(last.date+'T00:00:00Z'))/86400000,ok=age>=0&&age<=3;
+    const b=last.buckets,small=b.lt10k.net,big=b['10k_100k'].net+b['100k_1m'].net+b.gt1m.net;
+    const usd=v=>(v>=0?'+':'−')+'$'+short(Math.abs(v));
+    const max=Math.max(1,...Object.values(b).map(x=>Math.abs(x.net)));
+    const rows=(spotFlow.buckets||[]).map(k=>{const v=b[k.key]?.net??0;
+      return `<div class="sf-row"><span>${esc(k.label)}</span><div class="sf-bar"><i class="${v<0?'neg':'pos'}" style="width:${(Math.abs(v)/max*50).toFixed(1)}%;${v<0?'right':'left'}:50%"></i></div><b class="tabular ${v<0?'negative':'positive'}">${esc(usd(v))}</b></div>`;}).join('');
+    const week=days.slice(-7),wmax=Math.max(1,...week.map(d=>Math.abs(d.net-d.buckets.lt10k.net)));
+    const bars=week.map(d=>{const v=d.net-d.buckets.lt10k.net;return `<div title="${esc(d.date)} 大单净额 ${esc(usd(v))}"><span class="${v<0?'neg':''}" style="height:${(Math.abs(v)/wmax*46).toFixed(1)}%;${v>=0?'bottom':'top'}:50%"></span><small>${esc(md(d.date))}</small></div>`;}).join('');
+    el.innerHTML=`${head}<div class="sf-head"><div><small>散户 &lt;1万</small><b class="tabular ${small<0?'negative':'positive'}">${esc(usd(small))}</b></div><div><small>大单 ≥1万</small><b class="tabular ${big<0?'negative':'positive'}">${esc(usd(big))}</b></div></div>
+      <div class="sf-rows">${rows}</div><p class="panel-note" style="padding-bottom:4px">近 7 日大单（≥1万）净额</p><div class="flow-bars sf-week">${bars}</div>
+      <p class="panel-note">UTC ${esc(last.date)}${ok?'':' · 已过期'}。净额 = 主动买入 − 主动卖出（USDT）。按单笔聚合成交分档，跨价位的大单会被拆分，大单金额偏保守。<a href="${esc(spotFlow.sourceUrl)}" target="_blank" rel="noopener noreferrer">Binance 公开数据 ↗</a></p>`;
+  }
   function renderFlows(){
     const e=asset.etf;
     if(!e?.rows?.length){$('flows').innerHTML='<div class="panel-title"><h2 id="flowsTitle">现货 ETF 资金流</h2></div><p class="panel-note">暂无可核验数据。</p>';return;}
@@ -314,10 +331,11 @@
       data=next;asset=next.assets[symbol];render();
       const side=await Promise.allSettled([
         fetch('/data/cex-reserves.json',{signal:AbortSignal.timeout(8000)}).then(x=>x.ok?x.json():null),
-        fetch('/data/positioning-summary.json',{cache:'no-store',signal:AbortSignal.timeout(8000)}).then(x=>x.ok?x.json():null)]);
-      reserves=side[0].value||null;const rs=side[1].value;
+        fetch('/data/positioning-summary.json',{cache:'no-store',signal:AbortSignal.timeout(8000)}).then(x=>x.ok?x.json():null),
+        fetch('/data/spot-flow.json',{cache:'no-store',signal:AbortSignal.timeout(8000)}).then(x=>x.ok?x.json():null)]);
+      reserves=side[0].value||null;const rs=side[1].value;spotFlow=side[2].value||null;
       radar=rs&&Date.now()-rs.generatedAt<6*3600000?rs:null;
-      renderReserves();renderPositioning();
+      renderReserves();renderPositioning();renderSpotFlow();
       await loadQuote();
     }catch{
       if(asset){render();notice('<strong>更新未成功</strong>　保留上次读取的快照，时效仍按实际日期判断。');}

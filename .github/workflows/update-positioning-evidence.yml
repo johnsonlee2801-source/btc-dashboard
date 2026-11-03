@@ -1,0 +1,53 @@
+name: Update positioning evidence
+
+# Daily holder-concentration evidence for the positioning radar: exchange wallet labels
+# (Binance/Bybit proof-of-reserves + DefiLlama CEX adapters), then GoPlus top-10 holders
+# and CoinGecko supply for each mapped token. The hourly radar run applies it (48h validity).
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '10 1 * * *'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: positioning-evidence
+  cancel-in-progress: false
+
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.11'
+      - name: Verify concentration contracts
+        run: python -B -m unittest discover -s tests -p 'test_positioning_*.py' -q
+      - name: Refresh exchange wallet labels
+        # A thin or failed refresh keeps the previous address book (the script exits non-zero without writing).
+        continue-on-error: true
+        env:
+          BINANCE_PROXY_URL: https://btc.flowhunt.net/api/binance-futures
+        run: python -B scripts/build_exchange_labels.py
+      - name: Collect top-holder evidence
+        run: python -B scripts/build_positioning_evidence.py
+      - name: Commit evidence if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/positioning-evidence.json data/exchange-addresses.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "chore: update positioning evidence"
+          for attempt in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            git pull --rebase origin master
+          done
+          exit 1

@@ -15,7 +15,6 @@ UA = {"User-Agent": "flowhunt-health-check/1.0 (+https://btc.flowhunt.net)"}
 
 # 数据允许的最大年龄（小时）。定时任务会被 GitHub 延迟 0.5~4 小时，阈值留了余量。
 MAX_AGE_HOURS = {
-    "data.json（BTC，每 3 小时）": 12,
     "eth-data.json（每日）": 36,
     "cex-reserves.json（每日）": 60,
 }
@@ -136,23 +135,21 @@ def main():
     except Exception as ex:
         check("减半周期数据", False, str(ex)[:120])
 
+    # data.json (the pre-v2 pipeline) was retired on 2026-11-03; nothing reads it any more.
     try:
-        _, d = get_json(f"{BTC}/data.json")
-        check_age("data.json（BTC，每 3 小时）", d.get("timestamp"), MAX_AGE_HOURS["data.json（BTC，每 3 小时）"])
-        oc = d.get("onchain") or {}
-        check("data.json: MVRV/NUPL 非陈旧", oc.get("mvrv_zscore") is not None and not oc.get("mvrv_zscore_stale"),
-              f"as_of {oc.get('mvrv_zscore_as_of')}, age {oc.get('mvrv_zscore_age_days')} 天")
-        check("data.json: Puell/LTH-MVRV 存在且未过期", oc.get("puell") is not None and not oc.get("puell_stale")
-              and oc.get("lth_mvrv") is not None and not oc.get("lth_mvrv_stale"),
-              f"puell {oc.get('puell')}@{oc.get('puell_as_of')}, lth_mvrv {oc.get('lth_mvrv')}@{oc.get('lth_mvrv_as_of')}")
-        check("data.json: DXY / ETF / 美联储 / TIPS 存在",
-              isinstance((d.get("dxy") or {}).get("value"), (int, float)) and (d.get("etf") or {}).get("sum5d") is not None
-              and (d.get("fed") or {}).get("fed_direction") and d.get("tips") is not None,
-              f"dxy {(d.get('dxy') or {}).get('value')}, etf {(d.get('etf') or {}).get('sum5d')}, fed {(d.get('fed') or {}).get('fed_direction')}, tips {d.get('tips')}")
-        check("data.json: 200 周均线 / 市场兜底值", isinstance((d.get("ma200w") or {}).get("value"), (int, float))
-              and isinstance((d.get("market") or {}).get("ma200d"), (int, float)))
+        _, flow = get_json(f"{BTC}/data/spot-flow.json")
+        latest = {s: ((flow.get("assets") or {}).get(s, {}).get("days") or [{}])[-1].get("date") for s in ("BTC", "ETH")}
+        check("现货分档资金流: 最近交易日", all(d and (hours_since(d) or 999) <= 60 for d in latest.values()), f"最新 {latest}")
     except Exception as e:
-        check("data.json", False, str(e)[:120])
+        check("现货分档资金流", False, str(e)[:120])
+
+    try:
+        _, ev = get_json(f"{BTC}/data/positioning-evidence.json")
+        age = (datetime.now(timezone.utc).timestamp() * 1000 - (ev.get("generatedAt") or 0)) / 3600000
+        check("控盘证据: 48 小时内更新且覆盖 ≥150 个代币", 0 <= age <= 48 and len(ev.get("assets") or {}) >= 150,
+              f"{age:.1f} 小时前，{len(ev.get('assets') or {})} 个代币，失败 {len(ev.get('errors') or [])}")
+    except Exception as e:
+        check("控盘证据", False, str(e)[:120])
 
     try:
         _, e = get_json(f"{BTC}/eth-data.json")

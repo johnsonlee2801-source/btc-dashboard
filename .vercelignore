@@ -18,3 +18,7 @@ docs/
 2026-04-08-*.png
 # Superseded by og-image.jpg (1200x630); vercel.json redirects the old URL
 og-image.png
+# Pre-v2 snapshot; its pipeline was retired 2026-11-03 and no page reads it
+/data.json
+# Raw label book; the radar only publishes the per-holder results it derives from it
+data/exchange-addresses.json
