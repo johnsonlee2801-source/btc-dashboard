@@ -52,6 +52,14 @@ class ConcentrationTests(unittest.TestCase):
         self.assertEqual(row['concentrationAudit']['method'], 'goplus-top10')
         self.assertEqual(len(row['concentrationAudit']['excluded']), 1)
 
+    def test_a_contract_with_few_holders_is_not_scored(self):
+        row = {'symbol': 'ATUSDT', 'baseAsset': 'AT', 'network': None, 'address': None, 'multiplier': None, 'makers': [],
+               'metrics': {k: radar.metric() for k in radar.FIELDS}}
+        evidence = {'symbol': 'ATUSDT', 'baseAsset': 'AT', 'asOf': 5, 'url': 'https://x', 'network': 'ETH', 'address': '0x1',
+                    'method': 'goplus-top10', 'total': 100, 'holderCount': 19, 'holders': [holder(100)]}
+        radar.apply_evidence(row, evidence, 10)
+        self.assertIsNone(row['metrics']['concentration']['value'])
+
     def test_native_coins_never_take_token_evidence(self):
         row = {'symbol': 'BNBUSDT', 'baseAsset': 'BNB', 'metrics': {k: radar.metric() for k in radar.FIELDS}}
         radar.apply_evidence(row, {'symbol': 'BNBUSDT', 'baseAsset': 'BNB', 'asOf': 1, 'url': 'https://x', 'network': 'ETH',

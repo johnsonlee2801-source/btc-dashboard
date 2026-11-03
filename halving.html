@@ -178,6 +178,22 @@ const TODAY    = new Date();
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const usd = v => Number.isFinite(v) ? '$' + Math.round(v).toLocaleString('en-US') : '—';
+const pos = v => typeof v === 'number' && Number.isFinite(v) && v > 0;
+// A real calendar day: "2026-02-30" must not roll over into March.
+const isDay = s => typeof s === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(s) && Number.isFinite(Date.parse(s + 'T00:00:00Z'))
+  && new Date(s + 'T00:00:00Z').toISOString().slice(0, 10) === s;
+const span = (a, lo, hi) => Array.isArray(a) && a.length === 2 && a.every(x => Number.isFinite(x) && x >= lo && x <= hi);
+// Everything the renderers dereference, checked once: a malformed file shows a message instead of half a page.
+function valid(d) {
+  const w = d?.windows;
+  return Array.isArray(d?.cycles) && d.cycles.length === 4 && isDay(d.nextHalvingEstimate)
+    && span(w?.peakDays, 0, 2000) && span(w?.lowDays, 0, 2000) && span(w?.drawdownPct, -100, 0)
+    && d.cycles.every(c => isDay(c?.halving) && isDay(c.lastDate) && pos(c.halvingClose) && pos(c.lastClose)
+      && isDay(c.peak?.date) && pos(c.peak.close) && Number.isFinite(c.peak.day) && Number.isFinite(c.peak.multiple)
+      && Array.isArray(c.curve) && c.curve.every(p => Array.isArray(p) && p.length === 2 && Number.isFinite(p[0]) && pos(p[1]))
+      && (c.lowAfterPeak == null || (isDay(c.lowAfterPeak.date) && pos(c.lowAfterPeak.close) && Number.isFinite(c.lowAfterPeak.day)
+        && Number.isFinite(c.lowAfterPeak.drawdownPct))));
+}
 const utc = s => Date.parse(s + 'T00:00:00Z');
 const dayNo = (from, to) => Math.floor((Date.UTC(to.getUTCFullYear(), to.getUTCMonth(), to.getUTCDate()) - utc(from)) / DAY);
 const cn = s => { const [y, m, d] = s.split('-'); return `${y}年${+m}月${+d}日`; };
@@ -187,9 +203,10 @@ let data = null, ma200w = null;
 function renderStatus() {
   const cur = data.cycles.at(-1), w = data.windows, today = dayNo(cur.halving, TODAY);
   const total = Math.round((utc(data.nextHalvingEstimate) - utc(cur.halving)) / DAY);
-  $('dataAsOf').textContent = '数据截至 ' + cur.lastDate;
+  const lag = dayNo(cur.lastDate, TODAY);
+  $('dataAsOf').textContent = '数据截至 ' + cur.lastDate + (lag > 3 ? `（已 ${lag} 天未更新）` : '');
   $('daysSince').textContent = 'Day ' + today;
-  $('daysSub').textContent = `${cn(cur.halving)} 起，周期过半 ${(today / total * 100).toFixed(1)}%`;
+  $('daysSub').textContent = `${cn(cur.halving)} 起，本轮已走过 ${(today / total * 100).toFixed(1)}%`;
   $('peakWindow').textContent = `Day ${w.peakDays[0]}–${w.peakDays[1]}`;
   $('peakStatus').textContent = `本轮高点在 Day ${cur.peak.day}（${cur.peak.date}，${usd(cur.peak.close)}），${cur.peak.day >= w.peakDays[0] && cur.peak.day <= w.peakDays[1] ? '落在窗口内' : '在窗口外'}`;
   $('lowWindow').textContent = `Day ${w.lowDays[0]}–${w.lowDays[1]}`;
@@ -263,33 +280,38 @@ function calculate() {
   const rows = [
     ['相对减半日收盘', (p / cur.halvingClose).toFixed(2) + 'x', p >= cur.halvingClose ? 'var(--green)' : 'var(--red)'],
     ['距本轮高点 ' + usd(cur.peak.close), dd.toFixed(1) + '%', 'var(--red)'],
-    ['相对本轮至今最低收盘 ' + usd(cur.lowAfterPeak?.close), ((p / cur.lowAfterPeak.close - 1) * 100).toFixed(1) + '%', ''],
   ];
+  if (cur.lowAfterPeak) rows.push(['相对本轮至今最低收盘 ' + usd(cur.lowAfterPeak.close), ((p / cur.lowAfterPeak.close - 1) * 100).toFixed(1) + '%', '']);
   if (ma200w) rows.push([`相对 200 周均线 ${usd(ma200w.value)}`, ((p / ma200w.value - 1) * 100).toFixed(1) + '%', p >= ma200w.value ? 'var(--green)' : 'var(--red)']);
   const shallow = cur.peak.close * (1 + w.drawdownPct[0] / 100), deep = cur.peak.close * (1 + w.drawdownPct[1] / 100);
   rows.push([`若本轮回撤与前三轮相同（${w.drawdownPct[0].toFixed(0)}% ~ ${w.drawdownPct[1].toFixed(0)}%）`, `${usd(deep)} – ${usd(shallow)}`, 'var(--muted)']);
   $('resultContent').innerHTML = rows.map(([k, v, c]) => `<div class="r-row"><span class="rk">${esc(k)}</span><span class="rv" style="color:${c}">${esc(v)}</span></div>`).join('') +
-    `<p class="small">最后一行只是把历史回撤幅度套到本轮高点上的算术，不是价位判断；本轮至今回撤 ${Math.abs(cur.lowAfterPeak.drawdownPct).toFixed(1)}%，明显浅于前三轮，样本在变化。</p>`;
+    `<p class="small">最后一行只是把历史回撤幅度套到本轮高点上的算术，不是价位判断${cur.lowAfterPeak ? `；本轮至今回撤 ${Math.abs(cur.lowAfterPeak.drawdownPct).toFixed(1)}%，与前三轮的 ${Math.abs(w.drawdownPct[0]).toFixed(0)}%–${Math.abs(w.drawdownPct[1]).toFixed(0)}% 相比，样本在变化` : ''}。</p>`;
 }
 
 async function load() {
   try {
     const r = await fetch('/data/halving-cycles.json', { cache: 'no-cache' });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
     data = await r.json();
-  } catch { $('halvingGrid').innerHTML = '<div class="card">历史数据暂时无法读取，请稍后刷新。</div>'; return; }
+    if (!valid(data)) throw new Error('invalid');
+  } catch { data = null; $('halvingGrid').innerHTML = '<div class="card">历史数据暂时无法读取，请稍后刷新。</div>'; return; }
   renderStatus(); renderCards(); renderTable();
   if (window.Chart) renderChart(); else window.addEventListener('load', renderChart, { once: true });
   try {
     const obs = await (await fetch('/data/observatory.json', { cache: 'no-cache' })).json();
     const rung = obs.assets.BTC.ladder.find(x => x.label === '200 周均线');
-    if (rung) { ma200w = rung; $('ma200wNote').textContent = `当前约 ${usd(rung.value)}（截至 ${rung.asOf}，Binance 完整周收盘均值）`; }
+    if (!(rung && pos(rung.value) && isDay(rung.asOf))) throw new Error('no valid 200w MA');
+    ma200w = rung; $('ma200wNote').textContent = `当前约 ${usd(rung.value)}（截至 ${rung.asOf}，Binance 完整周收盘均值）`;
   } catch { $('ma200wNote').textContent = '当前值暂不可用。'; }
+  let q = null;
   try {
-    const q = await (await fetch('/api/ticker?symbol=BTC', { signal: AbortSignal.timeout(8000) })).json();
-    if (q.price > 0) { $('curPrice').value = Math.round(q.price); $('priceSource').textContent = `${q.source} 实时价，可手动改成任意价格`; }
-  } catch {
-    const last = data.cycles.at(-1); $('curPrice').value = Math.round(last.lastClose); $('priceSource').textContent = `实时行情不可用，已填入 ${last.lastDate} 收盘价`;
-  }
+    const r = await fetch('/api/ticker?symbol=BTC', { signal: AbortSignal.timeout(8000) });
+    if (r.ok) q = await r.json();
+  } catch {}
+  // Any failure — network, HTTP error, or an error body without a price — falls back to the last close.
+  if (pos(q?.price)) { $('curPrice').value = Math.round(q.price); $('priceSource').textContent = `${String(q.source || '行情')} 实时价，可手动改成任意价格`; }
+  else { const last = data.cycles.at(-1); $('curPrice').value = Math.round(last.lastClose); $('priceSource').textContent = `实时行情不可用，已填入 ${last.lastDate} 收盘价`; }
   calculate();
 }
 $('curPrice').addEventListener('input', calculate);

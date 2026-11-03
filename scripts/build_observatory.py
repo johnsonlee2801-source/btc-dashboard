@@ -105,52 +105,80 @@ def metric(value, as_of, source, max_hours=72, note=''):
 
 # ---------------------------------------------------------------- sources
 
+def candle_closes(rows, cutoff_ms):
+    """{date: close} from closed, well-formed kline rows; anything else is skipped."""
+    closes = {}
+    for row in rows:
+        try:
+            opened, ended, close = float(row[0]), float(row[6]), float(row[4])
+            if not (math.isfinite(close) and close > 0 and 0 <= opened <= ended < cutoff_ms):
+                continue
+            closes[datetime.fromtimestamp(opened / 1000, timezone.utc).date().isoformat()] = close
+        except (TypeError, ValueError, IndexError, KeyError, OverflowError, OSError):
+            continue
+    return closes
+
+
 def fetch_candles(symbol, errors, now, pages=4):
-    """Closed UTC daily candles, oldest first, up to pages*1000 days."""
+    """Closed UTC daily candles, oldest first, up to pages*1000 days.
+
+    A host whose pagination fails part-way is not trusted with a truncated history:
+    the other host is tried, and the longer complete (or, failing that, longest) result wins.
+    """
+    best, best_complete = {}, False
     for host in ('data-api.binance.vision', 'api.binance.com'):
-        rows, end = [], None
+        rows, end, complete = [], None, False
         for _ in range(pages):
             url = f'https://{host}/api/v3/klines?symbol={symbol}USDT&interval=1d&limit=1000' + (f'&endTime={end}' if end else '')
             page = safe_get(url, errors)
-            if not isinstance(page, list) or not page:
+            if not isinstance(page, list) or not page or not isinstance(page[0], list):
                 break
             rows = page + rows
-            end = int(page[0][0]) - 1
-            if len(page) < 1000:
-                break
-        cutoff = now.timestamp() * 1000
-        closes = {}
-        for row in rows:
             try:
-                opened, ended, close = float(row[0]), float(row[6]), float(row[4])
+                end = int(page[0][0]) - 1
             except (TypeError, ValueError, IndexError):
-                continue
-            if close > 0 and 0 <= opened <= ended < cutoff:
-                closes[datetime.fromtimestamp(opened / 1000, timezone.utc).date().isoformat()] = close
-        if closes:
-            return sorted(closes.items())
-    return []
+                break
+            if len(page) < 1000:
+                complete = True
+                break
+        else:
+            complete = True  # reached the page budget without a failure
+        closes = candle_closes(rows, now.timestamp() * 1000)
+        if (complete, len(closes)) > (best_complete, len(best)):
+            best, best_complete = closes, complete
+        if complete and closes:
+            break
+    return sorted(best.items())
 
 
 def fetch_fear_alt(errors):
     raw = safe_get('https://api.alternative.me/fng/?limit=0&format=json', errors)
+    rows = raw.get('data') if isinstance(raw, dict) else None
+    return dated_values(rows if isinstance(rows, list) else [], 'timestamp', 'value')
+
+
+def dated_values(rows, time_key, value_key):
+    """{date: value} from rows with a unix-seconds timestamp; malformed rows are skipped."""
     out = {}
-    for row in (raw or {}).get('data') or []:
-        stamp, value = number(row.get('timestamp')), number(row.get('value'))
-        if stamp is not None and value is not None:
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        stamp, value = number(row.get(time_key)), number(row.get(value_key))
+        if stamp is None or value is None:
+            continue
+        try:
             out[datetime.fromtimestamp(stamp, timezone.utc).date().isoformat()] = value
+        except (OverflowError, OSError, ValueError):
+            continue
     return out
 
 
 def fetch_fear_cmc(errors, now):
     start = int((now - timedelta(days=400)).timestamp())
     raw = safe_get(f'https://api.coinmarketcap.com/data-api/v3/fear-greed/chart?start={start}&end={int(now.timestamp())}', errors)
-    out = {}
-    for row in ((raw or {}).get('data') or {}).get('dataList') or []:
-        stamp, value = number(row.get('timestamp')), number(row.get('score'))
-        if stamp is not None and value is not None:
-            out[datetime.fromtimestamp(stamp, timezone.utc).date().isoformat()] = value
-    return out
+    data = raw.get('data') if isinstance(raw, dict) else None
+    rows = data.get('dataList') if isinstance(data, dict) else None
+    return dated_values(rows if isinstance(rows, list) else [], 'timestamp', 'score')
 
 
 def ratio_rows(body, field='longShortRatio'):
@@ -214,7 +242,7 @@ def fetch_derivatives(symbol, errors, now):
     book = safe_get(f'https://www.deribit.com/api/v2/public/get_book_summary_by_currency?currency={symbol}&kind=option', errors)
     rr = options_rr.rr25_30d((book or {}).get('result'), now)
     if rr:
-        out['rr25'] = metric(rr['value'], now.replace(minute=0, second=0, microsecond=0).isoformat(), 'Deribit', 12,
+        out['rr25'] = metric(rr['value'], rr['asOf'], 'Deribit', 12,
                              f"25Δ 风险逆转 = 25Δ 看涨 IV − 25Δ 看跌 IV（{rr['tenor']}），负值表示看跌期权更贵。"
                              '由 Deribit 期权标记 IV 按 Black-Scholes 远期 delta 计算。')
     return out
@@ -264,7 +292,11 @@ def parse_etf(html, now=None):
         text = row[total_idx].replace(',', '').replace('−', '-')
         value = number('-' + text[1:-1] if text.startswith('(') and text.endswith(')') else text)
         if value is not None:
-            out[day.isoformat()] = {'date': day.isoformat(), 'value': value}
+            # Farside fills late-reporting funds as they arrive (often 0.0 until then), so the
+            # newest session and any row with an unreported '-' cell are marked provisional.
+            close = datetime(day.year, day.month, day.day, 21, tzinfo=timezone.utc)
+            pending = any(c.strip() in ('-', '') for c in row[1:total_idx]) or (now - close).total_seconds() < 36 * 3600
+            out[day.isoformat()] = {'date': day.isoformat(), 'value': value, **({'provisional': True} if pending else {})}
     return sorted(out.values(), key=lambda r: r['date'])[-10:]
 
 
@@ -296,8 +328,14 @@ def build_table(symbol, closes, store, fear_alt):
         table['hash_ribbon'] = S.hash_ribbon(series.get('hashrate', {}))
         table['whale_net30'] = S.change_over(series.get('whale_1k_10k', {}), 30)
         table['fear'] = fear_alt
+        # Each close is divided by the latest cost still valid on that day (costs publish a day late),
+        # so the ratio never pairs today's cost with an older price or vice versa.
         for key, base in (('sth_mvrv', 'sth_cost'), ('lth_ratio', 'lth_cost')):
-            table[key] = {day: p / table[base][day] for day, p in price.items() if table[base].get(day)}
+            table[key] = {}
+            for day, p in price.items():
+                cost = S.asof(table[base], day, 4)
+                if cost and cost[1] > 0:
+                    table[key][day] = p / cost[1]
     else:
         table['mvrv'] = dict(series.get('eth_mvrv', {}))
         # ETH realized price follows from MVRV on the same day.
@@ -305,7 +343,19 @@ def build_table(symbol, closes, store, fear_alt):
     return table
 
 
-def item_payload(item, table, today, price_series, backtest_end):
+PRICE_KEYS = {'price', 'ma200d', 'high90', 'ma200w', 'weekly_rsi', 'mayer', 'price_ma200w', 'drawdown90', 'pi_bottom', 'fear'}
+
+
+def publication_lag(symbol, key):
+    """Days between an observation's date and the day a live reader could have had it."""
+    if key in PRICE_KEYS:
+        return 0  # closed daily candles and the fear index are out the same day
+    if symbol == 'ETH' and key in ('mvrv', 'realized_price'):
+        return 6  # BGeometrics publishes ETH MVRV about a week late
+    return 1      # BGeometrics series, and anything derived from them, land the next day
+
+
+def item_payload(item, table, today, price_series, backtest_end, lags=None, days=None):
     key, label, op, threshold, unit, linked, max_age = item
     series = table.get(key, {})
     found = S.asof(series, today, max_age)
@@ -321,7 +371,8 @@ def item_payload(item, table, today, price_series, backtest_end):
         payload.update(value=series[latest], asOf=latest, stale=True)
     if series:
         start = max(min(series), min(price_series))
-        payload['backtest'] = S.backtest(S.lit_set(series, op, threshold), price_series, start, backtest_end)
+        lit = S.lit_days(series, item, days or sorted(price_series), (lags or {}).get(key, 0))
+        payload['backtest'] = S.backtest(lit, price_series, start, backtest_end)
     if key in ('lth_net30', 'whale_net30'):
         payload['spark'] = [[k, round(series[k], 1)] for k in sorted(series)[-90:]]
     return payload
@@ -336,11 +387,14 @@ def build_asset(symbol, closes, store, fear_alt, now):
     eval_day = now.date().isoformat()
     days = [day for day, _ in closes]
     backtest_end = today
+    lags = {key: publication_lag(symbol, key) for key in table}
+    # A candle history that ends days ago cannot describe "now": current sections are withheld.
+    candles_fresh = (now.date() - S.d(today)).days <= 3
     groups = []
     for group in groups_def:
         groups.append({'id': group['id'], 'title': group['title'], 'weight': group['weight'],
                        'description': group['description'],
-                       'items': [item_payload(i, table, eval_day, price, backtest_end) for i in group['items']]})
+                       'items': [item_payload(i, table, eval_day, price, backtest_end, lags, days) for i in group['items']]})
     raw = {}
     for key in ('price', 'ma200d', 'ma200w', 'high90', 'drawdown90', 'sth_cost', 'lth_cost', 'realized_price', 'true_mean'):
         found = S.asof(table.get(key, {}), today, 9 if key == 'ma200w' else 4)
@@ -353,15 +407,16 @@ def build_asset(symbol, closes, store, fear_alt, now):
     if symbol == 'BTC':
         onchain_start = min(table['sth_cost']) if table['sth_cost'] else today
         score_days = [d for d in days if d >= onchain_start]
-        scores = {d: S.score_on(groups_def, table, d) for d in score_days}
+        # History is evaluated on what was published by each day; today's reading uses the latest data.
+        scores = {d: S.score_on(groups_def, table, d, lags) for d in score_days}
         out['score'] = S.score_on(groups_def, table, eval_day)
         out['verdict'] = dict(zip(('code', 'label'), S.verdict(out['score']['lower'])))
         out['scoreHistory'] = [[d, scores[d]['lower'], price[d]] for d in score_days]
-        combo_days = {d for d in days if S.combo_on(table, d)}
+        combo_days = {d for d in days if S.combo_on(table, d, lags)}
         sth = S.asof(table['sth_cost'], today, 4)
         high90 = table['high90'].get(today)
         out['combo'] = {
-            'met': S.combo_on(table, today),
+            'met': S.combo_on(table, today) if candles_fresh else None,
             'conditions': [
                 {'id': 'sth', 'label': '跌破短期持有者成本', 'triggerPrice': sth[1] if sth else None,
                  'asOf': sth[0] if sth else None, 'source': 'BGeometrics', 'note': 'STH 实现价格（持币 <155 天筹码的平均成本）'},
@@ -376,9 +431,12 @@ def build_asset(symbol, closes, store, fear_alt, now):
             bands[str(floor)] = S.backtest(lit, price, onchain_start, backtest_end)
         out['scoreBacktest'] = bands
         # Position band: reference line = max(200-week MA, STH cost), with days spent above it.
-        above, streak = {}, 0
+        above, streak, prev = {}, 0, None
         for d in days:
             ma, sc = table['ma200w'].get(d), S.asof(table['sth_cost'], d, 4)
+            if prev is not None and (S.d(d) - S.d(prev)).days != 1:
+                streak = 0  # a missing candle breaks "consecutive days above"
+            prev = d
             if ma is None or sc is None:
                 streak = 0
                 continue
@@ -386,7 +444,7 @@ def build_asset(symbol, closes, store, fear_alt, now):
             streak = streak + 1 if price[d] >= line else 0
             above[d] = (line, streak)
         ma200w, ref = table['ma200w'].get(today), above.get(today)
-        if ma200w and ref:
+        if ma200w and ref and candles_fresh:
             line, streak = ref
             zone = 0 if price[today] < ma200w else 1 if price[today] < line else 2 if streak < 28 else 3
             out['band'] = {'ma200w': ma200w, 'line': line, 'sthCost': sth[1] if sth else None, 'zone': zone,
@@ -400,7 +458,8 @@ def build_asset(symbol, closes, store, fear_alt, now):
             if not ser:
                 continue
             last = max(ser)
-            entry = {'label': label, 'note': note, 'asOf': last, 'value': ser[last]}
+            entry = {'label': label, 'note': note, 'asOf': last, 'value': ser[last],
+                     'stale': (now.date() - S.d(last)).days > 6}
             if key != 'lth_net30':
                 for n in (7, 30):
                     old = ser.get((datetime.fromisoformat(last) - timedelta(days=n)).date().isoformat())
@@ -415,7 +474,7 @@ def build_asset(symbol, closes, store, fear_alt, now):
         for d in days:
             n = 0
             for item in groups_def[0]['items']:
-                found = S.asof(table.get(item[0], {}), d, item[6])
+                found = S.asof(table.get(item[0], {}), d, item[6], lags.get(item[0], 0))
                 n += bool(found and S.evaluate(item[2], item[3], found[1]))
             lit_counts[d] = n
         out['scoreHistory'] = [[d, lit_counts[d], price[d]] for d in days[-1460:]]
@@ -437,11 +496,12 @@ def build_asset(symbol, closes, store, fear_alt, now):
         rung('200 周均线', table['ma200w'][today], today, '价格/200周均线 <1', 'Binance')
     if table['high90'].get(today):
         rung('90天高点 × 0.8', table['high90'][today] * 0.8, today, '回撤 ≥20%' + ('（组合②）' if symbol == 'BTC' else ''), 'Binance')
+    cost_age = 8 if symbol == 'ETH' else 4  # same windows as the MVRV / cost signals
     for key, label, meaning in (('true_mean', 'True Mean 成本', '活跃投资者平均成本'),
                                 ('sth_cost', 'STH 成本', '跌破即组合①；STH-MVRV <1'),
                                 ('realized_price', '实现价格', 'MVRV <1'),
                                 ('lth_cost', 'LTH 成本', '价格/LTH 成本 <1')):
-        found = S.asof(table.get(key, {}), today, 9)
+        found = S.asof(table.get(key, {}), eval_day, cost_age)
         if found:
             rung(label, found[1], found[0], meaning, 'BGeometrics' if symbol == 'BTC' else 'BGeometrics（由 ETH MVRV 换算）')
     ladder.sort(key=lambda r: -r['value'])
@@ -473,7 +533,7 @@ def main():
         old = (previous.get('assets') or {}).get(symbol)
         if not closes:
             if old:
-                assets[symbol] = old
+                assets[symbol] = {**old, 'carried': True}  # last good snapshot, flagged; the run still fails
             continue
         asset = build_asset(symbol, closes, store, fear_alt, now)
         asset['derivatives'] = fetch_derivatives(symbol, errors, now)
@@ -497,7 +557,7 @@ def main():
             for key, label, unit, src in (
                     ('staked_pct', '质押占比', '%', 'validatorqueue'), ('total_staked', '总质押量', ' ETH', 'validatorqueue'),
                     ('burn_rate_daily', '每日销毁', ' ETH', 'Ethereum RPC'), ('burn_issuance_pct', '销毁 / 估算增发', '%', 'Ethereum RPC'),
-                    ('stake_conc_top5', '质押前五集中度', '%', 'DefiLlama'), ('whale_top100_pct', '前百地址持仓', '%', 'Blockscout'),
+                    ('stake_conc_top5', '流动性质押前五集中度', '%', 'DefiLlama'), ('whale_top100_pct', '前百地址持仓', '%', 'Blockscout'),
                     ('holder_count', '非零余额地址', '', 'Coin Metrics'), ('active_addr_7d', '7日均活跃地址', '', 'Coin Metrics'),
                     ('stablecoin_mcap_b', '链上稳定币规模', ' B USD', 'DefiLlama'), ('stablecoin_change_30d', '稳定币 30天变化', '%', 'DefiLlama')):
                 observed = dates.get(key)
@@ -508,7 +568,8 @@ def main():
                               **metric(legacy.get(key), observed, src, 72,
                                        '近 7200 个区块基础费销毁估算，不含 blob 费用。' if key == 'burn_rate_daily' else
                                        '销毁量 ÷ 由质押量估算的共识层增发，非完整增发统计。' if key == 'burn_issuance_pct' else
-                                       '前 100 个地址含质押合约、交易所与跨链桥，不等于巨鲸实体。' if key == 'whale_top100_pct' else '')})
+                                       '前 100 个地址含质押合约、交易所与跨链桥，不等于巨鲸实体。' if key == 'whale_top100_pct' else
+                                       '只统计流动性质押协议（Lido 等）前五家占比，不含交易所直接质押与独立验证者。' if key == 'stake_conc_top5' else '')})
             asset['facts'] = facts
         assets[symbol] = asset
     payload = {'schemaVersion': 2, 'generatedAt': datetime.now(timezone.utc).isoformat(), 'assets': assets,
@@ -523,7 +584,13 @@ def main():
     print(f'Source failures: {len(errors)}')
     for e in errors[:12]:
         print('  ', e['error'], e['url'][:110])
-    return 0 if all(a.get('asOf') for a in assets.values()) and len(assets) == 2 else 1
+    def current(asset):
+        try:
+            return not asset.get('carried') and (now.date() - S.d(asset['asOf'])).days <= 3
+        except (KeyError, TypeError, ValueError):
+            return False
+    # A green run must mean both assets were rebuilt from candles no older than three days.
+    return 0 if len(assets) == 2 and all(current(a) for a in assets.values()) else 1
 
 
 if __name__ == '__main__':

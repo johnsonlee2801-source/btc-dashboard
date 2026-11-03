@@ -45,8 +45,9 @@
     if(!bt)return '回测样本不足';
     if(!bt.litDays)return `${bt.start.slice(0,7)} 起未亮过`;
     const parts=[`亮 ${bt.episodes} 段`];
-    if(finite(bt.forwardMedianPct))parts.push(`90天后中位 ${pct(bt.forwardMedianPct,0)}`);
-    if(finite(bt.forwardUpPct))parts.push(`上涨 ${bt.forwardUpPct}%`);
+    if(bt.forwardN&&finite(bt.forwardMedianPct))parts.push(`90天后中位 ${pct(bt.forwardMedianPct,0)}`);
+    if(bt.forwardN&&finite(bt.forwardUpPct))parts.push(`上涨 ${bt.forwardUpPct}%`);
+    if(!bt.forwardN)parts.push('尚无 90 天后续样本');
     if(!compact)parts.push(`覆盖 ${bt.lowsCovered}/${bt.lows} 个3月低点`);
     return parts.join(' · ');
   }
@@ -81,12 +82,12 @@
         <p class="verdict-line">${gapLine}</p>
         <p class="verdict-counts">大底必要 <b>${gl('necessary').lit}/${gl('necessary').total}</b> · 大底确认 <b>${gl('confirm').lit}/${gl('confirm').total}</b> · 相对底部 <b>${gl('relative').lit}/${gl('relative').total}</b> · 有效数据 ${s.known}/${s.total}</p>
         <div class="tiers">${tiers}</div>
-        <p class="verdict-evidence">${bt50?.litDays?`历史依据：指数 ≥50 的 ${bt50.episodes} 段（${esc(bt50.start.slice(0,7))} 起），90 天后中位 ${esc(pct(bt50.forwardMedianPct,0))}、上涨概率 ${bt50.forwardUpPct}%`:''}${bt20?.litDays?`；指数 ≥20 时 90 天后上涨概率 ${bt20.forwardUpPct}%`:''}。样本只覆盖一轮熊转牛，<button type="button" class="link" data-method>看口径</button></p></div>`;
+        <p class="verdict-evidence">${bt50?.litDays&&bt50.forwardN?`历史依据：指数 ≥50 的 ${bt50.episodes} 段（${esc(bt50.start.slice(0,7))} 起），90 天后中位 ${esc(pct(bt50.forwardMedianPct,0))}、上涨概率 ${bt50.forwardUpPct}%`:''}${bt20?.litDays&&bt20.forwardN?`；指数 ≥20 时 90 天后上涨概率 ${bt20.forwardUpPct}%`:''}。样本只覆盖一轮熊转牛，<button type="button" class="link" data-method>看口径</button></p></div>`;
     }else{
       const s=M.score(asset.groups,now()),items=asset.groups[0].items;
       const near=items.filter(i=>M.itemState(i,now())===false&&M.triggerPrice(i)).map(i=>({label:i.label,t:M.triggerPrice(i)})).sort((a,b)=>b.t-a.t);
       el.innerHTML=`<div class="verdict-gauge"><div class="ring tabular"><b>${s.lit}</b><span>/ ${s.total}</span></div><div class="gauge-cap">ETH 低位条件已满足</div></div>
-        <div class="verdict-body"><p class="verdict-kicker">现在</p><h2 class="verdict-title v-${s.lit>=4?'strong':s.lit>=2?'watch':'none'}">${s.lit>=4?'多数低位条件同时满足':s.lit>=2?'部分低位条件满足':s.lit===1?'仅一项低位条件满足':'低位条件均未满足'}</h2>
+        <div class="verdict-body"><p class="verdict-kicker">现在</p><h2 class="verdict-title v-${s.lit>=4?'strong':s.lit>=2?'watch':'none'}">${!s.known?'数据暂缺，无法判断':s.lit>=4?'多数低位条件同时满足':s.lit>=2?'部分低位条件满足':s.lit===1?'仅一项低位条件满足':s.known<s.total?'有效条件均未满足（部分数据缺失）':'低位条件均未满足'}</h2>
         <p class="verdict-line">${items.filter(i=>M.itemState(i,now())).map(i=>`<span class="pill on">✓ ${esc(i.label)}</span>`).join('')||'暂无已亮条件'}</p>
         <p class="verdict-counts">${near.length?'最近的价格触发：'+near.slice(0,3).map(n=>`${esc(n.label)} ${esc(kmoney(n.t))}（${esc(pct(M.move(n.t,livePrice()),1))}）`).join(' · '):''}</p>
         <p class="verdict-evidence">ETH 不套用 BTC 的综合分数与矿工/持有者模型；6 项条件各自回测，见下方卡片。有效数据 ${s.known}/${s.total}。<button type="button" class="link" data-method>看口径</button></p></div>`;
@@ -108,12 +109,12 @@
         ${c.conditions.map((x,i)=>barRow(`${i===0?'①':'②'} ${esc(x.label)}`,x.triggerPrice,price,st?.each[i],`<small>（${esc(x.id==='sth'?'STH 成本 · '+md(x.asOf):'90天高 '+kmoney(x.high90)+' × 0.8')}）</small>`)).join('')}
         <p class="panel-note">组合信号在样本期（${esc(bt?.start?.slice(0,7)||'—')} 起）亮过 ${bt?.episodes??'—'} 段，覆盖了 ${bt?.lowsCovered??'—'}/${bt?.lows??'—'} 个 3 个月低点；亮起后 90 天中位 ${esc(pct(bt?.forwardMedianPct,0))}。</p>`;
     }else{
-      const items=asset.groups[0].items.filter(i=>M.triggerPrice(i)||i.key==='drawdown90');
+      const items=asset.groups[0].items.filter(i=>(i.linked||i.key==='drawdown90')&&M.itemFresh(i,now()));
       const rows=items.map(i=>{
-        const state=M.itemState(i,now());
         const close=asset.metrics.price?.value;
         const t=i.key==='drawdown90'?(asset.ladder.find(r=>r.label.startsWith('90天高点'))?.value):M.triggerPrice(i)??(i.linked&&finite(i.value)&&i.value>0&&finite(close)?close*i.threshold/i.value:null);
-        return {i,t,state};
+        // Status and distance both come from the live price: below the trigger means met.
+        return {i,t,state:finite(t)&&finite(price)?price<=t:null};
       }).filter(r=>finite(r.t)).sort((a,b)=>b.t-a.t);
       el.innerHTML=`<div class="panel-title"><h2 id="comboTitle">价格触发线</h2><span>按距离由近到远</span></div>${rows.map(r=>barRow(esc(r.i.label)+` <small>${esc(opText(r.i.op))} ${esc(r.i.threshold)}${esc(r.i.unit)}</small>`,r.t,price,r.state===true,`<small>· ${esc(btLine(r.i.backtest))}</small>`)).join('')}
         <p class="panel-note">触发价 = 当前价格 × 阈值 ÷ 当前指标值（指标与价格同比例变动时成立）。</p>`;
@@ -123,8 +124,8 @@
   // ---------------------------------------------------------------- position band (BTC)
   function renderBand(){
     const el=$('band');if(!el)return;
-    const b=asset.band;
-    if(!b){el.innerHTML='<div class="panel-title"><h2 id="bandTitle">价格位置带</h2></div><p class="panel-note">200 周均线或 STH 成本缺失，位置带待确认。</p>';return;}
+    const b=asset.band&&M.dayFresh(asset.band.asOf,3,now())?asset.band:null;
+    if(!b){el.innerHTML='<div class="panel-title"><h2 id="bandTitle">价格位置带</h2></div><p class="panel-note">200 周均线或 STH 成本缺失或已过期，位置带待确认。</p>';return;}
     const zones=[['低于 200 周线',`≤${kmoney(b.ma200w)}`],['200周线–参考线',b.line>b.ma200w?`${kmoney(b.ma200w)}–${kmoney(b.line)}`:'（区间为空）'],['线上 未满28天',`≥${kmoney(b.line)}`],['线上 满28天','持续站稳']];
     el.innerHTML=`<div class="panel-title"><h2 id="bandTitle">价格位置带</h2><span>参考线 = max(200周线 ${esc(kmoney(b.ma200w))}, STH成本 ${esc(kmoney(b.sthCost))})</span></div>
       <div class="zones">${zones.map((z,i)=>`<div class="zone z${i} ${i===b.zone?'on':''}"><b>${esc(z[0])}</b><small>${esc(z[1])}</small>${i===b.zone?'<em>当前</em>':''}</div>`).join('')}</div>
@@ -222,7 +223,8 @@
     const max=Math.max(1,...Object.values(b).map(x=>Math.abs(x.net)));
     const rows=(spotFlow.buckets||[]).map(k=>{const v=b[k.key]?.net??0;
       return `<div class="sf-row"><span>${esc(k.label)}</span><div class="sf-bar"><i class="${v<0?'neg':'pos'}" style="width:${(Math.abs(v)/max*50).toFixed(1)}%;${v<0?'right':'left'}:50%"></i></div><b class="tabular ${v<0?'negative':'positive'}">${esc(usd(v))}</b></div>`;}).join('');
-    const week=days.slice(-7),wmax=Math.max(1,...week.map(d=>Math.abs(d.net-d.buckets.lt10k.net)));
+    const cutoff=Date.parse(last.date+'T00:00:00Z')-6*86400000;
+    const week=days.filter(d=>Date.parse(d.date+'T00:00:00Z')>=cutoff),wmax=Math.max(1,...week.map(d=>Math.abs(d.net-d.buckets.lt10k.net)));
     const bars=week.map(d=>{const v=d.net-d.buckets.lt10k.net;return `<div title="${esc(d.date)} 大单净额 ${esc(usd(v))}"><span class="${v<0?'neg':''}" style="height:${(Math.abs(v)/wmax*46).toFixed(1)}%;${v>=0?'bottom':'top'}:50%"></span><small>${esc(md(d.date))}</small></div>`;}).join('');
     el.innerHTML=`${head}<div class="sf-head"><div><small>散户 &lt;1万</small><b class="tabular ${small<0?'negative':'positive'}">${esc(usd(small))}</b></div><div><small>大单 ≥1万</small><b class="tabular ${big<0?'negative':'positive'}">${esc(usd(big))}</b></div></div>
       <div class="sf-rows">${rows}</div><p class="panel-note" style="padding-bottom:4px">近 7 日大单（≥1万）净额</p><div class="flow-bars sf-week">${bars}</div>
@@ -235,8 +237,8 @@
     const age=(now()-Date.parse(e.asOf))/86400000,ok=age>=0&&age<=5;
     $('flows').innerHTML=`<div class="panel-title"><h2 id="flowsTitle">现货 ETF 资金流</h2><span>${esc(symbol)} · 5 个交易日</span></div>
       <div class="flow-sum ${ok?(sum>=0?'positive':'negative'):'muted'} tabular">${sum>=0?'+':'−'}$${esc(short(Math.abs(sum)*1e6))}</div>
-      <div class="flow-bars">${rows.map(r=>`<div title="${esc(r.date)}: ${esc(fmt(r.value,1))} 百万美元"><span class="${r.value<0?'neg':''}" style="height:${(Math.abs(r.value)/max*46).toFixed(1)}%;${r.value>=0?'bottom':'top'}:50%"></span><small>${esc(md(r.date))}</small><em class="${r.value<0?'negative':'positive'}">${esc(fmt(r.value,0))}</em></div>`).join('')}</div>
-      <p class="panel-note"><a href="${esc(e.sourceUrl)}" target="_blank" rel="noopener noreferrer">Farside ↗</a> · 截至 ${esc(e.asOf)}（美东收盘后更新，单位百万美元）${ok?'':' · 已过期'}</p>`;
+      <div class="flow-bars">${rows.map(r=>`<div title="${esc(r.date)}: ${esc(fmt(r.value,1))} 百万美元"><span class="${r.value<0?'neg':''}" style="height:${(Math.abs(r.value)/max*46).toFixed(1)}%;${r.value>=0?'bottom':'top'}:50%"></span><small>${esc(md(r.date))}${r.provisional?'*':''}</small><em class="${r.value<0?'negative':'positive'}">${esc(fmt(r.value,0))}</em></div>`).join('')}</div>
+      <p class="panel-note"><a href="${esc(e.sourceUrl)}" target="_blank" rel="noopener noreferrer">Farside ↗</a> · 截至 ${esc(e.asOf)}（美东收盘后更新，单位百万美元）${rows.some(r=>r.provisional)?'。* 为暂定数据，晚报的基金补齐后会修订':''}${ok?'':' · 已过期'}</p>`;
   }
   function spark(points,cls=''){
     const v=(points||[]).map(p=>p[1]).filter(finite);if(v.length<2)return '';
@@ -246,10 +248,11 @@
   function renderCohorts(){
     const el=$('cohorts');if(!el)return;
     const c=asset.cohorts||{},order=['whale_1k_10k','whale_10k_plus','retail_lt1','lth_net30'];
-    const rows=order.filter(k=>c[k]).map(k=>{const r=c[k],d30=k==='lth_net30'?r.value:r.d30;
-      return `<div class="cohort"><div><b>${esc(r.label)}</b><small>${esc(r.note)} · ${esc(md(r.asOf))}</small></div><div class="cohort-num"><b class="${finite(d30)?(d30>=0?'positive':'negative'):'muted'} tabular">${esc(signed(d30))}</b><small>30天${k==='lth_net30'?'净变化':''}${finite(r.d7)?` · 7天 ${esc(signed(r.d7))}`:''}</small></div>${spark(r.spark,finite(d30)&&d30<0?'neg':'pos')}</div>`;}).join('');
+    const stale=k=>!c[k]||!M.dayFresh(c[k].asOf,6,now());
+    const rows=order.filter(k=>c[k]).map(k=>{const r={...c[k],stale:stale(k)},d30=k==='lth_net30'?r.value:r.d30;
+      return `<div class="cohort${r.stale?' na':''}"><div><b>${esc(r.label)}</b><small>${esc(r.note)} · ${esc(md(r.asOf))}${r.stale?' · 已过期':''}</small></div><div class="cohort-num"><b class="${finite(d30)?(d30>=0?'positive':'negative'):'muted'} tabular">${esc(signed(d30))}</b><small>30天${k==='lth_net30'?'净变化':''}${finite(r.d7)?` · 7天 ${esc(signed(r.d7))}`:''}</small></div>${spark(r.spark,finite(d30)&&d30<0?'neg':'pos')}</div>`;}).join('');
     const w=c.whale_1k_10k?.d30,rt=c.retail_lt1?.d30;
-    const headline=finite(w)&&finite(rt)?`${w>=0?'巨鲸增持':'巨鲸减持'} / ${rt>=0?'散户增持':'散户减持'}`:'';
+    const headline=finite(w)&&finite(rt)&&!stale('whale_1k_10k')&&!stale('retail_lt1')?`${w>=0?'巨鲸增持':'巨鲸减持'} / ${rt>=0?'散户增持':'散户减持'}`:'';
     el.innerHTML=`<div class="panel-title"><h2 id="cohortsTitle">巨鲸 vs 散户</h2><span>BGeometrics 地址口径</span></div>${headline?`<p class="cohort-headline">${esc(headline)}</p>`:''}${rows||'<p class="panel-note">分组数据正在首次回补（免费接口每天限额 15 次，约 1–2 天补齐）。</p>'}
       <p class="panel-note">按地址余额分组，单位 BTC。交易所和托管机构也有大额地址，"巨鲸"不等于个人实体。</p>`;
   }
@@ -277,7 +280,7 @@
     const ok=(now()-Date.parse(reserves.anchor))/3600000<=60;
     $('reserves').innerHTML=`<div class="panel-title"><h2 id="reservesTitle">交易所公开储备</h2><div class="seg" role="group" aria-label="变化窗口">${['7d','30d','90d'].map(w=>`<button type="button" data-rw="${w}" aria-pressed="${w===reserveWindow}">${w.replace('d',' 天')}</button>`).join('')}</div></div>
       ${[...rows].sort((a,b)=>b.latest-a.latest).slice(0,5).map(r=>{const v=r.change?.[reserveWindow],f=M.reserveFresh(reserves.anchor,r);
-        return `<div class="pos-row"><span>${esc(r.name)}</span><b class="tabular ${f&&finite(v)?(v>=0?'positive':'negative'):'muted'}">${esc(signed(v))}</b><small>余额 ${esc(short(r.latest))} ${esc(symbol)}</small></div>`;}).join('')}
+        return `<div class="pos-row"><span>${esc(r.name)}</span><b class="tabular ${f&&finite(v)?(v>=0?'positive':'negative'):'muted'}">${esc(signed(v))}</b><small>余额 ${esc(short(r.latest))} ${esc(symbol)} · ${esc(md(r.asOf))}${f?'':' · 已过期，不作当前变化'}</small></div>`;}).join('')}
       <p class="panel-note">DefiLlama 公开地址口径，${esc(md(reserves.anchor))}${ok?'':' · 已过期'}。剔除单日 >20% 的地址台阶；储备变化不等于交易净流入。</p>`;
     $('reserves').querySelectorAll('[data-rw]').forEach(b=>b.addEventListener('click',()=>{reserveWindow=b.dataset.rw;renderReserves();}));
   }
@@ -306,21 +309,20 @@
   }
   function render(){
     renderHead();renderVerdict();renderCombo();if(isBTC)renderBand();renderTrend();renderGroups();
-    renderLadder();renderFlows();if(isBTC)renderCohorts();else renderFacts();renderPositioning();renderReserves();renderSentiment();renderNotice();
-    document.querySelectorAll('[data-method]').forEach(b=>{b.onclick=()=>showDialog('口径与回测方法',methodHTML());});
+    renderLadder();renderFlows();renderSpotFlow();if(isBTC)renderCohorts();else renderFacts();renderPositioning();renderReserves();renderSentiment();renderNotice();
   }
   function methodHTML(){
     return `<h3>综合观察指数（BTC）</h3><p>16 项信号分三组：大底必要 5 项（共 40 分）、大底确认 6 项（共 40 分）、相对底部 5 项（共 20 分），同一指标只出现一次。只有数据有效且满足阈值才计分；缺失或过期项计 0，但单独标注"最多还可能 +X 分"。分档：&lt;20 无底部信号，20–49 进入关注区，50–59 低位信号增强，≥60 历史低位信号集中。分档是观察描述，不是买卖指令。</p>
     <h3>组合信号</h3><p>两条同时满足才亮：① 价格跌破短期持有者成本（STH 实现价格）；② 价格距近 90 个完整日收盘高点跌 ≥20%。触发价 = min(STH 成本, 90 天高点 × 0.8)。</p>
     <h3>触发价怎么算</h3><p>Mayer、价/200周线、MVRV、价/LTH 成本、STH-MVRV 都等于"价格 ÷ 某个成本或均线"，短期内分母几乎不动，所以触发价 = 当前价 × 阈值 ÷ 当前值。其余指标（如盈利占比、RSI、SOPR）与价格不是简单比例，只显示"差多少"。</p>
     <h3>回测</h3><p>对每项信号：统计样本期内亮起的天数与段数（间隔 >7 天算新的一段）；亮起后 90 天的价格变化（中位数、上涨占比）；以及覆盖了多少个"3 个月低点"（前后各 45 天内最低收盘，低点前后 7 天内亮过即算覆盖）。价格类信号用 Binance 2017 年起的日线；链上类信号用 BGeometrics 免费接口可得的 2022-11 起数据，样本只覆盖一轮熊转牛，结论需谨慎。</p>
-    <h3>数据与时效</h3><p>价格：Binance 完整 UTC 日收盘（USDT 计价）。链上：BGeometrics（免费接口约有 1–5 天延迟，按实际日期判断时效）。STH-MVRV、价/LTH 成本由本站用价格与 BGeometrics 成本自算。哈希带由全网哈希率 30/60 日均线计算；Pi Cycle 底部 = 150 日 EMA ÷ (0.745 × 471 日均线)。25Δ 风险逆转由 Deribit 期权标记 IV 计算并插值到 30 天。日度信号默认 3–4 天有效、周线 9 天、情绪 2 天、合约 12 小时；过期即不参与判断。</p>
+    <h3>数据与时效</h3><p>价格：Binance 完整 UTC 日收盘（USDT 计价）。链上：BGeometrics（免费接口约有 1–5 天延迟，按实际日期判断时效）。STH-MVRV、价/LTH 成本由本站用价格与 BGeometrics 成本自算。哈希带由全网哈希率 30/60 日均线计算；Pi Cycle 底部 = 150 日 EMA ÷ (0.745 × 471 日均线)。25Δ 风险逆转由 Deribit 期权标记 IV 计算并插值到 30 天。日度信号默认 3–4 天有效（ETH MVRV 因发布延迟为 8 天），周线指标按日展开后 2 天、情绪 2 天、合约 12 小时；过期即不参与判断。回测与指数历史按数据实际发布日计算：BGeometrics 链上数据晚 1 天，ETH MVRV 晚 6 天。</p>
     <h3>阈值与口径差异</h3><p>阈值沿用常见的链上研究口径；MVRV Z-Score 不同数据商的标准差算法不同，本站使用 BGeometrics 口径并以 &lt;0 为阈值（该口径在 2022 年底部约为 −0.1）。巨鲸/散户为地址余额分组，含交易所与托管地址。</p><p>仅作研究参考，不构成投资建议。</p>`;
   }
   async function loadQuote(){
     try{const r=await fetch(`/api/ticker?symbol=${symbol}`,{signal:AbortSignal.timeout(8000)});if(!r.ok)throw 0;const q=await r.json();
       if(q?.symbol===symbol&&finite(q.price)&&q.price>0&&Math.abs(now()-Date.parse(q.asOf))<180000)quote=q;else quote=null;}catch{quote=null;}
-    if(asset){renderHead();renderVerdict();renderCombo();renderLadder();if(filter)renderGroups();}
+    if(asset)keepFocus(()=>{renderHead();renderVerdict();renderCombo();renderLadder();renderGroups();});
   }
   async function load(){
     $('refresh').disabled=true;
@@ -343,10 +345,19 @@
     }finally{$('refresh').disabled=false;}
   }
   $('refresh').addEventListener('click',load);
+  document.addEventListener('click',e=>{if(e.target.closest('[data-method]'))showDialog('口径与回测方法',methodHTML());});
   $('sourcesButton').addEventListener('click',()=>showDialog('数据来源',`<p>每个信号卡片都能点开看原始日期与来源。研究快照每 6 小时生成；行情每 30 秒刷新。</p><h3>使用的公开来源</h3><table>${(data?.sources||[]).map(s=>`<tr><td><a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer">${esc(s.name)}</a></td></tr>`).join('')}</table>${data?.errors?.length?`<h3>本次快照的源请求失败</h3><p>${data.errors.slice(0,8).map(e=>esc(e.error+' · '+e.url.replace(/^https?:\/\//,'').slice(0,70))).join('<br>')}</p><p>失败的项保留原观测日期，按原日期判断是否过期。</p>`:''}`));
   $('closeDialog').addEventListener('click',()=>$('infoDialog').close());
   $('infoDialog').addEventListener('click',e=>{if(e.target===$('infoDialog'))$('infoDialog').close();});
   let resizeTimer;window.addEventListener('resize',()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(()=>{if(asset)renderTrend();},200);});
+  // Re-render (not just the quote) so every section re-judges its validity window over time.
+  function keepFocus(fn){
+    const a=document.activeElement,key=a?.dataset?.k?`[data-k="${a.dataset.k}"]`:a?.dataset?.filter?`[data-filter="${a.dataset.filter}"]`:null;
+    fn();
+    if(key)document.querySelector(key)?.focus();
+  }
   setInterval(()=>{if(!document.hidden&&asset)loadQuote();},30000);
+  setInterval(()=>{if(!document.hidden&&asset)keepFocus(render);},300000);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&asset)keepFocus(()=>{render();loadQuote();});});
   load();
 })();

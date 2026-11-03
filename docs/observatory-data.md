@@ -30,6 +30,7 @@
 - `api/binance-futures.js` 是固定在新加坡（`regions: ['sin1']`）的 Edge 函数，只转发白名单内的公开行情 GET 端点，按批次（每次 ≤120 个请求）返回；
 - `scripts/binance_futures.py` 在设置了 `BINANCE_PROXY_URL` 时走中转，否则直连（本地开发）；
 - `api/distribution-radar.js` 也固定到新加坡，避免美国访客访问时同样失败。
+  每个数据源要通过品种、成功码和时效校验才算可用（失败只记录固定错误码，不转发上游内容）；合约/现货成交比只用两侧都拿到的同一组交易所；有数据的指标权重不足 70% 时返回“数据不足”、不出分。同一实例 30 秒内复用结果，上游 418/429 的主机按 Retry-After 暂停。
 
 ### BGeometrics 免费额度
 
@@ -74,4 +75,5 @@ ETH 6 项低位条件（周线 RSI、Mayer、价/200 周线、90 天回撤、Pi 
 python3 -B -m unittest discover -s tests -p 'test_*.py'
 node --test tests/observatory-model.test.cjs tests/ticker.test.cjs tests/positioning-radar.test.cjs
 python3 scripts/health_check.py   # 线上：页面、API、数据新鲜度，以及"有效信号数""合约数据是否经中转拿到""资金雷达覆盖率"
+# 每项按观测日期逐条复核（不信任生成时间与 stale 标记）：信号按今天重算是否过期、储备逐交易所逐资产、控盘证据逐代币、ETH 逐字段。
 ```

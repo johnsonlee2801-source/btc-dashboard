@@ -125,6 +125,78 @@ class SourceEdgeTests(unittest.TestCase):
         self.assertAlmostEqual(out['funding']['value'], 0.01)
 
 
+class AuditRegressionTests(unittest.TestCase):
+    """Failure paths found by the cross-model audit of build_observatory.py."""
+
+    def test_sth_mvrv_uses_the_latest_valid_cost_for_each_close(self):
+        closes = synthetic_closes(300)
+        store = {'series': {'sth_cost': {closes[-3][0]: 100.0}}}  # cost published two days before the last close
+        table = B.build_table('BTC', closes, store, {})
+        self.assertAlmostEqual(table['sth_mvrv'][closes[-1][0]], closes[-1][1] / 100.0)
+
+    def test_stale_candles_withhold_current_sections(self):
+        closes = synthetic_closes()
+        store = synthetic_store(closes)
+        late = NOW + timedelta(days=10)
+        asset = B.build_asset('BTC', closes, store, {}, late)
+        self.assertIsNone(asset['combo']['met'])
+        self.assertNotIn('band', asset)
+
+    def test_band_streak_resets_on_a_missing_candle(self):
+        closes = [c for c in synthetic_closes() if c[0] != synthetic_closes()[-10][0]]
+        store = synthetic_store(closes)
+        asset = B.build_asset('BTC', closes, store, {}, NOW)
+        if 'band' in asset:
+            self.assertLessEqual(asset['band']['daysAbove'], 9)
+
+    def test_partial_pagination_falls_back_to_the_other_host(self):
+        day = 86_400_000
+        start = int(datetime(2020, 1, 1, tzinfo=timezone.utc).timestamp() * 1000)
+        def page(n, first):
+            return [[first + i * day, '1', '1', '1', '100', '1', first + (i + 1) * day - 1] for i in range(n)]
+        calls = []
+
+        def safe_get(url, errors, timeout=30):
+            calls.append(url)
+            if 'binance.vision' in url:
+                return page(1000, start + 1000 * day) if 'endTime' not in url else None  # second page fails
+            return page(1000, start + 1000 * day) if 'endTime' not in url else page(1000, start)
+        with patch.object(B, 'safe_get', safe_get):
+            closes = B.fetch_candles('BTC', [], NOW, pages=2)
+        self.assertEqual(len(closes), 2000)
+        self.assertTrue(any('api.binance.com' in u for u in calls))
+
+    def test_malformed_sources_do_not_crash(self):
+        with patch.object(B, 'safe_get', return_value=['not', 'a', 'dict']):
+            self.assertEqual(B.fetch_fear_alt([]), {})
+            self.assertEqual(B.fetch_fear_cmc([], NOW), {})
+        self.assertEqual(B.dated_values([{'timestamp': 1e30, 'value': 5}, None], 'timestamp', 'value'), {})
+        self.assertEqual(B.candle_closes([[1e30, 1, 1, 1, 5, 1, 1e30], ['x'], None], 2e30), {})
+
+    def test_main_fails_when_assets_are_not_current(self):
+        old = {'assets': {s: {'asOf': '2020-01-01', 'groups': [], 'metrics': {}} for s in ('BTC', 'ETH')}}
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            out = pathlib.Path(tmp) / 'o.json'
+            out.write_text(json.dumps(old))
+            argv = ['x', '--output', str(out), '--store', str(pathlib.Path(tmp) / 's.json'), '--offline-onchain']
+            with patch('sys.argv', argv), patch.object(B, 'fetch_candles', return_value=[]), \
+                 patch.object(B, 'safe_get', return_value=None):
+                self.assertEqual(B.main(), 1)
+            published = json.loads(out.read_text())
+        self.assertTrue(all(a.get('carried') for a in published['assets'].values()))
+
+    def test_etf_newest_session_is_provisional(self):
+        html = ('<table><tr><th>Date</th><th>IBIT</th><th>Total</th></tr>'
+                '<tr><td>29 Oct 2026</td><td>1</td><td>1</td></tr>'
+                '<tr><td>30 Oct 2026</td><td>-</td><td>(643.2)</td></tr>'
+                '<tr><td>02 Nov 2026</td><td>5</td><td>5</td></tr></table>')
+        rows = {r['date']: r for r in B.parse_etf(html, datetime(2026, 11, 3, 10, tzinfo=timezone.utc))}
+        self.assertNotIn('provisional', rows['2026-10-29'])
+        self.assertTrue(rows['2026-10-30']['provisional'], 'an unreported fund cell')
+        self.assertTrue(rows['2026-11-02']['provisional'], 'within 36h of the close')
+
+
 class PageContractTests(unittest.TestCase):
     def test_pages_load_the_v2_assets_and_share_the_shell(self):
         for page in ('index.html', 'eth.html'):

@@ -4,7 +4,7 @@
   const full=document.body.hasAttribute('data-radar-page');
   const summaries=[...document.querySelectorAll('[data-radar-summary]')];
   if(!M||(!full&&!summaries.length))return;
-  let snapshot=null,analysis=null,loadError=false,busy=false,query='',filter='all';
+  let snapshot=null,analysis=null,loadError=false,busy=false,query='',filter='all',openSymbol=null;
   const expanded=new Set(),sorts=new Map();
   const labels={topLong:'大户持仓多头占比',accountLong:'全体账户多头占比',topDelta:'大户多头占比24h变化',accountDelta:'全体账户多头占比24h变化',oiUsd:'未平仓名义金额 OI',oiUnits:'未平仓合约标的数量',oiDelta:'OI名义金额24h变化',priceChange:'价格24h变化',volumeUsd:'合约24h成交额',fundingRate:'最近已结算资金费率',fundingHours:'实际结算间隔',concentration:'调整后前10地址集中度',circulation:'流通供应 / 总供应',unlockPct:'未来30天解锁 / 当前流通量',unknownShare:'原始前10未知地址余额占比',lockedShare:'原始前10已验证锁定余额占比'};
   const E=(tag,text,className)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(className)n.className=className;return n;};
@@ -78,7 +78,9 @@
     let list=M.select(all,query,filter);
     const sort=sorts.get(config.key);
     if(sort)list=[...list].sort((x,y)=>{
-      const vx=sort.key==='gap'?x.gap:x.values[sort.key],vy=sort.key==='gap'?y.gap:y.values[sort.key];
+      // The short-crowding list displays the short share (1 - long), so it sorts by that.
+      const shown=(row)=>sort.key==='gap'?row.gap:config.key==='crowdedShort'&&sort.key==='accountLong'&&finite(row.values.accountLong)?1-row.values.accountLong:row.values[sort.key];
+      const vx=shown(x),vy=shown(y);
       if(!finite(vx))return finite(vy)?1:0;if(!finite(vy))return -1;return (vy-vx)*sort.direction;
     });
     const section=E('section',undefined,'panel radar-section');section.id='radar-'+config.key;section.dataset.kind=config.key;
@@ -106,12 +108,14 @@
   }
   function changesSection(){
     const c=analysis.changes;const section=E('section',undefined,'panel radar-section');section.id='radar-changes';
-    const head=E('div',undefined,'radar-section-head'),intro=E('div');intro.append(E('span','07 / DAILY CHANGES','radar-kicker'),E('h2','今日变化'),E('p','只比较同币种、同口径且对齐24小时的观测；采集缺口不算退出'));head.append(intro);section.append(head);
+    const head=E('div',undefined,'radar-section-head'),intro=E('div');intro.append(E('span','07 / DAILY CHANGES','radar-kicker'),E('h2','今日变化'),E('p','集中度比较同币种、同合约、间隔 18–30 小时的两次观测；持仓方向为精确 24 小时；采集缺口不算退出'));head.append(intro);section.append(head);
     const grid=E('div',undefined,'radar-change-grid');
-    for(const [title,list,empty]of [['集中度上升 / 下降',[...c.up,...c.down],'暂无可对齐的集中度历史。'],['高集中度新增 / 退出',[],c.compared?'新增 '+c.entered+' · 退出 '+c.exited+' · 有效比较 '+c.compared+' 个':'待核验：不能把未采集或过期算作退出。'],['持仓方向变化',c.direction,'当前没有已核验的方向切换，或缺少完整24h比较。']]){
+    for(const [title,list,empty,total=list.length]of [['集中度上升 / 下降',[...c.up.slice(0,5),...c.down.slice(0,5)],'暂无可对齐的集中度历史。',c.up.length+c.down.length],['高集中度新增 / 退出',[],c.compared?'新增 '+c.entered+' · 退出 '+c.exited+' · 有效比较 '+c.compared+' 个':'待核验：不能把未采集或过期算作退出。'],['持仓方向变化',c.direction,'当前没有已核验的方向切换，或缺少完整24h比较。']]){
       const box=E('div');box.append(E('h3',title));
       if(!list.length)box.append(E('p',empty));
-      for(const x of list.slice(0,10)){const line=E('div',x.symbol+' · '+(x.label||(x.delta>0?'+':'')+num(x.delta)+'pp'),'radar-change-line');line.append(E('small',date(x.fromAsOf)+' → '+date(x.asOf)));box.append(line);}grid.append(box);
+      for(const x of list.slice(0,10)){const line=E('div',x.symbol+' · '+(x.label||(x.delta>0?'+':'')+num(x.delta)+'pp'),'radar-change-line');line.append(E('small',date(x.fromAsOf)+' → '+date(x.asOf)));box.append(line);}
+      const hidden=total-Math.min(list.length,10);if(hidden>0)box.append(E('p','另有 '+hidden+' 项未显示（各方向最多显示 5 项）','radar-muted'));
+      grid.append(box);
     }section.append(grid);return section;
   }
   function renderSections(){
@@ -124,6 +128,7 @@
     if(focus)document.querySelector('[data-radar-focus="'+CSS.escape(focus)+'"]')?.focus({preventScroll:true});
   }
   function detail(r){
+    openSymbol=r.symbol;
     let dialog=document.getElementById('radarDialog');
     if(!dialog){dialog=E('dialog');dialog.id='radarDialog';dialog.setAttribute('aria-labelledby','radarDetailTitle');const header=E('div',undefined,'dialog-header');const title=E('h2');title.id='radarDetailTitle';const close=E('button','×','close-dialog');close.type='button';close.setAttribute('aria-label','关闭币种证据');close.addEventListener('click',()=>dialog.close());header.append(title,close);const content=E('div',undefined,'dialog-content');content.id='radarDetail';dialog.append(header,content);document.body.append(dialog);}
     document.getElementById('radarDetailTitle').textContent=r.symbol+' · 数据证据';
@@ -144,7 +149,8 @@
       content.append(part);
     }
     for(const [key,label]of Object.entries(labels)){
-      const m=r.metrics?.[key],valid=M.fresh(m,key,Date.now());
+      // Deltas are valid only after the model's parent-timestamp and exact-24h checks.
+      const m=r.metrics?.[key],valid=key.endsWith('Delta')?r.values?.[key]!=null:M.fresh(m,key,Date.now());
       const part=E('div',undefined,'radar-detail-metric');part.append(E('h3',label));
       let text='暂无数据';if(finite(m?.value))text=['oiUsd','volumeUsd'].includes(key)?money(m.value):['topLong','accountLong'].includes(key)?pct(m.value*100):key==='oiUnits'?num(m.value,3):key==='fundingHours'?num(m.value,0)+'h':key.endsWith('Delta')&&key!=='oiDelta'?num(m.value)+'pp':pct(m.value,false,key==='fundingRate'?4:2);
       part.append(E('strong',text),E('p',(valid?'有效观测':finite(m?.value)?'过期或日期无效，不参与当前判断':'待核验')+' · '+date(m?.asOf)));
@@ -152,7 +158,7 @@
       if(finite(m?.value)){part.append(sourceLink(m.url,'来源：'+(m.source||'未注明')));if(m.fromAsOf)part.append(E('p','比较起点：'+date(m.fromAsOf)));}
       content.append(part);
     }
-    dialog.showModal();
+    if(!dialog.open)dialog.showModal();
   }
   function render(){
     analysis=M.analyze(snapshot||{},Date.now());const a=analysis;
@@ -163,6 +169,8 @@
     if(snapshot?.partial)note+=' 当前是部分采样，榜单不能代表全市场。';
     if(snapshot?.errors?.length)note+=' '+snapshot.errors.length+' 项源请求失败；保留原日期。最近错误：'+snapshot.errors.slice(0,2).map(e=>[e.symbol,e.source,e.error].filter(Boolean).join(' ')).join('；')+'。';
     if(full){document.getElementById('radarNotice').textContent=note;document.getElementById('radarTime').textContent=observation;renderSections();}
+    const dialog=document.getElementById('radarDialog');
+    if(dialog?.open&&openSymbol){const row=a.rows.find(x=>x.symbol===openSymbol);if(row)detail(row);else dialog.close();}
     for(const host of summaries){
       const leaders=a.groups.divergence.slice(0,3).map(r=>(r.baseAsset||r.symbol)+' 分歧 '+num(r.gap)+'pp');
       host.querySelector('.radar-summary-lead').textContent=leaders.length?'方向分歧观察：'+leaders.join(' · '):a.coverage.position?'当前有效样本中暂无满足条件的方向分歧。':'暂无可核验的方向分歧排名。';
@@ -171,9 +179,12 @@
   }
   async function load(){
     if(busy)return;busy=true;document.querySelectorAll('.radar-refresh').forEach(b=>b.disabled=true);
-    try{const response=await fetch('/data/positioning-radar.json',{cache:'no-store',signal:AbortSignal.timeout(15000)});if(!response.ok)throw new Error('HTTP '+response.status);const data=await response.json();if(data.schemaVersion!==1||!Array.isArray(data.rows))throw new Error('Invalid snapshot');snapshot=data;loadError=false;}
+    try{const response=await fetch('/data/positioning-radar.json',{cache:'no-store',signal:AbortSignal.timeout(15000)});if(!response.ok)throw new Error('HTTP '+response.status);const data=await response.json();if(data.schemaVersion!==1||!Array.isArray(data.rows))throw new Error('Invalid snapshot');M.analyze(data,Date.now());for(const r of data.rows){if(!r||typeof r!=='object'||(r.makers!=null&&!Array.isArray(r.makers))||(r.makers||[]).some(x=>!x||typeof x!=='object'))throw new Error('Invalid row');}snapshot=data;loadError=false;}
     catch{loadError=true;}
-    finally{busy=false;render();document.querySelectorAll('.radar-refresh').forEach(b=>b.disabled=false);}
+    finally{
+      busy=false;document.querySelectorAll('.radar-refresh').forEach(b=>b.disabled=false);
+      try{render();}catch{loadError=true;}
+    }
   }
   if(full){
     document.getElementById('radarSearch').addEventListener('input',e=>{query=e.target.value;renderSections();});

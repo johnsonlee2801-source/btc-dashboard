@@ -32,6 +32,7 @@ jobs:
         env:
           # fapi.binance.com returns HTTP 451 to US runners; the site's Singapore function relays it.
           BINANCE_PROXY_URL: https://btc.flowhunt.net/api/binance-futures
+          BINANCE_PROXY_TOKEN: ${{ secrets.RELAY_TOKEN }}
         run: python -B scripts/build_positioning_radar.py
       - name: Commit only the radar snapshot
         run: |

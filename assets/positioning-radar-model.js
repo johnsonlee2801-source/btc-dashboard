@@ -27,6 +27,8 @@
         const d=raw.metrics?.[key],p=raw.metrics?.[parent];
         if(!d||!p||d.asOf!==p.asOf||d.fromAsOf!==d.asOf-86400000)r.values[key]=null;
       }
+      const fr=raw.metrics?.fundingRate,fh=raw.metrics?.fundingHours;
+      if(r.values.fundingHours!=null&&(!fr||!fh||fr.asOf!==fh.asOf))r.values.fundingHours=null;
       const v=r.values,c=v.concentration;
       r.positionValid=live&&aligned(r,['topLong','accountLong','oiUsd'],now);
       r.accountValid=live&&aligned(r,['accountLong','oiUsd'],now);
@@ -56,10 +58,17 @@
     for(const r of rows){
       if(r.chainValid){
         const current=r.metrics.concentration;
-        let old=null;
-        for(const entry of snapshot.history||[]){
-          const candidate=(entry.rows||[]).find(x=>x.symbol===r.symbol)?.metrics?.concentration;
-          if(candidate?.asOf===current.asOf-86400000&&fresh(candidate,'concentration',current.asOf))old=candidate;
+        // Holder evidence is collected once a day at a drifting time, so "yesterday" is the
+        // observation 18-30h earlier closest to 24h, not an exact 86,400,000 ms predecessor.
+        let old=null,best=Infinity;
+        for(const entry of Array.isArray(snapshot.history)?snapshot.history:[]){
+          if(!entry||!Array.isArray(entry.rows))continue;
+          const prior=entry.rows.find(x=>x&&x.symbol===r.symbol);
+          // A different contract or network is a different measurement, not yesterday's value.
+          if(prior?.address&&r.address&&prior.address!==r.address)continue;
+          const candidate=prior?.metrics?.concentration;
+          const gap=finite(candidate?.asOf)?current.asOf-candidate.asOf:NaN;
+          if(gap>=18*3600000&&gap<=30*3600000&&Math.abs(gap-86400000)<best&&fresh(candidate,'concentration',current.asOf)){old=candidate;best=Math.abs(gap-86400000);}
         }
         if(old){
           changes.compared++;changes.entered??=0;changes.exited??=0;
@@ -72,11 +81,14 @@
       }
       const td=r.metrics?.topDelta,ad=r.metrics?.accountDelta;
       if(r.positionValid&&fresh(td,'topDelta',now)&&fresh(ad,'accountDelta',now)&&td.asOf===r.metrics.topLong.asOf&&ad.asOf===td.asOf&&td.fromAsOf===td.asOf-86400000&&ad.fromAsOf===td.fromAsOf){
-        const topBefore=r.values.topLong-td.value/100,accountBefore=r.values.accountLong-ad.value/100;
+        // Binance publishes shares to 4 decimals; rounding stops 0.58-0.08 reading as 0.4999…
+        const round=x=>Math.round(x*1e4)/1e4,side=x=>x>.5?1:x<.5?-1:0;
+        const topBefore=round(r.values.topLong-td.value/100),accountBefore=round(r.values.accountLong-ad.value/100);
         if(topBefore>=0&&topBefore<=1&&accountBefore>=0&&accountBefore<=1){
-          const was=(topBefore-.5)*(accountBefore-.5)<0;
-          const is=(r.values.topLong-.5)*(r.values.accountLong-.5)<0;
-          if(was!==is)changes.direction.push({symbol:r.symbol,label:is?'转为方向分歧':'方向分歧结束',fromAsOf:td.fromAsOf,asOf:td.asOf});
+          const was=[side(topBefore),side(accountBefore)],is=[side(r.values.topLong),side(r.values.accountLong)];
+          const split=x=>x[0]*x[1]<0;
+          if(split(was)!==split(is))changes.direction.push({symbol:r.symbol,label:split(is)?'转为方向分歧':'方向分歧结束',fromAsOf:td.fromAsOf,asOf:td.asOf});
+          else if(split(is)&&was[0]!==is[0])changes.direction.push({symbol:r.symbol,label:'分歧方向反转',fromAsOf:td.fromAsOf,asOf:td.asOf});
         }
       }
     }

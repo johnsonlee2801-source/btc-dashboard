@@ -27,10 +27,14 @@ def sorted_dates(series):
     return sorted(series)
 
 
-def asof(series, day, max_age_days):
-    """Latest (date, value) at or before `day` no older than max_age_days, else None."""
+def asof(series, day, max_age_days, lag=0):
+    """Latest (date, value) observed no more than max_age_days before `day`, else None.
+
+    `lag` is the publication delay: an observation is only visible `lag` days after its
+    date, while its freshness still counts from the observation date itself.
+    """
     probe = d(day)
-    for back in range(max_age_days + 1):
+    for back in range(lag, max_age_days + 1):
         key = iso(probe - timedelta(days=back))
         value = series.get(key)
         if finite(value):
@@ -120,16 +124,34 @@ def wilder_rsi(values, period=14):
 
 
 def carry_weekly(weekly, days):
-    """Map each day to the latest complete week's value (week must end before the day)."""
+    """Map each day to the latest complete week's value.
+
+    A week is usable from its own closing day on: callers only pass closed daily candles,
+    so the Sunday candle that completes the week is final. Values are carried at most
+    8 days, i.e. until the next week has had a day to arrive.
+    """
     keys = sorted(weekly)
     out, i, current = {}, 0, None
     for day in days:
-        while i < len(keys) and keys[i] < day:
+        while i < len(keys) and keys[i] <= day:
             current = keys[i]
             i += 1
         if current is not None and (d(day) - d(current)).days <= 8:
             out[day] = weekly[current]
     return out
+
+
+def weekly_runs(weeks):
+    """Split complete weeks into runs 7 days apart, so indicators never bridge a missing week."""
+    runs, run = [], []
+    for key, value in weeks:
+        if run and (d(key) - d(run[-1][0])).days != 7:
+            runs.append(run)
+            run = []
+        run.append((key, value))
+    if run:
+        runs.append(run)
+    return runs
 
 
 def change_over(series, days):
@@ -143,20 +165,23 @@ def change_over(series, days):
 
 
 def price_features(closes):
-    """closes: sorted contiguous [(date, close)]. Returns {feature: {date: value}}."""
+    """closes: sorted [(date, close)] of closed candles. Returns {feature: {date: value}}.
+
+    Non-finite or non-positive closes are dropped; the resulting gap resets every rolling window.
+    """
+    closes = [(day, close) for day, close in closes if finite(close) and close > 0]
     ma200 = rolling_mean(closes, 200)
     high90 = rolling_max(closes, 90)
-    weeks = weekly_closes(closes)
-    ma200w_week = {}
-    if len(weeks) >= 200:
+    ma200w_week, rsi_week = {}, {}
+    for run in weekly_runs(weekly_closes(closes)):
+        rsi_week.update(wilder_rsi(run))
         window = []
-        for key, value in weeks:
+        for key, value in run:
             window.append(value)
             if len(window) > 200:
                 window.pop(0)
             if len(window) == 200:
                 ma200w_week[key] = sum(window) / 200
-    rsi_week = wilder_rsi(weeks)
     days = [day for day, _ in closes]
     ma200w = carry_weekly(ma200w_week, days)
     weekly_rsi = carry_weekly(rsi_week, days)
@@ -210,7 +235,7 @@ BTC_GROUPS = [
      'description': '周期性大底通常同时出现的五个条件',
      'items': [
          ('supply_profit', '全网盈利占比', '<', 60, '%', False, 4),
-         ('weekly_rsi', '周线 RSI', '<', 35, '', False, 9),
+         ('weekly_rsi', '周线 RSI', '<', 35, '', False, 2),
          ('hash_ribbon', '哈希带投降', '>', 0, '', False, 4),
          ('sopr', 'SOPR', '<', 1, '', False, 4),
          ('mayer', 'Mayer 倍数', '<', 0.8, '', True, 3),
@@ -219,7 +244,7 @@ BTC_GROUPS = [
      'description': '链上估值与长期均线跌到历史低估区',
      'items': [
          ('mvrv_z', 'MVRV Z-Score', '<', 0, '', False, 4),
-         ('price_ma200w', '价格 / 200周均线', '<', 1, '', True, 9),
+         ('price_ma200w', '价格 / 200周均线', '<', 1, '', True, 2),
          ('mvrv', 'MVRV', '<', 1, '', True, 4),
          ('lth_ratio', '价格 / LTH 成本', '<', 1, '', True, 4),
          ('puell', 'Puell Multiple', '<', 0.5, '', False, 4),
@@ -240,9 +265,9 @@ ETH_GROUPS = [
     {'id': 'technical', 'title': 'ETH 低位条件', 'weight': 0,
      'description': '价格周期与链上估值；每项可回测，阈值与 BTC 同口径',
      'items': [
-         ('weekly_rsi', '周线 RSI', '<', 35, '', False, 9),
+         ('weekly_rsi', '周线 RSI', '<', 35, '', False, 2),
          ('mayer', 'Mayer 倍数', '<', 0.8, '', True, 3),
-         ('price_ma200w', '价格 / 200周均线', '<', 1, '', True, 9),
+         ('price_ma200w', '价格 / 200周均线', '<', 1, '', True, 2),
          ('drawdown90', '距90天高点回撤', '>=', 20, '%', False, 3),
          ('pi_bottom', 'Pi Cycle 底部', '<', 1, '', False, 3),
          # BGeometrics publishes ETH MVRV about 5-7 days late; a tighter window would never be fresh.
@@ -285,8 +310,12 @@ def series_value(series, item, day):
     return found
 
 
-def score_on(groups, table, day):
-    """Score on one day. table: {key: series}. Missing inputs count as unknown."""
+def score_on(groups, table, day, lags=None):
+    """Score on one day. table: {key: series}; lags: {key: publication delay in days}.
+
+    Missing inputs count as unknown. With lags, only what was published by `day` is used.
+    """
+    lags = lags or {}
     lower = upper = 0.0
     lit = known = total = 0
     per_group = []
@@ -295,7 +324,7 @@ def score_on(groups, table, day):
         g_lit = g_known = 0
         for item in group['items']:
             total += 1
-            found = asof(table.get(item[0], {}), day, item[6])
+            found = asof(table.get(item[0], {}), day, item[6], lags.get(item[0], 0))
             state = evaluate(item[2], item[3], found[1]) if found else None
             if state is not None:
                 known += 1
@@ -311,9 +340,10 @@ def score_on(groups, table, day):
             'groups': per_group}
 
 
-def combo_on(table, day):
+def combo_on(table, day, lags=None):
     """BTC combination: price below STH cost AND >=20% below the 90-day closing high."""
-    price, sth, dd = (asof(table.get(k, {}), day, a) for k, a in (('price', 0), ('sth_cost', 4), ('drawdown90', 0)))
+    lags = lags or {}
+    price, sth, dd = (asof(table.get(k, {}), day, a, lags.get(k, 0)) for k, a in (('price', 0), ('sth_cost', 4), ('drawdown90', 0)))
     if not price or not sth or not dd:
         return None
     return price[1] < sth[1] and dd[1] >= 20
@@ -367,3 +397,18 @@ def backtest(lit_days, price, start, end, horizon=90, near=7):
 
 def lit_set(series, op, threshold):
     return {k for k, v in series.items() if evaluate(op, threshold, v)}
+
+
+def lit_days(series, item, days, lag=0):
+    """Days a signal was on as a live reader would have seen it.
+
+    An observation counts only from its publication day (observation date + `lag` days)
+    and only while it is within the item's freshness window counted from the observation
+    date, exactly like today's evaluation.
+    """
+    out = set()
+    for day in days:
+        found = asof(series, day, item[6], lag)
+        if found and evaluate(item[2], item[3], found[1]):
+            out.add(day)
+    return out

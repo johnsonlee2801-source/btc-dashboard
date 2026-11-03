@@ -1,14 +1,21 @@
 #!/usr/bin/env python3
 """Exchange wallet address book for labelling token holders in the positioning radar.
 
-Sources: Binance's published proof-of-reserves wallet list (via the site's Singapore relay
-when BINANCE_PROXY_URL is set) and the `owners` lists in DefiLlama's CEX adapters, which
-also back the exchange-reserve panel. Writes data/exchange-addresses.json.
-An address missing from this book is reported as unlabelled, never assumed to be retail.
+Sources, each validated on its own:
+  - Binance proof-of-reserves wallet list (via the site's Singapore relay when BINANCE_PROXY_URL is set)
+  - Bybit's monthly proof-of-reserves CSV (current month, falling back up to two months)
+  - the `owners` lists in DefiLlama's CEX adapters (projects/<slug>/index.js or cex/<slug>.js),
+    which also back the exchange-reserve panel
+Writes data/exchange-addresses.json. A source that fails this run keeps the addresses it had
+in the previous book, so one outage never erases an exchange's labels. An address missing
+from the book is reported as unlabelled, never assumed to be retail.
 """
+import csv
+import io
 import json
 import re
 import sys
+import time
 import urllib.error
 import urllib.request
 from datetime import datetime, timezone
@@ -24,101 +31,147 @@ BYBIT_POR = 'https://api2.bybit.com/common-static/por/bybit_por_{}.csv'
 ADAPTERS = {
     'okex': 'OKX', 'bitget': 'Bitget', 'kucoin': 'KuCoin', 'gate-io': 'Gate', 'huobi': 'HTX',
     'bitfinex': 'Bitfinex', 'gemini': 'Gemini', 'bitstamp': 'Bitstamp', 'coinex': 'CoinEx', 'bitrue-cex': 'Bitrue',
-    'mexc-cex': 'MEXC', 'phemex': 'Phemex', 'blofin-cex': 'BloFin', 'weex-cex': 'WEEX', 'crypto-com': 'Crypto.com', 'kraken': 'Kraken', 'robinhood': 'Robinhood', 'deribit': 'Deribit',
+    'mexc-cex': 'MEXC', 'phemex': 'Phemex', 'blofin-cex': 'BloFin', 'weex-cex': 'WEEX',
+    'crypto-com': 'Crypto.com', 'kraken': 'Kraken', 'robinhood': 'Robinhood', 'deribit': 'Deribit',
     'bitmex': 'BitMEX', 'bingx': 'BingX', 'upbit': 'Upbit', 'lbank': 'LBank', 'poloniex': 'Poloniex', 'woo-cex': 'WOO X',
 }
 EVM_CHAINS = {'ethereum', 'bsc', 'base', 'arbitrum', 'polygon', 'optimism', 'avax', 'era', 'linea', 'scroll', 'mantle', 'blast', 'sonic', 'op_bnb'}
-BLOCK_RE = re.compile(r'(\w+)\s*:\s*\{[^{}]*?owners\s*:\s*\[([^\]]*)\]', re.S)
+COMMENTS = re.compile(r'/\*.*?\*/|//[^\n]*', re.S)
+BLOCK_RE = re.compile(r'''['"]?(\w+)['"]?\s*:\s*\{[^{}]*?owners\s*:\s*\[([^\]]*)\]''', re.S)
+STRING_RE = re.compile(r'''(['"])([^'"\n]+)\1''')
 EVM_RE = re.compile(r'0x[0-9a-fA-F]{40}')
-B58_RE = re.compile(r'[1-9A-HJ-NP-Za-km-z]{32,44}')
+B58_ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
+DEADLINE_SECONDS = 8 * 60  # leaves the evidence collector its own budget inside the 45-minute job
 UA = {'User-Agent': 'FlowHunt-labels/1.0 (+https://btc.flowhunt.net)'}
 
 
+def is_solana(address):
+    """Base58 that decodes to exactly 32 bytes (an ed25519 public key)."""
+    if not 32 <= len(address) <= 44 or any(c not in B58_ALPHABET for c in address):
+        return False
+    n = 0
+    for c in address:
+        n = n * 58 + B58_ALPHABET.index(c)
+    leading = len(address) - len(address.lstrip('1'))
+    return leading + (n.bit_length() + 7) // 8 == 32
+
+
 def parse_adapter(source):
-    """{'evm': set, 'solana': set} from an adapter's `chain: { owners: [...] }` blocks."""
+    """{'evm': set, 'solana': set} from active `chain: { owners: [...] }` blocks (comments ignored)."""
     out = {'evm': set(), 'solana': set()}
-    for chain, body in BLOCK_RE.findall(source):
-        if chain == 'solana':
-            out['solana'].update(B58_RE.findall(body))
-        elif chain in EVM_CHAINS:
-            out['evm'].update(a.lower() for a in EVM_RE.findall(body))
+    for chain, body in BLOCK_RE.findall(COMMENTS.sub('', source)):
+        for _, literal in STRING_RE.findall(body):
+            literal = literal.strip()
+            if chain == 'solana' and is_solana(literal):
+                out['solana'].add(literal)
+            elif chain in EVM_CHAINS and EVM_RE.fullmatch(literal):
+                out['evm'].add(literal.lower())
     return out
+
+
+def fetch_text(url, timeout=30):
+    with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=timeout) as response:
+        return response.read().decode('utf-8', 'replace')
 
 
 def binance_por():
-    rows = binance_futures.fetch_one('/bapi/apex/v1/public/apex/market/por/address').get('data') or []
+    reply = binance_futures.fetch_one('/bapi/apex/v1/public/apex/market/por/address')
+    if not isinstance(reply, dict) or str(reply.get('code')) != '000000' or not isinstance(reply.get('data'), list):
+        raise RuntimeError(f"unexpected Binance PoR envelope (code {reply.get('code') if isinstance(reply, dict) else None})")
     out = {'evm': set(), 'solana': set()}
-    for row in rows:
+    for row in reply['data']:
+        if not isinstance(row, dict):
+            continue
         address, network = str(row.get('address') or ''), str(row.get('network') or '').upper()
         if EVM_RE.fullmatch(address):
             out['evm'].add(address.lower())
-        elif network == 'SOL' and B58_RE.fullmatch(address):
+        elif network == 'SOL' and is_solana(address):
             out['solana'].add(address)
+    if len(out['evm']) + len(out['solana']) < 20:
+        raise RuntimeError('Binance PoR list has too few usable addresses')
+    return out, 'https://www.binance.com/en/proof-of-reserves', None
+
+
+def parse_bybit_csv(text):
+    out = {'evm': set(), 'solana': set()}
+    reader = csv.reader(io.StringIO(text))
+    header = next(reader, None)
+    if not header or header[0] != 'Coin':
+        return out
+    for row in reader:
+        if len(row) < 4 or '(ALL)' in row[0]:
+            continue
+        chain = row[0].split('-')[-1]
+        for address in ' '.join(row[3:]).split():
+            if EVM_RE.fullmatch(address):
+                out['evm'].add(address.lower())
+            elif chain == 'Solana' and is_solana(address):
+                out['solana'].add(address)
     return out
 
 
-def bybit_por(now):
-    """Bybit's monthly proof-of-reserves CSV: Coin,Height,Amount,<space-separated addresses>."""
-    out = {'evm': set(), 'solana': set()}
+def bybit_por(now, fetch=fetch_text):
+    """Newest monthly PoR CSV with usable addresses -> (addresses, url, 'YYYY-MM')."""
     for back in range(3):
         y, m = now.year, now.month - back
         while m <= 0:
             y, m = y - 1, m + 12
+        url = BYBIT_POR.format(f'{y}{m:02d}')
         try:
-            req = urllib.request.Request(BYBIT_POR.format(f'{y}{m:02d}'), headers=UA)
-            with urllib.request.urlopen(req, timeout=150) as response:
-                text = response.read().decode('utf-8', 'replace')
-        except urllib.error.URLError:
-            continue
-        if not text.startswith('Coin,'):
-            continue
-        for line in text.splitlines()[1:]:
-            parts = line.split(',')
-            if len(parts) < 4 or '(ALL)' in parts[0]:
+            found = parse_bybit_csv(fetch(url, timeout=150))
+        except (urllib.error.URLError, OSError, TimeoutError):
+            continue  # not published yet or slow: try the previous month
+        if found['evm'] or found['solana']:
+            return found, url, f'{y}-{m:02d}'
+    raise RuntimeError('no usable Bybit PoR CSV in the last 3 months')
+
+
+def adapter(slug, fetch=fetch_text):
+    """First adapter location that yields owners -> (addresses, url, None)."""
+    for pattern in RAW:
+        url = pattern.format(slug)
+        try:
+            found = parse_adapter(fetch(url))
+        except urllib.error.HTTPError as exc:
+            if exc.code == 404:
                 continue
-            chain = parts[0].split('-')[-1]
-            for address in ','.join(parts[3:]).split():
-                if EVM_RE.fullmatch(address):
-                    out['evm'].add(address.lower())
-                elif chain == 'Solana' and B58_RE.fullmatch(address):
-                    out['solana'].add(address)
-        return out
-    raise RuntimeError('no Bybit PoR CSV in the last 3 months')
+            raise
+        if found['evm'] or found['solana']:
+            return found, url, None
+    raise RuntimeError('no adapter with owners')
 
 
 def main():
+    started = time.monotonic()
+    out = ROOT / 'data/exchange-addresses.json'
+    try:
+        previous = json.loads(out.read_text())
+    except (OSError, ValueError):
+        previous = {}
+    old_book = previous.get('addresses') or {}
+    jobs = [('Binance', binance_por), ('Bybit', lambda: bybit_por(datetime.now(timezone.utc)))]
+    jobs += [(name, (lambda s=slug: adapter(s))) for slug, name in ADAPTERS.items()]
     book, sources, errors = {}, [], []
-
-    def add(name, found, url):
+    for name, job in jobs:
+        if time.monotonic() - started > DEADLINE_SECONDS:
+            errors.append({'source': name, 'error': 'run deadline'})
+            continue
+        try:
+            found, url, period = job()
+        except Exception as exc:
+            errors.append({'source': name, 'error': str(exc)[:120]})
+            continue
         for kind in ('evm', 'solana'):
             for address in found[kind]:
                 book.setdefault(address, name)
-        sources.append({'name': name, 'url': url, 'evm': len(found['evm']), 'solana': len(found['solana'])})
-    try:
-        add('Binance', binance_por(), 'https://www.binance.com/en/proof-of-reserves')
-    except Exception as exc:
-        errors.append({'source': 'Binance PoR', 'error': str(exc)[:120]})
-    try:
-        add('Bybit', bybit_por(datetime.now(timezone.utc)), 'https://www.bybit.com/app/user/proof-of-reserve')
-    except Exception as exc:
-        errors.append({'source': 'Bybit PoR', 'error': str(exc)[:120]})
-    for slug, name in ADAPTERS.items():
-        for pattern in RAW:
-            url = pattern.format(slug)
-            try:
-                with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=30) as response:
-                    found = parse_adapter(response.read().decode('utf-8', 'replace'))
-            except urllib.error.HTTPError as exc:
-                if exc.code != 404:
-                    errors.append({'source': name, 'error': f'HTTP {exc.code}'})
-                continue
-            except Exception as exc:
-                errors.append({'source': name, 'error': type(exc).__name__})
-                continue
-            if found['evm'] or found['solana']:
-                add(name, found, url)
-            break
-    out = ROOT / 'data/exchange-addresses.json'
+        sources.append({'name': name, 'url': url, 'period': period, 'evm': len(found['evm']), 'solana': len(found['solana']),
+                        'fetchedAt': datetime.now(timezone.utc).isoformat()})
+    # Sources that failed this run keep their previous addresses (and previous source record).
+    failed = {e['source'] for e in errors}
+    for address, name in old_book.items():
+        if name in failed:
+            book.setdefault(address, name)
+    sources += [s for s in previous.get('sources', []) if s.get('name') in failed]
     if len(book) < 200:
         # Keep the previous book rather than publishing a thin one that would mislabel exchanges as holders.
         print(f'::warning::only {len(book)} addresses collected; keeping {out.name}', errors)
@@ -126,7 +179,8 @@ def main():
     payload = {'generatedAt': datetime.now(timezone.utc).isoformat(), 'sources': sources, 'errors': errors,
                'addresses': dict(sorted(book.items()))}
     out.write_text(json.dumps(payload, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
-    print(json.dumps({'addresses': len(book), 'sources': [(s['name'], s['evm'], s['solana']) for s in sources], 'errors': errors}, ensure_ascii=False))
+    print(json.dumps({'addresses': len(book), 'sources': [(s.get('name'), s.get('evm'), s.get('solana')) for s in sources],
+                      'errors': errors}, ensure_ascii=False))
     return 0
 
 

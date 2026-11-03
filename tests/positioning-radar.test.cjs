@@ -5,6 +5,29 @@ const path=require('node:path');
 const file=path.join(__dirname,'../assets/positioning-radar-model.js');
 const M=fs.existsSync(file)?require(file):null;
 const NOW=1793448000000,T=NOW-3600000;
+const H=3600000;
+function concentrationSnapshot(history,address='0xabc'){
+  const conc=(value,asOf)=>({value,asOf,maxAgeHours:72});
+  return {universeAsOf:NOW-60000,universeTotal:1,history,
+    rows:[{symbol:'XUSDT',baseAsset:'X',address,metrics:{concentration:conc(96,NOW-H)}}]};
+}
+test('concentration compares the observation nearest 24h within 18-30h on the same contract',()=>{
+  const h=(gapH,value,address='0xabc')=>({asOf:NOW-H-gapH*H,rows:[{symbol:'XUSDT',address,metrics:{concentration:{value,asOf:NOW-H-gapH*H,maxAgeHours:72}}}]});
+  let a=M.analyze(concentrationSnapshot([h(17,90),h(31,91)]),NOW);
+  assert.equal(a.changes.compared,0,'outside the 18-30h window');
+  a=M.analyze(concentrationSnapshot([h(19,90),h(25,94)]),NOW);
+  assert.equal(a.rows[0].values.concentrationDelta,2,'nearest to 24h wins');
+  a=M.analyze(concentrationSnapshot([h(24,90,'0xother')]),NOW);
+  assert.equal(a.changes.compared,0,'a different contract is not yesterday');
+});
+test('malformed history is ignored instead of crashing',()=>{
+  for(const history of [{},[null],[{rows:null}],[{rows:[null]}]])
+    assert.doesNotThrow(()=>M.analyze(concentrationSnapshot(history),NOW));
+});
+test('funding interval needs the same settlement as the rate',()=>{
+  const snap={universeAsOf:NOW-60000,rows:[{symbol:'YUSDT',metrics:{fundingRate:{value:0.01,asOf:T,maxAgeHours:11},fundingHours:{value:8,asOf:T-8*H,maxAgeHours:11}}}]};
+  assert.equal(M.analyze(snap,NOW).rows[0].values.fundingHours,null);
+});
 const m=(value,asOf=T)=>({value,asOf,source:'test fixture',url:'https://example.com/data'});
 function row(symbol='BTCUSDT',top=.7,all=.3,oi=10000000){return {symbol,baseAsset:symbol,makers:[],metrics:{topLong:m(top),accountLong:m(all),oiUsd:m(oi),topDelta:{...m(10),fromAsOf:T-86400000},accountDelta:{...m(-10),fromAsOf:T-86400000}}};}
 function snapshot(rows){return {schemaVersion:1,generatedAt:NOW,universeAsOf:NOW,universeTotal:rows.length,rows,history:[],errors:[]};}

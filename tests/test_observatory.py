@@ -45,13 +45,46 @@ class SeriesTests(unittest.TestCase):
         self.assertEqual(list(S.wilder_rsi(up).values())[-1], 100.0)
         self.assertEqual(S.wilder_rsi(up[:14]), {})
 
-    def test_weekly_values_only_apply_after_the_week_closes(self):
-        weekly = {'2026-10-18': 40.0}
-        carried = S.carry_weekly(weekly, ['2026-10-18', '2026-10-19', '2026-10-26', '2026-10-27'])
-        self.assertNotIn('2026-10-18', carried, 'a week cannot be used on its own closing day')
-        self.assertEqual(carried['2026-10-19'], 40.0)
+    def test_weekly_values_apply_from_the_closing_sunday(self):
+        weekly = {'2026-10-11': 30.0, '2026-10-18': 40.0}
+        carried = S.carry_weekly(weekly, ['2026-10-17', '2026-10-18', '2026-10-19', '2026-10-26', '2026-10-27'])
+        self.assertEqual(carried['2026-10-17'], 30.0)
+        self.assertEqual(carried['2026-10-18'], 40.0, 'the closed Sunday candle completes the week')
         self.assertIn('2026-10-26', carried)
         self.assertNotIn('2026-10-27', carried, 'older than 8 days without a newer week')
+
+    def test_monday_build_uses_the_week_that_just_closed(self):
+        # Mondays: falling for 20 weeks, then one sharp up-week closing on Sunday 2026-11-01.
+        start = date(2026, 6, 15)
+        closes = []
+        for i in range(140):
+            day = start + timedelta(days=i)
+            closes.append((day.isoformat(), 1000.0 - i * 5 if i < 133 else 2000.0))
+        f = S.price_features(closes)
+        last_sunday = closes[-1][0]
+        self.assertEqual(last_sunday, '2026-11-01')
+        found = S.asof(f['weekly_rsi'], '2026-11-02', 2)
+        self.assertEqual(found[0], last_sunday)
+        self.assertGreater(found[1], 40, 'the up-week is already in the published RSI')
+
+    def test_weekly_indicators_restart_after_a_missing_week(self):
+        closes = days('2020-01-06', [100.0] * 1500)
+        broken = [c for c in closes if c[0] != '2023-06-14']
+        f = S.price_features(broken)
+        self.assertTrue(all(k < '2023-06-14' or k >= '2027' for k in f['ma200w']), '200 weeks cannot bridge the gap')
+
+    def test_non_finite_closes_are_dropped_and_windows_reset(self):
+        closes = days('2026-01-01', [100.0] * 5 + [float('inf')] + [100.0] * 5)
+        f = S.price_features(closes)
+        self.assertNotIn('2026-01-06', f['price'])
+
+    def test_backtest_days_follow_publication_and_freshness(self):
+        series = {'2026-01-10': 0.5}
+        item = ('mvrv', 'ETH MVRV', '<', 1, '', True, 8)
+        days_ = [(date(2026, 1, 1) + timedelta(days=i)).isoformat() for i in range(40)]
+        lit = S.lit_days(series, item, days_, lag=6)
+        self.assertEqual(min(lit), '2026-01-16', 'not before it was published')
+        self.assertEqual(max(lit), '2026-01-18', 'freshness counts from the observation date, not publication')
 
     def test_price_features_drawdown_and_mayer(self):
         closes = days('2025-01-01', [100.0] * 199 + [200.0] + [150.0])
@@ -153,18 +186,48 @@ class RiskReversalTests(unittest.TestCase):
         self.assertEqual((exp.date(), strike, kind), (date(2026, 11, 13), 83000.0, 'P'))
         self.assertIsNone(options_rr.parse_instrument('BTC-PERPETUAL'))
 
-    def test_skewed_smile_gives_negative_rr(self):
-        now = datetime(2026, 11, 2, tzinfo=timezone.utc)
-        rows = []
-        for code, fwd in (('27NOV26', 78000), ('25DEC26', 78500)):
-            for strike in range(50000, 110001, 2000):
-                for kind in 'CP':
-                    iv = 45 + (78000 - strike) / 2000 * 0.6  # puts (low strikes) richer
-                    rows.append({'instrument_name': f'BTC-{code}-{strike}-{kind}', 'mark_iv': iv, 'underlying_price': fwd})
-        rr = options_rr.rr25_30d(rows, now)
-        self.assertLess(rr['value'], 0)
+    NOW = datetime(2026, 11, 2, tzinfo=timezone.utc)
+
+    def book(self, expiries=('27NOV26', '25DEC26'), call_iv=50.0, put_iv=55.0, age_s=60, extra=()):
+        created = (self.NOW.timestamp() - age_s) * 1000
+        rows = [{'instrument_name': f'BTC-{code}-{strike}-{kind}', 'mark_iv': call_iv if kind == 'C' else put_iv,
+                 'underlying_price': 78000.0, 'creation_timestamp': created}
+                for code in expiries for strike in range(40000, 130001, 1000) for kind in 'CP']
+        return rows + list(extra)
+
+    def test_forward_delta_matches_black_scholes(self):
+        # F = K, sigma 50%, T = 1 year: d1 = 0.25, N(0.25) = 0.598706
+        self.assertAlmostEqual(options_rr.forward_delta(100, 100, 50, 1, 'C'), 0.598706, places=5)
+        self.assertAlmostEqual(options_rr.forward_delta(100, 100, 50, 1, 'P'), 0.598706 - 1, places=5)
+
+    def test_flat_smiles_give_exactly_the_iv_difference(self):
+        rr = options_rr.rr25_30d(self.book(), self.NOW)
+        self.assertEqual(rr['value'], -5.0)
         self.assertIn('30d', rr['tenor'])
-        self.assertIsNone(options_rr.rr25_30d([], now))
+        self.assertEqual(rr['asOf'], datetime.fromtimestamp(self.NOW.timestamp() - 60, timezone.utc).isoformat())
+
+    def test_expiry_interpolation_weights(self):
+        # 25d -> rr -2, 53d -> rr -9: at 30d the value is -2 + (-7) * (30-25)/(53-25)
+        rows = self.book(('27NOV26',), 50, 52) + self.book(('25DEC26',), 50, 59)
+        per, _ = options_rr.rr25_by_expiry(rows, self.NOW)
+        t = sorted((e - self.NOW).total_seconds() / 86400 for e in per)
+        expected = -2 + (-7) * (30 - t[0]) / (t[1] - t[0])
+        self.assertAlmostEqual(options_rr.rr25_30d(rows, self.NOW)['value'], round(expected, 2))
+
+    def test_no_bracket_no_stale_no_value(self):
+        self.assertIsNone(options_rr.rr25_30d(self.book(('29OCT27',)), self.NOW), 'a 361-day expiry is not 30 days')
+        self.assertIsNone(options_rr.rr25_30d(self.book(age_s=3 * 3600), self.NOW), 'stale marks')
+        self.assertIsNone(options_rr.rr25_30d(self.book(age_s=-600), self.NOW), 'future-dated marks')
+        self.assertIsNone(options_rr.rr25_30d([], self.NOW))
+
+    def test_malformed_rows_are_skipped_not_fatal(self):
+        bad = [None, {'instrument_name': None}, {'instrument_name': 'BTC-27NOV26-80000-X', 'mark_iv': 50, 'underlying_price': 1},
+               {'instrument_name': 'BTC-27NOV26-80000-C', 'mark_iv': True, 'underlying_price': 78000, 'creation_timestamp': 1},
+               {'instrument_name': 'BTC-27NOV26-80000-C', 'mark_iv': 50, 'underlying_price': float('inf'), 'creation_timestamp': 1}]
+        self.assertEqual(options_rr.rr25_30d(self.book(extra=bad), self.NOW)['value'], -5.0)
+
+    def test_exact_delta_needs_no_neighbour(self):
+        self.assertEqual(options_rr.iv_at_delta([(0.25, 50)], 0.25), 50)
 
 
 class OnchainStoreTests(unittest.TestCase):
@@ -181,13 +244,74 @@ class OnchainStoreTests(unittest.TestCase):
         def fetch(url):
             calls.append(url)
             if url.endswith('snapshot'):
-                return {'date': '2026-11-01', 'mvrv': 1.4, 'sopr': 1.0}
+                return {'date': '2026-11-01', 'mvrv': 1.4, 'sopr': 1.0, 'puellMultiple': 1, 'realizedPrice': 5e4}
             return [{'d': '2026-11-01', 'unixTs': 0, 'v': 2.0}]
         store, errors = onchain_store.refresh(store, now, fetch, max_calls=4)
         self.assertEqual(len(calls), 4)
         self.assertEqual(errors, [])
         self.assertEqual(store['series']['mvrv']['2026-11-01'], 1.4)
         self.assertIn('2022-11-02', store['series']['sth_cost'], 'older history is kept')
+        self.assertEqual(len(store['calls']), 4, 'attempts are logged for the next run')
+
+    def test_allowance_is_enforced_across_runs(self):
+        now = datetime(2026, 11, 2, 12, tzinfo=timezone.utc)
+        earlier = [(now - timedelta(minutes=m)).isoformat() for m in range(5, 50, 5)]  # 9 in the last hour
+        store = {'series': {}, 'fetched': {}, 'calls': earlier}
+        calls = []
+        onchain_store.refresh(store, now, lambda url: calls.append(url) or [], max_calls=8)
+        self.assertEqual(calls, [], 'hourly allowance already used by earlier runs')
+        day = [(now - timedelta(hours=h)).isoformat() for h in range(2, 16)]  # 14 in the last day
+        store = {'series': {}, 'fetched': {}, 'calls': day}
+        onchain_store.refresh(store, now, lambda url: calls.append(url) or [], max_calls=8)
+        self.assertEqual(calls, [])
+
+    def test_snapshot_429_stops_everything(self):
+        now = datetime(2026, 11, 2, tzinfo=timezone.utc)
+        calls = []
+
+        def fetch(url):
+            calls.append(url)
+            raise urllib.error.HTTPError(url, 429, 'Too Many', None, None)
+        onchain_store.refresh({'series': {}, 'fetched': {}, 'calls': []}, now, fetch)
+        self.assertEqual(len(calls), 1)
+
+    def test_incomplete_snapshot_is_not_marked_fetched(self):
+        now = datetime(2026, 11, 2, tzinfo=timezone.utc)
+        store = {'series': {k: {'2026-11-01': 1.0} for k in onchain_store.SERIES},
+                 'fetched': {k: now.isoformat() for k in onchain_store.SERIES}, 'calls': []}
+        store, errors = onchain_store.refresh(store, now, lambda url: {'date': '2026-11-01', 'mvrv': None})
+        self.assertNotIn('_snapshot', store['fetched'])
+        self.assertEqual(errors[0]['error'], 'ValueError')
+
+    def test_invalid_values_and_dates_are_rejected(self):
+        today = date(2026, 11, 2)
+        raw = [{'d': '2026-02-30', 'v': 1}, {'d': '2026-12-01', 'v': 1}, {'d': None, 'v': 1},
+               {'d': '2026-10-01', 'v': True}, {'d': '2026-10-02', 'v': 10 ** 400}, {'d': '2026-10-03', 'v': '4'}]
+        self.assertEqual(onchain_store.parse_series(raw, today), {'2026-10-03': 4.0})
+
+    def test_truncated_response_is_an_error_not_a_crash(self):
+        import http.client
+        now = datetime(2026, 11, 2, tzinfo=timezone.utc)
+
+        def fetch(url):
+            raise http.client.IncompleteRead(b'[', 100)
+        store, errors = onchain_store.refresh({'series': {}, 'fetched': {}, 'calls': []}, now, fetch, max_calls=2)
+        self.assertEqual([e['error'] for e in errors], ['IncompleteRead', 'IncompleteRead'])
+
+    def test_corrupt_history_stops_instead_of_resetting(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            path = pathlib.Path(tmp) / 'h.json'
+            self.assertEqual(onchain_store.load(path)['series'], {}, 'missing file starts empty')
+            for bad in ('{not json', 'null', '[]', '{"series": null}'):
+                path.write_text(bad)
+                with self.subTest(bad=bad), self.assertRaises(onchain_store.CorruptStore):
+                    onchain_store.load(path)
+            path.write_text('{"series":{"a":{"2026-01-01":1}},"fetched":{}}')
+            store = onchain_store.load(path)
+            onchain_store.save(store, path)
+            self.assertFalse(path.with_suffix('.tmp').exists())
+            self.assertEqual(json.loads(path.read_text())['series'], {'a': {'2026-01-01': 1}})
 
     def test_missing_series_come_before_refreshes(self):
         now = datetime(2026, 11, 2, tzinfo=timezone.utc)

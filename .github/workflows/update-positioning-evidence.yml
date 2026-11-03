@@ -26,12 +26,15 @@ jobs:
         with:
           python-version: '3.11'
       - name: Verify concentration contracts
-        run: python -B -m unittest discover -s tests -p 'test_positioning_*.py' -q
+        run: |
+          python -B -m unittest discover -s tests -p 'test_positioning_*.py' -q
+          python -B -m unittest discover -s tests -p 'test_new_pipelines.py' -q
       - name: Refresh exchange wallet labels
         # A thin or failed refresh keeps the previous address book (the script exits non-zero without writing).
         continue-on-error: true
         env:
           BINANCE_PROXY_URL: https://btc.flowhunt.net/api/binance-futures
+          BINANCE_PROXY_TOKEN: ${{ secrets.RELAY_TOKEN }}
         run: python -B scripts/build_exchange_labels.py
       - name: Collect top-holder evidence
         run: python -B scripts/build_positioning_evidence.py

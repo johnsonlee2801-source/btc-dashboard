@@ -41,6 +41,7 @@ jobs:
       VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
       VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      RELAY_TOKEN: ${{ secrets.RELAY_TOKEN }}
     steps:
       - name: Check deploy credentials
         id: check
@@ -60,6 +61,14 @@ jobs:
       - name: Install Vercel CLI
         if: steps.check.outputs.skip != 'true'
         run: npm install --global vercel@latest
+
+      - name: Sync relay token to Vercel
+        # api/binance-futures.js refuses every request without RELAY_TOKEN, so it is
+        # written to the production environment before each build picks settings up.
+        if: steps.check.outputs.skip != 'true' && env.RELAY_TOKEN != ''
+        run: |
+          vercel env rm RELAY_TOKEN production --yes --token="$VERCEL_TOKEN" >/dev/null 2>&1 || true
+          printf '%s' "$RELAY_TOKEN" | vercel env add RELAY_TOKEN production --token="$VERCEL_TOKEN"
 
       - name: Pull production project settings
         if: steps.check.outputs.skip != 'true'

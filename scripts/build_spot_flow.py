@@ -6,13 +6,16 @@ published SHA-256. Each aggregated trade is one taker order's fills at one price
 notional approximates order size; a large order that sweeps several prices is split and
 therefore counted smaller (big-order totals are conservative).
 
-Net flow per bucket = taker buy notional - taker sell notional (USDT). Only days not yet
-in the file are fetched; the last 30 complete UTC days are kept.
+Net flow per bucket = taker buy notional - taker sell notional (USDT). Missing days are
+fetched newest first under a deadline, and the file is saved after every day, so a slow
+or throttled run keeps what it finished. The last 30 complete UTC days are kept.
 """
 import csv
 import hashlib
 import io
 import json
+import math
+import time
 import urllib.error
 import urllib.request
 import zipfile
@@ -24,12 +27,28 @@ URL = 'https://data.binance.vision/data/spot/daily/aggTrades/{s}USDT/{s}USDT-agg
 BUCKETS = [('lt10k', 0, 1e4, '<1万'), ('10k_100k', 1e4, 1e5, '1–10万'),
            ('100k_1m', 1e5, 1e6, '10–100万'), ('gt1m', 1e6, float('inf'), '>100万')]
 KEEP_DAYS = 30
+MAX_STALE_DAYS = 3          # the newest day older than this is a failed pipeline, not a quiet one
+DEADLINE_SECONDS = 6 * 60   # the observatory job also builds the snapshot within 12 minutes
 UA = {'User-Agent': 'FlowHunt-spot-flow/1.0 (+https://btc.flowhunt.net)'}
+FLAGS = {'true': True, 'false': False, '1': True, '0': False}
 
 
-def fetch(url, timeout=120):
-    with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=timeout) as response:
-        return response.read()
+class Throttled(RuntimeError):
+    pass
+
+
+def fetch(url, timeout=120, attempts=3):
+    for attempt in range(attempts):
+        try:
+            with urllib.request.urlopen(urllib.request.Request(url, headers=UA), timeout=timeout) as response:
+                return response.read()
+        except urllib.error.HTTPError as exc:
+            if exc.code == 429 or exc.code == 418:
+                raise Throttled(f'HTTP {exc.code}') from None
+            if exc.code >= 500 and attempt < attempts - 1:
+                time.sleep(5 * (attempt + 1))
+                continue
+            raise
 
 
 def bucket_of(notional):
@@ -53,13 +72,34 @@ def summarise(rows):
     return out
 
 
-def parse_zip(blob):
+def epoch_ms(value):
+    """Dumps use milliseconds historically and microseconds since 2025."""
+    t = int(value)
+    return t // 1000 if t > 10**14 else t
+
+
+def parse_zip(blob, day=None):
+    """Validated (price, qty, buyer_maker) rows; malformed records raise instead of being skipped."""
+    start = end = None
+    if day:
+        start = int(datetime.combine(date.fromisoformat(day), datetime.min.time(), tzinfo=timezone.utc).timestamp() * 1000)
+        end = start + 86_400_000
     with zipfile.ZipFile(io.BytesIO(blob)) as z:
         with z.open(z.namelist()[0]) as f:
-            for rec in csv.reader(io.TextIOWrapper(f, 'utf-8')):
-                if not rec or not rec[0].isdigit():
-                    continue  # newer dumps carry a header row
-                yield float(rec[1]), float(rec[2]), rec[6].strip().lower() in ('true', '1')
+            for index, rec in enumerate(csv.reader(io.TextIOWrapper(f, 'utf-8'))):
+                if not rec:
+                    continue
+                if index == 0 and not rec[0].strip().isdigit():
+                    continue  # header row of newer dumps
+                if len(rec) < 7 or not rec[0].strip().isdigit():
+                    raise ValueError(f'malformed record at line {index + 1}')
+                price, qty = float(rec[1]), float(rec[2])
+                flag = FLAGS.get(rec[6].strip().lower())
+                if not (math.isfinite(price) and math.isfinite(qty)) or price <= 0 or qty <= 0 or flag is None:
+                    raise ValueError(f'invalid record at line {index + 1}')
+                if start is not None and not start <= epoch_ms(rec[5]) < end:
+                    raise ValueError(f'trade outside {day} at line {index + 1}')
+                yield price, qty, flag
 
 
 def day_flow(symbol, day):
@@ -68,48 +108,71 @@ def day_flow(symbol, day):
     expected = fetch(url + '.CHECKSUM').decode().split()[0]
     if hashlib.sha256(blob).hexdigest() != expected:
         raise ValueError('checksum mismatch')
-    return summarise(parse_zip(blob)), url
+    buckets = summarise(parse_zip(blob, day))
+    if not sum(b['trades'] for b in buckets.values()):
+        raise ValueError('archive has no trades')
+    return buckets, url
+
+
+def save(path, data):
+    data['generatedAt'] = datetime.now(timezone.utc).isoformat()
+    tmp = path.with_suffix('.tmp')
+    tmp.write_text(json.dumps(data, ensure_ascii=False, allow_nan=False, separators=(',', ':')) + '\n', encoding='utf-8')
+    tmp.replace(path)
 
 
 def main():
+    started = time.monotonic()
     out_file = ROOT / 'data/spot-flow.json'
     try:
         data = json.loads(out_file.read_text())
     except (OSError, ValueError):
         data = {}
     data.setdefault('assets', {})
+    data.update(buckets=[{'key': k, 'label': label} for k, _, _, label in BUCKETS], unit='USDT',
+                source='Binance 现货 aggTrades 公开日数据', sourceUrl='https://data.binance.vision/?prefix=data/spot/daily/aggTrades/',
+                note='按单笔聚合成交金额分档；跨价位的大单会被拆分，大单金额偏保守。净额 = 主动买入 − 主动卖出。')
     today = datetime.now(timezone.utc).date()
-    wanted = [(today - timedelta(days=i)).isoformat() for i in range(KEEP_DAYS, 0, -1)]
-    errors = []
-    for symbol in ('BTC', 'ETH'):
-        days = {d['date']: d for d in data['assets'].get(symbol, {}).get('days', [])}
-        for day in wanted:
-            if day in days:
+    wanted = [(today - timedelta(days=i)).isoformat() for i in range(1, KEEP_DAYS + 1)]  # newest first
+    errors, throttled = [], False
+    days = {s: {d['date']: d for d in data['assets'].get(s, {}).get('days', []) if d.get('date') in wanted} for s in ('BTC', 'ETH')}
+    for day in wanted:
+        for symbol in ('BTC', 'ETH'):
+            if day in days[symbol] or throttled or time.monotonic() - started > DEADLINE_SECONDS:
                 continue
             try:
                 buckets, url = day_flow(symbol, day)
+            except Throttled as exc:
+                errors.append({'symbol': symbol, 'date': day, 'error': str(exc)})
+                throttled = True
+                continue
             except urllib.error.HTTPError as exc:
-                if exc.code != 404:  # 404 = not published yet (usually a few hours after UTC midnight)
+                # Only yesterday may legitimately be unpublished; an older 404 is a real gap.
+                if not (exc.code == 404 and day == wanted[0]):
                     errors.append({'symbol': symbol, 'date': day, 'error': f'HTTP {exc.code}'})
                 continue
             except Exception as exc:
-                errors.append({'symbol': symbol, 'date': day, 'error': type(exc).__name__})
+                errors.append({'symbol': symbol, 'date': day, 'error': type(exc).__name__ + ': ' + str(exc)[:80]})
                 continue
-            days[day] = {'date': day, 'buckets': buckets, 'url': url,
-                         'net': round(sum(b['net'] for b in buckets.values()), 2)}
-        kept = sorted((d for k, d in days.items() if k in wanted), key=lambda d: d['date'])
-        data['assets'][symbol] = {'days': kept}
-    data.update(generatedAt=datetime.now(timezone.utc).isoformat(), errors=errors,
-                buckets=[{'key': k, 'label': label} for k, _, _, label in BUCKETS], unit='USDT',
-                source='Binance 现货 aggTrades 公开日数据', sourceUrl='https://data.binance.vision/?prefix=data/spot/daily/aggTrades/',
-                note='按单笔聚合成交金额分档；跨价位的大单会被拆分，大单金额偏保守。净额 = 主动买入 − 主动卖出。')
-    out_file.write_text(json.dumps(data, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+            days[symbol][day] = {'date': day, 'buckets': buckets, 'url': url,
+                                 'net': round(sum(b['net'] for b in buckets.values()), 2)}
+            data['assets'][symbol] = {'days': sorted(days[symbol].values(), key=lambda d: d['date'])}
+            data['errors'] = errors
+            save(out_file, data)  # checkpoint: finished days survive a timeout later in the run
+    for symbol in ('BTC', 'ETH'):
+        data['assets'][symbol] = {'days': sorted(days[symbol].values(), key=lambda d: d['date'])}
+    data['errors'] = errors
+    save(out_file, data)
+    status = 0
     for symbol, a in data['assets'].items():
-        last = a['days'][-1] if a['days'] else None
-        print(symbol, len(a['days']), 'days; latest', last and last['date'],
-              last and {k: round(v['net'] / 1e6, 1) for k, v in last['buckets'].items()})
+        last = a['days'][-1]['date'] if a['days'] else None
+        age = (today - date.fromisoformat(last)).days if last else None
+        print(symbol, len(a['days']), 'days; latest', last)
+        if age is None or age > MAX_STALE_DAYS:
+            print(f'::error::{symbol} spot flow is {age} days old')
+            status = 1
     print('errors', errors[:5])
-    return 0 if all(a['days'] for a in data['assets'].values()) else 1
+    return status
 
 
 if __name__ == '__main__':

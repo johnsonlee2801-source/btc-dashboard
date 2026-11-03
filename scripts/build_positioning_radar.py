@@ -161,6 +161,7 @@ def apply_evidence(row, evidence, now):
 
 
 EXCLUDED_KINDS=('exchange','burn','dex','bridge')
+MIN_HOLDERS=200
 
 
 def top10_concentration(holders,total):
@@ -197,6 +198,9 @@ def apply_top10(row,evidence,stamp,url,source):
     circ,total=number(evidence.get('circulating')),number(evidence.get('supplyTotal'))
     if circ is not None and total and 0<circ<=total:
         put('circulation',circ/total*100,'CoinGecko 流通供应 / 总供应')
+    # A contract with a handful of holders is a wrong mapping or an unused copy, not the token's supply.
+    holder_count=number(evidence.get('holderCount'))
+    if holder_count is not None and holder_count<MIN_HOLDERS:return
     result=top10_concentration(evidence.get('holders'),evidence.get('total'))
     if not result:return
     put('concentration',result['value'],f"前10地址扣除交易所/销毁/DEX/跨链桥/锁仓后的占比；剩余 {result['known']} 个地址，为下界")
@@ -242,11 +246,13 @@ def summary(payload, now):
         m = row['metrics'].get(key) or {}
         v, t = number(m.get('value')), number(m.get('asOf'))
         return (v, t) if v is not None and t is not None and 0 <= now - t <= 10800000 else (None, None)
-    divergence, majors = [], {}
+    divergence, majors, valid, by_hour = [], {}, 0, {}
     for row in payload.get('rows', []):
         (top, t1), (acc, t2), (oi, t3) = val(row, 'topLong'), val(row, 'accountLong'), val(row, 'oiUsd')
         if None in (top, acc, oi) or not (t1 == t2 == t3):
             continue
+        valid += 1
+        by_hour[str(int(t1))] = by_hour.get(str(int(t1)), 0) + 1
         entry = {'symbol': row['symbol'], 'baseAsset': row.get('baseAsset'), 'topLong': top, 'accountLong': acc,
                  'oiUsd': oi, 'asOf': t1}
         if row['symbol'] in ('BTCUSDT', 'ETHUSDT'):
@@ -256,7 +262,7 @@ def summary(payload, now):
     divergence.sort(key=lambda r: -r['gap'])
     return {'generatedAt': payload.get('generatedAt'), 'dataStatus': payload.get('dataStatus'),
             'universeTotal': payload.get('universeTotal'), 'sampled': payload.get('sampled'),
-            'divergence': divergence[:8], 'majors': majors}
+            'valid': valid, 'validByAsOf': by_hour, 'divergence': divergence[:8], 'majors': majors}
 
 
 class PublicClient:
@@ -336,7 +342,7 @@ def main():
             rows.append(row)
         print('Collected',len(rows),'/',len(selected),'source errors',len(errors),flush=True)
     now=int(time.time()*1000)
-    compact={'asOf':now,'rows':[{'symbol':r['symbol'],'metrics':{k:r['metrics'][k] for k in ('concentration','topLong','accountLong','oiUsd')}} for r in rows]}
+    compact={'asOf':now,'rows':[{'symbol':r['symbol'],'address':r.get('address'),'metrics':{k:r['metrics'][k] for k in ('concentration','topLong','accountLong','oiUsd')}} for r in rows]}
     history=history_append(old.get('history',[]),compact,now)
     payload={'schemaVersion':1,'generatedAt':now,'universeAsOf':now,'universeTotal':len(infos),
              'sampled':len(rows),'partial':len(rows)!=len(infos),'venue':'Binance USDT perpetual',

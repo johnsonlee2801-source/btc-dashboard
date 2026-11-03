@@ -74,7 +74,7 @@
   </div>
 
   <div class="band">
-    <div class="band-item"><strong style="color:var(--green)">0–34 健康上涨</strong><span>现货承接相对正常，衍生品未明显过热。</span></div>
+    <div class="band-item"><strong style="color:var(--green)">0–34 承接正常</strong><span>现货承接相对正常，衍生品未明显过热。</span></div>
     <div class="band-item"><strong style="color:var(--yellow)">35–64 派发苗头</strong><span>上涨质量开始变差，需要观察承接是否恢复。</span></div>
     <div class="band-item"><strong style="color:var(--red)">65–100 强派发嫌疑</strong><span>价格上涨与现货买盘、主动买盘或美元现货溢价明显背离。</span></div>
   </div>
@@ -94,12 +94,15 @@
 <footer class="site-footer"><div><strong>FlowHunt｜流程猎人</strong> · 公开数据 · 独立研究 · 不构成投资建议</div><nav aria-label="页脚导航"><a href="/">BTC 观察台</a><a href="/eth">ETH 观察台</a><a href="/positioning-radar">资金雷达</a><a href="/distribution-radar">派发雷达</a><a href="/halving">减半周期</a></nav></footer>
 
 <script>
+// null/'' would become 0 through Number(); only real numbers are shown.
+function realNum(v) { return typeof v === 'number' && Number.isFinite(v) ? v : null; }
+function esc(v) { return String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
 function fmtUsd(v, digits = 0) {
-  if (!Number.isFinite(Number(v))) return '--';
+  if (realNum(v) === null) return '--';
   return '$' + Number(v).toLocaleString('en-US', { maximumFractionDigits: digits });
 }
 function fmtPct(v, digits = 2) {
-  if (!Number.isFinite(Number(v))) return '--';
+  if (realNum(v) === null) return '--';
   const n = Number(v);
   return (n >= 0 ? '+' : '') + n.toFixed(digits) + '%';
 }
@@ -115,15 +118,16 @@ function setGauge(score, tone) {
 }
 function renderMetric(m) {
   const cls = toneClass(m.status);
-  const width = Math.round((m.score / (m.maxScore || 1)) * 100);
+  const score = realNum(m.score) ?? 0, max = realNum(m.maxScore) || 1;
+  const width = Math.max(0, Math.min(100, Math.round(score / max * 100)));
   const fill = cls === 'danger' ? 'var(--red)' : cls === 'good' ? 'var(--green)' : 'var(--yellow)';
   return `<div class="metric">
     <div class="metric-head">
-      <div><div class="metric-name">${m.name}</div><div class="metric-value">${m.value || '--'}</div></div>
-      <div class="metric-score ${cls}">${m.score}<span style="font-size:12px;color:var(--muted)">/${m.maxScore}</span></div>
+      <div><div class="metric-name">${esc(m.name)}</div><div class="metric-value">${esc(m.value || '--')}</div></div>
+      <div class="metric-score ${cls}">${m.available === false ? '--' : score}<span style="font-size:12px;color:var(--muted)">/${max}</span></div>
     </div>
     <div class="bar"><div class="fill" style="width:${width}%;background:${fill}"></div></div>
-    <div class="metric-detail">${m.detail || ''}</div>
+    <div class="metric-detail">${esc(m.detail)}</div>
   </div>`;
 }
 async function loadRadar(manual = false) {
@@ -142,19 +146,21 @@ async function loadRadar(manual = false) {
     document.getElementById('level').className = 'level ' + (level.tone || 'warn');
     document.getElementById('headline').textContent = `当前观察：${level.label || '未知'}`;
     document.getElementById('summary').textContent = data.summary || '暂无摘要';
-    setGauge(Number(data.score || 0), level.tone);
+    setGauge(realNum(data.score) ?? 0, level.tone);
 
     const raw = data.raw || {};
     document.getElementById('price').textContent = fmtUsd(raw.price, 2);
     document.getElementById('change24h').textContent = fmtPct(raw.priceChange24hPct);
-    document.getElementById('change24h').className = 'quick-value ' + (Number(raw.priceChange24hPct) >= 0 ? 'pos' : 'neg');
-    document.getElementById('funding').textContent = Number.isFinite(Number(raw.fundingRatePct)) ? Number(raw.fundingRatePct).toFixed(4) + '%/8h' : '--';
+    document.getElementById('change24h').className = 'quick-value ' + (realNum(raw.priceChange24hPct) === null ? '' : raw.priceChange24hPct >= 0 ? 'pos' : 'neg');
+    document.getElementById('funding').textContent = realNum(raw.fundingRatePct) !== null ? raw.fundingRatePct.toFixed(4) + '%/8h' : '--';
     const fiatPremium = raw.fiatSpotPremiumPct ?? raw.coinbasePremiumPct;
     document.getElementById('premium').textContent = fmtPct(fiatPremium, 3) + (raw.fiatSpotSource ? ` (${raw.fiatSpotSource})` : '');
-    document.getElementById('premium').className = 'quick-value ' + (Number(fiatPremium) >= 0 ? 'pos' : 'neg');
+    document.getElementById('premium').className = 'quick-value ' + (realNum(fiatPremium) === null ? '' : fiatPremium >= 0 ? 'pos' : 'neg');
 
     document.getElementById('metrics').innerHTML = (data.metrics || []).map(renderMetric).join('') || '<div class="metric muted">暂无指标</div>';
-    document.getElementById('notes').innerHTML = '<ul>' + (data.notes || []).map(n => `<li>${n}</li>`).join('') + '</ul>';
+    const ul = document.createElement('ul');
+    for (const n of Array.isArray(data.notes) ? data.notes : []) { const li = document.createElement('li'); li.textContent = String(n); ul.appendChild(li); }
+    document.getElementById('notes').replaceChildren(ul);
     document.getElementById('lastUpdated').textContent = data.generatedAt ? new Date(data.generatedAt).toLocaleString('zh-CN') : new Date().toLocaleString('zh-CN');
   } catch (err) {
     errorBox.style.display = 'block';

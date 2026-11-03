@@ -13,24 +13,37 @@
       "name": "python",
       "description": "Data pipeline: signals, backtests, on-chain store, evidence, spot flow, page contracts. One test serves the site locally on 127.0.0.1.",
       "command": "rm -f .coverage && python3 -m coverage run --branch --source=scripts -m unittest discover -s tests -p 'test_*.py' -q && python3 -m coverage json -q -o coverage/python.json",
-      "gateOn": ["taskCompleted", "commit"],
+      "gateOn": [
+        "taskCompleted",
+        "commit"
+      ],
       "coverage": "include",
       "coverageSummaryPath": "coverage/python.json",
       "timeoutMs": 300000
     },
     {
       "name": "node",
-      "description": "Browser-side models (observatory, positioning radar) and the ticker relay.",
-      "command": "mkdir -p coverage && node --test --experimental-test-coverage --test-coverage-exclude='tests/**' --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=coverage/node.lcov tests/observatory-model.test.cjs tests/ticker.test.cjs tests/positioning-radar.test.cjs",
-      "gateOn": ["taskCompleted", "commit"],
+      "description": "Browser-side models (observatory, positioning radar), the ticker relay and the Binance relay handler.",
+      "command": "mkdir -p coverage && node --test --experimental-test-coverage --test-coverage-exclude='tests/**' --test-reporter=spec --test-reporter-destination=stdout --test-reporter=lcov --test-reporter-destination=coverage/node.lcov tests/observatory-model.test.cjs tests/ticker.test.cjs tests/positioning-radar.test.cjs tests/relay.test.mjs tests/distribution-radar.test.mjs",
+      "gateOn": [
+        "taskCompleted",
+        "commit"
+      ],
       "coverage": "include",
       "coverageSummaryPath": "coverage/node.lcov",
       "timeoutMs": 120000
     }
   ],
-  "coverageThresholds": { "lines": 100, "functions": 100, "branches": 100, "statements": 100 },
+  "coverageThresholds": {
+    "lines": 100,
+    "functions": 100,
+    "branches": 100,
+    "statements": 100
+  },
   "coverageMode": "no-decrease",
   "requireMutation": false,
   "mutationCommand": "",
-  "mutationGateOn": ["push"]
+  "mutationGateOn": [
+    "push"
+  ]
 }

@@ -4,10 +4,15 @@
 Writes data/halving-cycles.json: per cycle, the close on halving day, the cycle
 peak and the lowest close after it (all closing prices, with day numbers), plus a
 5-day sampled curve of price / halving-day price for the comparison chart.
+
+Nothing is written unless every cycle is complete: finite positive closes, no missing
+day inside any analysed window, all four halvings present and data no older than
+MAX_STALE_DAYS. A failed run leaves the previous file untouched.
 """
 import json
+import math
 import urllib.request
-from datetime import date, datetime, timedelta, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -16,6 +21,11 @@ URL = ('https://community-api.coinmetrics.io/v4/timeseries/asset-metrics?assets=
 HALVINGS = [date(2012, 11, 28), date(2016, 7, 9), date(2020, 5, 11), date(2024, 4, 20)]
 NEXT_HALVING_ESTIMATE = date(2028, 4, 17)
 PEAK_WITHIN, LOW_WITHIN = 730, 1200
+MAX_STALE_DAYS = 3
+
+
+class IncompleteData(ValueError):
+    pass
 
 
 def fetch_closes():
@@ -26,17 +36,24 @@ def fetch_closes():
             page = json.load(response)
         for row in page.get('data', []):
             try:
-                closes[date.fromisoformat(row['time'][:10])] = float(row['PriceUSD'])
-            except (KeyError, TypeError, ValueError):
+                value = float(row['PriceUSD'])
+                day = date.fromisoformat(row['time'][:10])
+            except (KeyError, TypeError, ValueError, OverflowError):
                 continue
+            if math.isfinite(value) and value > 0:
+                closes[day] = value
         url = page.get('next_page_url')
     return closes
 
 
-def cycle_stats(closes, start, end):
-    days = sorted(d for d in closes if start <= d < end)
+def cycle_stats(closes, start, end=None):
+    """Stats for one cycle; `end` is the next observed halving (None for the running cycle)."""
+    days = sorted(d for d in closes if start <= d and (end is None or d < end))
     if not days or days[0] != start:
         return None
+    if len(days) != (days[-1] - start).days + 1:
+        # A missing day can hide the real peak or low; refuse rather than publish wrong extremes.
+        raise IncompleteData(f'cycle {start}: {(days[-1] - start).days + 1 - len(days)} missing days')
     base = closes[start]
     # The bull-market top comes within two years of each halving; the bear-market low follows it
     # before the run-up to the next halving (which would otherwise win the max/min).
@@ -56,11 +73,23 @@ def cycle_stats(closes, start, end):
 
 def main():
     closes = fetch_closes()
-    bounds = HALVINGS[1:] + [NEXT_HALVING_ESTIMATE]
-    cycles = [cycle_stats(closes, s, e) for s, e in zip(HALVINGS, bounds)]
+    today = datetime.now(timezone.utc).date()
+    if not closes or (today - max(closes)).days > MAX_STALE_DAYS:
+        print(f'::error::Coin Metrics data ends {max(closes) if closes else None}; keeping the previous file')
+        return 1
+    # Closed cycles end at the next actual halving; the running one ends at the newest close.
+    bounds = HALVINGS[1:] + [None]
+    try:
+        cycles = [cycle_stats(closes, s, e) for s, e in zip(HALVINGS, bounds)]
+    except IncompleteData as exc:
+        print(f'::error::{exc}; keeping the previous file')
+        return 1
+    if not all(cycles) or any(c['lowAfterPeak'] is None for c in cycles[:3]):
+        print('::error::a halving cycle is missing; keeping the previous file')
+        return 1
     payload = {'generatedAt': datetime.now(timezone.utc).isoformat(), 'source': 'Coin Metrics Community API (PriceUSD, daily close)',
                'sourceUrl': 'https://docs.coinmetrics.io/', 'nextHalvingEstimate': NEXT_HALVING_ESTIMATE.isoformat(),
-               'cycles': [c for c in cycles if c]}
+               'cycles': cycles}
     # Closed cycles define the historical windows the page compares against.
     closed = [c for c in payload['cycles'][:-1] if c['lowAfterPeak']]
     payload['windows'] = {
@@ -71,13 +100,15 @@ def main():
         'note': '高点窗口取第 2、3 周期（第 1 周期样本过早）；低点窗口与回撤取前 3 个完整周期，均为日收盘口径。',
     }
     out = ROOT / 'data/halving-cycles.json'
-    out.write_text(json.dumps(payload, ensure_ascii=False, separators=(',', ':')) + '\n', encoding='utf-8')
+    tmp = out.with_suffix('.tmp')
+    tmp.write_text(json.dumps(payload, ensure_ascii=False, allow_nan=False, separators=(',', ':')) + '\n', encoding='utf-8')
+    tmp.replace(out)
     for c in payload['cycles']:
         p, l = c['peak'], c['lowAfterPeak']
         print(c['halving'], f"base {c['halvingClose']:.0f} peak {p['close']:.0f} D{p['day']} x{p['multiple']:.2f}",
               f"low {l['close']:.0f} D{l['day']} {l['drawdownPct']:.1f}%" if l else '', 'last D', c['lastDay'])
     print('windows', payload['windows'])
-    return 0 if len(payload['cycles']) == 4 else 1
+    return 0
 
 
 if __name__ == '__main__':
