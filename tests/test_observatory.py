@@ -218,6 +218,8 @@ class RiskReversalTests(unittest.TestCase):
         self.assertIsNone(options_rr.rr25_30d(self.book(('29OCT27',)), self.NOW), 'a 361-day expiry is not 30 days')
         self.assertIsNone(options_rr.rr25_30d(self.book(age_s=3 * 3600), self.NOW), 'stale marks')
         self.assertIsNone(options_rr.rr25_30d(self.book(age_s=-600), self.NOW), 'future-dated marks')
+        # Rows stamped by Deribit's clock a minute after the build started are current, not future.
+        self.assertIsNotNone(options_rr.rr25_30d(self.book(age_s=-60), self.NOW), 'server stamp just after now')
         self.assertIsNone(options_rr.rr25_30d([], self.NOW))
 
     def test_malformed_rows_are_skipped_not_fatal(self):

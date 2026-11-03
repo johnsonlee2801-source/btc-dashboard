@@ -240,7 +240,8 @@ def fetch_derivatives(symbol, errors, now):
                                 'DVOL：Deribit 30 日期权隐含波动率指数，最近完整小时。'),
                        'ago30': month[1] if month else None}
     book = safe_get(f'https://www.deribit.com/api/v2/public/get_book_summary_by_currency?currency={symbol}&kind=option', errors)
-    rr = options_rr.rr25_30d((book or {}).get('result'), now)
+    # Judge the book's age at the moment it arrived, not at the start of the build.
+    rr = options_rr.rr25_30d((book or {}).get('result'), datetime.now(timezone.utc))
     if rr:
         out['rr25'] = metric(rr['value'], rr['asOf'], 'Deribit', 12,
                              f"25Δ 风险逆转 = 25Δ 看涨 IV − 25Δ 看跌 IV（{rr['tenor']}），负值表示看跌期权更贵。"

@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 
 MONTHS = {m: i + 1 for i, m in enumerate(('JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'))}
 MAX_AGE_SECONDS = 2 * 3600
+FUTURE_SKEW_SECONDS = 300
 TARGET_DAYS = 30.0
 
 
@@ -77,7 +78,9 @@ def rr25_by_expiry(summaries, now):
             continue
         stamp = datetime.fromtimestamp(created / 1000, timezone.utc)
         age = (now - stamp).total_seconds()
-        if not 0 <= age <= MAX_AGE_SECONDS:
+        # Deribit stamps rows with its own clock at response time, which can be slightly
+        # after the caller's `now`: allow a small future skew, never a real future date.
+        if not -FUTURE_SKEW_SECONDS <= age <= MAX_AGE_SECONDS:
             continue
         expiry, strike, kind = parsed
         years = (expiry - now).total_seconds() / (365 * 86400)
