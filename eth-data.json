@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-11-02T06:14:57.423959+00:00",
-  "timestamp_cn": "2026-11-02 14:14 GMT+8",
-  "price_usd": 2286.69,
-  "price_change_24h": 0.66256,
-  "market_cap": 279389445179,
-  "circulating_supply": 122183191.98331761,
-  "holder_count": 211832952,
-  "active_addr_7d": 791364,
-  "whale_top100_pct": 12.4,
-  "burn_rate_daily": 9.3,
-  "stablecoin_mcap_b": 140.75,
-  "stablecoin_change_30d": -3.09,
-  "staked_pct": 36.2,
-  "total_staked": 44232431,
+  "timestamp": "2026-11-03T06:53:35.388757+00:00",
+  "timestamp_cn": "2026-11-03 14:53 GMT+8",
+  "price_usd": 2242.05,
+  "price_change_24h": -1.81016,
+  "market_cap": 273993906133,
+  "circulating_supply": 122186161.86556138,
+  "holder_count": 211921555,
+  "active_addr_7d": 793131,
+  "whale_top100_pct": 12.36,
+  "burn_rate_daily": 24.2,
+  "stablecoin_mcap_b": 139.5,
+  "stablecoin_change_30d": -4.06,
+  "staked_pct": 36.26,
+  "total_staked": 44303325,
   "stake_conc_top5": 36.5,
   "stake_conc_leaders": [
     {
@@ -25,7 +25,7 @@
     },
     {
       "name": "ether.fi Stake",
-      "pct": 4.4
+      "pct": 4.3
     },
     {
       "name": "Rocket Pool",
@@ -36,19 +36,19 @@
       "pct": 0.9
     }
   ],
-  "issuance_daily": 3030,
-  "burn_issuance_pct": 0.31,
+  "issuance_daily": 3033,
+  "burn_issuance_pct": 0.8,
   "lth_pct": null,
   "distribution": null,
   "as_of": {
-    "holder_count": "2026-11-01",
-    "active_addr_7d": "2026-11-01",
-    "whale_top100_pct": "2026-11-02",
-    "burn_rate_daily": "2026-11-02",
-    "stablecoin_mcap_b": "2026-11-02",
-    "stablecoin_change_30d": "2026-11-02",
-    "staked_pct": "2026-10-31",
-    "total_staked": "2026-10-31",
-    "stake_conc_top5": "2026-11-02"
+    "holder_count": "2026-11-02",
+    "active_addr_7d": "2026-11-02",
+    "whale_top100_pct": "2026-11-03",
+    "burn_rate_daily": "2026-11-03",
+    "stablecoin_mcap_b": "2026-11-03",
+    "stablecoin_change_30d": "2026-11-03",
+    "staked_pct": "2026-11-02",
+    "total_staked": "2026-11-02",
+    "stake_conc_top5": "2026-11-03"
   }
 }
