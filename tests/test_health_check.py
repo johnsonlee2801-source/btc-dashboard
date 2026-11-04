@@ -219,6 +219,13 @@ class MainTests(unittest.TestCase):
         self.assertFails(lambda d: d["/eth-data.json"]["as_of"].update(whale_top100_pct=day(2)), name)
         self.assertFails(lambda d: d["/eth-data.json"]["as_of"].update(holder_count=day(-1)), name)
 
+    def test_staking_may_lag_two_days_behind_the_run(self):
+        # validatorqueue.com publishes day D during D+1, after the ~06:30 UTC ETH run.
+        name = "eth-data.json: 关键字段有值且未沿用旧值"
+        code, _, checks = self.run_main(lambda d: d["/eth-data.json"]["as_of"].update(staked_pct=day(2), total_staked=day(2)))
+        self.assertTrue(checks[name])
+        self.assertFails(lambda d: d["/eth-data.json"]["as_of"].update(staked_pct=day(3)), name)
+
     def test_evidence_needs_holder_data_the_page_accepts(self):
         name = "控盘证据: 48 小时内观测 ≥150 个代币"
 

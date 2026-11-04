@@ -291,19 +291,23 @@ def main(report_path="health-report.md"):
                   "whale_top100_pct", "stablecoin_mcap_b", "stablecoin_change_30d", "burn_issuance_pct")
         as_of = e.get("as_of") or {}
         # Field dates are calendar days. A field that was not refreshed by the run is "carried":
-        # its date then lags the run's own date by more than the one day the slowest source
-        # (holder counts, published for the previous day) needs. The run itself must be within
-        # 36h (checked above). burn_issuance_pct is derived from the burn rate and from issuance
-        # (which uses total_staked), so it carries both dates.
+        # its date then lags the run's own date by more than its source's normal publication
+        # delay. Most sources publish the previous day by the ~06:30 UTC run (1 day);
+        # validatorqueue.com publishes day D during D+1, after the run, so staking is
+        # normally 2 days behind (observed 2026-11-04: run on 11-04, latest record 11-02).
+        # The run itself must be within 36h (checked above). burn_issuance_pct is derived
+        # from the burn rate and from issuance (which uses total_staked), so it carries both.
         run = hours_since(e.get("timestamp"))
         run_day = (now_utc() - timedelta(hours=run)).date() if run is not None else None
+        lag = {"staked_pct": 2, "total_staked": 2}
 
-        def current(d):
-            return is_day(d) and run_day is not None and 0 <= (run_day - date.fromisoformat(d)).days <= 1
+        def current(field, d):
+            return (is_day(d) and run_day is not None
+                    and 0 <= (run_day - date.fromisoformat(d)).days <= lag.get(field, 1))
 
         deps = {f: [f] for f in fields}
         deps["burn_issuance_pct"] = ["burn_rate_daily", "total_staked"]
-        bad = [f for f in fields if not real(e.get(f)) or not all(current(as_of.get(d)) for d in deps[f])]
+        bad = [f for f in fields if not real(e.get(f)) or not all(current(d, as_of.get(d)) for d in deps[f])]
         check("eth-data.json: 关键字段有值且未沿用旧值", not bad, f"缺失或过期 {bad}" if bad else "全部正常")
     except Exception as ex:
         check("eth-data.json", False, str(ex)[:120])
