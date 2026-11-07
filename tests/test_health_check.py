@@ -92,7 +92,7 @@ def healthy():
         "/data/observatory.json": {"schemaVersion": 2, "generatedAt": iso(2),
                                    "assets": {"BTC": asset(14), "ETH": asset(6)}},
         "/data/onchain-history.json": {"series": {k: {day(2): 1.0} for k in
-                                                  ("sth_cost", "supply_profit", "sth_profit", "lth_net30", "whale_1k_10k")}},
+                                                  ("sth_cost", "supply_profit", "sth_profit", "cc_lth_net30", "cc_net30_1k_10k", "cc_mvrv_z", "cc_miner_rev_cost")}},
         "/data/positioning-summary.json": {"generatedAt": MS - 3600000, "dataStatus": "available", "universeTotal": 500,
                                            "sampled": 500, "valid": 480, "validByAsOf": {str(MS - 3600000): 480}, "majors": {"BTCUSDT": major(), "ETHUSDT": major()}},
         "/data/halving-cycles.json": {"generatedAt": iso(10), "nextHalvingEstimate": "2028-04-17",

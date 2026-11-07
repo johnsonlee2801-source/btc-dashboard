@@ -18,6 +18,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'scripts'))
 import binance_futures  # noqa: E402
+import checkonchain  # noqa: E402
 import onchain_store  # noqa: E402
 import options_rr  # noqa: E402
 import signals as S  # noqa: E402
@@ -26,6 +27,7 @@ SOURCES = {
     'Binance': 'https://developers.binance.com/docs/binance-spot-api-docs/rest-api/market-data-endpoints',
     'Binance Futures': 'https://developers.binance.com/docs/derivatives/usds-margined-futures/market-data/rest-api',
     'BGeometrics': onchain_store.DOC,
+    'checkonchain': checkonchain.DOC,
     'Alternative.me': 'https://alternative.me/crypto/fear-and-greed-index/',
     'CoinMarketCap': 'https://coinmarketcap.com/charts/fear-and-greed-index/',
     'Deribit': 'https://docs.deribit.com/',
@@ -44,20 +46,28 @@ UA = 'FlowHunt-observatory/2.0 (+https://btc.flowhunt.net)'
 KEY_SOURCE = {
     'price': 'Binance', 'ma200d': 'Binance', 'ma200w': 'Binance', 'high90': 'Binance', 'mayer': 'Binance',
     'price_ma200w': 'Binance', 'weekly_rsi': 'Binance', 'drawdown90': 'Binance', 'pi_bottom': 'Binance',
-    'supply_profit': 'BGeometrics', 'sopr': 'BGeometrics', 'mvrv_z': 'BGeometrics', 'mvrv': 'BGeometrics',
-    'puell': 'BGeometrics', 'sth_cost': 'BGeometrics', 'sth_profit': 'BGeometrics', 'lth_cost': 'BGeometrics',
-    'realized_price': 'BGeometrics', 'true_mean': 'BGeometrics', 'lth_net30': 'BGeometrics',
-    'hash_ribbon': 'BGeometrics', 'whale_net30': 'BGeometrics', 'sth_mvrv': 'FlowHunt 计算',
-    'lth_ratio': 'FlowHunt 计算', 'fear': 'Alternative.me',
+    'supply_profit': 'BGeometrics', 'sopr': 'BGeometrics', 'mvrv': 'BGeometrics',
+    'puell': 'BGeometrics', 'sth_cost': 'BGeometrics', 'sth_profit': 'BGeometrics', 'lth_cost': 'checkonchain',
+    'realized_price': 'BGeometrics', 'true_mean': 'checkonchain', 'hash_ribbon': 'BGeometrics',
+    'mvrv_z': 'checkonchain', 'nupl': 'checkonchain', 'miner_rev_cost': 'checkonchain',
+    'lth_net30': 'checkonchain', 'whale_net30': 'checkonchain', 'sth_mvrv': 'FlowHunt 计算', 'fear': 'Alternative.me',
 }
+KEY_SOURCE.update({alias: KEY_SOURCE[base] for alias, base in S.ALIASES.items()})
+# Rules that do not move in proportion to price but still have an exact price at which they flip.
+TRIGGER_SERIES = {'mvrv_z': 'mvrv_z_m1_price', 'nupl': 'realized_price'}
 NOTES = {
     'hash_ribbon': '哈希率 30 日均线跌破 60 日均线视为矿工投降（1=投降中）。由 BGeometrics 全网哈希率计算。',
     'pi_bottom': 'Pi Cycle 底部：150 日 EMA ÷ (0.745 × 471 日均线)，低于 1 为历史底部区。由 Binance 日收盘计算。',
     'sth_mvrv': '价格 ÷ 短期持有者实现价格（STH 成本）。与 BGeometrics 发布值误差 <0.3%，自算可避免其接口约 5 天的发布延迟。',
-    'lth_ratio': '价格 ÷ 长期持有者实现价格（LTH 成本）。',
-    'whale_net30': '持有 1,000–10,000 BTC 的地址余额合计 30 天变化。地址口径，含部分交易所/托管地址，不等于实体买卖。',
-    'lth_net30': '长期持有者（持币 >155 天）供给 30 天净变化。正值通常意味着筹码在沉淀。',
-    'mvrv_z': 'BGeometrics 口径的 MVRV Z-Score。不同数据商的 Z 值标准差口径不同，数值不可跨站比较；本站阈值按本口径设定并回测。',
+    'whale_net30': '持有 1,000–10,000 BTC 的实体 30 天持仓净变化（checkonchain 实体口径，已合并同一实体的多个地址）。',
+    'lth_net30': '长期持有者（持币 >155 天）供给 30 天净变化（checkonchain）。正值通常意味着筹码在沉淀。',
+    'mvrv_z': 'checkonchain 口径的 MVRV Z-Score（市值与实现市值之差 ÷ 历史标准差）。≤ −1 为历史深度低估区；未亮时给出 Z = −1 对应的价格。不同数据商的标准差算法不同，数值不可跨站比较。',
+    'nupl': '净未实现盈亏 = 1 − 实现市值 ÷ 市值（checkonchain）。< 0 即全网平均亏损，等价于价格跌破实现价格。',
+    'miner_rev_cost': '矿工每日收入（区块奖励 + 手续费）÷ 估算生产成本（checkonchain，按全网算力与能耗模型）。< 1 表示矿工整体亏损。',
+    'supply_profit_deep': '同一序列的更深阈值：全网盈利占比 < 50%。',
+    'weekly_rsi_deep': '同一序列的更深阈值：周线 RSI < 30。',
+    'sth_profit_deep': '同一序列的更深阈值：短期持有者盈利占比 < 15%。',
+    'puell_soft': '同一序列的较浅阈值：Puell < 0.7，回调中较常见。',
     'weekly_rsi': '完整 UTC 周收盘，Wilder 14 周平滑。',
     'mayer': '日收盘 ÷ 200 日均线。',
     'price_ma200w': '日收盘 ÷ 200 周均线（完整 UTC 周收盘均值）。',
@@ -323,15 +333,20 @@ def build_table(symbol, closes, store, fear_alt):
     series = store.get('series', {})
     price = feats['price']
     if symbol == 'BTC':
-        for key in ('supply_profit', 'sopr', 'mvrv_z', 'mvrv', 'puell', 'sth_cost', 'sth_profit', 'lth_cost',
-                    'realized_price', 'true_mean', 'lth_net30'):
+        for key in ('supply_profit', 'sopr', 'mvrv', 'puell', 'sth_cost', 'sth_profit', 'realized_price'):
             table[key] = dict(series.get(key, {}))
+        # checkonchain: entity-adjusted cohorts, Z-score/NUPL and the miner cost model.
+        for key, src in (('mvrv_z', 'cc_mvrv_z'), ('mvrv_z_m1_price', 'cc_mvrv_z_m1_price'), ('nupl', 'cc_nupl'),
+                         ('miner_rev_cost', 'cc_miner_rev_cost'), ('lth_net30', 'cc_lth_net30'),
+                         ('whale_net30', 'cc_net30_1k_10k'), ('true_mean', 'cc_true_mean'), ('lth_cost', 'cc_lth_cost')):
+            table[key] = dict(series.get(src, {}))
         table['hash_ribbon'] = S.hash_ribbon(series.get('hashrate', {}))
-        table['whale_net30'] = S.change_over(series.get('whale_1k_10k', {}), 30)
         table['fear'] = fear_alt
+        for alias, base in S.ALIASES.items():
+            table[alias] = table[base]
         # Each close is divided by the latest cost still valid on that day (costs publish a day late),
         # so the ratio never pairs today's cost with an older price or vice versa.
-        for key, base in (('sth_mvrv', 'sth_cost'), ('lth_ratio', 'lth_cost')):
+        for key, base in (('sth_mvrv', 'sth_cost'),):
             table[key] = {}
             for day, p in price.items():
                 cost = S.asof(table[base], day, 4)
@@ -344,7 +359,8 @@ def build_table(symbol, closes, store, fear_alt):
     return table
 
 
-PRICE_KEYS = {'price', 'ma200d', 'high90', 'ma200w', 'weekly_rsi', 'mayer', 'price_ma200w', 'drawdown90', 'pi_bottom', 'fear'}
+PRICE_KEYS = {'price', 'ma200d', 'high90', 'ma200w', 'weekly_rsi', 'weekly_rsi_deep', 'mayer', 'price_ma200w', 'drawdown90',
+              'pi_bottom', 'fear'}
 
 
 def publication_lag(symbol, key):
@@ -362,12 +378,17 @@ def item_payload(item, table, today, price_series, backtest_end, lags=None, days
     found = S.asof(series, today, max_age)
     payload = {'key': key, 'label': label, 'op': op, 'threshold': threshold, 'unit': unit, 'linked': linked,
                'maxAgeDays': max_age, 'source': KEY_SOURCE.get(key, ''), 'sourceUrl': SOURCES.get(KEY_SOURCE.get(key, '')),
-               'note': NOTES.get('eth_mvrv' if label == 'ETH MVRV' else key, ''), 'value': None, 'asOf': None, 'triggered': None, 'gap': None}
+               'note': NOTES.get('eth_mvrv' if label == 'ETH MVRV' else key, NOTES.get(S.ALIASES.get(key), '')), 'value': None, 'asOf': None, 'triggered': None, 'gap': None}
     latest = max(series) if series else None
     if found:
         day, value = found
         payload.update(value=value, asOf=day, triggered=S.evaluate(op, threshold, value),
                        gap=S.gap(item, value, price_series.get(day)))
+        other = TRIGGER_SERIES.get(key)
+        target = S.asof(table.get(other, {}), day, max_age) if other else None
+        close = price_series.get(day)
+        if payload['gap'] and not payload['gap']['met'] and target and close:
+            payload['gap'].update(triggerPrice=target[1], movePct=(target[1] / close - 1) * 100)
     elif latest:
         payload.update(value=series[latest], asOf=latest, stale=True)
     if series:
@@ -431,43 +452,48 @@ def build_asset(symbol, closes, store, fear_alt, now):
             lit = {d for d, s in scores.items() if s['lower'] >= floor}
             bands[str(floor)] = S.backtest(lit, price, onchain_start, backtest_end)
         out['scoreBacktest'] = bands
-        # Position band: reference line = max(200-week MA, STH cost), with days spent above it.
-        above, streak, prev = {}, 0, None
+        # Position band. Reference line = max(200-day MA, STH cost). Once the close has held above it
+        # for 28 days the "held above" state sticks until 28 consecutive closes below it, so one dip
+        # under the line does not reset the reading.
+        state, above, below, hold_since, prev = {}, 0, 0, None, None
         for d in days:
-            ma, sc = table['ma200w'].get(d), S.asof(table['sth_cost'], d, 4)
+            ma, sc = table['ma200d'].get(d), S.asof(table['sth_cost'], d, 4)
             if prev is not None and (S.d(d) - S.d(prev)).days != 1:
-                streak = 0  # a missing candle breaks "consecutive days above"
+                above = below = 0  # a missing candle breaks every consecutive count
             prev = d
             if ma is None or sc is None:
-                streak = 0
+                above = below = 0
                 continue
             line = max(ma, sc[1])
-            streak = streak + 1 if price[d] >= line else 0
-            above[d] = (line, streak)
-        ma200w, ref = table['ma200w'].get(today), above.get(today)
+            if price[d] >= line:
+                above, below = above + 1, 0
+            else:
+                above, below = 0, below + 1
+            if above >= 28 and hold_since is None:
+                hold_since = d
+            if below >= 28:
+                hold_since = None
+            state[d] = (line, ma, above, below, hold_since)
+        ma200w, ref = table['ma200w'].get(today), state.get(today)
         if ma200w and ref and candles_fresh:
-            line, streak = ref
-            zone = 0 if price[today] < ma200w else 1 if price[today] < line else 2 if streak < 28 else 3
-            out['band'] = {'ma200w': ma200w, 'line': line, 'sthCost': sth[1] if sth else None, 'zone': zone,
-                           'daysAbove': streak, 'asOf': today}
-        cohorts = {}
-        for key, label, note in (('whale_1k_10k', '巨鲸 1k–10k BTC', '地址余额口径'),
-                                 ('whale_10k_plus', '超大户 ≥10k BTC', '含交易所冷钱包'),
-                                 ('retail_lt1', '散户 <1 BTC', '地址余额口径'),
-                                 ('lth_net30', 'LTH 30天净变化', '长期持有者供给')):
-            ser = store.get('series', {}).get(key, {})
+            line, ma200d, above, below, hold_since = ref
+            zone = 0 if price[today] < ma200w else 3 if hold_since else 2 if price[today] >= line else 1
+            out['band'] = {'ma200w': ma200w, 'ma200d': ma200d, 'line': line, 'sthCost': sth[1] if sth else None,
+                           'zone': zone, 'daysAbove': above, 'daysBelow': below, 'holdSince': hold_since,
+                           'holdDays': (S.d(today) - S.d(hold_since)).days + 1 if hold_since else None, 'asOf': today}
+        # Entity-adjusted 30-day net position change by wallet size (checkonchain).
+        cohorts, series = {}, store.get('series', {})
+        for key, src, label in (('lt1', 'cc_net30_lt1', '虾米 <1'), ('1_10', 'cc_net30_1_10', '螃蟹 1–10'),
+                                ('10_100', 'cc_net30_10_100', '10–100'), ('100_1k', 'cc_net30_100_1k', '100–1k'),
+                                ('1k_10k', 'cc_net30_1k_10k', '巨鲸 1k–10k'), ('10k_plus', 'cc_net30_10k_plus', '>10k（含交易所）'),
+                                ('lth', 'cc_lth_net30', '长期持有者 LTH')):
+            ser = series.get(src, {})
             if not ser:
                 continue
             last = max(ser)
-            entry = {'label': label, 'note': note, 'asOf': last, 'value': ser[last],
-                     'stale': (now.date() - S.d(last)).days > 6}
-            if key != 'lth_net30':
-                for n in (7, 30):
-                    old = ser.get((datetime.fromisoformat(last) - timedelta(days=n)).date().isoformat())
-                    entry[f'd{n}'] = ser[last] - old if old is not None else None
-            entry['spark'] = [[k, round(ser[k], 1)] for k in sorted(ser)[-90:]]
-            cohorts[key] = entry
-        out['cohorts'] = cohorts
+            cohorts[key] = {'label': label, 'asOf': last, 'net30': ser[last],
+                            'spark': [[k, round(ser[k], 1)] for k in sorted(ser)[-90:]]}
+        out['cohorts'] = {'source': 'checkonchain', 'sourceUrl': SOURCES['checkonchain'], 'rows': cohorts}
         combo_line = {d: min(S.asof(table['sth_cost'], d, 4)[1], table['high90'][d] * 0.8)
                       for d in history_days if S.asof(table['sth_cost'], d, 4) and d in table['high90']}
     else:
@@ -498,13 +524,15 @@ def build_asset(symbol, closes, store, fear_alt, now):
     if table['high90'].get(today):
         rung('90天高点 × 0.8', table['high90'][today] * 0.8, today, '回撤 ≥20%' + ('（组合②）' if symbol == 'BTC' else ''), 'Binance')
     cost_age = 8 if symbol == 'ETH' else 4  # same windows as the MVRV / cost signals
-    for key, label, meaning in (('true_mean', 'True Mean 成本', '活跃投资者平均成本'),
+    for key, label, meaning in (('true_mean', 'True Mean', '活跃投资者平均成本'),
                                 ('sth_cost', 'STH 成本', '跌破即组合①；STH-MVRV <1'),
-                                ('realized_price', '实现价格', 'MVRV <1'),
-                                ('lth_cost', 'LTH 成本', '价格/LTH 成本 <1')):
+                                ('mvrv_z_m1_price', 'MVRV-Z = −1 价', 'MVRV Z ≤ −1'),
+                                ('realized_price', '实现价格', 'MVRV <1 · NUPL <0'),
+                                ('lth_cost', 'LTH 成本', '长期持有者平均成本')):
         found = S.asof(table.get(key, {}), eval_day, cost_age)
         if found:
-            rung(label, found[1], found[0], meaning, 'BGeometrics' if symbol == 'BTC' else 'BGeometrics（由 ETH MVRV 换算）')
+            source = KEY_SOURCE.get(key, 'checkonchain') if symbol == 'BTC' else 'BGeometrics（由 ETH MVRV 换算）'
+            rung(label, found[1], found[0], meaning, source)
     ladder.sort(key=lambda r: -r['value'])
     out['ladder'] = ladder
     out['history'] = [{'date': d, 'close': price[d], 'ma200': round(table['ma200d'][d], 2) if d in table['ma200d'] else None,
@@ -525,6 +553,8 @@ def main():
     if not args.offline_onchain:
         store, chain_errors = onchain_store.refresh(store, now)
         errors.extend(chain_errors)
+        store, cc_errors = checkonchain.refresh(store, now)
+        errors.extend(cc_errors)
         onchain_store.save(store, args.store)
     fear_alt = fetch_fear_alt(errors)
     fear_cmc = fetch_fear_cmc(errors, now)

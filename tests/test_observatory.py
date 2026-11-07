@@ -104,11 +104,20 @@ class SeriesTests(unittest.TestCase):
 
 
 class RuleTests(unittest.TestCase):
-    def test_every_signal_appears_once_and_weights_sum_to_100(self):
+    def test_rule_layout_is_5_8_8_and_weights_sum_to_100(self):
         keys = [i[0] for g in S.BTC_GROUPS for i in g['items']]
-        self.assertEqual(len(keys), 16)
-        self.assertEqual(len(keys), len(set(keys)), 'an indicator must not score twice')
+        self.assertEqual([len(g['items']) for g in S.BTC_GROUPS], [5, 8, 8])
+        self.assertEqual(len(keys), len(set(keys)), 'every rule needs its own key')
         self.assertEqual(sum(g['weight'] for g in S.BTC_GROUPS), 100)
+        self.assertEqual([g['weight'] / len(g['items']) for g in S.BTC_GROUPS], [8, 5, 2.5])
+
+    def test_repeated_metrics_are_aliases_with_a_different_threshold(self):
+        rules = {i[0]: i for g in S.BTC_GROUPS for i in g['items']}
+        for alias, base in S.ALIASES.items():
+            with self.subTest(alias=alias):
+                self.assertIn(alias, rules)
+                self.assertIn(base, rules)
+                self.assertNotEqual(rules[alias][3], rules[base][3])
         self.assertEqual(len(S.ETH_GROUPS[0]['items']), 6)
 
     def test_boundaries_keep_strict_and_inclusive_operators(self):

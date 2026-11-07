@@ -25,8 +25,8 @@
     if(!finite(v))return '—';
     if(item.key==='hash_ribbon')return v>0?'投降中':'否';
     if(['lth_net30','whale_net30'].includes(item.key))return signed(v);
-    if(['supply_profit','sth_profit','drawdown90'].includes(item.key))return fmt(v,1);
-    if(['weekly_rsi','fear'].includes(item.key))return fmt(v,0);
+    if(['supply_profit','supply_profit_deep','sth_profit','sth_profit_deep','drawdown90'].includes(item.key))return fmt(v,1);
+    if(['weekly_rsi','weekly_rsi_deep','fear'].includes(item.key))return fmt(v,0);
     if(item.key==='sopr')return fmt(v,4);
     return fmt(v,2);
   }
@@ -126,10 +126,16 @@
     const el=$('band');if(!el)return;
     const b=asset.band&&M.dayFresh(asset.band.asOf,3,now())?asset.band:null;
     if(!b){el.innerHTML='<div class="panel-title"><h2 id="bandTitle">价格位置带</h2></div><p class="panel-note">200 周均线或 STH 成本缺失或已过期，位置带待确认。</p>';return;}
-    const zones=[['低于 200 周线',`≤${kmoney(b.ma200w)}`],['200周线–参考线',b.line>b.ma200w?`${kmoney(b.ma200w)}–${kmoney(b.line)}`:'（区间为空）'],['线上 未满28天',`≥${kmoney(b.line)}`],['线上 满28天','持续站稳']];
-    el.innerHTML=`<div class="panel-title"><h2 id="bandTitle">价格位置带</h2><span>参考线 = max(200周线 ${esc(kmoney(b.ma200w))}, STH成本 ${esc(kmoney(b.sthCost))})</span></div>
+    const zones=[['低于 200 周线',`≤${kmoney(b.ma200w)}`],['200周线–参考线',b.line>b.ma200w?`${kmoney(b.ma200w)}–${kmoney(b.line)}`:'（区间为空）'],['线上 未满28天',`≥${kmoney(b.line)}`],['线上 满28天',b.holdSince?`${md(b.holdSince)} 起`:'持续站稳']];
+    const line=b.ma200d&&b.sthCost?`参考线 = max(200日线 ${esc(kmoney(b.ma200d))}, STH成本 ${esc(kmoney(b.sthCost))})`:'参考线 = max(200日线, STH成本)';
+    let state;
+    if(b.zone===3)state=`自 ${esc(b.holdSince)} 起已连续站稳 ${b.holdDays} 天；${b.daysBelow?`最近 ${b.daysBelow} 天收在线下，`:''}需连续 28 天收在 ${esc(kmoney(b.line))} 下方才退出该档（还差 ${28-b.daysBelow} 天）`;
+    else if(b.zone===2)state=`已连续 ${b.daysAbove} 天收在参考线上方，满 28 天进入"线上 满28天"`;
+    else if(b.zone===1)state=`已连续 ${b.daysBelow} 天收在参考线下方`;
+    else state='收盘低于 200 周均线';
+    el.innerHTML=`<div class="panel-title"><h2 id="bandTitle">价格位置带</h2><span>${line}</span></div>
       <div class="zones">${zones.map((z,i)=>`<div class="zone z${i} ${i===b.zone?'on':''}"><b>${esc(z[0])}</b><small>${esc(z[1])}</small>${i===b.zone?'<em>当前</em>':''}</div>`).join('')}</div>
-      <p class="panel-note">日收盘 ${esc(kmoney(asset.metrics.price?.value))}${b.zone>=2?`，已连续 ${b.daysAbove} 天收在参考线上方`:''}。位置带只描述价格所处区间，不是买卖指令。</p>`;
+      <p class="panel-note">日收盘 ${esc(kmoney(asset.metrics.price?.value))}，${state}。位置带只描述价格所处区间，不是买卖指令。</p>`;
   }
 
   // ---------------------------------------------------------------- trend chart
@@ -177,12 +183,12 @@
   // ---------------------------------------------------------------- signal groups
   function renderGroups(){
     const s=M.score(asset.groups,now());
-    const bar=`<div class="section-bar"><div><h2>信号矩阵</h2><p>${isBTC?`16 项，每项只计一次；权重 必要 40 · 确认 40 · 相对 20`:'6 项 ETH 低位条件'}。点卡片看来源、日期与回测。</p></div><div class="seg" role="group" aria-label="筛选"><button type="button" data-filter="all" aria-pressed="${filter==='all'}">全部</button><button type="button" data-filter="lit" aria-pressed="${filter==='lit'}">已亮</button><button type="button" data-filter="missing" aria-pressed="${filter==='missing'}">缺失/过期</button></div></div>`;
+    const bar=`<div class="section-bar"><div><h2>信号矩阵</h2><p>${isBTC?`${asset.groups.reduce((n,g)=>n+g.items.length,0)} 项；权重 必要 40 · 确认 40 · 相对 20，部分指标在更深阈值处重复计分`:'6 项 ETH 低位条件'}。点卡片看来源、日期与回测。</p></div><div class="seg" role="group" aria-label="筛选"><button type="button" data-filter="all" aria-pressed="${filter==='all'}">全部</button><button type="button" data-filter="lit" aria-pressed="${filter==='lit'}">已亮</button><button type="button" data-filter="missing" aria-pressed="${filter==='missing'}">缺失/过期</button></div></div>`;
     $('groups').innerHTML=bar+asset.groups.map((g,gi)=>{
       const gs=s.groups[gi],per=g.weight?g.weight/g.items.length:0;
       const items=g.items.filter(i=>{const st=M.itemState(i,now());return filter==='all'||filter==='lit'&&st===true||filter==='missing'&&st===null;});
       return `<section class="panel group"><div class="group-head"><h3>${esc(g.title)} <b class="${gs.lit?'positive':''}">${gs.lit}</b><small>/${gs.total} 亮</small></h3><span>${esc(g.description)}${per?` · 每项 ${fmt(per,1)} 分`:''}</span></div>
-        <div class="cards ${g.items.length===6?'n6':''}">${items.length?items.map(i=>{
+        <div class="cards ${g.items.length===6?'n6':g.items.length===8?'n8':''}">${items.length?items.map(i=>{
           const st=M.itemState(i,now()),gp=gapText(i,st);
           return `<button type="button" class="card ${st===true?'lit':st===null?'na':''}" data-g="${gi}" data-k="${esc(i.key)}"><span class="card-label"><i></i>${esc(i.label)}</span>
             <span class="card-value tabular">${esc(valueText(i))}${finite(i.value)&&i.unit.trim()==='%'?'<small>%</small>':''}<em>${esc(opText(i.op))}${esc(i.threshold)}${esc(i.unit.trim()==='%'?'%':'')}</em></span>
@@ -247,14 +253,14 @@
   }
   function renderCohorts(){
     const el=$('cohorts');if(!el)return;
-    const c=asset.cohorts||{},order=['whale_1k_10k','whale_10k_plus','retail_lt1','lth_net30'];
-    const stale=k=>!c[k]||!M.dayFresh(c[k].asOf,6,now());
-    const rows=order.filter(k=>c[k]).map(k=>{const r={...c[k],stale:stale(k)},d30=k==='lth_net30'?r.value:r.d30;
-      return `<div class="cohort${r.stale?' na':''}"><div><b>${esc(r.label)}</b><small>${esc(r.note)} · ${esc(md(r.asOf))}${r.stale?' · 已过期':''}</small></div><div class="cohort-num"><b class="${finite(d30)?(d30>=0?'positive':'negative'):'muted'} tabular">${esc(signed(d30))}</b><small>30天${k==='lth_net30'?'净变化':''}${finite(r.d7)?` · 7天 ${esc(signed(r.d7))}`:''}</small></div>${spark(r.spark,finite(d30)&&d30<0?'neg':'pos')}</div>`;}).join('');
-    const w=c.whale_1k_10k?.d30,rt=c.retail_lt1?.d30;
-    const headline=finite(w)&&finite(rt)&&!stale('whale_1k_10k')&&!stale('retail_lt1')?`${w>=0?'巨鲸增持':'巨鲸减持'} / ${rt>=0?'散户增持':'散户减持'}`:'';
-    el.innerHTML=`<div class="panel-title"><h2 id="cohortsTitle">巨鲸 vs 散户</h2><span>BGeometrics 地址口径</span></div>${headline?`<p class="cohort-headline">${esc(headline)}</p>`:''}${rows||'<p class="panel-note">分组数据正在首次回补（免费接口每天限额 15 次，约 1–2 天补齐）。</p>'}
-      <p class="panel-note">按地址余额分组，单位 BTC。交易所和托管机构也有大额地址，"巨鲸"不等于个人实体。</p>`;
+    const c=asset.cohorts||{},rows=c.rows||{},order=['lt1','1_10','10_100','100_1k','1k_10k','10k_plus','lth'];
+    const stale=k=>!rows[k]||!M.dayFresh(rows[k].asOf,4,now());
+    const list=order.filter(k=>rows[k]).map(k=>{const r=rows[k],st=stale(k),v=r.net30;
+      return `<div class="cohort${st?' na':''}"><div><b>${esc(r.label)}${k==='lth'?'':' BTC'}</b><small>${esc(md(r.asOf))}${st?' · 已过期':''}</small></div><div class="cohort-num"><b class="${finite(v)?(v>=0?'positive':'negative'):'muted'} tabular">${esc(signed(v))}</b><small>30天净变化</small></div>${spark(r.spark,finite(v)&&v<0?'neg':'pos')}</div>`;}).join('');
+    const w=rows['1k_10k']?.net30,rt=finite(rows.lt1?.net30)&&finite(rows['1_10']?.net30)?rows.lt1.net30+rows['1_10'].net30:null;
+    const headline=finite(w)&&finite(rt)&&!stale('1k_10k')&&!stale('lt1')?`${w>=0?'巨鲸增持':'巨鲸减持'} / ${rt>=0?'散户增持':'散户减持'}`:'';
+    el.innerHTML=`<div class="panel-title"><h2 id="cohortsTitle">巨鲸 vs 散户</h2><span>checkonchain 实体口径</span></div>${headline?`<p class="cohort-headline">${esc(headline)}</p>`:''}${list||'<p class="panel-note">暂无可核验数据。</p>'}
+      <p class="panel-note">按实体持仓规模分组的 30 天净变化，单位 BTC；散户 = &lt;10 BTC（虾米 + 螃蟹）。实体口径已合并同一主体的多个地址，>10k 档含交易所。<a href="${esc(c.sourceUrl||'')}" target="_blank" rel="noopener noreferrer">checkonchain ↗</a></p>`;
   }
   function renderFacts(){
     const el=$('facts');if(!el)return;
@@ -312,12 +318,13 @@
     renderLadder();renderFlows();renderSpotFlow();if(isBTC)renderCohorts();else renderFacts();renderPositioning();renderReserves();renderSentiment();renderNotice();
   }
   function methodHTML(){
-    return `<h3>综合观察指数（BTC）</h3><p>16 项信号分三组：大底必要 5 项（共 40 分）、大底确认 6 项（共 40 分）、相对底部 5 项（共 20 分），同一指标只出现一次。只有数据有效且满足阈值才计分；缺失或过期项计 0，但单独标注"最多还可能 +X 分"。分档：&lt;20 无底部信号，20–49 进入关注区，50–59 低位信号增强，≥60 历史低位信号集中。分档是观察描述，不是买卖指令。</p>
+    return `<h3>综合观察指数（BTC）</h3><p>21 项信号分三组：大底必要 5 项（每项 8 分）、大底确认 8 项（每项 5 分）、相对底部 8 项（每项 2.5 分）。全网盈利占比、周线 RSI、STH 盈利占比、Puell 在不同组里以不同阈值各计一次（越深的阈值放在越重的组）。只有数据有效且满足阈值才计分；缺失或过期项计 0，但单独标注"最多还可能 +X 分"。分档：&lt;20 无底部信号，20–49 进入关注区，50–59 低位信号增强，≥60 历史低位信号集中。分档是观察描述，不是买卖指令。</p>
     <h3>组合信号</h3><p>两条同时满足才亮：① 价格跌破短期持有者成本（STH 实现价格）；② 价格距近 90 个完整日收盘高点跌 ≥20%。触发价 = min(STH 成本, 90 天高点 × 0.8)。</p>
-    <h3>触发价怎么算</h3><p>Mayer、价/200周线、MVRV、价/LTH 成本、STH-MVRV 都等于"价格 ÷ 某个成本或均线"，短期内分母几乎不动，所以触发价 = 当前价 × 阈值 ÷ 当前值。其余指标（如盈利占比、RSI、SOPR）与价格不是简单比例，只显示"差多少"。</p>
-    <h3>回测</h3><p>对每项信号：统计样本期内亮起的天数与段数（间隔 >7 天算新的一段）；亮起后 90 天的价格变化（中位数、上涨占比）；以及覆盖了多少个"3 个月低点"（前后各 45 天内最低收盘，低点前后 7 天内亮过即算覆盖）。价格类信号用 Binance 2017 年起的日线；链上类信号用 BGeometrics 免费接口可得的 2022-11 起数据，样本只覆盖一轮熊转牛，结论需谨慎。</p>
-    <h3>数据与时效</h3><p>价格：Binance 完整 UTC 日收盘（USDT 计价）。链上：BGeometrics（免费接口约有 1–5 天延迟，按实际日期判断时效）。STH-MVRV、价/LTH 成本由本站用价格与 BGeometrics 成本自算。哈希带由全网哈希率 30/60 日均线计算；Pi Cycle 底部 = 150 日 EMA ÷ (0.745 × 471 日均线)。25Δ 风险逆转由 Deribit 期权标记 IV 计算并插值到 30 天。日度信号默认 3–4 天有效（ETH MVRV 因发布延迟为 8 天），周线指标按日展开后 2 天、情绪 2 天、合约 12 小时；过期即不参与判断。回测与指数历史按数据实际发布日计算：BGeometrics 链上数据晚 1 天，ETH MVRV 晚 6 天。</p>
-    <h3>阈值与口径差异</h3><p>阈值沿用常见的链上研究口径；MVRV Z-Score 不同数据商的标准差算法不同，本站使用 BGeometrics 口径并以 &lt;0 为阈值（该口径在 2022 年底部约为 −0.1）。巨鲸/散户为地址余额分组，含交易所与托管地址。</p><p>仅作研究参考，不构成投资建议。</p>`;
+    <h3>触发价怎么算</h3><p>Mayer、价/200周线、MVRV、STH-MVRV 都等于"价格 ÷ 某个成本或均线"，短期内分母几乎不动，所以触发价 = 当前价 × 阈值 ÷ 当前值。MVRV Z-Score 的触发价取 checkonchain 公布的 Z = −1 对应价格，NUPL 的触发价即实现价格。其余指标（如盈利占比、RSI、SOPR）与价格不是简单比例，只显示"差多少"。</p>
+    <h3>回测</h3><p>对每项信号：统计样本期内亮起的天数与段数（间隔 >7 天算新的一段）；亮起后 90 天的价格变化（中位数、上涨占比）；以及覆盖了多少个"3 个月低点"（前后各 45 天内最低收盘，低点前后 7 天内亮过即算覆盖）。价格类信号用 Binance 2017 年起的日线；checkonchain 的链上序列从 2017 年起；BGeometrics 免费接口只有 2022-11 起的数据，样本只覆盖一轮熊转牛，结论需谨慎。</p>
+    <h3>数据与时效</h3><p>价格：Binance 完整 UTC 日收盘（USDT 计价）。链上：BGeometrics（盈利占比、SOPR、MVRV、Puell、STH 成本、实现价格、哈希率）与 checkonchain 公开图表（MVRV Z-Score、NUPL、矿工收入/成本、LTH 与各规模实体 30 天净变化、True Mean、LTH 成本），按实际日期判断时效。STH-MVRV 由本站用价格与 STH 成本自算。哈希带由全网哈希率 30/60 日均线计算；Pi Cycle 底部 = 150 日 EMA ÷ (0.745 × 471 日均线)。25Δ 风险逆转由 Deribit 期权标记 IV 计算并插值到 30 天。日度信号默认 3–4 天有效（ETH MVRV 因发布延迟为 8 天），周线指标按日展开后 2 天、情绪 2 天、合约 12 小时；过期即不参与判断。回测与指数历史按数据实际发布日计算：BGeometrics 链上数据晚 1 天，ETH MVRV 晚 6 天。</p>
+    <h3>阈值与口径差异</h3><p>阈值沿用常见的链上研究口径；MVRV Z-Score 不同数据商的标准差算法不同，本站使用 checkonchain 口径，阈值 ≤ −1。巨鲸/散户为 checkonchain 实体分组，>10k 档含交易所。</p>
+    <h3>价格位置带</h3><p>参考线 = max(200 日均线, STH 成本)。收盘连续 28 天站在参考线上方即进入"线上 满28天"，之后要连续 28 天收在线下才退出——一两天跌破不会重置。低于 200 周均线单独成档。</p><p>仅作研究参考，不构成投资建议。</p>`;
   }
   async function loadQuote(){
     try{const r=await fetch(`/api/ticker?symbol=${symbol}`,{signal:AbortSignal.timeout(8000)});if(!r.ok)throw 0;const q=await r.json();

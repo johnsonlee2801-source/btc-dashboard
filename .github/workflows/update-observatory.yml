@@ -27,6 +27,7 @@ jobs:
         run: |
           python -B -m unittest discover -s tests -p 'test_observatory*.py' -q
           python -B -m unittest discover -s tests -p 'test_new_pipelines.py' -q
+          python -B -m unittest discover -s tests -p 'test_checkonchain.py' -q
       - name: Collect public BTC and ETH observations
         env:
           # fapi.binance.com returns HTTP 451 to US runners; the site's Singapore function relays it.

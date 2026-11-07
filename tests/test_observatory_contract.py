@@ -34,8 +34,13 @@ def synthetic_store(closes):
         series.setdefault('mvrv_z', {})[day] = 1.0
         series.setdefault('puell', {})[day] = 1.0
         series.setdefault('hashrate', {})[day] = 5e8
-        series.setdefault('lth_net30', {})[day] = -1000.0
-        series.setdefault('whale_1k_10k', {})[day] = 4.2e6
+        series.setdefault('cc_lth_net30', {})[day] = -1000.0
+        series.setdefault('cc_net30_1k_10k', {})[day] = 500.0
+        series.setdefault('cc_net30_lt1', {})[day] = -20.0
+        series.setdefault('cc_mvrv_z', {})[day] = 1.0
+        series.setdefault('cc_mvrv_z_m1_price', {})[day] = close * 0.7
+        series.setdefault('cc_nupl', {})[day] = 1 - 40000.0 / close
+        series.setdefault('cc_miner_rev_cost', {})[day] = 1.2
     return {'series': series, 'fetched': {}}
 
 
@@ -58,7 +63,7 @@ class BuildContractTests(unittest.TestCase):
 
     def test_items_carry_dates_sources_and_backtests(self):
         items = [i for g in self.btc['groups'] for i in g['items']]
-        self.assertEqual(len(items), 16)
+        self.assertEqual(len(items), 21)
         for i in items:
             with self.subTest(key=i['key']):
                 for field in ('key', 'label', 'op', 'threshold', 'unit', 'linked', 'maxAgeDays', 'source', 'value', 'asOf', 'triggered'):
@@ -141,6 +146,52 @@ class AuditRegressionTests(unittest.TestCase):
         asset = B.build_asset('BTC', closes, store, {}, late)
         self.assertIsNone(asset['combo']['met'])
         self.assertNotIn('band', asset)
+
+    def _btc(self):
+        closes = synthetic_closes()
+        return B.build_asset('BTC', closes, synthetic_store(closes), {}, NOW)
+
+    def test_mvrv_z_and_nupl_report_the_price_where_they_flip(self):
+        btc = self._btc()
+        items = {i['key']: i for g in btc['groups'] for i in g['items']}
+        close = btc['metrics']['price']['value']
+        z, nupl = items['mvrv_z'], items['nupl']
+        self.assertFalse(z['triggered'])
+        self.assertAlmostEqual(z['gap']['triggerPrice'], close * 0.7)
+        if not nupl['triggered']:
+            self.assertAlmostEqual(nupl['gap']['triggerPrice'], 40000.0)
+
+    def test_cohorts_are_entity_rows_from_checkonchain(self):
+        btc = self._btc()
+        rows = btc['cohorts']['rows']
+        self.assertEqual(rows['1k_10k']['net30'], 500.0)
+        self.assertEqual(rows['lth']['net30'], -1000.0)
+        whale = next(i for g in btc['groups'] for i in g['items'] if i['key'] == 'whale_net30')
+        self.assertTrue(whale['triggered'])
+
+    def _band(self, path):
+        days = [(date(2026, 11, 1) - timedelta(days=len(path) - 1 - i)).isoformat() for i in range(len(path))]
+        closes = [(d, 100.0) for d in days]
+        closes = [(d, p) for (d, _), p in zip(closes, path)]
+        store = {'series': {'sth_cost': {d: 100.0 for d in days}}, 'fetched': {}}
+        return B.build_asset('BTC', closes, store, {}, NOW).get('band')
+
+    def test_band_holds_above_until_28_closes_below(self):
+        flat = [50.0] * 1500  # keeps the 200-week MA far below the reference line
+        held = self._band(flat + [120.0] * 40 + [90.0] * 5)
+        self.assertEqual(held['zone'], 3, 'a short dip keeps the "held above" state')
+        self.assertEqual(held['daysBelow'], 5)
+        self.assertIsNotNone(held['holdSince'])
+        left = self._band(flat + [120.0] * 40 + [90.0] * 28)
+        self.assertEqual(left['zone'], 1)
+        self.assertIsNone(left['holdSince'])
+        young = self._band(flat + [90.0] * 40 + [120.0] * 10)
+        self.assertEqual((young['zone'], young['daysAbove']), (2, 10))
+
+    def test_band_line_uses_the_200_day_average(self):
+        band = self._band([50.0] * 1500 + [300.0] * 300)
+        self.assertGreater(band['line'], 100.0, 'the 200-day MA above STH cost sets the line')
+        self.assertAlmostEqual(band['line'], band['ma200d'])
 
     def test_band_streak_resets_on_a_missing_candle(self):
         closes = [c for c in synthetic_closes() if c[0] != synthetic_closes()[-10][0]]

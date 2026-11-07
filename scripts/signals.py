@@ -230,36 +230,47 @@ OPS = {'<': lambda x, t: x < t, '<=': lambda x, t: x <= t, '>': lambda x, t: x >
 
 # key, label, op, threshold, unit, price_linked, max_age_days
 # price_linked: the metric moves proportionally with price today, so a trigger price exists.
+# Same 21-rule layout as the widely shared BTC bottom index: 5 necessary (8 points each),
+# 8 confirming (5 each), 8 relative (2.5 each). A few metrics appear twice at a deeper
+# threshold; those are separate rule keys reading the same series (see ALIASES).
 BTC_GROUPS = [
     {'id': 'necessary', 'title': '大底必要信号', 'weight': 40,
      'description': '周期性大底通常同时出现的五个条件',
      'items': [
          ('supply_profit', '全网盈利占比', '<', 60, '%', False, 4),
          ('weekly_rsi', '周线 RSI', '<', 35, '', False, 2),
-         ('hash_ribbon', '哈希带投降', '>', 0, '', False, 4),
+         ('miner_rev_cost', '矿工收入/成本', '<', 1, '', False, 4),
          ('sopr', 'SOPR', '<', 1, '', False, 4),
          ('mayer', 'Mayer 倍数', '<', 0.8, '', True, 3),
      ]},
     {'id': 'confirm', 'title': '大底确认信号', 'weight': 40,
      'description': '链上估值与长期均线跌到历史低估区',
      'items': [
-         ('mvrv_z', 'MVRV Z-Score', '<', 0, '', False, 4),
+         ('mvrv_z', 'MVRV Z-Score', '<=', -1, '', False, 4),
+         ('supply_profit_deep', '全网盈利占比', '<', 50, '%', False, 4),
          ('price_ma200w', '价格 / 200周均线', '<', 1, '', True, 2),
          ('mvrv', 'MVRV', '<', 1, '', True, 4),
-         ('lth_ratio', '价格 / LTH 成本', '<', 1, '', True, 4),
+         ('nupl', 'NUPL', '<', 0, '', False, 4),
          ('puell', 'Puell Multiple', '<', 0.5, '', False, 4),
+         ('weekly_rsi_deep', '周线 RSI', '<', 30, '', False, 2),
          ('pi_bottom', 'Pi Cycle 底部', '<', 1, '', False, 3),
      ]},
     {'id': 'relative', 'title': '相对底部信号', 'weight': 20,
-     'description': '短期持有者亏损、情绪恐慌与长线/大户承接',
+     'description': '每轮回调都可能出现：短期筹码亏损、恐慌、矿工与长线/大户承接',
      'items': [
          ('sth_mvrv', 'STH-MVRV', '<', 1, '', True, 4),
          ('sth_profit', 'STH 盈利占比', '<', 30, '%', False, 4),
+         ('sth_profit_deep', 'STH 盈利占比', '<', 15, '%', False, 4),
          ('fear', '恐慌指数', '<=', 20, '', False, 2),
+         ('hash_ribbon', '哈希带投降', '>', 0, '', False, 4),
          ('lth_net30', 'LTH 30天净变化', '>', 0, ' BTC', False, 4),
          ('whale_net30', '巨鲸 30天净变化', '>', 0, ' BTC', False, 4),
+         ('puell_soft', 'Puell Multiple', '<', 0.7, '', False, 4),
      ]},
 ]
+# Deeper-threshold rules -> the series they read.
+ALIASES = {'supply_profit_deep': 'supply_profit', 'weekly_rsi_deep': 'weekly_rsi',
+           'sth_profit_deep': 'sth_profit', 'puell_soft': 'puell'}
 
 ETH_GROUPS = [
     {'id': 'technical', 'title': 'ETH 低位条件', 'weight': 0,

@@ -217,7 +217,7 @@ def main(report_path="health-report.md"):
                 return False
             day = max(obs)
             return real(obs[day]) and within(day, 24 * 6)
-        stale = [k for k in ("sth_cost", "supply_profit", "sth_profit", "lth_net30", "whale_1k_10k") if not latest_ok(k)]
+        stale = [k for k in ("sth_cost", "supply_profit", "sth_profit", "cc_lth_net30", "cc_net30_1k_10k", "cc_mvrv_z", "cc_miner_rev_cost") if not latest_ok(k)]
         check("链上历史库: 核心序列 6 天内有更新", not stale, f"滞后或缺失: {stale}" if stale else "全部正常")
     except Exception as ex:
         check("链上历史库", False, str(ex)[:120])
