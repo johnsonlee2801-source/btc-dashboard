@@ -330,6 +330,18 @@ class OnchainStoreTests(unittest.TestCase):
                  'fetched': {k: (now - timedelta(hours=30)).isoformat() for k in onchain_store.SERIES}}
         self.assertEqual(onchain_store.due(store, now)[0], 'eth_mvrv')
 
+    def test_daily_series_behind_yesterday_is_retried_before_its_interval(self):
+        now = datetime(2026, 11, 8, 9, tzinfo=timezone.utc)
+        fetched = (now - timedelta(hours=14)).isoformat()
+        store = {'series': {k: {'2026-11-06': 1.0} for k in onchain_store.SERIES},
+                 'fetched': {k: fetched for k in onchain_store.SERIES}}
+        self.assertIn('sth_cost', onchain_store.due(store, now), '11-06 is older than yesterday')
+        store['series']['sth_cost'] = {'2026-11-07': 1.0}
+        self.assertNotIn('sth_cost', onchain_store.due(store, now), 'yesterday is current')
+        store['series']['sth_profit'] = {'2026-11-06': 1.0}
+        store['fetched']['sth_profit'] = (now - timedelta(hours=1)).isoformat()
+        self.assertNotIn('sth_profit', onchain_store.due(store, now), 'just tried: wait before retrying')
+
     def test_rate_limit_stops_the_run_and_keeps_old_data(self):
         now = datetime(2026, 11, 2, tzinfo=timezone.utc)
         store = {'series': {'sth_cost': {'2026-10-01': 5.0}}, 'fetched': {'_snapshot': now.isoformat()}}

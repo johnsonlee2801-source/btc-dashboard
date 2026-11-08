@@ -26,15 +26,10 @@ FETCH_ERRORS = (urllib.error.URLError, OSError, ValueError, http.client.HTTPExce
 
 # key -> (endpoint, refresh hours). Core inputs of today's signals refresh daily.
 SERIES = {
+    # LTH/whale cohorts, LTH cost and True Mean now come from checkonchain (checkonchain.py).
     'sth_cost': ('realized-price-sth', 20),
     'sth_profit': ('percent-sth-in-profit', 20),
     'supply_profit': ('supply-in-profit-pct', 20),
-    'lth_net30': ('lth-net-position-change-30d-btc', 20),
-    'whale_1k_10k': ('coins-addr-10K-1K-BTC', 20),
-    'lth_cost': ('realized-price-lth', 44),
-    'true_mean': ('true-market-mean', 68),
-    'whale_10k_plus': ('coins-addr-10K-BTC', 68),
-    'retail_lt1': ('coins-addr-1-BTC', 68),
     'eth_mvrv': ('eth-mvrv', 44),
     # The snapshot adds yesterday's value daily; whole series only back-fill history,
     # and these endpoints publish ~5 days later than the snapshot anyway.
@@ -137,13 +132,30 @@ def allowance(store, now):
     return max(0, min(HOURLY_LIMIT - hour, DAILY_LIMIT - len(calls)))
 
 
+# A daily series whose newest observation is older than yesterday is retried this often,
+# instead of waiting out its full refresh interval (BGeometrics publishes around 03:00 UTC).
+RETRY_BEHIND_HOURS = 3
+
+
+def behind(store, key, now):
+    """True when the newest stored observation is older than yesterday (UTC)."""
+    obs = store['series'].get(key) or {}
+    return not obs or max(obs) < (now.date() - timedelta(days=1)).isoformat()
+
+
 def due(store, now):
     """Series keys to refresh this run, most urgent first."""
     def age_hours(key):
         stamp = _stamp(store['fetched'].get(key))
         return (now - stamp).total_seconds() / 3600 if stamp else None
+
+    def stale_key(k):
+        age = age_hours(k)
+        if age is None or age >= SERIES[k][1]:
+            return True
+        return SERIES[k][1] <= 24 and age >= RETRY_BEHIND_HOURS and behind(store, k, now)
     missing = [k for k in SERIES if not store['series'].get(k)]
-    stale = [k for k in SERIES if k not in missing and (age_hours(k) is None or age_hours(k) >= SERIES[k][1])]
+    stale = [k for k in SERIES if k not in missing and stale_key(k)]
     stale.sort(key=lambda k: (SERIES[k][1], -(age_hours(k) or 1e9)))
     return missing + stale
 
@@ -162,7 +174,8 @@ def refresh(store, now=None, fetch=get_json, max_calls=MAX_CALLS):
         return fetch(url)
 
     snap_stamp = _stamp(store['fetched'].get('_snapshot'))
-    snap_due = not snap_stamp or (now - snap_stamp).total_seconds() >= 20 * 3600
+    snap_age = (now - snap_stamp).total_seconds() / 3600 if snap_stamp else None
+    snap_due = snap_age is None or snap_age >= 20 or (snap_age >= RETRY_BEHIND_HOURS and behind(store, 'sopr', now))
     if snap_due and budget > 0:
         budget -= 1
         try:
