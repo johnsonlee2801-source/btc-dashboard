@@ -1,27 +1,27 @@
 {
-  "timestamp": "2026-11-10T07:24:38.867394+00:00",
-  "timestamp_cn": "2026-11-10 15:24 GMT+8",
-  "price_usd": 2117.92,
-  "price_change_24h": 0.97445,
-  "market_cap": 258789345903,
-  "circulating_supply": 122206811.20718135,
-  "holder_count": 212759397,
-  "active_addr_7d": 899991,
-  "whale_top100_pct": 12.31,
-  "burn_rate_daily": 35.0,
-  "stablecoin_mcap_b": 135.25,
-  "stablecoin_change_30d": -6.48,
-  "staked_pct": 36.41,
-  "total_staked": 44489256,
-  "stake_conc_top5": 36.4,
+  "timestamp": "2026-11-11T06:32:38.655460+00:00",
+  "timestamp_cn": "2026-11-11 14:32 GMT+8",
+  "price_usd": 2063.07,
+  "price_change_24h": -2.48909,
+  "market_cap": 252126684736,
+  "circulating_supply": 122209757.95344049,
+  "holder_count": 212917628,
+  "active_addr_7d": 914210,
+  "whale_top100_pct": 12.34,
+  "burn_rate_daily": 44.6,
+  "stablecoin_mcap_b": 134.23,
+  "stablecoin_change_30d": -7.36,
+  "staked_pct": 36.43,
+  "total_staked": 44513254,
+  "stake_conc_top5": 36.3,
   "stake_conc_leaders": [
     {
       "name": "Lido",
-      "pct": 21.9
+      "pct": 21.8
     },
     {
       "name": "Binance staked ETH",
-      "pct": 8.3
+      "pct": 8.2
     },
     {
       "name": "ether.fi Stake",
@@ -36,19 +36,19 @@
       "pct": 0.9
     }
   ],
-  "issuance_daily": 3039,
-  "burn_issuance_pct": 1.15,
+  "issuance_daily": 3040,
+  "burn_issuance_pct": 1.47,
   "lth_pct": null,
   "distribution": null,
   "as_of": {
-    "holder_count": "2026-11-09",
-    "active_addr_7d": "2026-11-09",
-    "burn_rate_daily": "2026-11-10",
-    "stablecoin_mcap_b": "2026-11-10",
-    "stablecoin_change_30d": "2026-11-10",
-    "staked_pct": "2026-11-09",
-    "total_staked": "2026-11-09",
-    "stake_conc_top5": "2026-11-10",
-    "whale_top100_pct": "2026-11-09"
+    "holder_count": "2026-11-10",
+    "active_addr_7d": "2026-11-10",
+    "whale_top100_pct": "2026-11-11",
+    "burn_rate_daily": "2026-11-11",
+    "stablecoin_mcap_b": "2026-11-11",
+    "stablecoin_change_30d": "2026-11-11",
+    "staked_pct": "2026-11-10",
+    "total_staked": "2026-11-10",
+    "stake_conc_top5": "2026-11-11"
   }
 }
