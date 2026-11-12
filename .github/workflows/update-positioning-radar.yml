@@ -36,17 +36,4 @@ jobs:
         run: python -B scripts/build_positioning_radar.py
       - name: Commit only the radar snapshot
         run: |
-          git --no-optional-locks config user.name "github-actions[bot]"
-          git --no-optional-locks config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git --no-optional-locks add data/positioning-radar.json data/positioning-summary.json
-          if git --no-optional-locks diff --cached --quiet; then
-            exit 0
-          fi
-          git --no-optional-locks commit -m "chore: update public positioning radar"
-          for attempt in 1 2 3; do
-            if git --no-optional-locks push; then
-              exit 0
-            fi
-            git --no-optional-locks pull --rebase origin master
-          done
-          exit 1
+          bash scripts/commit_generated.sh "chore: update public positioning radar" data/positioning-radar.json data/positioning-summary.json

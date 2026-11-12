@@ -21,21 +21,4 @@ jobs:
         run: python scripts/fetch_cex_reserves.py
       - name: Commit reserves if changed
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/cex-reserves.json
-          if git diff --cached --quiet; then
-            echo "No CEX reserve changes"
-            exit 0
-          fi
-          git commit -m "chore: update CEX reserves"
-          # Another data workflow may land first; rebase and retry instead of failing.
-          for attempt in 1 2 3; do
-            if git push; then
-              exit 0
-            fi
-            echo "Push rejected on attempt $attempt, rebasing onto latest master"
-            git pull --rebase origin master
-          done
-          echo "Push still failing after 3 attempts"
-          exit 1
+          bash scripts/commit_generated.sh "chore: update CEX reserves" data/cex-reserves.json
