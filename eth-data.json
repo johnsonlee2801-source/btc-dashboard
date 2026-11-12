@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-11-12T07:17:34.710966+00:00",
-  "timestamp_cn": "2026-11-12 15:17 GMT+8",
-  "price_usd": 2045.59,
-  "price_change_24h": -0.37322,
-  "market_cap": 249996774184,
+  "timestamp": "2026-11-12T08:02:13.356581+00:00",
+  "timestamp_cn": "2026-11-12 16:02 GMT+8",
+  "price_usd": 2049.22,
+  "price_change_24h": -0.84135,
+  "market_cap": 250443286730,
   "circulating_supply": 122212724.4774798,
   "holder_count": 213047624,
   "active_addr_7d": 915859,
@@ -13,7 +13,7 @@
   "stablecoin_change_30d": -7.62,
   "staked_pct": 36.46,
   "total_staked": 44558467,
-  "stake_conc_top5": 36.4,
+  "stake_conc_top5": 36.3,
   "stake_conc_leaders": [
     {
       "name": "Lido",
