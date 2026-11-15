@@ -1,27 +1,27 @@
 {
-  "timestamp": "2026-11-14T06:31:30.857473+00:00",
-  "timestamp_cn": "2026-11-14 14:31 GMT+8",
-  "price_usd": 1906.62,
-  "price_change_24h": -1.29161,
-  "market_cap": 233023868606,
-  "circulating_supply": 122218624.4003947,
-  "holder_count": 213307868,
-  "active_addr_7d": 879697,
-  "whale_top100_pct": 12.3,
-  "burn_rate_daily": 36.8,
-  "stablecoin_mcap_b": 132.26,
-  "stablecoin_change_30d": -8.5,
+  "timestamp": "2026-11-15T06:40:39.832472+00:00",
+  "timestamp_cn": "2026-11-15 14:40 GMT+8",
+  "price_usd": 1791.03,
+  "price_change_24h": -5.87761,
+  "market_cap": 218852871674,
+  "circulating_supply": 122221530.60130492,
+  "holder_count": 213400980,
+  "active_addr_7d": 881802,
+  "whale_top100_pct": 12.29,
+  "burn_rate_daily": 105.7,
+  "stablecoin_mcap_b": 132.73,
+  "stablecoin_change_30d": -8.13,
   "staked_pct": 36.51,
   "total_staked": 44618504,
-  "stake_conc_top5": 36.2,
+  "stake_conc_top5": 36.9,
   "stake_conc_leaders": [
     {
       "name": "Lido",
-      "pct": 21.8
+      "pct": 22.2
     },
     {
       "name": "Binance staked ETH",
-      "pct": 8.2
+      "pct": 8.3
     },
     {
       "name": "ether.fi Stake",
@@ -37,18 +37,18 @@
     }
   ],
   "issuance_daily": 3043,
-  "burn_issuance_pct": 1.21,
+  "burn_issuance_pct": 3.47,
   "lth_pct": null,
   "distribution": null,
   "as_of": {
-    "holder_count": "2026-11-13",
-    "active_addr_7d": "2026-11-13",
-    "whale_top100_pct": "2026-11-14",
-    "burn_rate_daily": "2026-11-14",
-    "stablecoin_mcap_b": "2026-11-14",
-    "stablecoin_change_30d": "2026-11-14",
+    "holder_count": "2026-11-14",
+    "active_addr_7d": "2026-11-14",
+    "whale_top100_pct": "2026-11-15",
+    "burn_rate_daily": "2026-11-15",
+    "stablecoin_mcap_b": "2026-11-15",
+    "stablecoin_change_30d": "2026-11-15",
     "staked_pct": "2026-11-13",
     "total_staked": "2026-11-13",
-    "stake_conc_top5": "2026-11-14"
+    "stake_conc_top5": "2026-11-15"
   }
 }
