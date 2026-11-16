@@ -1,23 +1,23 @@
 {
-  "timestamp": "2026-11-15T06:40:39.832472+00:00",
-  "timestamp_cn": "2026-11-15 14:40 GMT+8",
-  "price_usd": 1791.03,
-  "price_change_24h": -5.87761,
-  "market_cap": 218852871674,
-  "circulating_supply": 122221530.60130492,
-  "holder_count": 213400980,
-  "active_addr_7d": 881802,
-  "whale_top100_pct": 12.29,
-  "burn_rate_daily": 105.7,
-  "stablecoin_mcap_b": 132.73,
-  "stablecoin_change_30d": -8.13,
-  "staked_pct": 36.51,
-  "total_staked": 44618504,
-  "stake_conc_top5": 36.9,
+  "timestamp": "2026-11-16T06:38:13.508915+00:00",
+  "timestamp_cn": "2026-11-16 14:38 GMT+8",
+  "price_usd": 1810.31,
+  "price_change_24h": 1.04089,
+  "market_cap": 221263591723,
+  "circulating_supply": 122224475.73780824,
+  "holder_count": 213491825,
+  "active_addr_7d": 874948,
+  "whale_top100_pct": 12.28,
+  "burn_rate_daily": 41.9,
+  "stablecoin_mcap_b": 132.56,
+  "stablecoin_change_30d": -8.26,
+  "staked_pct": 36.54,
+  "total_staked": 44650822,
+  "stake_conc_top5": 36.4,
   "stake_conc_leaders": [
     {
       "name": "Lido",
-      "pct": 22.2
+      "pct": 21.9
     },
     {
       "name": "Binance staked ETH",
@@ -36,19 +36,19 @@
       "pct": 0.9
     }
   ],
-  "issuance_daily": 3043,
-  "burn_issuance_pct": 3.47,
+  "issuance_daily": 3044,
+  "burn_issuance_pct": 1.38,
   "lth_pct": null,
   "distribution": null,
   "as_of": {
-    "holder_count": "2026-11-14",
-    "active_addr_7d": "2026-11-14",
-    "whale_top100_pct": "2026-11-15",
-    "burn_rate_daily": "2026-11-15",
-    "stablecoin_mcap_b": "2026-11-15",
-    "stablecoin_change_30d": "2026-11-15",
-    "staked_pct": "2026-11-13",
-    "total_staked": "2026-11-13",
-    "stake_conc_top5": "2026-11-15"
+    "holder_count": "2026-11-15",
+    "active_addr_7d": "2026-11-15",
+    "whale_top100_pct": "2026-11-16",
+    "burn_rate_daily": "2026-11-16",
+    "stablecoin_mcap_b": "2026-11-16",
+    "stablecoin_change_30d": "2026-11-16",
+    "staked_pct": "2026-11-14",
+    "total_staked": "2026-11-14",
+    "stake_conc_top5": "2026-11-16"
   }
 }
