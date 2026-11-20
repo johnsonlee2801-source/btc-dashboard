@@ -1,19 +1,19 @@
 {
-  "timestamp": "2026-11-19T07:31:34.422434+00:00",
-  "timestamp_cn": "2026-11-19 15:31 GMT+8",
-  "price_usd": 1802.69,
-  "price_change_24h": -0.59161,
-  "market_cap": 220348338337,
-  "circulating_supply": 122233327.7069443,
-  "holder_count": 213813982,
-  "active_addr_7d": 953080,
-  "whale_top100_pct": 12.08,
-  "burn_rate_daily": 48.6,
-  "stablecoin_mcap_b": 131.92,
-  "stablecoin_change_30d": -8.22,
+  "timestamp": "2026-11-20T07:23:18.800779+00:00",
+  "timestamp_cn": "2026-11-20 15:23 GMT+8",
+  "price_usd": 1745.41,
+  "price_change_24h": -3.1541,
+  "market_cap": 213341812408,
+  "circulating_supply": 122236257.68111889,
+  "holder_count": 213914912,
+  "active_addr_7d": 935361,
+  "whale_top100_pct": 12.1,
+  "burn_rate_daily": 72.6,
+  "stablecoin_mcap_b": 129.86,
+  "stablecoin_change_30d": -9.55,
   "staked_pct": 36.48,
-  "total_staked": 44585407,
-  "stake_conc_top5": 36.3,
+  "total_staked": 44592626,
+  "stake_conc_top5": 36.1,
   "stake_conc_leaders": [
     {
       "name": "Lido",
@@ -21,11 +21,11 @@
     },
     {
       "name": "Binance staked ETH",
-      "pct": 8.2
+      "pct": 8.1
     },
     {
       "name": "ether.fi Stake",
-      "pct": 4.3
+      "pct": 4.2
     },
     {
       "name": "Rocket Pool",
@@ -36,19 +36,19 @@
       "pct": 0.8
     }
   ],
-  "issuance_daily": 3042,
-  "burn_issuance_pct": 1.6,
+  "issuance_daily": 3043,
+  "burn_issuance_pct": 2.39,
   "lth_pct": null,
   "distribution": null,
   "as_of": {
-    "holder_count": "2026-11-18",
-    "active_addr_7d": "2026-11-18",
-    "whale_top100_pct": "2026-11-19",
-    "burn_rate_daily": "2026-11-19",
-    "stablecoin_mcap_b": "2026-11-19",
-    "stablecoin_change_30d": "2026-11-19",
-    "staked_pct": "2026-11-18",
-    "total_staked": "2026-11-18",
-    "stake_conc_top5": "2026-11-19"
+    "holder_count": "2026-11-19",
+    "active_addr_7d": "2026-11-19",
+    "whale_top100_pct": "2026-11-20",
+    "burn_rate_daily": "2026-11-20",
+    "stablecoin_mcap_b": "2026-11-20",
+    "stablecoin_change_30d": "2026-11-20",
+    "staked_pct": "2026-11-19",
+    "total_staked": "2026-11-19",
+    "stake_conc_top5": "2026-11-20"
   }
 }
