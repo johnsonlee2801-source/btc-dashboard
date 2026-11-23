@@ -1,18 +1,18 @@
 {
-  "timestamp": "2026-11-22T06:56:46.126376+00:00",
-  "timestamp_cn": "2026-11-22 14:56 GMT+8",
-  "price_usd": 1659.35,
-  "price_change_24h": 1.16531,
-  "market_cap": 202841650603,
-  "circulating_supply": 122241915.09116153,
-  "holder_count": 214032989,
-  "active_addr_7d": 923441,
+  "timestamp": "2026-11-23T07:46:01.156662+00:00",
+  "timestamp_cn": "2026-11-23 15:46 GMT+8",
+  "price_usd": 1721.71,
+  "price_change_24h": 3.61826,
+  "market_cap": 210477784362,
+  "circulating_supply": 122244884.63845612,
+  "holder_count": 214230835,
+  "active_addr_7d": 888921,
   "whale_top100_pct": 12.11,
-  "burn_rate_daily": 42.4,
-  "stablecoin_mcap_b": 129.21,
-  "stablecoin_change_30d": -10.17,
+  "burn_rate_daily": 27.1,
+  "stablecoin_mcap_b": 129.25,
+  "stablecoin_change_30d": -9.98,
   "staked_pct": 36.5,
-  "total_staked": 44618339,
+  "total_staked": 44615880,
   "stake_conc_top5": 36.3,
   "stake_conc_leaders": [
     {
@@ -21,7 +21,7 @@
     },
     {
       "name": "Binance staked ETH",
-      "pct": 8.2
+      "pct": 8.3
     },
     {
       "name": "ether.fi Stake",
@@ -37,18 +37,18 @@
     }
   ],
   "issuance_daily": 3043,
-  "burn_issuance_pct": 1.39,
+  "burn_issuance_pct": 0.89,
   "lth_pct": null,
   "distribution": null,
   "as_of": {
-    "whale_top100_pct": "2026-11-22",
-    "burn_rate_daily": "2026-11-22",
-    "stablecoin_mcap_b": "2026-11-22",
-    "stablecoin_change_30d": "2026-11-22",
-    "staked_pct": "2026-11-20",
-    "total_staked": "2026-11-20",
-    "stake_conc_top5": "2026-11-22",
-    "holder_count": "2026-11-20",
-    "active_addr_7d": "2026-11-20"
+    "holder_count": "2026-11-22",
+    "active_addr_7d": "2026-11-22",
+    "whale_top100_pct": "2026-11-23",
+    "burn_rate_daily": "2026-11-23",
+    "stablecoin_mcap_b": "2026-11-23",
+    "stablecoin_change_30d": "2026-11-23",
+    "staked_pct": "2026-11-22",
+    "total_staked": "2026-11-22",
+    "stake_conc_top5": "2026-11-23"
   }
 }
