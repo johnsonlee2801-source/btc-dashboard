@@ -1,23 +1,23 @@
 {
-  "timestamp": "2026-11-26T08:27:10.992636+00:00",
-  "timestamp_cn": "2026-11-26 16:27 GMT+8",
-  "price_usd": 1688.65,
-  "price_change_24h": 2.91321,
-  "market_cap": 206443430928,
-  "circulating_supply": 122253671.96393436,
-  "holder_count": 214651035,
-  "active_addr_7d": 832701,
-  "whale_top100_pct": 12.18,
-  "burn_rate_daily": 44.2,
-  "stablecoin_mcap_b": 129.11,
-  "stablecoin_change_30d": -9.48,
-  "staked_pct": 36.54,
-  "total_staked": 44664056,
-  "stake_conc_top5": 36.1,
+  "timestamp": "2026-11-27T08:42:02.878921+00:00",
+  "timestamp_cn": "2026-11-27 16:42 GMT+8",
+  "price_usd": 1727.59,
+  "price_change_24h": 2.26442,
+  "market_cap": 211209880198,
+  "circulating_supply": 122256647.46018286,
+  "holder_count": 214796418,
+  "active_addr_7d": 879213,
+  "whale_top100_pct": 12.19,
+  "burn_rate_daily": 26.3,
+  "stablecoin_mcap_b": 129.51,
+  "stablecoin_change_30d": -9.23,
+  "staked_pct": 36.55,
+  "total_staked": 44681083,
+  "stake_conc_top5": 36.2,
   "stake_conc_leaders": [
     {
       "name": "Lido",
-      "pct": 21.7
+      "pct": 21.8
     },
     {
       "name": "Binance staked ETH",
@@ -36,19 +36,19 @@
       "pct": 0.8
     }
   ],
-  "issuance_daily": 3045,
-  "burn_issuance_pct": 1.45,
+  "issuance_daily": 3046,
+  "burn_issuance_pct": 0.86,
   "lth_pct": null,
   "distribution": null,
   "as_of": {
-    "holder_count": "2026-11-25",
-    "active_addr_7d": "2026-11-25",
-    "whale_top100_pct": "2026-11-26",
-    "burn_rate_daily": "2026-11-26",
-    "stablecoin_mcap_b": "2026-11-26",
-    "stablecoin_change_30d": "2026-11-26",
-    "staked_pct": "2026-11-25",
-    "total_staked": "2026-11-25",
-    "stake_conc_top5": "2026-11-26"
+    "holder_count": "2026-11-26",
+    "active_addr_7d": "2026-11-26",
+    "whale_top100_pct": "2026-11-27",
+    "burn_rate_daily": "2026-11-27",
+    "stablecoin_mcap_b": "2026-11-27",
+    "stablecoin_change_30d": "2026-11-27",
+    "staked_pct": "2026-11-26",
+    "total_staked": "2026-11-26",
+    "stake_conc_top5": "2026-11-27"
   }
 }
